@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssessmentReminder;
 use App\Models\CourseProgress;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +17,20 @@ use Illuminate\Validation\Rule;
 
 class LeaderEvaluationController extends Controller
 {
+    private function staffQuery(): Builder
+    {
+        $query = User::working()->assessmentEligible()->where('id', '!=', Auth::id());
+        if (auth()->user()?->cua_hang_id && Schema::hasColumn('users', 'cua_hang_id')) {
+            $query->where('cua_hang_id', auth()->user()->cua_hang_id)
+                ->whereRaw("LOWER(TRIM(COALESCE(ChucVu, ''))) NOT IN (?, ?, ?, ?)", ['quản lý cửa hàng', 'quản lý vùng', 'hr', 'hr đào tạo']);
+            if (auth()->user()->ca_lam_viec_id && Schema::hasColumn('users', 'ca_lam_viec_id')) {
+                $query->where('ca_lam_viec_id', auth()->user()->ca_lam_viec_id);
+            }
+        }
+
+        return $query;
+    }
+
     /**
      * Danh sách Bộ tiêu chuẩn năng lực chuẩn hóa theo vị trí công việc
      */
@@ -35,22 +51,10 @@ class LeaderEvaluationController extends Controller
         $currentUserId = Auth::id();
 
         // 1. Tất cả danh sách nhân viên
-        $staffs = User::where('id', '!=', $currentUserId)->get();
+        $staffs = $this->staffQuery()->get();
 
-        // 2. Lọc danh sách nhân viên ĐẾN HẠN SÁT HẠCH 3 THÁNG (~ 80 đến 105 ngày làm việc)
-        $eightyDaysAgo = Carbon::now()->subDays(80);
-        $oneHundredFiveDaysAgo = Carbon::now()->subDays(105);
-
-        $dueStaffs = User::where('id', '!=', $currentUserId)
-            ->whereNotNull('joined_at')
-            ->whereBetween('joined_at', [$oneHundredFiveDaysAgo, $eightyDaysAgo])
-            ->get()
-            ->map(function ($staff) {
-                $staff->days_worked = Carbon::parse($staff->joined_at)->diffInDays(now());
-                $staff->joined_date_formatted = Carbon::parse($staff->joined_at)->format('d/m/Y');
-
-                return $staff;
-            });
+        // Dùng cùng chu kỳ đánh giá và trạng thái làm việc với quản lý cửa hàng.
+        $dueStaffs = app(AssessmentReminder::class)->decorate($staffs)->where('needs_reminder', true);
 
         // 3. Bộ tiêu chuẩn năng lực vị trí
         $standards = $this->getStandardList();
@@ -69,12 +73,21 @@ class LeaderEvaluationController extends Controller
                 'danh_gia_nang_luc.Diem',
                 'danh_gia_nang_luc.ChiTietDeXuat'
             )
-            ->where('danh_gia_nang_luc.user_id', '!=', $currentUserId)
-            ->whereIn('danh_gia_nang_luc.TrangThai', ['ChoDanhGia', 'ChoPheDuyet', 'DaDuyet', 'HoanThanh'])
+            ->whereIn('danh_gia_nang_luc.user_id', $staffs->modelKeys())
+            ->whereIn('danh_gia_nang_luc.TrangThai', ['ChoDanhGia', 'ChoPheDuyet', 'DaDuyet', 'HoanThanh', 'TraLai'])
             ->orderBy('danh_gia_nang_luc.NgayHen', 'asc')
             ->get();
 
+        if (Schema::hasColumn('danh_gia_nang_luc', 'ly_do_tra_lai')) {
+            $reasons = DB::table('danh_gia_nang_luc')->whereIn('id', $schedules->pluck('id'))->pluck('ly_do_tra_lai', 'id');
+            foreach ($schedules as $schedule) {
+                $schedule->ly_do_tra_lai = $reasons->get($schedule->id);
+            }
+        }
         $proposalOwners = User::orderBy('name')->get(['id', 'name']);
+        if (auth()->user()?->cua_hang_id && Schema::hasColumn('users', 'cua_hang_id')) {
+            $proposalOwners = User::where('cua_hang_id', auth()->user()->cua_hang_id)->orderBy('name')->get(['id', 'name']);
+        }
         $proposalCourses = DB::table('chuong_trinh_dao_tao')->orderBy('MaCTDT')->get(['MaCTDT', 'TenCTDT']);
         $proposalLessons = DB::table('bai_hoc')->orderBy('FK_MaCTDT')->orderBy('ThuTu')->get(['MaBaiHoc', 'FK_MaCTDT', 'TenBaiHoc']);
 
@@ -88,7 +101,7 @@ class LeaderEvaluationController extends Controller
     public function createSchedule(Request $request): RedirectResponse
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|integer|exists:users,id',
             'MaCTDT' => 'required',
             'NgayDanhGia' => 'required',
             'note' => 'nullable|string|max:2000',
@@ -117,6 +130,17 @@ class LeaderEvaluationController extends Controller
 
         DB::beginTransaction();
         try {
+            $person = $this->staffQuery()->where('id', $request->user_id)->lockForUpdate()->first();
+            if (! $person) {
+                DB::rollBack();
+
+                return back()->withErrors(['user_id' => 'Chỉ xếp lịch cho nhân viên đang làm việc trong phạm vi ca / cửa hàng.'])->withInput();
+            }
+            if (DB::table('danh_gia_nang_luc')->where('user_id', $person->id)->whereIn('TrangThai', ['ChoDanhGia', 'ChoPheDuyet', 'TraLai'])->exists()) {
+                DB::rollBack();
+
+                return back()->withErrors(['user_id' => 'Nhân viên đã có lịch đánh giá hoặc kết quả đang xử lý. Vui lòng xử lý lượt hiện tại trước.'])->withInput();
+            }
             $now = now();
             $leaderId = auth()->id() ?? 1;
 
@@ -383,12 +407,22 @@ class LeaderEvaluationController extends Controller
         if (! $assessment) {
             return redirect()->back()->with('error', 'Không tìm thấy hồ sơ đánh giá tương ứng!');
         }
+        if (auth()->user()?->cua_hang_id && ! $this->staffQuery()->where('id', $assessment->user_id)->exists()) {
+            abort(403);
+        }
 
         DB::beginTransaction();
         try {
             // 1. Chuẩn bị dữ liệu cập nhật
+            $assessment = DB::table('danh_gia_nang_luc')->where('id', $request->assessment_id)->lockForUpdate()->first();
+            if (! in_array($assessment->TrangThai, ['ChoDanhGia', 'TraLai'])) {
+                DB::rollBack();
+
+                return back()->with('error', 'Đánh giá đang chờ duyệt hoặc đã duyệt. Vui lòng tạo lượt đánh giá mới.');
+            }
             $updateData = [
                 'Diem' => $diemTong,
+                'NgayDanhGia' => now(),
                 'NhanXet' => $request->comment,
                 'TrangThai' => 'ChoPheDuyet',
                 'updated_at' => now(),
@@ -414,6 +448,11 @@ class LeaderEvaluationController extends Controller
                 }
             }
             $updateData['DeXuatXuLy'] = $isPassed ? null : json_encode($request->input('proposals'), JSON_UNESCAPED_UNICODE);
+            if (Schema::hasColumn('danh_gia_nang_luc', 'nguoi_duyet_id')) {
+                $updateData['nguoi_duyet_id'] = null;
+                $updateData['ngay_duyet'] = null;
+                $updateData['ly_do_tra_lai'] = null;
+            }
             $updateData['ChiTietDeXuat'] = $isPassed ? null : json_encode([
                 'source' => 'Trưởng ca đề xuất', 'proposed_by' => Auth::id(),
                 'status' => 'ChoPheDuyet', 'details' => $proposalDetails,
@@ -449,6 +488,18 @@ class LeaderEvaluationController extends Controller
                 'updated_at' => now(),
             ]);
 
+            if (Schema::hasColumn('users', 'cua_hang_id')) {
+                $storeId = DB::table('users')->where('id', $assessment->user_id)->value('cua_hang_id');
+                if ($storeId) {
+                    foreach (DB::table('users')->where('cua_hang_id', $storeId)->whereRaw('LOWER(TRIM(ChucVu)) IN (?, ?)', ['quản lý cửa hàng', 'quan ly cua hang'])->pluck('id') as $managerId) {
+                        $notification = ['user_id' => $managerId, 'title' => 'Đánh giá chờ phê duyệt', 'message' => 'Trưởng ca đã gửi đánh giá #'.$assessment->id.'. Vui lòng xem tại mục Duyệt đánh giá.', 'type' => 'training', 'is_read' => 0, 'created_at' => now(), 'updated_at' => now()];
+                        if (Schema::hasColumn('notifications', 'event_key')) {
+                            $notification['event_key'] = 'pending-review-'.$managerId.'-'.$assessment->id.'-'.$updateData['updated_at']->toDateTimeString();
+                        }
+                        DB::table('notifications')->insertOrIgnore($notification);
+                    }
+                }
+            }
             DB::commit();
 
             $msg = $isPassed
@@ -471,7 +522,7 @@ class LeaderEvaluationController extends Controller
         $truongCa = Auth::user();
         $currentUserId = Auth::id();
 
-        $staffs = User::where('id', '!=', $currentUserId)->get();
+        $staffs = $this->staffQuery()->get();
 
         $latestQuizResults = DB::table('ket_qua_kiem_tra')
             ->whereIn('user_id', $staffs->modelKeys())
@@ -543,15 +594,7 @@ class LeaderEvaluationController extends Controller
 
         $totalStaffs = $staffs->count();
 
-        $dueCount = $staffs->filter(function ($staff) {
-            $startDate = $staff->joined_at ?? $staff->created_at ?? null;
-            if (empty($startDate)) {
-                return false;
-            }
-            $days = Carbon::parse($startDate)->diffInDays(now());
-
-            return $days >= 80 && $days <= 105;
-        })->count();
+        $dueCount = app(AssessmentReminder::class)->decorate($staffs)->where('needs_reminder', true)->count();
 
         $avgProgress = $totalStaffs > 0 ? round($staffs->avg('overall_progress') ?? 0, 1) : 0;
         $highRiskCount = $staffs->filter(fn ($staff) => $staff->overall_progress < 30)->count();

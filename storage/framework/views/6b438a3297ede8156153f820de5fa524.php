@@ -92,7 +92,8 @@
         $role =$currentUser->role ?? '';
         $chucVu =$currentUser->ChucVu ?? '';
 
-        $isLeader = ($role === 'truong_ca' ||$chucVu === 'Trưởng Ca' || $role === 'leader');
+        $isLeader = ($role === 'truong_ca' || mb_strtolower($chucVu) === 'trưởng ca' || $role === 'leader');
+        $isManager = in_array(mb_strtolower(trim($chucVu)), ['quản lý cửa hàng', 'quan ly cua hang', 'manager']);
     ?>
 
     <!-- MOBILE SIDEBAR BACKDROP -->
@@ -105,7 +106,7 @@
         <div class="flex-1 min-h-0 overflow-y-auto overscroll-contain">
             <!-- LOGO AREA -->
             <div class="px-6 py-5 flex items-center justify-between border-b border-[#E8DFC8]/50 sticky top-0 bg-[#FAF7F2] z-10">
-                <a href="<?php echo e(route('dashboard')); ?>" class="flex items-center space-x-3">
+                <a href="<?php echo e(route($isManager ? 'manager.dashboard' : 'dashboard')); ?>" class="flex items-center space-x-3">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#4A2E1B] to-[#6E4E30] flex items-center justify-center text-white shadow-md shadow-coffee-800/10">
                         <i class="fa-solid fa-mug-hot text-lg"></i>
                     </div>
@@ -123,7 +124,16 @@
             <div class="p-4 space-y-6">
                 
                 <!-- 1. CHỈ HIỂN THỊ CHO TRƯỞNG CA -->
-<?php if($isLeader): ?>
+<?php if($isManager): ?>
+    <div>
+        <h3 class="px-3 text-[11px] font-bold uppercase tracking-wider text-coffee-500 mb-2">Quản lý cửa hàng</h3>
+        <nav class="space-y-1">
+            <?php $__currentLoopData = ['dashboard' => ['chart-pie', 'Tổng quan cửa hàng'], 'staff' => ['users', 'Hồ sơ nhân viên'], 'assessments' => ['clipboard-check', 'Duyệt đánh giá'], 'training' => ['arrows-rotate', 'Giao đào tạo lại'], 'notifications' => ['bell', 'Thông báo']]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => [$icon, $label]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <a href="<?php echo e(route('manager.'.$page)); ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition <?php echo e(request()->routeIs('manager.'.$page) || ($page === 'staff' && request()->routeIs('manager.profile')) ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:bg-[#F3ECE1]'); ?>"><i class="fa-solid fa-<?php echo e($icon); ?> w-5 text-center text-coffee-600"></i><span><?php echo e($label); ?></span></a>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        </nav>
+    </div>
+<?php elseif($isLeader): ?>
     <div>
         <h3 class="px-3 text-[11px] font-bold uppercase tracking-wider text-coffee-500 mb-2">Quản lý nhân viên</h3>
         <nav class="space-y-1">
@@ -209,7 +219,7 @@
     <h3 class="px-3 text-[11px] font-bold uppercase tracking-wider text-coffee-500 mb-2">TIÊU CHUẨN & HỖ TRỢ</h3>
     <nav class="space-y-1">
         <!-- 🔥 CHỈ ẨN SỔ TAY SOP VỚI TRƯỞNG CA (NHÂN VIÊN VẪN THẤY) -->
-        <?php if(!$isLeader): ?>
+        <?php if(!$isLeader && !$isManager): ?>
             <a href="javascript:void(0)" onclick="openSOPModal()" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1] transition">
                 <i class="fa-solid fa-book-bookmark w-5 text-center text-slate-500"></i>
                 <span>Sổ tay pha chế & SOP</span>
@@ -229,7 +239,7 @@
             <span>Nội quy & Chính sách</span>
         </a>
          <!-- Nút Trợ giúp & Hỗ trợ trong Sidebar -->
-<a href="<?php echo e(route('help.index', ['user_id' => request('user_id', 1)])); ?>" 
+<a href="<?php echo e(route('help.index')); ?>"
    class="flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all <?php echo e(request()->routeIs('help.*') ? 'bg-amber-100 text-amber-900 border border-amber-300 shadow-sm' : 'text-slate-600 hover:bg-amber-50/50'); ?>">
     <i class="fa-solid fa-headset text-base text-amber-700"></i>
     <span>Trợ giúp & Hỗ trợ</span>
@@ -263,13 +273,15 @@
                             <?php echo e($currentUser->ChucVu ?? 'Trưởng Ca'); ?> • <?php echo e($currentUser->ChiNhanh ?? 'Flagship Q.1'); ?>
 
                         </div>
+                        <?php if(!$isManager): ?>
                         <div class="w-24 bg-white/80 h-1.5 rounded-full overflow-hidden mt-1 border border-slate-200">
                             <div class="bg-amber_brand h-full rounded-full" style="width: <?php echo e($currentUser?->progress_percent ?? 0); ?>%"></div>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <span class="bg-amber-900 text-amber-100 text-[10px] font-extrabold px-2 py-1 rounded-lg shrink-0">
-                    Cấp <?php echo e($currentUser->CapDo ?? 2); ?>
+                    <?php echo e($isManager ? 'QL' : 'Cấp '.($currentUser->CapDo ?? 2)); ?>
 
                 </span>
             </div>
@@ -295,14 +307,14 @@
                 </div>
 
                 <!-- Search Bar -->
-                <form action="<?php echo e(route('search')); ?>" method="GET" class="hidden sm:flex flex-1 relative">
+                <form action="<?php echo e(route($isManager ? 'manager.staff' : 'search')); ?>" method="GET" class="hidden sm:flex flex-1 relative">
                     <button type="submit" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-coffee-800 text-sm transition">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
                     <input type="text" 
                            name="q" 
                            value="<?php echo e(request('q')); ?>" 
-                           placeholder="Tìm bài học, công thức latte, quy trình SOP..." 
+                           placeholder="<?php echo e($isManager ? 'Tìm nhân viên trong cửa hàng...' : 'Tìm bài học, công thức latte, quy trình SOP...'); ?>"
                            class="w-full bg-[#EFE7DA]/60 border border-[#E2D4C1] rounded-xl pl-10 pr-4 py-2 text-xs md:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-coffee-600 focus:bg-white transition"
                            required>
                 </form>
@@ -311,7 +323,7 @@
            <!-- BÊN PHẢI: Nút Test nhanh & Quả chuông Thông báo -->
 <div class="flex items-center space-x-2 md:space-x-3 shrink-0">
     <!-- ẨN NÚT THI NHANH NẾU LÀ TRƯỞNG CA -->
-    <?php if(!($isLeader ?? false)): ?>
+    <?php if(!($isLeader ?? false) && !$isManager): ?>
         <a href="<?php echo e(route('tests.show', ['id' => 1])); ?>" class="bg-amber_brand hover:bg-[#C25A1A] text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center space-x-1.5 shadow-sm">
             <i class="fa-solid fa-stopwatch text-[11px]"></i>
             <span class="hidden sm:inline">Làm bài test nhanh</span>
@@ -336,7 +348,7 @@
             <div class="p-3.5 bg-[#FAF7F2] border-b border-[#E8DFC8] flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-bell text-amber_brand text-sm"></i>
-                    <h3 class="font-bold text-coffee-900 text-xs">Thông báo từ Quản lý</h3>
+                    <h3 class="font-bold text-coffee-900 text-xs"><?php echo e($isManager ? 'Thông báo điều hành' : 'Thông báo từ Quản lý'); ?></h3>
                 </div>
                 <span class="text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded-full">
                     <?php echo e(isset($notifications) ? $notifications->count() : 0); ?> tin
@@ -399,7 +411,7 @@
             </div>
 
             <!-- NÚT XEM TẤT CẢ -->
-            <a href="<?php echo e(route('notifications.index', ['user_id' => request('user_id', $currentUser->id ?? auth()->id() ?? 2)])); ?>" 
+            <a href="<?php echo e(route($isManager ? 'manager.notifications' : 'notifications.index')); ?>"
                class="block text-center py-2.5 text-xs font-bold text-amber-900 bg-[#FAF7F2] hover:bg-[#EFE7DA] border-t border-[#E8DFC8] transition">
                 Xem tất cả thông báo →
             </a>
@@ -410,7 +422,7 @@
 </header>
 
 <!-- Nút Quay lại đặt sát lề trái phần nội dung chính -->
-<?php if(!request()->routeIs('dashboard')): ?>
+<?php if(!$isManager && !request()->routeIs('dashboard')): ?>
     <div class="fixed bottom-6 left-[320px] z-[9999]">
         <button onclick="window.history.back()" 
                 type="button"
@@ -836,6 +848,7 @@
         });
     </script>
  <!-- MODAL GỬI THÔNG BÁO DÀNH CHO TRƯỞNG CA -->
+<?php if($isLeader): ?>
 <div id="sendNotificationModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl relative border border-[#E8DFC8]">
         <div class="flex items-center justify-between border-b pb-3">
@@ -858,7 +871,10 @@
         <option value="all" class="font-bold text-blue-600">📢 Tất cả nhân viên trong ca (Gửi hàng loạt)</option>
         
         <?php
-            $staffsList = $staffs ?? \App\Models\User::where('id', '!=', auth()->id())->get();
+            $staffsList = $staffs ?? \App\Models\User::working()->assessmentEligible()->where('id', '!=', auth()->id())
+                ->when($currentUser->cua_hang_id, fn($query) => $query->where('cua_hang_id', $currentUser->cua_hang_id))
+                ->when($currentUser->ca_lam_viec_id, fn($query) => $query->where('ca_lam_viec_id', $currentUser->ca_lam_viec_id))
+                ->get();
         ?>
 
         <?php $__currentLoopData = $staffsList; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $staff): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -923,7 +939,7 @@
                 <label class="font-bold text-coffee-800 block mb-1">Gửi đến nhân viên (Mã NV / User ID):</label>
                 <select name="user_id" required class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-coffee-600 font-bold">
                     <option value="">-- Chọn nhân viên nhận thông báo --</option>
-                    <?php $__currentLoopData = \DB::table('users')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $staff): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php $__currentLoopData = $staffsList; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $staff): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <option value="<?php echo e($staff->id); ?>">
                             NV-<?php echo e(str_pad($staff->id, 3, '0', STR_PAD_LEFT)); ?>: <?php echo e($staff->name); ?> (ID: <?php echo e($staff->id); ?>)
                         </option>
@@ -986,6 +1002,7 @@
         document.getElementById('incidentModal').classList.add('hidden');
     }
 </script>
+<?php endif; ?>
 </body>
 </html>
 <?php /**PATH D:\wamp64\Brewlearn\resources\views/layouts/app.blade.php ENDPATH**/ ?>

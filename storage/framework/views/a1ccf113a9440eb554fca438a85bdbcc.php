@@ -53,7 +53,7 @@
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-bell text-amber-600 animate-bounce"></i>
                 <h3 class="font-bold text-amber-900 text-sm md:text-base">
-                    Nhắc nhở: Có <?php echo e($dueStaffs->count()); ?> nhân viên đến kỳ đánh giá năng lực 3 tháng!
+                    Có <?php echo e($dueStaffs->count()); ?> nhân viên sắp đến hạn / đến hạn / quá hạn đánh giá
                 </h3>
             </div>
         </div>
@@ -63,7 +63,12 @@
                 <div class="bg-white p-3 rounded-lg border border-amber-200 flex items-center justify-between shadow-xs">
                     <div>
                         <p class="font-bold text-xs text-slate-800"><?php echo e($due->name); ?></p>
-                        <p class="text-[11px] text-slate-500">Vào làm: <?php echo e($due->joined_date_formatted); ?> (<?php echo e($due->days_worked); ?> ngày)</p>
+                        <p class="text-[11px] text-slate-500">Hạn đánh giá: <?php echo e($due->due_at->format('d/m/Y')); ?> • <?php echo e($due->due_status); ?></p>
+                        <?php if($due->scheduled_assessment): ?>
+                            <p class="text-[11px] font-bold text-blue-700"><?php echo e($due->scheduled_assessment->TrangThai === 'ChoDanhGia' ? 'Đã xếp lịch' : 'Đang xử lý kết quả'); ?> #<?php echo e($due->scheduled_assessment->id); ?></p>
+                        <?php else: ?>
+                            <button type="button" onclick="document.querySelector('select[name=user_id]').value='<?php echo e($due->id); ?>'; document.querySelector('select[name=user_id]').focus();" class="mt-2 text-xs font-bold text-amber-700">Chọn nhân viên để xếp lịch →</button>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -123,7 +128,7 @@
                 </div>
 
                 <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium text-sm rounded-xl transition shadow-sm">
-                    Tạo Lịch Đánh Giá
+                    Tạo lịch & gửi thông báo
                 </button>
             </form>
         </div>
@@ -183,6 +188,9 @@
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
                                                 ✅ Đã duyệt
                                             </span>
+                                        <?php elseif($item->TrangThai === 'TraLai'): ?>
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800">Cần bổ sung</span>
+                                            <p class="text-xs text-rose-700 mt-1"><?php echo e($item->ly_do_tra_lai ?? ''); ?></p>
                                         <?php else: ?>
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
                                                 Chờ đánh giá
@@ -192,7 +200,7 @@
 
                                     <!-- Cột Thao tác -->
                                     <td class="py-3 px-4 text-right">
-                                        <?php if($item->TrangThai === 'ChoDanhGia'): ?>
+                                        <?php if(in_array($item->TrangThai, ['ChoDanhGia', 'TraLai'])): ?>
                                             <button type="button" 
                                                     class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium rounded-lg transition shadow-sm"
                                                     onclick="openScoringModal('<?php echo e($item->id); ?>', '<?php echo e(e($item->staff_name)); ?>', '<?php echo e(e($item->tiêu_chuẩn ?? $item->TieuChuan ?? '')); ?>')">

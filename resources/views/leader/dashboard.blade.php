@@ -53,7 +53,7 @@
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-bell text-amber-600 animate-bounce"></i>
                 <h3 class="font-bold text-amber-900 text-sm md:text-base">
-                    Nhắc nhở: Có {{ $dueStaffs->count() }} nhân viên đến kỳ đánh giá năng lực 3 tháng!
+                    Có {{ $dueStaffs->count() }} nhân viên sắp đến hạn / đến hạn / quá hạn đánh giá
                 </h3>
             </div>
         </div>
@@ -63,7 +63,12 @@
                 <div class="bg-white p-3 rounded-lg border border-amber-200 flex items-center justify-between shadow-xs">
                     <div>
                         <p class="font-bold text-xs text-slate-800">{{ $due->name }}</p>
-                        <p class="text-[11px] text-slate-500">Vào làm: {{ $due->joined_date_formatted }} ({{ $due->days_worked }} ngày)</p>
+                        <p class="text-[11px] text-slate-500">Hạn đánh giá: {{ $due->due_at->format('d/m/Y') }} • {{ $due->due_status }}</p>
+                        @if($due->scheduled_assessment)
+                            <p class="text-[11px] font-bold text-blue-700">{{ $due->scheduled_assessment->TrangThai === 'ChoDanhGia' ? 'Đã xếp lịch' : 'Đang xử lý kết quả' }} #{{ $due->scheduled_assessment->id }}</p>
+                        @else
+                            <button type="button" onclick="document.querySelector('select[name=user_id]').value='{{ $due->id }}'; document.querySelector('select[name=user_id]').focus();" class="mt-2 text-xs font-bold text-amber-700">Chọn nhân viên để xếp lịch →</button>
+                        @endif
                     </div>
                 </div>
             @endforeach
@@ -123,7 +128,7 @@
                 </div>
 
                 <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium text-sm rounded-xl transition shadow-sm">
-                    Tạo Lịch Đánh Giá
+                    Tạo lịch & gửi thông báo
                 </button>
             </form>
         </div>
@@ -180,6 +185,9 @@
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
                                                 ✅ Đã duyệt
                                             </span>
+                                        @elseif($item->TrangThai === 'TraLai')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800">Cần bổ sung</span>
+                                            <p class="text-xs text-rose-700 mt-1">{{ $item->ly_do_tra_lai ?? '' }}</p>
                                         @else
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
                                                 Chờ đánh giá
@@ -189,7 +197,7 @@
 
                                     <!-- Cột Thao tác -->
                                     <td class="py-3 px-4 text-right">
-                                        @if($item->TrangThai === 'ChoDanhGia')
+                                        @if(in_array($item->TrangThai, ['ChoDanhGia', 'TraLai']))
                                             <button type="button" 
                                                     class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium rounded-lg transition shadow-sm"
                                                     onclick="openScoringModal('{{ $item->id }}', '{{ e($item->staff_name) }}', '{{ e($item->tiêu_chuẩn ?? $item->TieuChuan ?? '') }}')">

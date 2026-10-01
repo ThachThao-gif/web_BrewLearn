@@ -1,19 +1,19 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\LeaderEvaluationController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\HelpController;
-use App\Http\Controllers\SupportController;
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\IncidentController;
+use App\Http\Controllers\LeaderEvaluationController;
+use App\Http\Controllers\ManagerController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SupportController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,10 +25,11 @@ View::composer('*', function ($view) {
     $notifications = collect([]);
 
     if ($currentUser && Schema::hasTable('notifications')) {
-        $notifications = DB::table('notifications')
-            ->where('user_id', $currentUser->id)
-            ->orderByDesc('id')
-            ->get();
+        $query = DB::table('notifications')->where('user_id', $currentUser->id);
+        if (in_array(mb_strtolower(trim($currentUser->ChucVu ?? '')), ['quản lý cửa hàng', 'quan ly cua hang', 'manager'])) {
+            $query->whereNotIn('type', ['risk', 'prediction']);
+        }
+        $notifications = $query->orderByDesc('id')->get();
     }
 
     $view->with([
@@ -52,18 +53,33 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->group(function () {
+    Route::prefix('manager')->name('manager.')->controller(ManagerController::class)->group(function () {
+        Route::get('/dashboard', 'dashboard')->name('dashboard');
+        Route::get('/staff', 'staff')->name('staff');
+        Route::get('/staff/{id}', 'profile')->name('profile');
+        Route::post('/shifts', 'createShift')->name('shifts.create');
+        Route::put('/staff/{id}/shift', 'assignShift')->name('shifts.assign');
+        Route::put('/staff/{id}/employment', 'updateEmployment')->name('employment.update');
+        Route::get('/assessments', 'assessments')->name('assessments');
+        Route::post('/assessments/{id}/review', 'review')->name('review');
+        Route::get('/training', 'training')->name('training');
+        Route::post('/training/{id}/review', 'reviewTraining')->name('training.review');
+        Route::put('/training/{id}', 'assignTraining')->name('training.assign');
+        Route::post('/training/{id}/reassess', 'reassess')->name('training.reassess');
+        Route::get('/notifications', 'notifications')->name('notifications');
+    });
 
     // 1. Trang chủ & Hệ thống
     Route::get('/', [CourseController::class, 'dashboard'])->name('dashboard');
     Route::get('/courses/roadmap', [CourseController::class, 'dashboard'])->name('courses.roadmap');
     Route::get('/search', [SearchController::class, 'index'])->name('search');
-    
+
     // Phân hệ Thông báo
     Route::prefix('notifications')->name('notifications.')->group(function () {
         Route::get('/', [NotificationController::class, 'index'])->name('index');
         Route::post('/store', [NotificationController::class, 'store'])->name('store');
         Route::post('/read-all', [NotificationController::class, 'markAllAsRead'])->name('readAll');
-        
+
         Route::get('/{id}', [NotificationController::class, 'show'])->name('show');
         Route::post('/{id}/read', [NotificationController::class, 'markAsRead'])->name('read');
         Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
@@ -88,10 +104,10 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('tests')->name('tests.')->group(function () {
         Route::get('/', [CourseController::class, 'testsIndex'])->name('index');
         Route::get('/quick-test', [CourseController::class, 'testsIndex'])->name('quick');
-        
+
         // Trang hiển thị câu hỏi làm bài (Trỏ về showTest trong CourseController)
         Route::get('/{id}', [CourseController::class, 'showTest'])->name('show');
-        
+
         // Route xử lý nộp bài AJAX (Trỏ về submitTest trong CourseController)
         Route::post('/{id}/submit', [CourseController::class, 'submitTest'])->name('submit');
     });
@@ -100,8 +116,8 @@ Route::middleware(['auth'])->group(function () {
     Route::view('/sop', 'sop.index')->name('sop.index');
     Route::view('/support', 'support.index')->name('support.index');
     Route::view('/policies', 'policies.index')->name('policies.index');
-    
-    Route::get('/assessments', fn() => redirect()->route('tests.index'))->name('assessments.index');
+
+    Route::get('/assessments', fn () => redirect()->route('tests.index'))->name('assessments.index');
     Route::view('/assessments/3-months', 'assessments.show')->name('assessments.show');
 
     // 5. Hồ sơ cá nhân & Tài khoản

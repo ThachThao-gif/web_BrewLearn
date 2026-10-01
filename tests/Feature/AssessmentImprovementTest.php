@@ -42,6 +42,7 @@ class AssessmentImprovementTest extends TestCase
             $table->integer('MaCTDT')->nullable();
             $table->string('TieuChuan')->nullable();
             $table->dateTime('NgayHen')->nullable();
+            $table->dateTime('NgayDanhGia')->nullable();
             $table->float('Diem')->nullable();
             $table->text('NhanXet')->nullable();
             $table->string('TrangThai');

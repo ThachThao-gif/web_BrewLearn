@@ -1,0 +1,6 @@
+<form method="GET" class="flex flex-wrap items-end gap-3 bg-white border border-coffee-200 p-4 rounded-2xl">
+    @isset($statusTab)<input type="hidden" name="status" value="{{ $statusTab }}">@endisset
+    <label class="text-xs font-semibold text-coffee-700">Ca làm việc<select name="shift" class="block mt-1 rounded-xl border border-coffee-300 px-3 py-2.5 text-sm bg-coffee-50 min-w-44"><option value="">Toàn cửa hàng</option><option value="none" @selected(request('shift') === 'none')>Chưa phân ca</option>@foreach($shifts as $shift)<option value="{{ $shift->id }}" @selected((string)request('shift') === (string)$shift->id)>{{ $shift->ten_ca }}</option>@endforeach</select></label>
+    <label class="flex-1 min-w-44 text-xs font-semibold text-coffee-700">Tìm nhân viên<input name="q" value="{{ request('q') }}" placeholder="Tên nhân viên..." class="block w-full mt-1 rounded-xl border border-coffee-300 px-3 py-2.5 text-sm"></label>
+    <button class="rounded-xl bg-amber_brand text-white font-bold px-5 py-2.5 text-sm">Áp dụng</button><a href="{{ isset($statusTab) ? route('manager.assessments', ['status' => $statusTab]) : url()->current() }}" class="py-2.5 px-2 text-sm text-coffee-600">Xóa lọc</a>
+</form>

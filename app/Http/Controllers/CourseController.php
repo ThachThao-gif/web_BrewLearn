@@ -26,6 +26,9 @@ class CourseController extends Controller
      */
     public function dashboard(Request $request)
     {
+        if (in_array(mb_strtolower(trim(auth()->user()?->ChucVu ?? '')), ['quản lý cửa hàng', 'quan ly cua hang', 'manager'])) {
+            return redirect()->route('manager.dashboard');
+        }
         $userId = $this->getCurrentUserId($request);
         $currentUser = User::find($userId) ?? User::first();
         $userId = $currentUser->id ?? 1;

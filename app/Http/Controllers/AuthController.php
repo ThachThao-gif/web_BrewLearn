@@ -13,6 +13,7 @@ class AuthController extends Controller
         if (Auth::check()) {
             return $this->redirectUserByRole(Auth::user());
         }
+
         return view('auth.login');
     }
 
@@ -21,7 +22,7 @@ class AuthController extends Controller
     {
         // 1. Validate dữ liệu đầu vào
         $credentials = $request->validate([
-            'email'    => ['required', 'email'],
+            'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
@@ -61,6 +62,7 @@ class AuthController extends Controller
                 return redirect()->route('manager.dashboard');
 
             case 'Trưởng Ca':
+            case 'Trưởng ca':
             case 'truong_ca':
             case 'quan_ly':
                 return redirect()->route('leader.dashboard');

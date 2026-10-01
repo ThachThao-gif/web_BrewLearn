@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class NotificationController extends Controller
 {
@@ -17,7 +17,7 @@ class NotificationController extends Controller
     {
         $currentUser = auth()->user();
 
-        if (!$currentUser) {
+        if (! $currentUser) {
             return redirect()->route('login');
         }
 
@@ -41,41 +41,41 @@ class NotificationController extends Controller
      */
     public function store(Request $request)
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return redirect()->route('login');
         }
 
         // Validate linh hoạt dữ liệu gửi từ cả Modal 1 (Thông báo chung) và Modal 2 (Sự cố)
         $validated = $request->validate([
-            'user_id'   => 'required|integer|exists:users,id',
-            'title'     => 'nullable|string|max:255',
-            'message'   => 'nullable|string|max:2000',
-            'loai_loi'  => 'nullable|string|max:255',
-            'muc_do'    => 'nullable|string|max:50',
+            'user_id' => 'required|integer|exists:users,id',
+            'title' => 'nullable|string|max:255',
+            'message' => 'nullable|string|max:2000',
+            'loai_loi' => 'nullable|string|max:255',
+            'muc_do' => 'nullable|string|max:50',
             'thoi_diem' => 'nullable|date',
-            'mo_ta'     => 'nullable|string|max:2000',
+            'mo_ta' => 'nullable|string|max:2000',
         ]);
 
         try {
             // Trường hợp 1: Form Gửi thông báo chung (có title & message)
             if ($request->filled('title') && $request->filled('message')) {
-                $title   = $validated['title'];
+                $title = $validated['title'];
                 $message = $validated['message'];
-                $type    = 'general';
-            } 
+                $type = 'general';
+            }
             // Trường hợp 2: Form Ghi nhận sự cố & nhắc nhở (có loai_loi & mo_ta)
             else {
-                $title   = 'Nhắc nhở sự cố: ' . ($validated['loai_loi'] ?? 'Vận hành');
+                $title = 'Nhắc nhở sự cố: '.($validated['loai_loi'] ?? 'Vận hành');
                 $message = $validated['mo_ta'] ?? '';
-                $type    = 'incident';
+                $type = 'incident';
             }
 
             DB::table('notifications')->insert([
-                'user_id'    => $validated['user_id'],
-                'title'      => $title,
-                'message'    => $message,
-                'type'       => $type,
-                'is_read'    => 0,
+                'user_id' => $validated['user_id'],
+                'title' => $title,
+                'message' => $message,
+                'type' => $type,
+                'is_read' => 0,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -93,7 +93,7 @@ class NotificationController extends Controller
                 ->withInput()
                 ->with(
                     'error',
-                    'Lỗi khi gửi thông báo: ' . $e->getMessage()
+                    'Lỗi khi gửi thông báo: '.$e->getMessage()
                 );
         }
     }
@@ -107,9 +107,9 @@ class NotificationController extends Controller
     {
         $userId = auth()->id();
 
-        if (!$userId) {
+        if (! $userId) {
             return response()->json([
-                'error' => 'Bạn chưa đăng nhập.'
+                'error' => 'Bạn chưa đăng nhập.',
             ], 401);
         }
 
@@ -118,9 +118,9 @@ class NotificationController extends Controller
             ->where('user_id', $userId)
             ->first();
 
-        if (!$notification) {
+        if (! $notification) {
             return response()->json([
-                'error' => 'Không tìm thấy thông báo.'
+                'error' => 'Không tìm thấy thông báo.',
             ], 404);
         }
 
@@ -166,10 +166,10 @@ class NotificationController extends Controller
     {
         $userId = auth()->id();
 
-        if (!$userId) {
+        if (! $userId) {
             return response()->json([
                 'success' => false,
-                'message' => 'Bạn chưa đăng nhập.'
+                'message' => 'Bạn chưa đăng nhập.',
             ], 401);
         }
 
@@ -187,16 +187,20 @@ class NotificationController extends Controller
                 ->where('user_id', $userId)
                 ->exists();
 
-            if (!$exists) {
+            if (! $exists) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Không tìm thấy thông báo.'
+                    'message' => 'Không tìm thấy thông báo.',
                 ], 404);
             }
         }
 
+        if (! request()->expectsJson() && str_contains(url()->previous(), '/manager/')) {
+            return back()->with('success', 'Đã đánh dấu thông báo đã đọc.');
+        }
+
         return response()->json([
-            'success' => true
+            'success' => true,
         ]);
     }
 
@@ -209,7 +213,7 @@ class NotificationController extends Controller
     {
         $userId = auth()->id();
 
-        if (!$userId) {
+        if (! $userId) {
             return redirect()->route('login');
         }
 
@@ -228,6 +232,7 @@ class NotificationController extends Controller
                 'Đã đánh dấu tất cả thông báo là đã đọc!'
             );
     }
+
     /**
      * =========================================================
      * 6. XÓA MỘT THÔNG BÁO
@@ -237,10 +242,10 @@ class NotificationController extends Controller
     {
         $userId = auth()->id();
 
-        if (!$userId) {
+        if (! $userId) {
             return response()->json([
                 'success' => false,
-                'message' => 'Bạn chưa đăng nhập.'
+                'message' => 'Bạn chưa đăng nhập.',
             ], 401);
         }
 
@@ -249,17 +254,16 @@ class NotificationController extends Controller
             ->where('user_id', $userId)
             ->delete();
 
-        if (!$deleted) {
+        if (! $deleted) {
             return response()->json([
                 'success' => false,
-                'message' => 'Không tìm thấy thông báo hoặc bạn không có quyền xóa.'
+                'message' => 'Không tìm thấy thông báo hoặc bạn không có quyền xóa.',
             ], 404);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Đã xóa thông báo thành công!'
+            'message' => 'Đã xóa thông báo thành công!',
         ]);
     }
 }
-
