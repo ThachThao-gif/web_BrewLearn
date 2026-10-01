@@ -2,6 +2,12 @@
 
 <?php $__env->startSection('content'); ?>
 <div class="max-w-7xl mx-auto space-y-6">
+    <?php if($errors->any()): ?>
+        <div role="alert" class="bg-rose-50 border border-rose-200 text-rose-800 rounded-xl p-4 text-sm">
+            <p class="font-bold">Chưa gửi được đánh giá. Kiểm tra các nội dung sau:</p>
+            <ul class="list-disc pl-5"><?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><li><?php echo e($error); ?></li><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></ul>
+        </div>
+    <?php endif; ?>
 
     <!-- HIỂN THỊ THÔNG BÁO FLASH MESSAGES (Thành công / Lỗi) -->
     <?php if(session('success')): ?>
@@ -158,6 +164,9 @@
                                     <td class="py-3 px-4 text-slate-600">
                                         <?php echo e($item->tiêu_chuẩn ?? $item->TieuChuan ?? 'Tiêu chuẩn năng lực'); ?>
 
+                                        <?php if($item->ChiTietDeXuat): ?>
+                                            <?php echo $__env->make('components.assessment-improvement-summary', ['savedProposal' => json_decode($item->ChiTietDeXuat, true)], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                                        <?php endif; ?>
                                     </td>
                                     <td class="py-3 px-4 text-slate-500 whitespace-nowrap">
                                         <?php echo e(\Carbon\Carbon::parse($item->NgayHen)->format('d/m/Y H:i')); ?>
@@ -226,8 +235,14 @@
                 <button type="button" onclick="closeScoringModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
             </div>
 
-            <form action="<?php echo e(route('leader.saveScore')); ?>" method="POST" class="space-y-4">
+            <form id="scoringForm" action="<?php echo e(route('leader.saveScore')); ?>" method="POST" class="space-y-4">
                 <?php echo csrf_field(); ?>
+                <?php if($errors->any() && old('assessment_id')): ?>
+                    <div role="alert" class="bg-rose-50 text-rose-800 rounded-lg p-3 text-sm">
+                        <p class="font-bold">Vui lòng bổ sung nội dung trước khi gửi:</p>
+                        <ul class="list-disc pl-5"><?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><li><?php echo e($error); ?></li><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></ul>
+                    </div>
+                <?php endif; ?>
                 <input type="hidden" name="assessment_id" id="modalAssessmentId">
 
                 <!-- Các tiêu chí chấm điểm -->
@@ -329,22 +344,23 @@
                     <p class="text-xs font-bold text-rose-800 uppercase">Đề xuất xử lý của Trưởng ca (Nhân viên chưa đạt):</p>
                     <div class="grid grid-cols-2 gap-2 text-xs text-slate-700">
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="proposals[]" value="daotaobosung" class="rounded text-amber-600 focus:ring-amber-500">
+                            <input type="checkbox" name="proposals[]" value="daotaobosung" onchange="updateProposalSections()" class="rounded text-amber-600 focus:ring-amber-500">
                             <span>Đào tạo bổ sung</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="proposals[]" value="hoclaibaihoc" class="rounded text-amber-600 focus:ring-amber-500">
+                            <input type="checkbox" name="proposals[]" value="hoclaibaihoc" onchange="updateProposalSections()" class="rounded text-amber-600 focus:ring-amber-500">
                             <span>Học lại bài học liên quan</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="proposals[]" value="theodoica" class="rounded text-amber-600 focus:ring-amber-500">
+                            <input type="checkbox" name="proposals[]" value="theodoica" onchange="updateProposalSections()" class="rounded text-amber-600 focus:ring-amber-500">
                             <span>Theo dõi thêm trong ca làm việc</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="proposals[]" value="danhgialai" class="rounded text-amber-600 focus:ring-amber-500">
+                            <input type="checkbox" name="proposals[]" value="danhgialai" onchange="updateProposalSections()" class="rounded text-amber-600 focus:ring-amber-500">
                             <span>Đánh giá lại</span>
                         </label>
                     </div>
+                    <?php echo $__env->make('components.assessment-improvement-details', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                 </div>
 
                 <!-- Nút bấm gửi -->
@@ -361,6 +377,7 @@
 
 <script>
     function openScoringModal(id, staffName, standardName) {
+        document.getElementById('scoringForm').reset();
         document.getElementById('modalAssessmentId').value = id;
         document.getElementById('modalStaffName').innerText = staffName;
         document.getElementById('modalStandard').innerText = standardName || 'Tiêu chuẩn năng lực';
@@ -403,6 +420,7 @@
         const badge = document.getElementById('passBadge');
         const improvementSection = document.getElementById('improvementSection');
         const submitBtn = document.getElementById('submitBtn');
+        improvementSection.dataset.passed = String(isPassed);
 
         if (isPassed) {
             badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800';
@@ -419,7 +437,61 @@
             submitBtn.innerText = 'Gửi đề xuất xử lý';
             submitBtn.className = 'px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-sm font-medium transition shadow-sm';
         }
+        updateProposalSections();
     }
+
+    function updateProposalSections() {
+        const failed = document.getElementById('improvementSection').dataset.passed === 'false';
+        const checkboxes = [...document.querySelectorAll('#scoringForm input[name="proposals[]"]')];
+        checkboxes.forEach(input => { input.disabled = !failed; });
+        checkboxes[0].setCustomValidity(failed && !checkboxes.some(input => input.checked) ? 'Vui lòng chọn ít nhất một đề xuất xử lý.' : '');
+        document.querySelectorAll('[data-proposal]').forEach(section => {
+            const enabled = failed && checkboxes.some(input => input.checked && input.value === section.dataset.proposal);
+            section.disabled = !enabled;
+            section.classList.toggle('hidden', !enabled);
+            section.querySelectorAll('[data-required]').forEach(input => { input.required = enabled; });
+        });
+        filterProposalLessons();
+        updateObservationRequirement();
+    }
+
+    function filterProposalLessons() {
+        const courseId = document.getElementById('proposalCourse').value;
+        [...document.getElementById('proposalLessons').options].forEach(option => {
+            const matches = option.dataset.course === courseId;
+            option.hidden = !matches;
+            option.disabled = !matches;
+            if (!matches) option.selected = false;
+        });
+    }
+
+    function updateObservationRequirement() {
+        const section = document.querySelector('[data-proposal="theodoica"]');
+        const shifts = document.getElementById('observationShifts');
+        const date = document.getElementById('observationDate');
+        shifts.required = !section.disabled && !date.value;
+        date.required = !section.disabled && !shifts.value;
+    }
+
+    <?php if($errors->any() && old('assessment_id')): ?>
+        <?php ($retryAssessment = $schedules->firstWhere('id', old('assessment_id'))); ?>
+        openScoringModal(<?php echo json_encode(old('assessment_id'), 15, 512) ?>, <?php echo json_encode($retryAssessment->staff_name ?? '', 15, 512) ?>, <?php echo json_encode($retryAssessment->tiêu_chuẩn ?? '', 15, 512) ?>);
+        const previousInput = <?php echo json_encode(session()->getOldInput(), 15, 512) ?>;
+        function restoreScoringInput(name, value) {
+            if (value && typeof value === 'object' && !Array.isArray(value)) {
+                Object.entries(value).forEach(([key, item]) => restoreScoringInput(name ? `${name}[${key}]` : key, item));
+                return;
+            }
+            const controls = [...document.getElementById('scoringForm').elements].filter(input => input.name === name + (Array.isArray(value) ? '[]' : ''));
+            controls.forEach(input => {
+                if (input.type === 'checkbox') input.checked = (value || []).map(String).includes(input.value);
+                else if (input.multiple) [...input.options].forEach(option => { option.selected = (value || []).map(String).includes(option.value); });
+                else input.value = value ?? '';
+            });
+        }
+        restoreScoringInput('', previousInput);
+        calculateTotalScore();
+    <?php endif; ?>
 
     function filterScheduleTable() {
         const input = document.getElementById('tableSearchInput').value.toLowerCase();
@@ -436,4 +508,5 @@
     }
 </script>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\wamp64\Brewlearn\resources\views/leader/dashboard.blade.php ENDPATH**/ ?>

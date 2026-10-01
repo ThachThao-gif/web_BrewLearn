@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\Rule;
 
 class LeaderEvaluationController extends Controller
 {
@@ -65,14 +66,19 @@ class LeaderEvaluationController extends Controller
                 'danh_gia_nang_luc.MaCTDT',
                 'danh_gia_nang_luc.NgayHen',
                 'danh_gia_nang_luc.TrangThai',
-                'danh_gia_nang_luc.Diem'
+                'danh_gia_nang_luc.Diem',
+                'danh_gia_nang_luc.ChiTietDeXuat'
             )
             ->where('danh_gia_nang_luc.user_id', '!=', $currentUserId)
             ->whereIn('danh_gia_nang_luc.TrangThai', ['ChoDanhGia', 'ChoPheDuyet', 'DaDuyet', 'HoanThanh'])
             ->orderBy('danh_gia_nang_luc.NgayHen', 'asc')
             ->get();
 
-        return view('leader.dashboard', compact('staffs', 'standards', 'schedules', 'dueStaffs'));
+        $proposalOwners = User::orderBy('name')->get(['id', 'name']);
+        $proposalCourses = DB::table('chuong_trinh_dao_tao')->orderBy('MaCTDT')->get(['MaCTDT', 'TenCTDT']);
+        $proposalLessons = DB::table('bai_hoc')->orderBy('FK_MaCTDT')->orderBy('ThuTu')->get(['MaBaiHoc', 'FK_MaCTDT', 'TenBaiHoc']);
+
+        return view('leader.dashboard', compact('staffs', 'standards', 'schedules', 'dueStaffs', 'proposalOwners', 'proposalCourses', 'proposalLessons'));
     }
 
     /**
@@ -279,14 +285,15 @@ class LeaderEvaluationController extends Controller
     public function saveScore(Request $request): RedirectResponse
     {
         $request->validate([
-            'assessment_id' => 'required',
+            'assessment_id' => 'required|integer|exists:danh_gia_nang_luc,id',
             'diem_nghiep_vu' => 'required|numeric|min:0|max:100',
             'diem_ky_nang' => 'required|numeric|min:0|max:100',
             'diem_quy_trinh' => 'required|numeric|min:0|max:100',
             'diem_phuc_vu' => 'required|numeric|min:0|max:100',
             'diem_tac_phong' => 'required|numeric|min:0|max:100',
-            'comment' => 'nullable|string',
+            'comment' => 'nullable|string|max:5000',
             'proposals' => 'nullable|array',
+            'proposals.*' => 'required|distinct|in:daotaobosung,hoclaibaihoc,theodoica,danhgialai',
         ]);
 
         $nv = (float) $request->diem_nghiep_vu;
@@ -299,6 +306,77 @@ class LeaderEvaluationController extends Controller
         $diemTong = round(($nv * 0.20) + ($kn * 0.30) + ($qt * 0.20) + ($pv * 0.15) + ($tp * 0.15), 1);
         $allCriteriaPassed = ($nv >= 70 && $kn >= 70 && $qt >= 70 && $pv >= 70 && $tp >= 70);
         $isPassed = ($diemTong >= 80) && $allCriteriaPassed;
+
+        $proposalDetails = [];
+        if (! $isPassed) {
+            $request->validate(['proposals' => 'required|array|min:1'], [
+                'proposals.required' => 'Nhân viên chưa đạt: vui lòng chọn ít nhất một đề xuất xử lý.',
+            ]);
+            $rules = [];
+            foreach ($request->input('proposals', []) as $proposal) {
+                $prefix = 'proposal_details.'.$proposal.'.';
+                $rules['proposal_details.'.$proposal] = 'required|array';
+                switch ($proposal) {
+                    case 'daotaobosung':
+                        $rules[$prefix.'skill'] = 'required|string|max:1000';
+                        $rules[$prefix.'instructions'] = 'required|string|max:3000';
+                        $rules[$prefix.'owner_id'] = 'required|integer|exists:users,id';
+                        break;
+                    case 'hoclaibaihoc':
+                        $rules[$prefix.'course_id'] = 'required|integer|exists:chuong_trinh_dao_tao,MaCTDT';
+                        $rules[$prefix.'lesson_ids'] = 'required|array|min:1';
+                        $rules[$prefix.'lesson_ids.*'] = [
+                            'required', 'integer', 'distinct',
+                            Rule::exists('bai_hoc', 'MaBaiHoc')->where('FK_MaCTDT', $request->input($prefix.'course_id')),
+                        ];
+                        break;
+                    case 'theodoica':
+                        $rules[$prefix.'behavior'] = 'required|string|max:3000';
+                        $rules[$prefix.'shift_count'] = 'nullable|required_without:'.$prefix.'until_date|integer|min:1|max:90';
+                        $rules[$prefix.'until_date'] = 'nullable|required_without:'.$prefix.'shift_count|date_format:Y-m-d|after_or_equal:today';
+                        break;
+                    case 'danhgialai':
+                        $rules[$prefix.'assessment_date'] = 'required|date_format:Y-m-d|after_or_equal:today';
+                        $rules[$prefix.'assessor_id'] = 'required|integer|exists:users,id';
+                        $rules[$prefix.'criteria'] = 'required|array|min:1';
+                        $rules[$prefix.'criteria.*'] = 'required|distinct|in:nghiep_vu,ky_nang,quy_trinh,phuc_vu,tac_phong';
+                        break;
+                }
+            }
+            $fieldLabels = [
+                'skill' => 'kỹ năng cần cải thiện', 'instructions' => 'nội dung hướng dẫn',
+                'owner_id' => 'người phụ trách', 'course_id' => 'khóa học cần học lại',
+                'lesson_ids' => 'bài học cần học lại', 'lesson_ids.*' => 'bài học đã chọn',
+                'behavior' => 'hành vi cần quan sát', 'shift_count' => 'số ca theo dõi',
+                'until_date' => 'ngày kết thúc theo dõi', 'assessment_date' => 'ngày đánh giá lại',
+                'assessor_id' => 'người đánh giá lại', 'criteria' => 'tiêu chí cần kiểm tra lại',
+                'criteria.*' => 'tiêu chí đã chọn',
+            ];
+            $attributes = [];
+            foreach ($rules as $field => $rule) {
+                $attributes[$field] = $fieldLabels[preg_replace('/^proposal_details\.[^.]+\./', '', $field)] ?? 'nội dung đề xuất';
+            }
+            $validatedDetails = $request->validate($rules, [
+                'required' => 'Vui lòng nhập :attribute.',
+                'required_without' => 'Vui lòng nhập số ca hoặc ngày kết thúc theo dõi.',
+                'exists' => ':attribute không hợp lệ hoặc không thuộc khóa học đã chọn.',
+                'after_or_equal' => ':attribute phải từ hôm nay trở đi.',
+                'in' => ':attribute không hợp lệ.',
+                'max' => ':attribute vượt quá giới hạn cho phép (:max).',
+                'min' => ':attribute phải có ít nhất :min.',
+            ], $attributes);
+            $allowedFields = [
+                'daotaobosung' => ['skill', 'instructions', 'owner_id'],
+                'hoclaibaihoc' => ['course_id', 'lesson_ids'],
+                'theodoica' => ['behavior', 'shift_count', 'until_date'],
+                'danhgialai' => ['assessment_date', 'assessor_id', 'criteria'],
+            ];
+            foreach ($request->input('proposals') as $proposal) {
+                $proposalDetails[$proposal] = array_intersect_key(
+                    $validatedDetails['proposal_details'][$proposal], array_flip($allowedFields[$proposal])
+                );
+            }
+        }
 
         $assessment = DB::table('danh_gia_nang_luc')->where('id', $request->assessment_id)->first();
 
@@ -330,9 +408,16 @@ class LeaderEvaluationController extends Controller
                 ]);
             }
 
-            if (! $isPassed && $request->has('proposals') && Schema::hasColumn('danh_gia_nang_luc', 'DeXuatXuLy')) {
-                $updateData['DeXuatXuLy'] = json_encode($request->proposals);
+            foreach (['Diem_NghiepVu' => $nv, 'Diem_KyNang' => $kn, 'Diem_QuyTrinh' => $qt, 'Diem_PhucVu' => $pv, 'Diem_TacPhong' => $tp] as $column => $score) {
+                if (Schema::hasColumn('danh_gia_nang_luc', $column)) {
+                    $updateData[$column] = $score;
+                }
             }
+            $updateData['DeXuatXuLy'] = $isPassed ? null : json_encode($request->input('proposals'), JSON_UNESCAPED_UNICODE);
+            $updateData['ChiTietDeXuat'] = $isPassed ? null : json_encode([
+                'source' => 'Trưởng ca đề xuất', 'proposed_by' => Auth::id(),
+                'status' => 'ChoPheDuyet', 'details' => $proposalDetails,
+            ], JSON_UNESCAPED_UNICODE);
 
             // 2. Cập nhật bảng kết quả
             DB::table('danh_gia_nang_luc')
