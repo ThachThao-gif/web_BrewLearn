@@ -43,6 +43,25 @@
         ::-webkit-scrollbar-thumb { background: #D5C5B3; border-radius: 9999px; }
         ::-webkit-scrollbar-thumb:hover { background: #A88764; }
         .smooth-transition { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        #sidebar { width: var(--sidebar-width, 288px); height: 100vh; height: 100dvh; overflow: hidden; transition: width .25s ease, transform .25s ease; }
+        #sidebarResizeHandle { display: none; }
+        body.sidebar-resizing { cursor: col-resize; user-select: none; }
+        body.sidebar-resizing #sidebar { transition: none; }
+        @media (min-width: 768px) {
+            #sidebar { position: fixed; top: 0; transform: none; }
+            #mainContent { margin-left: var(--sidebar-width, 288px); transition: margin-left .25s ease; }
+            body.sidebar-collapsed #mainContent { margin-left: 0; }
+            body.sidebar-resizing #mainContent { transition: none; }
+            #sidebarResizeHandle { display: block; }
+            #sidebar.sidebar-collapsed { width: 0; overflow: hidden; border-width: 0; visibility: hidden; }
+        }
+        @media (max-width: 767px) {
+            #sidebar { width: min(var(--sidebar-width, 288px), 85vw); transform: translateX(-100%); }
+            #sidebar.mobile-open { transform: translateX(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #sidebar { transition: none; }
+        }
     </style>
     <!-- Nhúng Alpine.js để xử lý Modal Bật Ra -->
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -67,7 +86,7 @@
     <aside id="sidebar" class="w-72 bg-[#FAF7F2] border-r border-[#E8DFC8] flex flex-col justify-between shrink-0 fixed md:static inset-y-0 left-0 z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out h-screen">
         
         <!-- PHẦN ĐỈNH + DANH SÁCH MENU -->
-        <div class="flex-1 overflow-y-auto">
+        <div class="flex-1 min-h-0 overflow-y-auto overscroll-contain">
             <!-- LOGO AREA -->
             <div class="px-6 py-5 flex items-center justify-between border-b border-[#E8DFC8]/50 sticky top-0 bg-[#FAF7F2] z-10">
                 <a href="{{ route('dashboard') }}" class="flex items-center space-x-3">
@@ -79,7 +98,7 @@
                         <span class="text-[10px] font-bold uppercase tracking-wider text-coffee-600 block mt-1">Academy & SOP System</span>
                     </div>
                 </a>
-                <button onclick="toggleSidebar()" class="md:hidden text-slate-500 hover:text-slate-800 p-1">
+                <button type="button" onclick="toggleSidebar()" aria-label="Ẩn menu" title="Ẩn menu" class="text-slate-500 hover:text-slate-800 p-1 shrink-0">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
@@ -90,6 +109,8 @@
                 <!-- 1. CHỈ HIỂN THỊ CHO TRƯỞNG CA -->
 @if($isLeader)
     <div>
+        <h3 class="px-3 text-[11px] font-bold uppercase tracking-wider text-coffee-500 mb-2">Quản lý nhân viên</h3>
+        <nav class="space-y-1">
             <a href="{{ route('leader.staffList') }}" 
                class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('leader.staffList') ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm font-semibold' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }}">
                 <i class="fa-solid fa-id-card w-5 text-center text-slate-500"></i>
@@ -114,6 +135,21 @@
                class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-red-700 hover:bg-red-50/80 transition border border-transparent hover:border-red-100">
                 <i class="fa-solid fa-triangle-exclamation w-5 text-center text-red-500"></i>
                 <span>Ghi Nhận Lỗi & Sự Cố</span>
+            </a>
+        </nav>
+    </div>
+    <div>
+        <h3 class="px-3 text-[11px] font-bold uppercase tracking-wider text-coffee-500 mb-2">Học tập & kiểm tra của tôi</h3>
+        <nav class="space-y-1">
+            <a href="{{ route('courses.index') }}"
+               class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('courses.*', 'lessons.*') ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }} transition">
+                <i class="fa-solid fa-book-open w-5 text-center {{ request()->routeIs('courses.*', 'lessons.*') ? 'text-coffee-800' : 'text-slate-500' }}"></i>
+                <span>Khóa học & Bài giảng</span>
+            </a>
+            <a href="{{ route('tests.index') }}"
+               class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('tests.*') ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }} transition">
+                <i class="fa-solid fa-clipboard-check w-5 text-center {{ request()->routeIs('tests.*') ? 'text-coffee-800' : 'text-slate-500' }}"></i>
+                <span>Kiểm tra của tôi</span>
             </a>
         </nav>
     </div>
@@ -194,8 +230,11 @@
     </nav>
 </div>
 
+            </div>
+        </div>
+
        <!-- THẺ CÁ NHÂN CỦA USER Ở ĐÁY SIDEBAR -->
-        <div class="p-4 border-t border-[#E8DFC8] bg-[#FAF7F2]">
+        <div class="shrink-0 p-4 border-t border-[#E8DFC8] bg-[#FAF7F2]">
             <div class="bg-[#EFE7DA]/80 border border-[#E2D4C1] rounded-2xl p-3 flex items-center justify-between gap-2 shadow-sm">
                 <div class="flex items-center space-x-2.5 min-w-0">
                     <div class="w-9 h-9 rounded-full bg-amber_brand text-white flex items-center justify-center font-extrabold text-xs shrink-0 shadow">
@@ -216,16 +255,17 @@
                 </span>
             </div>
         </div>
+        <div id="sidebarResizeHandle" role="separator" tabindex="0" aria-label="Thay đổi độ rộng menu" aria-orientation="vertical" aria-valuemin="240" aria-valuemax="420" aria-valuenow="288" title="Kéo để thay đổi độ rộng menu; dùng phím mũi tên trái/phải" class="absolute right-0 top-0 bottom-0 w-2 cursor-col-resize touch-none hover:bg-coffee-300 focus:bg-coffee-300 focus:outline-none"></div>
     </aside>
 
     <!-- MAIN CONTENT WRAPPER -->
-    <div class="flex-1 flex flex-col min-w-0 min-h-screen">
+    <div id="mainContent" class="flex-1 flex flex-col min-w-0 min-h-screen">
         <!-- TOPBAR HEADER -->
         <header class="bg-[#FAF7F2]/90 backdrop-blur-md sticky top-0 z-20 border-b border-[#E8DFC8] px-4 md:px-8 py-3.5 flex items-center justify-between gap-4 w-full">
             
             <!-- BÊN TRÁI: Nút Mobile + Chi nhánh + Ô tìm kiếm -->
             <div class="flex items-center gap-3 flex-1 max-w-2xl">
-                <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg bg-[#EFE7DA] text-coffee-800 hover:bg-[#E5D8C5] shrink-0">
+                <button id="sidebarToggle" type="button" onclick="toggleSidebar()" aria-controls="sidebar" aria-expanded="true" aria-label="Ẩn menu" title="Ẩn menu" class="p-2 rounded-lg bg-[#EFE7DA] text-coffee-800 hover:bg-[#E5D8C5] shrink-0">
                     <i class="fa-solid fa-bars"></i>
                 </button>
                 
@@ -627,15 +667,112 @@
     }
 </script>
 
-    <!-- JAVASCRIPT LOGIC -->
-    <script>
-        function toggleSidebar() {
+    <script id="sidebarControls">
+        (() => {
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('sidebarBackdrop');
-            sidebar.classList.toggle('-translate-x-full');
-            backdrop.classList.toggle('hidden');
-        }
+            const toggle = document.getElementById('sidebarToggle');
+            const handle = document.getElementById('sidebarResizeHandle');
+            const desktop = window.matchMedia('(min-width: 768px)');
+            let width = 288;
+            let collapsed = false;
+            let mobileOpen = false;
+            let drag = null;
 
+            try {
+                const saved = JSON.parse(localStorage.getItem('brewlearn.sidebar') || 'null');
+                if (saved && Number.isFinite(saved.width)) width = saved.width;
+                collapsed = saved?.collapsed === true;
+            } catch (_) {}
+
+            function maxWidth() {
+                return Math.max(240, Math.min(420, Math.floor(window.innerWidth * 0.45)));
+            }
+
+            function render() {
+                const visibleWidth = Math.max(240, Math.min(maxWidth(), width));
+                const open = desktop.matches ? !collapsed : mobileOpen;
+                sidebar.style.setProperty('--sidebar-width', `${visibleWidth}px`);
+                document.body.style.setProperty('--sidebar-width', `${visibleWidth}px`);
+                document.body.classList.toggle('sidebar-collapsed', collapsed);
+                sidebar.classList.toggle('sidebar-collapsed', collapsed);
+                sidebar.classList.toggle('mobile-open', mobileOpen);
+                sidebar.inert = !open;
+                sidebar.setAttribute('aria-hidden', String(!open));
+                backdrop.classList.toggle('hidden', desktop.matches || !mobileOpen);
+                toggle.setAttribute('aria-expanded', String(open));
+                toggle.setAttribute('aria-label', open ? 'Ẩn menu' : 'Hiện menu');
+                toggle.title = open ? 'Ẩn menu' : 'Hiện menu';
+                handle.setAttribute('aria-valuenow', String(visibleWidth));
+                handle.setAttribute('aria-valuemax', String(maxWidth()));
+            }
+
+            function save() {
+                try {
+                    localStorage.setItem('brewlearn.sidebar', JSON.stringify({ width, collapsed }));
+                } catch (_) {}
+            }
+
+            window.toggleSidebar = function () {
+                if (desktop.matches) {
+                    collapsed = !collapsed;
+                    save();
+                } else {
+                    mobileOpen = !mobileOpen;
+                }
+                if (desktop.matches ? collapsed : !mobileOpen) toggle.focus();
+                render();
+            };
+
+            handle.addEventListener('pointerdown', event => {
+                if (!desktop.matches || event.button !== 0) return;
+                event.preventDefault();
+                drag = { x: event.clientX, width: sidebar.getBoundingClientRect().width };
+                handle.setPointerCapture(event.pointerId);
+                document.body.classList.add('sidebar-resizing');
+            });
+
+            handle.addEventListener('pointermove', event => {
+                if (!drag) return;
+                width = Math.max(240, Math.min(maxWidth(), drag.width + event.clientX - drag.x));
+                render();
+            });
+
+            function finishDrag() {
+                if (!drag) return;
+                drag = null;
+                document.body.classList.remove('sidebar-resizing');
+                save();
+            }
+
+            handle.addEventListener('pointerup', finishDrag);
+            handle.addEventListener('pointercancel', finishDrag);
+            handle.addEventListener('lostpointercapture', finishDrag);
+            handle.addEventListener('keydown', event => {
+                if (!desktop.matches || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+                event.preventDefault();
+                const currentWidth = sidebar.getBoundingClientRect().width;
+                width = event.key === 'Home' ? 240 : event.key === 'End' ? maxWidth()
+                    : Math.max(240, Math.min(maxWidth(), currentWidth + (event.key === 'ArrowRight' ? 16 : -16)));
+                render();
+                save();
+            });
+
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape' && !desktop.matches && mobileOpen) window.toggleSidebar();
+            });
+            window.addEventListener('resize', render);
+            desktop.addEventListener('change', () => {
+                finishDrag();
+                mobileOpen = false;
+                render();
+            });
+            render();
+        })();
+    </script>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
         function toggleStoreDropdown() {
             document.getElementById('storeDropdown').classList.toggle('hidden');
         }

@@ -122,7 +122,7 @@
                 $progress         = $staff->overall_progress ?? 0;
 
                 // 2. TÍNH TOÁN QUIZ
-                $quizScore        = $staff->quiz_latest_score ?? 0;
+                $quizScore        = $staff->theory_score;
                 $quizAttempts     = $staff->quiz_attempts_count ?? 1;
                 $quizFailed       = $staff->quiz_failed_count ?? 0;
 
@@ -133,7 +133,8 @@
                 $staffPhone       = $staff->phone ?? $staff->SoDienThoai ?? 'Chưa cập nhật';
                 $staffEmail       = $staff->email ?? 'N/A';
                 $staffTram        = $staff->tram_lam_viec ?? $staff->Tram ?? 'Quầy Bar';
-                $rubricScore      = round((float) ($staff->RubricScore ?? $staff->rubric_score ?? 0), 1);
+                $assessmentScore  = $staff->assessment_score;
+                $assessmentStatus = $staff->assessment_status;
 
                 // 4. LOGIC SÁT HẠCH
                 $startDate        = $staff->joined_at ?? $staff->created_at ?? null;
@@ -184,12 +185,22 @@
                     <!-- Điểm số -->
                     <div class="lg:col-span-3 grid grid-cols-2 gap-2 text-center">
                         <div class="bg-slate-50 border border-slate-200 p-2 rounded-xl">
-                            <span class="text-[10px] font-bold text-slate-500 block">Lý thuyết Quiz</span>
-                            <span class="text-base font-black text-coffee-900"><?php echo e($quizScore); ?>/100</span>
+                            <span class="text-[10px] font-bold text-slate-500 block">Kiểm tra lý thuyết</span>
+                            <?php if($quizScore !== null): ?>
+                                <span class="text-base font-black text-coffee-900"><?php echo e($quizScore); ?>/100</span>
+                                <span class="text-[10px] text-slate-500 block">Lần gần nhất</span>
+                            <?php else: ?>
+                                <span class="text-xs font-semibold text-slate-500">Chưa làm bài</span>
+                            <?php endif; ?>
                         </div>
                         <div class="bg-slate-50 border border-slate-200 p-2 rounded-xl">
-                            <span class="text-[10px] font-bold text-slate-500 block">Đánh Giá Rubric</span>
-                            <span class="text-base font-black text-coffee-900"><?php echo e($rubricScore); ?>/10</span>
+                            <span class="text-[10px] font-bold text-slate-500 block">Đánh giá năng lực</span>
+                            <?php if($assessmentScore !== null): ?>
+                                <span class="text-base font-black text-coffee-900"><?php echo e($assessmentScore); ?>/100</span>
+                                <span class="text-[10px] font-semibold block <?php echo e($assessmentStatus === 'Đạt' ? 'text-emerald-700' : ($assessmentStatus === 'Chưa đạt' ? 'text-red-700' : 'text-amber-700')); ?>"><?php echo e($assessmentStatus); ?></span>
+                            <?php else: ?>
+                                <span class="text-xs font-semibold text-slate-500">Chưa đánh giá</span>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -396,4 +407,5 @@ function closeStaffDetail() {
 }
 </script>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\wamp64\Brewlearn\resources\views/leader/staff_list.blade.php ENDPATH**/ ?>

@@ -1,0 +1,1 @@
+<?php /**PATH D:\wamp64\Brewlearn\resources\views\area\dashboard.blade.php ENDPATH**/ ?>

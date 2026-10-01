@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Schema;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Carbon\Carbon;
-use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class LeaderEvaluationController extends Controller
 {
@@ -19,9 +19,9 @@ class LeaderEvaluationController extends Controller
     private function getStandardList()
     {
         return collect([
-            (object)['MaCTDT' => 'STD_BARISTA', 'TenCTDT' => 'Tiêu chuẩn năng lực Barista'],
-            (object)['MaCTDT' => 'STD_CASHIER', 'TenCTDT' => 'Tiêu chuẩn năng lực Thu ngân'],
-            (object)['MaCTDT' => 'STD_SERVER',  'TenCTDT' => 'Tiêu chuẩn năng lực Phục vụ'],
+            (object) ['MaCTDT' => 'STD_BARISTA', 'TenCTDT' => 'Tiêu chuẩn năng lực Barista'],
+            (object) ['MaCTDT' => 'STD_CASHIER', 'TenCTDT' => 'Tiêu chuẩn năng lực Thu ngân'],
+            (object) ['MaCTDT' => 'STD_SERVER',  'TenCTDT' => 'Tiêu chuẩn năng lực Phục vụ'],
         ]);
     }
 
@@ -46,6 +46,7 @@ class LeaderEvaluationController extends Controller
             ->map(function ($staff) {
                 $staff->days_worked = Carbon::parse($staff->joined_at)->diffInDays(now());
                 $staff->joined_date_formatted = Carbon::parse($staff->joined_at)->format('d/m/Y');
+
                 return $staff;
             });
 
@@ -80,31 +81,31 @@ class LeaderEvaluationController extends Controller
     public function createSchedule(Request $request): RedirectResponse
     {
         $request->validate([
-            'user_id'     => 'required|exists:users,id',
-            'MaCTDT'      => 'required',
+            'user_id' => 'required|exists:users,id',
+            'MaCTDT' => 'required',
             'NgayDanhGia' => 'required',
-            'note'        => 'nullable|string|max:2000',
+            'note' => 'nullable|string|max:2000',
         ], [
-            'user_id.required'     => 'Vui lòng chọn nhân viên.',
-            'user_id.exists'       => 'Nhân viên được chọn không hợp lệ.',
-            'MaCTDT.required'      => 'Vui lòng chọn tiêu chuẩn đánh giá.',
+            'user_id.required' => 'Vui lòng chọn nhân viên.',
+            'user_id.exists' => 'Nhân viên được chọn không hợp lệ.',
+            'MaCTDT.required' => 'Vui lòng chọn tiêu chuẩn đánh giá.',
             'NgayDanhGia.required' => 'Vui lòng chọn thời gian đánh giá.',
         ]);
 
         $standardMap = [
             'STD_BARISTA' => 'Tiêu chuẩn năng lực Barista',
             'STD_CASHIER' => 'Tiêu chuẩn năng lực Thu ngân',
-            'STD_SERVER'  => 'Tiêu chuẩn năng lực Phục vụ',
+            'STD_SERVER' => 'Tiêu chuẩn năng lực Phục vụ',
         ];
 
         $tieuChuanTen = $standardMap[$request->MaCTDT] ?? ($request->MaCTDT ?: 'Tiêu chuẩn năng lực Barista');
         $maCTDT_Value = is_numeric($request->MaCTDT) ? $request->MaCTDT : null;
-        $ghiChuText   = $request->input('note') ?? $request->input('ghi_chu') ?? $request->input('comment');
+        $ghiChuText = $request->input('note') ?? $request->input('ghi_chu') ?? $request->input('comment');
 
         // Tạo nội dung thông báo chuẩn hóa
-        $messageContent = "Bạn có lịch sát hạch '$tieuChuanTen' vào lúc " . Carbon::parse($request->NgayDanhGia)->format('H:i d/m/Y') . ".";
-        if (!empty(trim($ghiChuText))) {
-            $messageContent .= "\n\nLời dặn từ Trưởng ca: " . trim($ghiChuText);
+        $messageContent = "Bạn có lịch sát hạch '$tieuChuanTen' vào lúc ".Carbon::parse($request->NgayDanhGia)->format('H:i d/m/Y').'.';
+        if (! empty(trim($ghiChuText))) {
+            $messageContent .= "\n\nLời dặn từ Trưởng ca: ".trim($ghiChuText);
         }
 
         DB::beginTransaction();
@@ -114,32 +115,34 @@ class LeaderEvaluationController extends Controller
 
             // 1. Lưu bản ghi lịch sát hạch cho 1 cá nhân
             DB::table('danh_gia_nang_luc')->insert([
-                'user_id'         => $request->user_id,
+                'user_id' => $request->user_id,
                 'NguoiDanhGia_id' => $leaderId,
-                'MaCTDT'          => $maCTDT_Value,
-                'TieuChuan'       => $tieuChuanTen,
-                'NgayHen'         => $request->NgayDanhGia,
-                'TrangThai'       => 'ChoDanhGia',
-                'created_at'      => $now,
-                'updated_at'      => $now,
+                'MaCTDT' => $maCTDT_Value,
+                'TieuChuan' => $tieuChuanTen,
+                'NgayHen' => $request->NgayDanhGia,
+                'TrangThai' => 'ChoDanhGia',
+                'created_at' => $now,
+                'updated_at' => $now,
             ]);
 
             // 2. Bắn thông báo cho nhân viên đó
             DB::table('notifications')->insert([
-                'user_id'    => $request->user_id,
-                'title'      => 'Lịch sát hạch năng lực mới từ Trưởng ca',
-                'message'    => $messageContent,
-                'type'       => 'schedule',
-                'is_read'    => 0,
+                'user_id' => $request->user_id,
+                'title' => 'Lịch sát hạch năng lực mới từ Trưởng ca',
+                'message' => $messageContent,
+                'type' => 'schedule',
+                'is_read' => 0,
                 'created_at' => $now,
                 'updated_at' => $now,
             ]);
 
             DB::commit();
+
             return redirect()->back()->with('success', 'Đã xếp lịch và phát thông báo tới nhân viên thành công!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Có lỗi xảy ra khi tạo lịch sát hạch: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Có lỗi xảy ra khi tạo lịch sát hạch: '.$e->getMessage());
         }
     }
 
@@ -158,23 +161,23 @@ class LeaderEvaluationController extends Controller
         // Kiểm tra nếu chọn 1 người cụ thể thì phải tồn tại trong bảng users
         if ($request->user_id !== 'all') {
             $userExists = DB::table('users')->where('id', $request->user_id)->exists();
-            if (!$userExists) {
+            if (! $userExists) {
                 return redirect()->back()->with('error', 'Nhân viên được chọn không tồn tại.');
             }
         }
 
         // 1. Nhận linh hoạt mọi dạng biến Tiêu đề gửi lên
-        $title = $request->input('title') 
-              ?? $request->input('tieu_de') 
+        $title = $request->input('title')
+              ?? $request->input('tieu_de')
               ?? 'Thông báo từ Trưởng ca';
-        
+
         // 2. Nhận linh hoạt mọi dạng biến Nội dung từ Form Modal
-        $message = $request->input('message') 
-                ?? $request->input('content') 
-                ?? $request->input('noi_dung') 
-                ?? $request->input('note') 
+        $message = $request->input('message')
+                ?? $request->input('content')
+                ?? $request->input('noi_dung')
+                ?? $request->input('note')
                 ?? $request->input('description')
-                ?? $request->input('comment') 
+                ?? $request->input('comment')
                 ?? 'Thông báo mới từ Trưởng ca.';
 
         DB::beginTransaction();
@@ -191,11 +194,11 @@ class LeaderEvaluationController extends Controller
 
             foreach ($targetUserIds as $userId) {
                 $notificationsToInsert[] = [
-                    'user_id'    => $userId,
-                    'title'      => trim($title),
-                    'message'    => trim($message),
-                    'type'       => 'general', // Phân loại thông báo chung (Màu xanh)
-                    'is_read'    => 0,
+                    'user_id' => $userId,
+                    'title' => trim($title),
+                    'message' => trim($message),
+                    'type' => 'general', // Phân loại thông báo chung (Màu xanh)
+                    'is_read' => 0,
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];
@@ -212,7 +215,8 @@ class LeaderEvaluationController extends Controller
             return redirect()->back()->with('success', $successMsg);
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Lỗi khi gửi thông báo: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Lỗi khi gửi thông báo: '.$e->getMessage());
         }
     }
 
@@ -226,43 +230,45 @@ class LeaderEvaluationController extends Controller
             'user_id' => 'required|exists:users,id',
         ], [
             'user_id.required' => 'Vui lòng chọn nhân viên vi phạm.',
-            'user_id.exists'   => 'Nhân viên được chọn không hợp lệ.',
+            'user_id.exists' => 'Nhân viên được chọn không hợp lệ.',
         ]);
 
         // Đón nhận linh hoạt mọi biến nội dung ghi nhận từ Modal
         $noiDung = $request->input('description')
                 ?? $request->input('incident_description')
                 ?? $request->input('reason')
-                ?? $request->input('content') 
-                ?? $request->input('message') 
-                ?? $request->input('noi_dung') 
-                ?? $request->input('note') 
-                ?? $request->input('comment') 
+                ?? $request->input('content')
+                ?? $request->input('message')
+                ?? $request->input('noi_dung')
+                ?? $request->input('note')
+                ?? $request->input('comment')
                 ?? 'Nhắc nhở vi phạm quy trình ca làm việc.';
 
-        $loaiLoi = $request->input('loai_loi') 
-                ?? $request->input('incident_type') 
-                ?? $request->input('type') 
+        $loaiLoi = $request->input('loai_loi')
+                ?? $request->input('incident_type')
+                ?? $request->input('type')
                 ?? 'Vận hành quầy bar';
 
         DB::beginTransaction();
         try {
             // Thêm bản ghi vào bảng notifications với type = 'warning'
             DB::table('notifications')->insert([
-                'user_id'    => $request->user_id,
-                'title'      => 'Nhắc nhở sự cố: ' . $loaiLoi,
-                'message'    => trim($noiDung),
-                'type'       => 'warning',
-                'is_read'    => 0,
+                'user_id' => $request->user_id,
+                'title' => 'Nhắc nhở sự cố: '.$loaiLoi,
+                'message' => trim($noiDung),
+                'type' => 'warning',
+                'is_read' => 0,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
 
             DB::commit();
+
             return redirect()->back()->with('success', 'Đã ghi nhận sự cố và gửi nhắc nhở cho nhân viên thành công!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Có lỗi xảy ra: '.$e->getMessage());
         }
     }
 
@@ -272,14 +278,14 @@ class LeaderEvaluationController extends Controller
     public function saveScore(Request $request): RedirectResponse
     {
         $request->validate([
-            'assessment_id'  => 'required',
+            'assessment_id' => 'required',
             'diem_nghiep_vu' => 'required|numeric|min:0|max:100',
-            'diem_ky_nang'   => 'required|numeric|min:0|max:100',
-            'diem_quy_trinh'  => 'required|numeric|min:0|max:100',
-            'diem_phuc_vu'   => 'required|numeric|min:0|max:100',
+            'diem_ky_nang' => 'required|numeric|min:0|max:100',
+            'diem_quy_trinh' => 'required|numeric|min:0|max:100',
+            'diem_phuc_vu' => 'required|numeric|min:0|max:100',
             'diem_tac_phong' => 'required|numeric|min:0|max:100',
-            'comment'        => 'nullable|string',
-            'proposals'      => 'nullable|array',
+            'comment' => 'nullable|string',
+            'proposals' => 'nullable|array',
         ]);
 
         $nv = (float) $request->diem_nghiep_vu;
@@ -295,7 +301,7 @@ class LeaderEvaluationController extends Controller
 
         $assessment = DB::table('danh_gia_nang_luc')->where('id', $request->assessment_id)->first();
 
-        if (!$assessment) {
+        if (! $assessment) {
             return redirect()->back()->with('error', 'Không tìm thấy hồ sơ đánh giá tương ứng!');
         }
 
@@ -303,9 +309,9 @@ class LeaderEvaluationController extends Controller
         try {
             // 1. Chuẩn bị dữ liệu cập nhật
             $updateData = [
-                'Diem'       => $diemTong,
-                'NhanXet'    => $request->comment,
-                'TrangThai'  => 'ChoPheDuyet',
+                'Diem' => $diemTong,
+                'NhanXet' => $request->comment,
+                'TrangThai' => 'ChoPheDuyet',
                 'updated_at' => now(),
             ];
 
@@ -316,14 +322,14 @@ class LeaderEvaluationController extends Controller
             if (Schema::hasColumn('danh_gia_nang_luc', 'ChiTietDiem')) {
                 $updateData['ChiTietDiem'] = json_encode([
                     'nghiep_vu' => $nv,
-                    'ky_nang'   => $kn,
-                    'quy_trinh'  => $qt,
-                    'phuc_vu'   => $pv,
-                    'tac_phong'  => $tp,
+                    'ky_nang' => $kn,
+                    'quy_trinh' => $qt,
+                    'phuc_vu' => $pv,
+                    'tac_phong' => $tp,
                 ]);
             }
 
-            if (!$isPassed && $request->has('proposals') && Schema::hasColumn('danh_gia_nang_luc', 'DeXuatXuLy')) {
+            if (! $isPassed && $request->has('proposals') && Schema::hasColumn('danh_gia_nang_luc', 'DeXuatXuLy')) {
                 $updateData['DeXuatXuLy'] = json_encode($request->proposals);
             }
 
@@ -334,33 +340,40 @@ class LeaderEvaluationController extends Controller
 
             // 3. TỰ ĐỘNG BẮN THÔNG BÁO KẾT QUẢ CHO NHÂN VIÊN
             $resultStatusText = $isPassed ? 'ĐẠT' : 'CHƯA ĐẠT';
-            $notifMessage = "Trưởng ca đã hoàn tất chấm điểm bài đánh giá của bạn.\n" .
-                            "- Điểm tổng kết: {$diemTong}/100 ({$resultStatusText})\n";
+            $notifMessage = "Trưởng ca đã hoàn tất chấm điểm bài đánh giá của bạn.\n".
+                            "- Điểm tổng kết: {$diemTong}/100 ({$resultStatusText})\n\n".
+                            "Điểm chi tiết các tiêu chí:\n".
+                            "- Kiến thức nghiệp vụ: {$nv}/100\n".
+                            "- Thao tác công việc: {$kn}/100\n".
+                            "- Tuân thủ quy trình: {$qt}/100\n".
+                            "- Thái độ phục vụ: {$pv}/100\n".
+                            "- Tác phong & phối hợp: {$tp}/100\n";
 
-            if (!empty($request->comment)) {
-                $notifMessage .= "- Nhận xét: " . $request->comment;
+            if (! empty($request->comment)) {
+                $notifMessage .= "\nNhận xét của trưởng ca: ".$request->comment;
             }
 
             DB::table('notifications')->insert([
-                'user_id'    => $assessment->user_id,
-                'title'      => "Kết quả đánh giá năng lực: {$resultStatusText}",
-                'message'    => $notifMessage,
-                'type'       => 'general',
-                'is_read'    => 0,
+                'user_id' => $assessment->user_id,
+                'title' => "Kết quả đánh giá năng lực: {$resultStatusText}",
+                'message' => $notifMessage,
+                'type' => 'general',
+                'is_read' => 0,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
 
             DB::commit();
 
-            $msg = $isPassed 
-                ? "Đã gửi kết quả đánh giá ĐẠT ({$diemTong}/100 điểm) cho Quản lý cửa hàng phê duyệt và thông báo tới nhân viên!" 
+            $msg = $isPassed
+                ? "Đã gửi kết quả đánh giá ĐẠT ({$diemTong}/100 điểm) cho Quản lý cửa hàng phê duyệt và thông báo tới nhân viên!"
                 : "Đã gửi đề xuất xử lý cho nhân viên CHƯA ĐẠT ({$diemTong}/100 điểm) tới Quản lý cửa hàng!";
 
             return redirect()->back()->with('success', $msg);
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Có lỗi xảy ra khi lưu kết quả: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Có lỗi xảy ra khi lưu kết quả: '.$e->getMessage());
         }
     }
 
@@ -374,14 +387,32 @@ class LeaderEvaluationController extends Controller
 
         $staffs = User::where('id', '!=', $currentUserId)->get();
 
+        $latestQuizResults = DB::table('ket_qua_kiem_tra')
+            ->whereIn('user_id', $staffs->modelKeys())
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->get()
+            ->unique('user_id')
+            ->keyBy('user_id');
+
+        $latestAssessments = DB::table('danh_gia_nang_luc')
+            ->whereIn('user_id', $staffs->modelKeys())
+            ->whereIn('TrangThai', ['ChoPheDuyet', 'DaDuyet', 'HoanThanh'])
+            ->whereNotNull('Diem')
+            ->orderByDesc('updated_at')
+            ->orderByDesc('id')
+            ->get()
+            ->unique('user_id')
+            ->keyBy('user_id');
+
         foreach ($staffs as $staff) {
             $userChucVu = $staff->ChucVu ?? $staff->chuc_vu ?? '';
             $cleanChucVu = mb_strtoupper(trim($userChucVu), 'UTF-8');
 
             $assignedCourses = DB::table('chuong_trinh_dao_tao')
                 ->where(function ($query) use ($cleanChucVu) {
-                    if (!empty($cleanChucVu)) {
-                        $query->whereRaw('UPPER(TRIM(ChucVuApDung)) LIKE ?', ['%' . $cleanChucVu . '%']);
+                    if (! empty($cleanChucVu)) {
+                        $query->whereRaw('UPPER(TRIM(ChucVuApDung)) LIKE ?', ['%'.$cleanChucVu.'%']);
                     }
                     $query->orWhereRaw('UPPER(TRIM(ChucVuApDung)) IN (?, ?, ?)', ['ALL STAFF', 'ALL', 'TẤT CẢ']);
                 })
@@ -402,7 +433,7 @@ class LeaderEvaluationController extends Controller
                     ->toArray();
 
                 $hasRealtimeProgress = false;
-                if (!empty($allLessons)) {
+                if (! empty($allLessons)) {
                     $hasRealtimeProgress = DB::table('user_lesson_progresses')
                         ->where('user_id', $staff->id)
                         ->whereIn('lesson_id', $allLessons)
@@ -415,7 +446,7 @@ class LeaderEvaluationController extends Controller
                         ->whereIn('lesson_id', $allLessons)
                         ->where(function ($q) {
                             $q->where('is_completed', 1)
-                              ->orWhere('progress_percent', '>=', 95);
+                                ->orWhere('progress_percent', '>=', 95);
                         })
                         ->count();
 
@@ -452,19 +483,39 @@ class LeaderEvaluationController extends Controller
                 }
             }
 
-            $staff->overall_progress = $totalCoursesCount > 0 
-                ? round($totalProgressSum / $totalCoursesCount, 1) 
+            $staff->overall_progress = $totalCoursesCount > 0
+                ? round($totalProgressSum / $totalCoursesCount, 1)
                 : 0;
 
             $staff->completed_courses_count = $completedCoursesCount;
             $staff->total_courses_count = $totalCoursesCount;
 
-            $staff->quiz_latest_score = round(
-                DB::table('ket_qua_kiem_tra')
-                    ->where('user_id', $staff->id)
-                    ->avg('Diem') ?? 0,
-                1
-            );
+            $quizResult = $latestQuizResults->get($staff->id);
+            $staff->theory_score = $quizResult ? round((float) $quizResult->Diem, 1) : null;
+
+            $assessment = $latestAssessments->get($staff->id);
+            $staff->assessment_score = $assessment ? round((float) $assessment->Diem, 1) : null;
+            $staff->assessment_status = null;
+
+            if ($assessment) {
+                if ($assessment->TrangThai === 'ChoPheDuyet') {
+                    $staff->assessment_status = 'Chờ duyệt';
+                } elseif (isset($assessment->IsPassed)) {
+                    $staff->assessment_status = $assessment->IsPassed ? 'Đạt' : 'Chưa đạt';
+                } else {
+                    $criteria = json_decode($assessment->ChiTietDiem ?? '', true);
+                    $criterionKeys = ['nghiep_vu', 'ky_nang', 'quy_trinh', 'phuc_vu', 'tac_phong'];
+                    if (is_array($criteria) && count(array_intersect($criterionKeys, array_keys($criteria))) === 5) {
+                        $isPassed = $assessment->Diem >= 80;
+                        foreach ($criterionKeys as $key) {
+                            $isPassed = $isPassed && is_numeric($criteria[$key]) && $criteria[$key] >= 70;
+                        }
+                        $staff->assessment_status = $isPassed ? 'Đạt' : 'Chưa đạt';
+                    } else {
+                        $staff->assessment_status = 'Đã duyệt';
+                    }
+                }
+            }
         }
 
         $totalStaffs = $staffs->count();
@@ -475,13 +526,12 @@ class LeaderEvaluationController extends Controller
                 return false;
             }
             $days = Carbon::parse($startDate)->diffInDays(now());
-            return ($days >= 80 && $days <= 105);
+
+            return $days >= 80 && $days <= 105;
         })->count();
 
-        $avgProgress    = $totalStaffs > 0 ? round($staffs->avg('overall_progress') ?? 0, 1) : 0;
-        $highRiskCount  = $staffs->filter(fn($staff) => $staff->overall_progress < 30)->count();
-        $avgQuizScore   = $totalStaffs > 0 ? round($staffs->avg('quiz_latest_score') ?? 0, 1) : 0;
-        $avgRubricScore = $totalStaffs > 0 ? round($staffs->avg('RubricScore') ?? 0, 1) : 0;
+        $avgProgress = $totalStaffs > 0 ? round($staffs->avg('overall_progress') ?? 0, 1) : 0;
+        $highRiskCount = $staffs->filter(fn ($staff) => $staff->overall_progress < 30)->count();
 
         return view('leader.staff_list', compact(
             'truongCa',
@@ -489,9 +539,7 @@ class LeaderEvaluationController extends Controller
             'totalStaffs',
             'dueCount',
             'avgProgress',
-            'highRiskCount',
-            'avgQuizScore',
-            'avgRubricScore'
+            'highRiskCount'
         ));
     }
 
@@ -504,7 +552,7 @@ class LeaderEvaluationController extends Controller
             ->where('id', $MaDGNL)
             ->orWhere('MaDGNL', $MaDGNL)
             ->update([
-                'TrangThai'  => 'ChoPheDuyet',
+                'TrangThai' => 'ChoPheDuyet',
                 'updated_at' => now(),
             ]);
 
