@@ -9,7 +9,7 @@
     $totalCount = count($items);$learningCount = 0;
     $completedCount = 0;
 
-    foreach($items as $item) {$p = isset($item->TienDo) ? round($item->TienDo) : 0;
+    foreach($items as $item) {$p = isset($item->TienDo) ? round($item->TienDo, 1) : 0;
         if ($p >= 100) {$completedCount++;
         } elseif ($p > 0) {$learningCount++;
         }
@@ -64,7 +64,7 @@
                 <?php 
                     $courseId = $course->MaCTDT ?? $course->id ?? '';
                     // Đảm bảo ép kiểu nguyên (int) để tránh lỗi định dạng chuỗi
-                    $progress = (int) round($course->TienDo ?? 0);
+                    $progress = round($course->TienDo ?? 0, 1);
                     $level =$course->CapDo ?? 'CẤP ĐỘ 1';
                     $tenCourse =$course->TenCTDT ?? 'Chưa có tên khóa học';
                     $moTa =$course->MoTa ?? '';
@@ -217,4 +217,5 @@
     }
 </script>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\wamp64\Brewlearn\resources\views\courses\index.blade.php ENDPATH**/ ?>

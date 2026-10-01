@@ -77,7 +77,6 @@
     <div id="tab-3" class="help-tab-content hidden">
         <form action="<?php echo e(route('help.store')); ?>" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-2xl border border-[#E8DFC8] shadow-sm space-y-4">
             <?php echo csrf_field(); ?>
-            <input type="hidden" name="user_id" value="<?php echo e(request('user_id', 1)); ?>">
             <h3 class="font-bold text-slate-800 text-sm border-b pb-2">🚨 BÁO LỖI HỆ THỐNG / YÊU CẦU TRỢ GIÚP</h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -194,4 +193,5 @@
     }
 </script>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\wamp64\Brewlearn\resources\views\help\index.blade.php ENDPATH**/ ?>

@@ -226,7 +226,9 @@
         showQuestion(currentIndex);
     }
 
+    let submitting = false;
     function submitExam(isAutoSubmit = false) {
+        if (submitting) return;
         const answeredCount = Object.keys(userAnswers).length;
 
         if (!isAutoSubmit) {
@@ -237,8 +239,7 @@
             alert('Đã hết thời gian làm bài! Hệ thống sẽ tự động nộp bài làm của bạn.');
         }
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('user_id') || "<?php echo e($user->id ?? auth()->id() ?? 1); ?>";
+        submitting = true;
 
         // Gửi AJAX chấm điểm
         fetch(`/tests/${currentTestId}/submit`, {
@@ -248,7 +249,7 @@
                 "X-CSRF-TOKEN": "<?php echo e(csrf_token()); ?>"
             },
             body: JSON.stringify({
-                user_id: userId,
+                attempt_token: <?php echo json_encode($attemptToken, 15, 512) ?>,
                 answers: userAnswers
             })
         })
@@ -256,12 +257,14 @@
         .then(data => {
             if (data.success) {
                 alert(data.message || 'Nộp bài thành công!');
-                window.location.href = "<?php echo e(route('tests.index')); ?>?user_id=" + userId;
+                window.location.href = "<?php echo e(route('tests.index')); ?>";
             } else {
+                submitting = false;
                 alert(data.message || 'Có lỗi xảy ra khi chấm điểm.');
             }
         })
         .catch(error => {
+            submitting = false;
             console.error('Error:', error);
             alert('Lỗi kết nối máy chủ khi nộp bài!');
         });
@@ -287,4 +290,5 @@
     showQuestion(0);
 </script>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\wamp64\Brewlearn\resources\views\tests\show.blade.php ENDPATH**/ ?>

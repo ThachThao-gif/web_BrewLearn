@@ -54,7 +54,7 @@
 
         // Nếu bài trước ĐÃ CÓ ĐIỂM và ĐẠT ĐIỂM CHUẨN -> Mở bài này ($isLocked = false)
         // Ngược lại nếu bài trước chưa đạt -> Khóa bài này ($isLocked = true)
-        $isLocked = is_null($prevScore) || ($prevScore < $prevPassScore);
+        $isLocked = !($prevTest->HasPassed ?? false);
     }
 ?>
 
@@ -81,6 +81,16 @@
                     </p>
                 </div>
 
+                <?php if(($test->History ?? collect())->isNotEmpty()): ?>
+                    <details class="text-xs text-slate-600 mb-3">
+                        <summary class="cursor-pointer font-bold">Lịch sử <?php echo e($test->History->count()); ?> lượt thi · Điểm lần gần nhất: <?php echo e($diem); ?>/100</summary>
+                        <ul class="mt-2 space-y-1">
+                            <?php $__currentLoopData = $test->History; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attempt): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li><?php echo e($attempt->created_at ? \Carbon\Carbon::parse($attempt->created_at)->format('H:i d/m/Y') : 'Dữ liệu demo'); ?> — <?php echo e($attempt->Diem); ?>/100 · <?php echo e($attempt->Diem >= ($test->DiemChuan ?? 80) ? 'Đạt' : 'Chưa đạt'); ?></li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </ul>
+                    </details>
+                <?php endif; ?>
                 <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
                     <?php if($isLocked): ?>
                         <!-- TRẠNG THÁI BỊ KHÓA -->
@@ -122,4 +132,5 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\wamp64\Brewlearn\resources\views\tests\index.blade.php ENDPATH**/ ?>

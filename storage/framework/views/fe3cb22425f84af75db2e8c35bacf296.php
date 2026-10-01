@@ -14,7 +14,7 @@
     })->count();
     
     // 3. Tính % tiến độ
-    $progressPercent = $totalLessons > 0 ? (int) round(($completedLessons / $totalLessons) * 100) : 0;
+    $progressPercent = round($course->TienDo ?? 0, 1);
 
     // 4. Tìm bài học tiếp theo chưa học (nếu học xong hết thì lấy bài đầu tiên)
     $nextLesson = $lessonList->firstWhere('LessonStatus', '!=', 'HoanThanh') 
@@ -183,4 +183,5 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\wamp64\Brewlearn\resources\views\courses\show.blade.php ENDPATH**/ ?>

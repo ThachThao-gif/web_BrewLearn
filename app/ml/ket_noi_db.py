@@ -102,9 +102,14 @@ def lay_progress_percent(conn, user_id: int) -> float:
         cur.execute(
             """
             SELECT
-                COALESCE(AVG(TienDo), 0) AS progress_percent
-            FROM nhan_vien_khoa_hoc
-            WHERE user_id = %s
+                COALESCE(AVG(COALESCE(n.TienDo, 0)), 0) AS progress_percent
+            FROM users u
+            JOIN chuong_trinh_dao_tao c ON (
+                UPPER(TRIM(c.ChucVuApDung)) = UPPER(TRIM(COALESCE(u.ChucVu, 'Barista')))
+                OR UPPER(TRIM(c.ChucVuApDung)) IN ('ALL STAFF', 'ALL', 'TẤT CẢ')
+            )
+            LEFT JOIN nhan_vien_khoa_hoc n ON n.user_id = u.id AND n.MaCTDT = c.MaCTDT
+            WHERE u.id = %s
             """,
             (user_id,),
         )

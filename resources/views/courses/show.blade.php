@@ -14,7 +14,7 @@
     })->count();
     
     // 3. Tính % tiến độ
-    $progressPercent = $totalLessons > 0 ? (int) round(($completedLessons / $totalLessons) * 100) : 0;
+    $progressPercent = round($course->TienDo ?? 0, 1);
 
     // 4. Tìm bài học tiếp theo chưa học (nếu học xong hết thì lấy bài đầu tiên)
     $nextLesson = $lessonList->firstWhere('LessonStatus', '!=', 'HoanThanh') 

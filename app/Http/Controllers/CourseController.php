@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CourseProgress;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Models\User;
+use Illuminate\Support\Str;
 
 class CourseController extends Controller
 {
@@ -14,8 +16,8 @@ class CourseController extends Controller
      */
     private function getCurrentUserId(Request $request)
     {
-        return Auth::id() 
-            ?? $request->query('user_id') 
+        return Auth::id()
+            ?? $request->query('user_id')
             ?? 2; // Mặc định cho môi trường Test
     }
 
@@ -35,8 +37,8 @@ class CourseController extends Controller
         $inProgressCoursesCount = $assignedCourses->where('TienDo', '>', 0)->count();
         $completedCoursesCount = $assignedCourses->where('TienDo', '>=', 100)->count();
 
-        $overallProgress = $assignedCoursesCount > 0 
-            ? round($assignedCourses->avg('TienDo'), 1) 
+        $overallProgress = $assignedCoursesCount > 0
+            ? round($assignedCourses->avg('TienDo'), 1)
             : 0;
 
         $avgQuizScore = round(
@@ -51,12 +53,12 @@ class CourseController extends Controller
             ->where('ket_qua_kiem_tra.user_id', $userId)
             ->where(function ($q) {
                 $q->whereIn('ket_qua_kiem_tra.TrangThai', ['Dat', 'DaDat'])
-                  ->orWhereRaw('ket_qua_kiem_tra.Diem >= COALESCE(bai_kiem_tra.DiemChuan, 80)');
+                    ->orWhereRaw('ket_qua_kiem_tra.Diem >= COALESCE(bai_kiem_tra.DiemChuan, 80)');
             })
             ->distinct('ket_qua_kiem_tra.MaBaiKiemTra')
             ->count('ket_qua_kiem_tra.MaBaiKiemTra');
 
-        $currentLesson = null; 
+        $currentLesson = null;
 
         return view('welcome', compact(
             'currentUser',
@@ -99,14 +101,14 @@ class CourseController extends Controller
         $courses = $this->getAssignedCoursesWithLockStatus($userId, $userChucVu);
         $course = $courses->firstWhere('MaCTDT', $id);
 
-        if (!$course) {
+        if (! $course) {
             return redirect()->route('courses.index', ['user_id' => $userId])
-                             ->with('error', 'Khóa học không tồn tại!');
+                ->with('error', 'Khóa học không tồn tại!');
         }
 
         if ($course->IsLocked && ($course->TienDo ?? 0) == 0) {
             return redirect()->route('courses.index', ['user_id' => $userId])
-                             ->with('error', 'Khóa học đang bị khóa!');
+                ->with('error', 'Khóa học đang bị khóa!');
         }
 
         // Lấy danh sách bài học
@@ -116,6 +118,7 @@ class CourseController extends Controller
             ->get();
 
         // Lấy danh sách tiến độ chi tiết của từng bài học
+        app(CourseProgress::class)->initializeLessons((int) $userId, (int) $course->MaCTDT);
         $userProgresses = DB::table('user_lesson_progresses')
             ->where('user_id', $userId)
             ->whereIn('lesson_id', $lessons->pluck('MaBaiHoc'))
@@ -126,7 +129,7 @@ class CourseController extends Controller
         foreach ($lessons as $lesson) {
             $prog = $userProgresses->get($lesson->MaBaiHoc);
             $percent = $prog ? $prog->progress_percent : 0;
-            
+
             $lesson->TienDo = $percent;
             if ($percent >= 95 || ($prog && $prog->is_completed)) {
                 $lesson->LessonStatus = 'HoanThanh';
@@ -156,7 +159,7 @@ class CourseController extends Controller
             return $c->TienDo > 0 && $c->TienDo < 100;
         }) ?? $courses->firstWhere('IsLocked', false) ?? $courses->first();
 
-        if (!$targetCourse) {
+        if (! $targetCourse) {
             return redirect()->route('courses.index', ['user_id' => $userId]);
         }
 
@@ -176,9 +179,9 @@ class CourseController extends Controller
             ->where('MaBaiHoc', $id)
             ->first();
 
-        if (!$lesson) {
+        if (! $lesson) {
             return redirect()->route('courses.index', ['user_id' => $userId])
-                             ->with('error', 'Bài học không tồn tại!');
+                ->with('error', 'Bài học không tồn tại!');
         }
 
         // Lấy thông tin khóa học & Tiến độ tổng khóa học
@@ -191,7 +194,7 @@ class CourseController extends Controller
                 ->where('user_id', $userId)
                 ->where('MaCTDT', $course->MaCTDT)
                 ->first();
-            $course->TienDo = round($userCourse->TienDo ?? 0);
+            $course->TienDo = round($userCourse->TienDo ?? 0, 1);
         }
 
         // Lấy danh sách bài học thuộc khóa
@@ -199,6 +202,8 @@ class CourseController extends Controller
             ->where('FK_MaCTDT', $lesson->FK_MaCTDT)
             ->orderBy('ThuTu', 'asc')
             ->get();
+
+        app(CourseProgress::class)->initializeLessons((int) $userId, (int) $lesson->FK_MaCTDT);
 
         // Ghi nhận 1 lượt truy cập bài học
         $existingProgress = DB::table('user_lesson_progresses')
@@ -234,8 +239,8 @@ class CourseController extends Controller
         // Đánh dấu hoàn thành cho từng bài học trong danh sách
         foreach ($lessonsInCourse as $item) {
             $prog = $userProgresses->get($item->MaBaiHoc);
-            $percent = $prog ? (int)$prog->progress_percent : 0;
-            $isCompleted = $prog ? (bool)$prog->is_completed : false;
+            $percent = $prog ? (int) $prog->progress_percent : 0;
+            $isCompleted = $prog ? (bool) $prog->is_completed : false;
 
             $item->TienDo = $percent;
             if ($percent >= 95 || $isCompleted) {
@@ -269,13 +274,13 @@ class CourseController extends Controller
         $lessons = $lessonsInCourse;
 
         return view('courses.lesson', compact(
-            'lesson', 
-            'course', 
-            'currentUser', 
-            'nextLesson', 
-            'prevLesson', 
-            'progress', 
-            'lessonsInCourse', 
+            'lesson',
+            'course',
+            'currentUser',
+            'nextLesson',
+            'prevLesson',
+            'progress',
+            'lessonsInCourse',
             'lessons'
         ));
     }
@@ -287,7 +292,7 @@ class CourseController extends Controller
     {
         $request->validate([
             'lesson_id' => 'required|integer',
-            'current_time' => 'required|numeric',
+            'current_time' => 'required|numeric|min:0',
             'progress_percent' => 'required|integer|min:0|max:100',
         ]);
 
@@ -297,11 +302,12 @@ class CourseController extends Controller
         $incomingPercent = $request->progress_percent;
 
         $lesson = DB::table('bai_hoc')->where('MaBaiHoc', $lessonId)->first();
-        if (!$lesson) {
+        if (! $lesson) {
             return response()->json(['error' => 'Bài học không tồn tại'], 404);
         }
 
         $maCTDT = $lesson->FK_MaCTDT;
+        app(CourseProgress::class)->initializeLessons((int) $userId, (int) $maCTDT);
 
         $existing = DB::table('user_lesson_progresses')
             ->where('user_id', $userId)
@@ -309,6 +315,9 @@ class CourseController extends Controller
             ->first();
 
         $maxPercent = $existing ? max($existing->progress_percent, $incomingPercent) : $incomingPercent;
+        if ($maxPercent >= 95 || ($existing && $existing->is_completed)) {
+            $maxPercent = 100;
+        }
         $isCompleted = ($maxPercent >= 95) ? 1 : ($existing ? $existing->is_completed : 0);
 
         DB::table('user_lesson_progresses')->updateOrInsert(
@@ -331,8 +340,8 @@ class CourseController extends Controller
         return response()->json([
             'status' => 'success',
             'lesson_percent' => $maxPercent,
-            'is_completed' => (bool)$isCompleted,
-            'course_progress' => $courseProgress
+            'is_completed' => (bool) $isCompleted,
+            'course_progress' => $courseProgress,
         ]);
     }
 
@@ -344,10 +353,11 @@ class CourseController extends Controller
         $userId = $this->getCurrentUserId($request);
 
         $lesson = DB::table('bai_hoc')->where('MaBaiHoc', $id)->first();
-        if (!$lesson) {
+        if (! $lesson) {
             return response()->json(['status' => 'error', 'message' => 'Bài học không tồn tại!'], 404);
         }
 
+        app(CourseProgress::class)->initializeLessons((int) $userId, (int) $lesson->FK_MaCTDT);
         DB::table('user_lesson_progresses')->updateOrInsert(
             ['user_id' => $userId, 'lesson_id' => $id],
             [
@@ -363,7 +373,7 @@ class CourseController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Đã đánh dấu hoàn thành bài học!',
-            'course_progress' => $courseProgress
+            'course_progress' => $courseProgress,
         ]);
     }
 
@@ -381,12 +391,14 @@ class CourseController extends Controller
         // Lấy kết quả làm bài của user
         $userResults = DB::table('ket_qua_kiem_tra')
             ->where('user_id', $userId)
-            ->get()
-            ->keyBy('MaBaiKiemTra');
+            ->orderByDesc('created_at')->orderByDesc('id')->get()->groupBy('MaBaiKiemTra');
 
         // Ghép điểm và trạng thái vào từng bài test
         foreach ($tests as $test) {
-            $result = $userResults->get($test->MaBaiKiemTra);
+            $history = $userResults->get($test->MaBaiKiemTra, collect());
+            $result = $history->first();
+            $test->History = $history;
+            $test->HasPassed = $history->contains(fn ($row) => $row->Diem >= ($test->DiemChuan ?? 80));
             $test->Diem = $result->Diem ?? null;
             $test->TrangThai = $result ? ($result->TrangThai ?? 'DaLam') : 'ChuaLam';
         }
@@ -399,27 +411,7 @@ class CourseController extends Controller
      */
     private function recalculateCourseProgress($userId, $maCTDT)
     {
-        $allLessons = DB::table('bai_hoc')->where('FK_MaCTDT', $maCTDT)->pluck('MaBaiHoc');
-        $totalLessonsCount = $allLessons->count();
-
-        if ($totalLessonsCount === 0) {
-            return 0;
-        }
-
-        $sumProgress = DB::table('user_lesson_progresses')
-            ->where('user_id', $userId)
-            ->whereIn('lesson_id', $allLessons)
-            ->sum('progress_percent');
-
-        $courseProgress = min(100, round($sumProgress / $totalLessonsCount));
-        $trangThai = ($courseProgress >= 100) ? 'HoanThanh' : 'DangHoc';
-
-        DB::table('nhan_vien_khoa_hoc')->updateOrInsert(
-            ['user_id' => $userId, 'MaCTDT' => $maCTDT],
-            ['TienDo' => $courseProgress, 'TrangThai' => $trangThai, 'updated_at' => now()]
-        );
-
-        return $courseProgress;
+        return app(CourseProgress::class)->sync((int) $userId, (int) $maCTDT);
     }
 
     /**
@@ -427,176 +419,144 @@ class CourseController extends Controller
      */
     private function getAssignedCoursesWithLockStatus($userId, $userChucVu)
     {
-        $cleanChucVu = mb_strtoupper(trim($userChucVu), 'UTF-8');
-
-        $courses = DB::table('chuong_trinh_dao_tao')
-            ->where(function ($query) use ($cleanChucVu) {
-                $query->whereRaw('UPPER(TRIM(ChucVuApDung)) = ?', [$cleanChucVu])
-                      ->orWhereRaw('UPPER(TRIM(ChucVuApDung)) = ?', ['ALL STAFF'])
-                      ->orWhereRaw('UPPER(TRIM(ChucVuApDung)) = ?', ['ALL']);
-            })
-            ->orderBy('chuong_trinh_dao_tao.MaCTDT', 'asc')
-            ->get();
-
+        $courses = app(CourseProgress::class)->assignedCourses($userChucVu);
         foreach ($courses as $index => $course) {
-            $allLessons = DB::table('bai_hoc')
-                ->where('FK_MaCTDT', $course->MaCTDT)
-                ->pluck('MaBaiHoc')
-                ->toArray();
-
-            $hasRealtimeProgress = DB::table('user_lesson_progresses')
-                ->where('user_id', $userId)
-                ->whereIn('lesson_id', $allLessons)
-                ->exists();
-
-            if ($hasRealtimeProgress) {
-                $totalLessonsCount = count($allLessons);
-                if ($totalLessonsCount > 0) {
-                    $completedLessonsCount = DB::table('user_lesson_progresses')
-                        ->where('user_id', $userId)
-                        ->whereIn('lesson_id', $allLessons)
-                        ->where(function ($q) {
-                            $q->where('is_completed', 1)
-                              ->orWhere('progress_percent', '>=', 95);
-                        })
-                        ->count();
-
-                    $realProgress = round(($completedLessonsCount / $totalLessonsCount) * 100);
-                } else {
-                    $realProgress = 0;
-                }
-
-                DB::table('nhan_vien_khoa_hoc')->updateOrInsert(
-                    ['user_id' => $userId, 'MaCTDT' => $course->MaCTDT],
-                    ['TienDo' => $realProgress, 'TrangThai' => ($realProgress >= 100 ? 'HoanThanh' : 'DangHoc'), 'updated_at' => now()]
-                );
-            } else {
-                $dbRecord = DB::table('nhan_vien_khoa_hoc')
-                    ->where('user_id', $userId)
-                    ->where('MaCTDT', $course->MaCTDT)
-                    ->first();
-
-                $realProgress = $dbRecord ? round($dbRecord->TienDo ?? 0) : 0;
-            }
-
+            $realProgress = app(CourseProgress::class)->sync((int) $userId, (int) $course->MaCTDT);
             $course->TienDo = $realProgress;
 
             if ($index === 0 || $realProgress > 0) {
                 $course->IsLocked = false;
             } else {
                 $prevCourse = $courses[$index - 1];
-                $prevProgress = round($prevCourse->TienDo ?? 0);
+                $prevProgress = $prevCourse->TienDo ?? 0;
                 $course->IsLocked = ($prevProgress < 100);
             }
         }
 
         return $courses;
     }
+
     /**
      * Hiển thị giao diện làm bài kiểm tra
      */
     public function showTest(Request $request, $id)
     {
-        $userId = $request->query('user_id') ?? auth()->id() ?? 1;
-        $user = \App\Models\User::find($userId) ?? \App\Models\User::first();
+        $userId = auth()->id();
+        $user = User::find($userId) ?? User::first();
 
         // Lấy thông tin bài kiểm tra
         $test = DB::table('bai_kiem_tra')
             ->where('MaBaiKiemTra', $id)
             ->first();
 
-        if (!$test) {
+        if (! $test) {
             return redirect()->route('tests.index', ['user_id' => $userId])
-                             ->with('error', 'Bài kiểm tra không tồn tại!');
+                ->with('error', 'Bài kiểm tra không tồn tại!');
         }
 
         // Lấy danh sách câu hỏi
         $questions = DB::table('cau_hoi_kiem_tra')
             ->where('MaBaiKiemTra', $id)
+            ->orderBy('id')
             ->get();
 
-        return view('tests.show', compact('test', 'questions', 'user'));
+        $attemptToken = (string) Str::uuid();
+        $request->session()->put('test_attempts.'.$attemptToken, ['user_id' => $userId, 'test_id' => (int) $id]);
+
+        return view('tests.show', compact('test', 'questions', 'user', 'attemptToken'));
     }
 
-   public function submitTest(Request $request, $id)
-{
-    try {
-        $userId = $request->input('user_id') ?? auth()->id() ?? 1;
-
-        $test = DB::table('bai_kiem_tra')
-            ->where('MaBaiKiemTra', $id)
-            ->first();
-
-        if (!$test) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bài kiểm tra không tồn tại!'
-            ], 404);
+    public function submitTest(Request $request, $id)
+    {
+        $request->validate(['attempt_token' => 'required|uuid', 'answers' => 'present|array', 'answers.*' => 'nullable|in:A,B,C,D']);
+        $userId = auth()->id();
+        $token = $request->input('attempt_token');
+        $attempt = $request->session()->get('test_attempts.'.$token);
+        if (! $attempt || (int) $attempt['user_id'] !== (int) $userId || (int) $attempt['test_id'] !== (int) $id) {
+            return response()->json(['success' => false, 'message' => 'Lượt thi không hợp lệ. Vui lòng mở lại bài kiểm tra.'], 422);
         }
+        try {
 
-        $questions = DB::table('cau_hoi_kiem_tra')
-            ->where('MaBaiKiemTra', $id)
-            ->get()
-            ->values();
+            $test = DB::table('bai_kiem_tra')
+                ->where('MaBaiKiemTra', $id)
+                ->first();
 
-        if ($questions->isEmpty()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bài kiểm tra chưa có câu hỏi nào!'
-            ], 400);
-        }
+            if (! $test) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bài kiểm tra không tồn tại!',
+                ], 404);
+            }
 
-        $userAnswers = $request->input('answers', []);
-        $correctCount = 0;
-        $totalQuestions = $questions->count();
+            $questions = DB::table('cau_hoi_kiem_tra')
+                ->where('MaBaiKiemTra', $id)
+                ->orderBy('id')
+                ->get()
+                ->values();
 
-        foreach ($questions as $index => $q) {
-            if (isset($userAnswers[$index])) {
-                $selected = strtoupper(trim((string)$userAnswers[$index]));
-                $correct  = strtoupper(trim((string)$q->DapAnDung));
+            if ($questions->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bài kiểm tra chưa có câu hỏi nào!',
+                ], 400);
+            }
 
-                if ($selected === $correct) {
-                    $correctCount++;
+            $userAnswers = $request->input('answers', []);
+            $correctCount = 0;
+            $totalQuestions = $questions->count();
+
+            foreach ($questions as $index => $q) {
+                if (isset($userAnswers[$index])) {
+                    $selected = strtoupper(trim((string) $userAnswers[$index]));
+                    $correct = strtoupper(trim((string) $q->DapAnDung));
+
+                    if ($selected === $correct) {
+                        $correctCount++;
+                    }
                 }
             }
+
+            // Tính điểm phần trăm
+            $score = (int) round(($correctCount / $totalQuestions) * 100);
+            $passScore = $test->DiemChuan ?? 80;
+            $isPassed = $score >= $passScore;
+
+            $result = DB::transaction(function () use ($userId, $id, $token, $score, $isPassed, $correctCount, $totalQuestions) {
+                DB::table('users')->where('id', $userId)->lockForUpdate()->first();
+                $existing = DB::table('ket_qua_kiem_tra')->where('attempt_token', $token)
+                    ->where('user_id', $userId)->where('MaBaiKiemTra', $id)->first();
+                if ($existing) {
+                    return $existing;
+                }
+                $resultId = DB::table('ket_qua_kiem_tra')->insertGetId([
+                    'user_id' => $userId, 'MaBaiKiemTra' => $id, 'attempt_token' => $token,
+                    'Diem' => $score, 'TrangThai' => $isPassed ? 'Dat' : 'KhongDat',
+                    'SoCauDung' => $correctCount, 'TongSoCau' => $totalQuestions,
+                    'created_at' => now(), 'updated_at' => now(),
+                ]);
+
+                return DB::table('ket_qua_kiem_tra')->where('id', $resultId)->first();
+            });
+            $score = (int) $result->Diem;
+            $correctCount = (int) $result->SoCauDung;
+            $totalQuestions = (int) $result->TongSoCau;
+            $isPassed = $result->TrangThai === 'Dat';
+
+            return response()->json([
+                'success' => true,
+                'score' => $score,
+                'correct_count' => $correctCount,
+                'total_questions' => $totalQuestions,
+                'message' => $isPassed
+                    ? "Chúc mừng! Bạn đã ĐẠT bài kiểm tra với điểm số {$score}/100."
+                    : "Rất tiếc! Bạn chỉ đạt {$score}/100 điểm. Chưa đủ điểm chuẩn ({$passScore} điểm).",
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi xử lý Server: '.$e->getMessage(),
+            ], 500);
         }
-
-        // Tính điểm phần trăm
-        $score = (int) round(($correctCount / $totalQuestions) * 100);
-        $passScore = $test->DiemChuan ?? 80;
-        $isPassed = $score >= $passScore;
-
-        // Lưu hoặc cập nhật kết quả vào database
-        DB::table('ket_qua_kiem_tra')->updateOrInsert(
-            [
-                'user_id' => $userId,
-                'MaBaiKiemTra' => $id,
-            ],
-            [
-                'Diem' => $score,
-                'TrangThai' => $isPassed ? 'Dat' : 'KhongDat',
-                'SoCauDung' => $correctCount,
-                'TongSoCau' => $totalQuestions,
-                'updated_at' => now(),
-                'created_at' => now()
-            ]
-        );
-
-        return response()->json([
-            'success' => true,
-            'score' => $score,
-            'correct_count' => $correctCount,
-            'total_questions' => $totalQuestions,
-            'message' => $isPassed 
-                ? "Chúc mừng! Bạn đã ĐẠT bài kiểm tra với điểm số {$score}/100." 
-                : "Rất tiếc! Bạn chỉ đạt {$score}/100 điểm. Chưa đủ điểm chuẩn ({$passScore} điểm)."
-        ]);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Lỗi xử lý Server: ' . $e->getMessage()
-        ], 500);
     }
-}
 }

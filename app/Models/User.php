@@ -29,6 +29,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected function casts(): array
+    {
+        return ['notification_settings' => 'array', 'email_verified_at' => 'datetime'];
+    }
+
     // ==========================================
     // 1. CÁC MỐI QUAN HỆ DATABASE
     // ==========================================
@@ -55,8 +60,8 @@ class User extends Authenticatable
     public function courses()
     {
         return $this->belongsToMany(ChuongTrinhDaoTao::class, 'nhan_vien_khoa_hoc', 'user_id', 'MaCTDT')
-                    ->withPivot('TienDo', 'TrangThai')
-                    ->withTimestamps();
+            ->withPivot('TienDo', 'TrangThai')
+            ->withTimestamps();
     }
 
     // ==========================================
@@ -68,15 +73,10 @@ class User extends Authenticatable
      */
     public function getProgressPercentAttribute()
     {
-        if ($this->courses->isEmpty()) {
-            return 0;
-        }
+        $progress = app(CourseProgress::class);
+        $courses = $progress->assignedCourses($this->ChucVu ?? 'Barista');
 
-        $avg = $this->courses->avg(function ($c) {
-            return $c->pivot->TienDo ?? $c->pivot->progress ?? 0;
-        });
-
-        return round($avg ?? 0, 1);
+        return round($courses->avg(fn ($course) => $progress->sync((int) $this->id, (int) $course->MaCTDT)) ?? 0, 1);
     }
 
     /**
@@ -95,6 +95,7 @@ class User extends Authenticatable
         return $this->courses->filter(function ($c) {
             $status = strtolower($c->pivot->TrangThai ?? '');
             $progress = $c->pivot->TienDo ?? 0;
+
             return in_array($status, ['hoanthanh', 'completed']) || $progress >= 100;
         })->count();
     }
@@ -107,6 +108,7 @@ class User extends Authenticatable
         return $this->courses->filter(function ($c) {
             $status = strtolower($c->pivot->TrangThai ?? '');
             $progress = $c->pivot->TienDo ?? 0;
+
             return in_array($status, ['danghoc', 'in_progress']) || ($progress > 0 && $progress < 100);
         })->count();
     }
@@ -128,7 +130,8 @@ class User extends Authenticatable
             return 0;
         }
 
-        $latestQuiz = $this->quizResults->sortByDesc('created_at')->sortByDesc('id')->first();
+        $latestQuiz = $this->quizResults()->orderByDesc('created_at')->orderByDesc('id')->first();
+
         return round($latestQuiz->Diem ?? $latestQuiz->score ?? 0, 1);
     }
 
@@ -157,13 +160,14 @@ class User extends Authenticatable
     }
 
     /**
-     * 8. Số lần làm Quiz không đạt (< 60 điểm)
+     * 8. Số lần làm Quiz không đạt (< 80 điểm, đồng bộ mô hình dự đoán)
      */
     public function getQuizFailedCountAttribute()
     {
         return $this->quizResults->filter(function ($q) {
             $score = $q->Diem ?? $q->score ?? 0;
-            return $score < 60;
+
+            return $score < 80;
         })->count();
     }
 
@@ -191,6 +195,7 @@ class User extends Authenticatable
         if ($this->progress_percent < 40 || $this->quiz_failed_count >= 3) {
             return ['label' => 'Cần đôn đốc', 'badge' => 'danger'];
         }
+
         return ['label' => 'Đang tiến hành', 'badge' => 'warning'];
     }
 }

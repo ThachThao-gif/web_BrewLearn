@@ -54,7 +54,7 @@
 
         // Nếu bài trước ĐÃ CÓ ĐIỂM và ĐẠT ĐIỂM CHUẨN -> Mở bài này ($isLocked = false)
         // Ngược lại nếu bài trước chưa đạt -> Khóa bài này ($isLocked = true)
-        $isLocked = is_null($prevScore) || ($prevScore < $prevPassScore);
+        $isLocked = !($prevTest->HasPassed ?? false);
     }
 @endphp
 
@@ -78,6 +78,16 @@
                     </p>
                 </div>
 
+                @if(($test->History ?? collect())->isNotEmpty())
+                    <details class="text-xs text-slate-600 mb-3">
+                        <summary class="cursor-pointer font-bold">Lịch sử {{ $test->History->count() }} lượt thi · Điểm lần gần nhất: {{ $diem }}/100</summary>
+                        <ul class="mt-2 space-y-1">
+                            @foreach($test->History as $attempt)
+                                <li>{{ $attempt->created_at ? \Carbon\Carbon::parse($attempt->created_at)->format('H:i d/m/Y') : 'Dữ liệu demo' }} — {{ $attempt->Diem }}/100 · {{ $attempt->Diem >= ($test->DiemChuan ?? 80) ? 'Đạt' : 'Chưa đạt' }}</li>
+                            @endforeach
+                        </ul>
+                    </details>
+                @endif
                 <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
                     @if ($isLocked)
                         <!-- TRẠNG THÁI BỊ KHÓA -->

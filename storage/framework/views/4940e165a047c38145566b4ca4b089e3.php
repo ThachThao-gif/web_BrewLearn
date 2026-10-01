@@ -255,6 +255,8 @@
 
                     <form action="<?php echo e(route('account.logout-other-devices')); ?>" method="POST" class="pt-1">
                         <?php echo csrf_field(); ?>
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Mật khẩu hiện tại để xác nhận</label>
+                        <input type="password" name="current_password" required autocomplete="current-password" class="w-full border border-slate-200 rounded-xl p-3 mb-2">
                         <button type="submit" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition flex items-center justify-center gap-2">
                             <i class="fa-solid fa-right-from-bracket text-red-500"></i> Đăng xuất khỏi tất cả các thiết bị khác
                         </button>
@@ -448,4 +450,5 @@
     });
 </script>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\wamp64\Brewlearn\resources\views\users\edit.blade.php ENDPATH**/ ?>

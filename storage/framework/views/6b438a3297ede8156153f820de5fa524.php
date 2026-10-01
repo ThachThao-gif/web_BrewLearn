@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="vi" class="h-full bg-[#FAF7F2]">
 <head>
+    <script>
+        const accountTheme = <?php echo json_encode(auth()->user()?->theme ?? 'light', 15, 512) ?>;
+        const themeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+        function applyAccountTheme() {
+            document.documentElement.dataset.theme = accountTheme === 'system' ? (themeMedia.matches ? 'dark' : 'light') : accountTheme;
+        }
+        applyAccountTheme();
+        themeMedia.addEventListener('change', applyAccountTheme);
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
@@ -43,6 +52,13 @@
         ::-webkit-scrollbar-thumb { background: #D5C5B3; border-radius: 9999px; }
         ::-webkit-scrollbar-thumb:hover { background: #A88764; }
         .smooth-transition { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        html[data-theme="dark"] { color-scheme: dark; background: #171717; }
+        html[data-theme="dark"] body, html[data-theme="dark"] #sidebar,
+        html[data-theme="dark"] [class*="bg-[#FAF7F2]"], html[data-theme="dark"] [class*="bg-white"] { background-color: #242424; }
+        html[data-theme="dark"] [class*="text-coffee-"], html[data-theme="dark"] [class*="text-slate-"],
+        html[data-theme="dark"] [class*="text-gray-"] { color: #E8DFC8; }
+        html[data-theme="dark"] input, html[data-theme="dark"] select, html[data-theme="dark"] textarea,
+        html[data-theme="dark"] [class*="bg-slate-"], html[data-theme="dark"] [class*="bg-[#EFE7DA]"] { background-color: #333; color: #E8DFC8; }
         #sidebar { width: var(--sidebar-width, 288px); height: 100vh; height: 100dvh; overflow: hidden; transition: width .25s ease, transform .25s ease; }
         #sidebarResizeHandle { display: none; }
         body.sidebar-resizing { cursor: col-resize; user-select: none; }
@@ -248,7 +264,7 @@
 
                         </div>
                         <div class="w-24 bg-white/80 h-1.5 rounded-full overflow-hidden mt-1 border border-slate-200">
-                            <div class="bg-amber_brand h-full rounded-full" style="width: <?php echo e($currentUser->TienDoTong ?? 78); ?>%"></div>
+                            <div class="bg-amber_brand h-full rounded-full" style="width: <?php echo e($currentUser?->progress_percent ?? 0); ?>%"></div>
                         </div>
                     </div>
                 </div>

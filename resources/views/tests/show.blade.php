@@ -221,7 +221,9 @@
         showQuestion(currentIndex);
     }
 
+    let submitting = false;
     function submitExam(isAutoSubmit = false) {
+        if (submitting) return;
         const answeredCount = Object.keys(userAnswers).length;
 
         if (!isAutoSubmit) {
@@ -232,8 +234,7 @@
             alert('Đã hết thời gian làm bài! Hệ thống sẽ tự động nộp bài làm của bạn.');
         }
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('user_id') || "{{ $user->id ?? auth()->id() ?? 1 }}";
+        submitting = true;
 
         // Gửi AJAX chấm điểm
         fetch(`/tests/${currentTestId}/submit`, {
@@ -243,7 +244,7 @@
                 "X-CSRF-TOKEN": "{{ csrf_token() }}"
             },
             body: JSON.stringify({
-                user_id: userId,
+                attempt_token: @json($attemptToken),
                 answers: userAnswers
             })
         })
@@ -251,12 +252,14 @@
         .then(data => {
             if (data.success) {
                 alert(data.message || 'Nộp bài thành công!');
-                window.location.href = "{{ route('tests.index') }}?user_id=" + userId;
+                window.location.href = "{{ route('tests.index') }}";
             } else {
+                submitting = false;
                 alert(data.message || 'Có lỗi xảy ra khi chấm điểm.');
             }
         })
         .catch(error => {
+            submitting = false;
             console.error('Error:', error);
             alert('Lỗi kết nối máy chủ khi nộp bài!');
         });

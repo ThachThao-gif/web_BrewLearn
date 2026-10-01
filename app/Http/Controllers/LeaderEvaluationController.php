@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CourseProgress;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -409,80 +410,17 @@ class LeaderEvaluationController extends Controller
             $userChucVu = $staff->ChucVu ?? $staff->chuc_vu ?? '';
             $cleanChucVu = mb_strtoupper(trim($userChucVu), 'UTF-8');
 
-            $assignedCourses = DB::table('chuong_trinh_dao_tao')
-                ->where(function ($query) use ($cleanChucVu) {
-                    if (! empty($cleanChucVu)) {
-                        $query->whereRaw('UPPER(TRIM(ChucVuApDung)) LIKE ?', ['%'.$cleanChucVu.'%']);
-                    }
-                    $query->orWhereRaw('UPPER(TRIM(ChucVuApDung)) IN (?, ?, ?)', ['ALL STAFF', 'ALL', 'TẤT CẢ']);
-                })
-                ->get();
-
-            if ($assignedCourses->isEmpty()) {
-                $assignedCourses = DB::table('chuong_trinh_dao_tao')->get();
-            }
-
+            $assignedCourses = app(CourseProgress::class)->assignedCourses($userChucVu);
             $totalCoursesCount = $assignedCourses->count();
             $totalProgressSum = 0;
             $completedCoursesCount = 0;
-
             foreach ($assignedCourses as $course) {
-                $allLessons = DB::table('bai_hoc')
-                    ->where('FK_MaCTDT', $course->MaCTDT)
-                    ->pluck('MaBaiHoc')
-                    ->toArray();
-
-                $hasRealtimeProgress = false;
-                if (! empty($allLessons)) {
-                    $hasRealtimeProgress = DB::table('user_lesson_progresses')
-                        ->where('user_id', $staff->id)
-                        ->whereIn('lesson_id', $allLessons)
-                        ->exists();
-                }
-
-                if ($hasRealtimeProgress && count($allLessons) > 0) {
-                    $completedLessonsCount = DB::table('user_lesson_progresses')
-                        ->where('user_id', $staff->id)
-                        ->whereIn('lesson_id', $allLessons)
-                        ->where(function ($q) {
-                            $q->where('is_completed', 1)
-                                ->orWhere('progress_percent', '>=', 95);
-                        })
-                        ->count();
-
-                    $courseProgress = round(($completedLessonsCount / count($allLessons)) * 100);
-
-                    DB::table('nhan_vien_khoa_hoc')->updateOrInsert(
-                        ['user_id' => $staff->id, 'MaCTDT' => $course->MaCTDT],
-                        ['TienDo' => $courseProgress, 'updated_at' => now()]
-                    );
-                } else {
-                    $dbRecord = DB::table('nhan_vien_khoa_hoc')
-                        ->where('user_id', $staff->id)
-                        ->where('MaCTDT', $course->MaCTDT)
-                        ->first();
-
-                    $courseProgress = $dbRecord ? round($dbRecord->TienDo ?? 0) : 0;
-                }
-
-                $totalProgressSum += $courseProgress;
-                if ($courseProgress >= 100) {
+                $progress = app(CourseProgress::class)->sync((int) $staff->id, (int) $course->MaCTDT);
+                $totalProgressSum += $progress;
+                if ($progress >= 100) {
                     $completedCoursesCount++;
                 }
             }
-
-            if ($totalProgressSum == 0) {
-                $userDbCourses = DB::table('nhan_vien_khoa_hoc')
-                    ->where('user_id', $staff->id)
-                    ->get();
-
-                if ($userDbCourses->isNotEmpty()) {
-                    $totalCoursesCount = $userDbCourses->count();
-                    $totalProgressSum = $userDbCourses->sum('TienDo');
-                    $completedCoursesCount = $userDbCourses->where('TienDo', '>=', 100)->count();
-                }
-            }
-
             $staff->overall_progress = $totalCoursesCount > 0
                 ? round($totalProgressSum / $totalCoursesCount, 1)
                 : 0;

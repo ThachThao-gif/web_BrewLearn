@@ -77,7 +77,6 @@
     <div id="tab-3" class="help-tab-content hidden">
         <form action="{{ route('help.store') }}" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-2xl border border-[#E8DFC8] shadow-sm space-y-4">
             @csrf
-            <input type="hidden" name="user_id" value="{{ request('user_id', 1) }}">
             <h3 class="font-bold text-slate-800 text-sm border-b pb-2">🚨 BÁO LỖI HỆ THỐNG / YÊU CẦU TRỢ GIÚP</h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
