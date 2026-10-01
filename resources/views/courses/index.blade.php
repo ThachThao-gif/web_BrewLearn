@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Chương Trình Đào Tạo & SOP - BrewLearn')
+@section('title', 'Chương Trình Đào Tạo - BrewLearn')
 
 @section('content')
 @php
@@ -21,9 +21,9 @@
 
 <div class="space-y-6">
     <!-- HEADER TRANG -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="bg-white border border-coffee-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-xl md:text-2xl font-extrabold text-coffee-900">Chương Trình Đào Tạo & SOP</h1>
+            <h1 class="text-xl md:text-2xl font-extrabold text-coffee-900">Chương Trình Đào Tạo</h1>
             <p class="text-xs text-slate-500 mt-1">Danh sách các khóa học tiêu chuẩn Barista phân theo cấp độ và chuyên môn.</p>
         </div>
 

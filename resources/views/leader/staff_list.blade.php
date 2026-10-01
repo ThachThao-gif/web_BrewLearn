@@ -7,21 +7,10 @@
 <div class="space-y-6 font-sans" x-data="{ searchQuery: '', activeTab: 'all', selectedStaff: null }">
 
     <!-- BREADCRUMB & HEADER CONTAINER -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="bg-white border border-coffee-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <div class="flex items-center space-x-2 text-xs text-slate-500 font-medium mb-1">
-                <span>QUẢN TRỊ CA & ĐÀO TẠO</span>
-                <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                <span class="text-coffee-800 font-semibold">Danh Sách Nhân Sự Ca & Theo Dõi Năng Lực</span>
-            </div>
             <h1 class="text-2xl font-bold text-coffee-900 tracking-tight">Danh Sách Nhân Sự Ca & Theo Dõi Năng Lực</h1>
-            <div class="flex items-center space-x-3 text-xs text-slate-600 mt-1">
-                <span class="flex items-center"><i class="fa-solid fa-sun text-amber-500 mr-1.5"></i> Ca Trực Hiện Tại</span>
-                <span>•</span>
-                <span>{{ $truongCa->ChiNhanh ?? 'Flagship Quận 1, TP.HCM' }}</span>
-                <span>•</span>
-                <span>Trưởng ca: <strong class="text-coffee-900 font-semibold">{{ $truongCa->name ?? 'Chưa phân công' }}</strong></span>
-            </div>
+            <p class="text-sm text-slate-500 mt-2">Theo dõi nhân viên trong ca, tiến độ đào tạo và các hạn đánh giá cần xử lý.</p>
         </div>
 
         <div class="flex items-center space-x-2.5">
@@ -36,42 +25,29 @@
         </div>
     </div>
 
-    <!-- BANNER SECURITY TIER 2 -->
-    <div class="bg-[#FFFDF9] border border-[#E8DFC8] rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
-        <div class="flex items-center space-x-3">
-            <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center text-sm font-bold shrink-0">
-                <i class="fa-solid fa-shield-halved text-[#D96B27]"></i>
-            </div>
-            <div class="text-xs">
-                <span class="font-bold text-coffee-900 uppercase mr-1">SECURITY TIER 2</span>
-                <span class="font-bold text-coffee-900">Chế độ xem chuẩn hóa Trưởng Ca:</span>
-                <span class="text-slate-600"> Giám sát vận hành ca, Tiến độ đào tạo & Theo dõi thời hạn sát hạch nhân sự.</span>
-            </div>
-        </div>
-    </div>
-
     <!-- PHẦN THỐNG KÊ NHANH -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div class="bg-white border border-[#E8DFC8] rounded-2xl p-4 shadow-sm flex items-center justify-between">
+        <div class="bg-white border border-coffee-200 border-t-4 border-t-coffee-700 rounded-2xl p-5 shadow-sm flex items-start justify-between gap-3">
             <div>
-                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">TỔNG NHÂN SỰ CA HÔM NAY</p>
+                <p class="text-xs font-bold uppercase tracking-wider text-coffee-700 mb-3">Nhân sự trong ca</p>
                 <div class="flex items-baseline space-x-2">
-                    <span class="text-2xl font-black text-coffee-900">{{ str_pad($totalStaffs ?? count($staffs), 2, '0', STR_PAD_LEFT) }}</span>
+                    <span class="text-3xl font-black text-coffee-900">{{ $totalStaffs ?? count($staffs) }}</span>
                     <span class="text-xs font-bold text-slate-600">nhân viên</span>
                 </div>
-                <p class="text-[11px] text-slate-500 mt-1">{{ $totalStaffs ?? count($staffs) }} Đang trong ca</p>
+                <p class="text-xs text-slate-500 mt-3">Nhân viên đang làm thuộc phạm vi ca phụ trách.</p>
             </div>
             <div class="w-10 h-10 rounded-xl bg-coffee-50 text-coffee-800 flex items-center justify-center text-lg">
                 <i class="fa-solid fa-users"></i>
             </div>
         </div>
 
-        <div class="bg-white border border-[#E8DFC8] rounded-2xl p-4 shadow-sm flex items-center justify-between">
+        <div class="bg-white border border-emerald-100 border-t-4 border-t-emerald-500 rounded-2xl p-5 shadow-sm flex items-start justify-between gap-3">
             <div>
-                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">TIẾN ĐỘ HỌC TRUNG BÌNH CA</p>
+                <p class="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-3">Tiến độ đào tạo</p>
                 <div class="flex items-baseline space-x-2">
-                    <span class="text-2xl font-black text-coffee-900">{{ $avgProgress ?? 0 }}%</span>
+                    <span class="text-3xl font-black text-coffee-900">{{ $avgProgress ?? 0 }}%</span>
                 </div>
+                <p class="text-xs text-slate-500 mt-3">Tiến độ học trung bình của nhân viên trong ca.</p>
                 <div class="w-28 bg-slate-100 h-1.5 rounded-full overflow-hidden mt-2">
                     <div class="bg-emerald-500 h-full rounded-full transition-all duration-300" style="width: {{ $avgProgress ?? 0 }}%"></div>
                 </div>
@@ -81,19 +57,20 @@
             </div>
         </div>
 
-        <div class="bg-white border border-[#E8DFC8] rounded-2xl p-4 shadow-sm flex items-center justify-between">
+        <a href="{{ route('leader.dashboard') }}" class="bg-amber-50 border border-amber-200 border-t-4 border-t-amber-500 rounded-2xl p-5 shadow-sm flex items-start justify-between gap-3 hover:shadow-md transition focus:outline-none focus:ring-2 focus:ring-amber-500">
             <div>
-                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">ĐẾN KỲ SÁT HẠCH (3 THÁNG)</p>
+                <p class="text-xs font-bold uppercase tracking-wider text-amber-800 mb-3">Nhắc hạn sát hạch</p>
                 <div class="flex items-baseline space-x-2">
-                    <span class="text-2xl font-black text-coffee-900">{{ str_pad($dueCount ?? 0, 2, '0', STR_PAD_LEFT) }}</span>
+                    <span class="text-3xl font-black text-coffee-900">{{ $dueCount ?? 0 }}</span>
                     <span class="text-xs font-bold text-slate-600">nhân sự</span>
                 </div>
-                <p class="text-[11px] text-amber-700 font-medium mt-1">Cần thực hiện sát hạch định kỳ</p>
+                <p class="text-xs text-amber-800 mt-3">Sắp đến hạn trong 7 ngày, đến hạn hoặc quá hạn.</p>
+                <p class="text-xs font-bold text-amber-800 mt-2">Xem lịch & xếp sát hạch <i class="fa-solid fa-arrow-right ml-1"></i></p>
             </div>
             <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-lg">
                 <i class="fa-solid fa-clipboard-check"></i>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- BỘ LỌC TÌM KIẾM & TAB -->
