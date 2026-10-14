@@ -7,21 +7,13 @@
 <div class="space-y-6 font-sans" x-data="{ searchQuery: '', activeTab: 'all', selectedStaff: null }">
 
     <!-- BREADCRUMB & HEADER CONTAINER -->
-    <div class="bg-white border border-coffee-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="page-banner bg-white border border-coffee-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-coffee-900 tracking-tight">Danh Sách Nhân Sự Ca & Theo Dõi Năng Lực</h1>
             <p class="text-sm text-slate-500 mt-2">Theo dõi nhân viên trong ca, tiến độ đào tạo và các hạn đánh giá cần xử lý.</p>
         </div>
 
         <div class="flex items-center space-x-2.5">
-            <button class="px-3.5 py-2 bg-white border border-[#E2D4C1] text-slate-700 hover:bg-coffee-50 rounded-xl text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
-                <i class="fa-solid fa-sliders text-[#6E4E30]"></i>
-                <span>Tùy chỉnh cột</span>
-            </button>
-            <button class="px-4 py-2 bg-coffee-900 hover:bg-coffee-800 text-white rounded-xl text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
-                <i class="fa-solid fa-download"></i>
-                <span>Xuất báo cáo ca</span>
-            </button>
         </div>
     </div>
 
@@ -215,7 +207,6 @@
                                     quizFailed: <?php echo e($quizFailed); ?>,
 
                                     capDo: '<?php echo e($staff->CapDo ?? $staff->cap_do ?? 1); ?>',
-                                    editUrl: '<?php echo e(Route::has('users.edit') ? route('users.edit', $staff->id) : '#'); ?>'
                                 })" 
                                 class="font-bold text-amber-800 hover:text-coffee-900 transition flex items-center text-xs mt-1 cursor-pointer">
                             <i class="fa-solid fa-address-card mr-1.5"></i>Xem Hồ sơ <i class="fa-solid fa-angle-right text-[10px] ml-1"></i>
@@ -324,9 +315,6 @@
             <button type="button" onclick="closeStaffDetail()" class="flex-1 py-2.5 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-200 transition cursor-pointer">
                 Đóng cửa sổ
             </button>
-            <a id="modalEditBtn" href="#" class="flex-1 py-2.5 bg-coffee-900 text-white font-bold text-xs rounded-xl hover:bg-coffee-800 transition text-center flex items-center justify-center gap-1.5 shadow">
-                <i class="fa-solid fa-user-pen text-amber-300"></i> Chỉnh sửa hồ sơ
-            </a>
         </div>
     </div>
 </div>
@@ -370,8 +358,6 @@ function showStaffDetail(data) {
     document.getElementById('modalQuizFailed').innerText = data.quizFailed ?? 0;
 
     // Link chỉnh sửa
-    const elEditBtn = document.getElementById('modalEditBtn');
-    if (elEditBtn) elEditBtn.href = data.editUrl || '#';
 
     // Hiển thị Popup
     const modal = document.getElementById('staffDetailModal');

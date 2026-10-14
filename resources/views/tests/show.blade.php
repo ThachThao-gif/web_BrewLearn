@@ -6,7 +6,7 @@
 <div class="space-y-6 max-w-6xl mx-auto">
 
     <!-- HEADER BÀI THI -->
-    <div class="bg-white rounded-3xl border border-[#E2D4C1] p-6 shadow-sm space-y-4">
+    <div class="page-banner bg-white rounded-3xl border border-[#E2D4C1] p-6 shadow-sm space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center gap-2">
                 <span class="bg-amber-100 text-amber-900 text-xs font-extrabold px-3 py-1 rounded-full uppercase">

@@ -12,6 +12,17 @@ use Tests\TestCase;
 
 class DemoWorkflowTest extends TestCase
 {
+    public function test_leader_cannot_open_or_submit_another_employees_profile(): void
+    {
+        $leader = User::factory()->create(['ChucVu' => 'Trưởng ca']);
+        $employee = User::factory()->create(['name' => 'Nhân viên giữ nguyên']);
+        $this->actingAs($leader)->get(route('users.edit', $employee->id))->assertForbidden();
+        $this->put(route('users.update', $employee->id), ['name' => 'Thay đổi trái quyền'])->assertForbidden();
+        $this->assertDatabaseHas('users', ['id' => $employee->id, 'name' => 'Nhân viên giữ nguyên']);
+        $this->flushSession();
+        $this->get(route('users.edit', $leader->id))->assertOk();
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -101,6 +112,28 @@ class DemoWorkflowTest extends TestCase
         $this->get(route('users.edit'))->assertOk()->assertSee('dark');
         $this->assertDatabaseHas('users', ['id' => $user->id, 'theme' => 'dark']);
         $this->put(route('account.update-contact'), ['secondary_email' => 'invalid'])->assertSessionHasErrors(['secondary_email', 'phone']);
+    }
+
+    public function test_quiz_dashboard_and_list_share_role_and_common_tests(): void
+    {
+        Schema::table('bai_kiem_tra', fn ($table) => $table->string('ChucVu')->nullable());
+        $user = User::factory()->create(['ChucVu' => 'Thu ngân']);
+        foreach ([[1, 'Thu ngân', 80], [2, 'ALL STAFF', 90], [3, 'Barista', 80], [4, 'ALL', 80]] as [$id, $role, $threshold]) {
+            DB::table('bai_kiem_tra')->insert(['MaBaiKiemTra' => $id, 'TenBaiKiemTra' => 'Bài '.$id, 'ChucVu' => $role, 'DiemChuan' => $threshold]);
+        }
+        foreach ([[1, 80], [2, 60], [2, 100], [3, 0]] as [$testId, $score]) {
+            DB::table('ket_qua_kiem_tra')->insert(['user_id' => $user->id, 'MaBaiKiemTra' => $testId,
+                'Diem' => $score, 'TrangThai' => 'Dat', 'SoCauDung' => $score / 10, 'TongSoCau' => 10,
+                'created_at' => now(), 'updated_at' => now()]);
+        }
+        $this->actingAs($user)->get(route('dashboard'))->assertOk()
+            ->assertViewHas('completedTestsCount', 2)->assertViewHas('totalTestsCount', 3)
+            ->assertViewHas('avgQuizScore', 80.0);
+        $this->get(route('tests.index'))->assertOk()->assertViewHas('tests', function ($tests) {
+            return $tests->pluck('MaBaiKiemTra')->all() === [1, 2, 4]
+                && $tests->firstWhere('MaBaiKiemTra', 2)->History->count() === 2
+                && $tests->firstWhere('MaBaiKiemTra', 4)->Diem === null;
+        });
     }
 
     public function test_password_change_requires_current_password_and_keeps_current_session(): void

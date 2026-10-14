@@ -5,7 +5,7 @@
 @section('content')
 <div class="space-y-6">
     <!-- HEADER TRANG -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-[#E8DFC8] shadow-sm">
+    <div class="page-banner flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-[#E8DFC8] shadow-sm">
         <div>
             <h1 class="text-xl md:text-2xl font-extrabold text-coffee-900 flex items-center gap-2">
                 <i class="fa-solid fa-clipboard-check text-amber_brand"></i>
@@ -19,16 +19,12 @@
 
     @php
         // 1. Xác định vị trí / chức vụ của user hiện tại
-        $currentUser = $user ?? auth()->user();
+        $currentUser = auth()->user() ?? $currentUser ?? $user ?? null;
         $userChucVu = $currentUser->ChucVu ?? $currentUser->chuc_vu ?? $currentUser->vi_tri ?? 'Thu ngân';
 
         // 2. Lọc danh sách bài kiểm tra phù hợp với chức vụ của user
         $allTests = $tests ?? $baiKiemTra ?? [];
-        $filteredTests = collect($allTests)->filter(function($test) use ($userChucVu) {
-            $testChucVu = $test->ChucVu ?? $test->chuc_vu ?? $test->ViTri ?? $test->vi_tri ?? null;
-            // Nếu bài test không khai báo chức vụ, hoặc ghi 'Tất cả', hoặc trùng chính xác chức vụ của user
-            return empty($testChucVu) || $testChucVu === 'Tất cả' || strcasecmp($testChucVu, $userChucVu) === 0;
-        })->values();
+        $filteredTests = collect($allTests)->values();
     @endphp
 
     <!-- DANH SÁCH BÀI KIỂM TRA -->

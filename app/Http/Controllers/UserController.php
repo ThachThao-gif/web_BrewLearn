@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 
 class UserController extends Controller
@@ -78,8 +77,7 @@ class UserController extends Controller
      */
     public function edit(Request $request, $id = null)
     {
-        // Cài đặt luôn thuộc tài khoản đang đăng nhập trong phiên demo.
-        $userId = Auth::id();
+        abort_if($id !== null && (int) $id !== (int) Auth::id(), 403, 'Bạn chỉ được chỉnh sửa hồ sơ của chính mình.');
 
         $user = $request->user();
 
@@ -104,6 +102,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        abort_unless((int) $id === (int) $request->user()->id, 403, 'Bạn chỉ được chỉnh sửa hồ sơ của chính mình.');
         $user = User::findOrFail($id);
 
         // Validate dữ liệu gửi lên từ form
@@ -214,7 +213,6 @@ class UserController extends Controller
                 'quizAttempts' => $quizAttempts,
                 'quizFailed' => $quizFailed,
 
-                'editUrl' => Route::has('users.edit') ? route('users.edit', $staff->id) : '#',
             ],
         ]);
     }

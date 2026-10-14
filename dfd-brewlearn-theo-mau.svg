@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2420" height="1640" viewBox="0 0 2420 1640"><defs><marker id="in" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#334155"/></marker><marker id="out" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#246B5B"/></marker></defs><rect width="2420" height="1640" fill="white"/><text x="1200" y="65" font-family="Arial, sans-serif" font-size="32" fill="#202D40" text-anchor="middle">DFD MỨC NGỮ CẢNH — BREWLEARN</text>
+<text x="1200" y="115" font-family="Arial, sans-serif" font-size="19" fill="#627797" text-anchor="middle">Các đầu vào và đầu ra được tách riêng • Mỗi mũi tên biểu diễn một luồng dữ liệu</text>
+<rect x="1010" y="160" width="360" height="1300" rx="28" fill="#F7F9FC" stroke="#202D40" stroke-width="2"/>
+<path d="M1010 225 H1370" stroke="#202D40" stroke-width="2"/>
+<text x="1190" y="205" font-family="Arial, sans-serif" font-size="26" fill="#202D40" text-anchor="middle">0</text>
+<text x="1190" y="735" font-family="Arial, sans-serif" font-size="30" fill="#202D40" text-anchor="middle">HỆ THỐNG</text>
+<text x="1190" y="778" font-family="Arial, sans-serif" font-size="30" fill="#202D40" text-anchor="middle">BREWLEARN</text>
+<rect x="40" y="185" width="220" height="550" fill="white" stroke="#202D40" stroke-width="2"/>
+<text x="150" y="460" font-family="Arial, sans-serif" font-size="22" fill="#202D40" text-anchor="middle">NHÂN VIÊN</text>
+<path d="M260 210 H1010" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="635" y="200" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">1. Thông tin đăng nhập, hồ sơ và cài đặt tài khoản</text>
+<path d="M260 254 H1010" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="635" y="244" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">2. Yêu cầu tra cứu khóa học, bài học, quiz và thông báo</text>
+<path d="M260 298 H1010" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="635" y="288" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">3. Dữ liệu tiến độ và hoàn thành bài học</text>
+<path d="M260 342 H1010" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="635" y="332" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">4. Câu trả lời bài kiểm tra</text>
+<path d="M260 386 H1010" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="635" y="376" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">5. Nội dung yêu cầu hỗ trợ</text>
+<path d="M1010 430 H260" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="635" y="420" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">6. Kết quả xác thực và cập nhật tài khoản</text>
+<path d="M1010 474 H260" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="635" y="464" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">7. Nội dung học tập, quiz, SOP, tiêu chuẩn và chính sách</text>
+<path d="M1010 518 H260" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="635" y="508" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">8. Tiến độ, điểm và lịch sử lượt thi</text>
+<path d="M1010 562 H260" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="635" y="552" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">9. Thông báo lịch đánh giá và kết quả đã được duyệt</text>
+<path d="M1010 606 H260" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="635" y="596" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">10. Thông báo nội dung / thời hạn đào tạo lại từng vòng</text>
+<path d="M1010 650 H260" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="635" y="640" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">11. Trạng thái gửi và lịch sử yêu cầu hỗ trợ</text>
+<rect x="2160" y="185" width="220" height="1220" fill="white" stroke="#202D40" stroke-width="2"/>
+<text x="2270" y="795" font-family="Arial, sans-serif" font-size="22" fill="#202D40" text-anchor="middle">TRƯỞNG CA</text>
+<path d="M2160 215 H1370" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="1765" y="205" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">12. Thông tin đăng nhập, hồ sơ và cài đặt tài khoản</text>
+<path d="M2160 290 H1370" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="1765" y="280" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">13. Yêu cầu tra cứu nhân viên, học tập và đánh giá</text>
+<path d="M2160 365 H1370" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="1765" y="355" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">14. Dữ liệu tạo lịch đánh giá ban đầu / định kỳ</text>
+<path d="M2160 440 H1370" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="1765" y="430" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">15. Điểm 5 tiêu chí, nhận xét và đề xuất xử lý</text>
+<path d="M2160 515 H1370" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="1765" y="505" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">16. Nội dung bổ sung đánh giá bị trả lại</text>
+<path d="M2160 590 H1370" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="1765" y="580" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">17. Nội dung nhắc học tập và ghi nhận sự cố</text>
+<path d="M2160 665 H1370" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="1765" y="655" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">18. Xác nhận thực hành / theo dõi vòng được phụ trách</text>
+<path d="M2160 740 H1370" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="1765" y="730" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">19. Tiến độ tự học, câu trả lời quiz và yêu cầu hỗ trợ</text>
+<path d="M1370 815 H2160" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="1765" y="805" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">20. Kết quả xác thực và cập nhật tài khoản</text>
+<path d="M1370 890 H2160" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="1765" y="880" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">21. Danh sách nhân viên trong ca, tiến độ và thống kê quiz</text>
+<path d="M1370 965 H2160" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="1765" y="955" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">22. Danh sách nhắc hạn và điều kiện đánh giá</text>
+<path d="M1370 1040 H2160" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="1765" y="1030" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">23. Lịch đánh giá, trạng thái duyệt và lý do trả lại</text>
+<path d="M1370 1115 H2160" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="1765" y="1105" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">24. Kế hoạch, tiến trình và điều kiện vòng phụ trách</text>
+<path d="M1370 1190 H2160" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="1765" y="1180" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">25. Nội dung tự học, điểm và lịch sử quiz của bản thân</text>
+<path d="M1370 1265 H2160" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="1765" y="1255" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">26. Chính sách, trạng thái gửi và lịch sử yêu cầu hỗ trợ</text>
+<rect x="40" y="825" width="220" height="600" fill="white" stroke="#202D40" stroke-width="2"/>
+<text x="150" y="1125" font-family="Arial, sans-serif" font-size="22" fill="#202D40" text-anchor="middle">QUẢN LÝ</text>
+<text x="150" y="1155" font-family="Arial, sans-serif" font-size="22" fill="#202D40" text-anchor="middle">CỬA HÀNG</text>
+<path d="M260 850 H1010" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="635" y="840" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">27. Thông tin đăng nhập, hồ sơ và cài đặt tài khoản</text>
+<path d="M260 894 H1010" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="635" y="884" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">28. Yêu cầu tìm kiếm, tra cứu và bộ lọc theo ca</text>
+<path d="M260 938 H1010" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="635" y="928" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">29. Dữ liệu tạo ca, phân ca và trạng thái làm việc</text>
+<path d="M260 982 H1010" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="635" y="972" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">30. Quyết định duyệt / trả lại đánh giá và lý do</text>
+<path d="M260 1026 H1010" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="635" y="1016" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">31. Quyết định duyệt / từ chối đề xuất chờ duyệt</text>
+<path d="M260 1070 H1010" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="635" y="1060" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">32. Kế hoạch từng vòng, trưởng ca phụ trách và thời hạn</text>
+<path d="M260 1114 H1010" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#in)"/>
+<text x="635" y="1104" font-family="Arial, sans-serif" font-size="16" fill="#334155" text-anchor="middle">33. Dữ liệu lịch đánh giá lại và yêu cầu hỗ trợ</text>
+<path d="M1010 1158 H260" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="635" y="1148" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">34. Kết quả xác thực và cập nhật tài khoản</text>
+<path d="M1010 1202 H260" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="635" y="1192" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">35. Tổng quan cửa hàng, nhân sự và hồ sơ học tập / quiz</text>
+<path d="M1010 1246 H260" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="635" y="1236" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">36. Mức nguy cơ dự đoán và kết quả đánh giá riêng biệt</text>
+<path d="M1010 1290 H260" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="635" y="1280" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">37. Đánh giá / đề xuất chờ duyệt, bị trả lại và đã duyệt</text>
+<path d="M1010 1334 H260" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="635" y="1324" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">38. Điều kiện đánh giá lại, tiến trình và lịch sử từng vòng</text>
+<path d="M1010 1378 H260" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="635" y="1368" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">39. Thông báo chờ duyệt, nhắc hạn đánh giá / đào tạo lại</text>
+<path d="M1010 1422 H260" stroke="#246B5B" stroke-width="1.5" fill="none" marker-end="url(#out)"/>
+<text x="635" y="1412" font-family="Arial, sans-serif" font-size="16" fill="#246B5B" text-anchor="middle">40. Chính sách, trạng thái gửi và lịch sử yêu cầu hỗ trợ</text>
+<text x="1200" y="1520" font-family="Arial, sans-serif" font-size="17" fill="#627797" text-anchor="middle">Phạm vi: nhân viên, trưởng ca và quản lý cửa hàng. Model và cơ sở dữ liệu thuộc nội bộ tiến trình 0.</text>
+<text x="1200" y="1550" font-family="Arial, sans-serif" font-size="17" fill="#627797" text-anchor="middle">Đầu vào: mũi tên hướng vào hệ thống. Đầu ra: mũi tên hướng về tác nhân.</text>
+<text x="1200" y="1580" font-family="Arial, sans-serif" font-size="17" fill="#627797" text-anchor="middle">Xác nhận thực hành / theo dõi thuộc trưởng ca phụ trách. Kết quả năng lực gửi cho nhân viên sau khi quản lý duyệt.</text></svg>

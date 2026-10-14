@@ -14,7 +14,7 @@
         </div>
 
         <!-- HEADER TỔNG QUAN -->
-        <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-sm space-y-4">
+        <div class="page-banner bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-sm space-y-4">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
                 <div class="space-y-1">
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-amber-900 border border-amber-200/60 text-xs font-bold uppercase tracking-wider">

@@ -47,6 +47,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        .page-back-button { position: fixed; bottom: 20px; left: 16px; z-index: 30; transition: left .25s ease; }
+        @media (min-width: 768px) {
+            .page-back-button { left: calc(var(--sidebar-width, 288px) + 24px); }
+            body.sidebar-collapsed .page-back-button { left: 24px; }
+        }
+        #mainContent > main { padding-bottom: 88px; }
+        #sidebar nav a[aria-current="page"], #sidebar nav a[data-modal-active="true"] {
+            background: #70512b !important;
+            color: #fff !important;
+            border: 1px solid #70512b !important;
+            font-weight: 700;
+            box-shadow: 0 3px 8px #49321520;
+        }
+        #sidebar nav a[aria-current="page"] i, #sidebar nav a[data-modal-active="true"] i { color: #fff !important; }
+        #sidebar nav a:focus-visible { outline: 2px solid #b78540; outline-offset: 3px; }
+        #sidebar:has(a[data-modal-active="true"]) nav a[aria-current="page"] {
+            background: transparent !important; color: #70512b !important; border-color: transparent !important; box-shadow: none;
+        }
+        #sidebar:has(a[data-modal-active="true"]) nav a[aria-current="page"] i { color: #70512b !important; }
+        .page-banner {
+            background: #70512b !important;
+            color: #fff !important;
+            border: 1px solid #70512b !important;
+            border-radius: 24px !important;
+            padding: 24px 28px !important;
+            box-shadow: 0 3px 6px #49321518 !important;
+        }
+        .page-banner h1, .page-banner h1 i { color: #fff !important; }
+        .page-banner h1 { font-size: 24px; line-height: 1.35; font-weight: 800; }
+        .page-banner > p, .page-banner > div > p,
+        .page-banner > div > div > p { color: #fef3c7 !important; }
+        @media (max-width: 640px) {
+            .page-banner { padding: 20px !important; }
+            .page-banner h1 { font-size: 20px; }
+        }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #FAF7F2; }
         ::-webkit-scrollbar-thumb { background: #D5C5B3; border-radius: 9999px; }
@@ -129,7 +164,7 @@
         <h3 class="px-3 text-[11px] font-bold uppercase tracking-wider text-coffee-500 mb-2">Quản lý cửa hàng</h3>
         <nav class="space-y-1">
             @foreach(['dashboard' => ['chart-pie', 'Tổng quan cửa hàng'], 'staff' => ['users', 'Hồ sơ nhân viên'], 'assessments' => ['clipboard-check', 'Duyệt đánh giá'], 'training' => ['arrows-rotate', 'Giao đào tạo lại'], 'notifications' => ['bell', 'Thông báo']] as $page => [$icon, $label])
-                <a href="{{ route('manager.'.$page) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('manager.'.$page) || ($page === 'staff' && request()->routeIs('manager.profile')) ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:bg-[#F3ECE1]' }}"><i class="fa-solid fa-{{ $icon }} w-5 text-center text-coffee-600"></i><span>{{ $label }}</span></a>
+                <a aria-current="{{ request()->routeIs('manager.'.$page) || ($page === 'staff' && request()->routeIs('manager.profile')) ? 'page' : 'false' }}" href="{{ route('manager.'.$page) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('manager.'.$page) || ($page === 'staff' && request()->routeIs('manager.profile')) ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:bg-[#F3ECE1]' }}"><i class="fa-solid fa-{{ $icon }} w-5 text-center text-coffee-600"></i><span>{{ $label }}</span></a>
             @endforeach
         </nav>
     </div>
@@ -137,19 +172,20 @@
     <div>
         <h3 class="px-3 text-[11px] font-bold uppercase tracking-wider text-coffee-500 mb-2">Quản lý nhân viên</h3>
         <nav class="space-y-1">
-            <a href="{{ route('leader.staffList') }}" 
+            <a aria-current="{{ request()->routeIs('leader.staffList') ? 'page' : 'false' }}" href="{{ route('leader.staffList') }}" 
                class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('leader.staffList') ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm font-semibold' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }}">
                 <i class="fa-solid fa-id-card w-5 text-center text-slate-500"></i>
                 <span>Danh Sách Nhân Sự Ca</span>
             </a>
 
-            <a href="{{ route('leader.dashboard') }}" 
+            <a aria-current="{{ request()->routeIs('leader.dashboard') ? 'page' : 'false' }}" href="{{ route('leader.dashboard') }}" 
                class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1] transition">
                 <i class="fa-solid fa-clipboard-check w-5 text-center text-slate-500"></i>
                 <span>Sát Hạch & Chấm Điểm</span>
             </a>
 
             <!-- 🔥 KHÔI PHỤC MỤC GỬI THÔNG BÁO CHO TRƯỞNG CA -->
+            <a aria-current="{{ request()->routeIs('training.*') ? 'page' : 'false' }}" href="{{ route('training.assignments') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-coffee-100"><i class="fa-solid fa-user-check w-5 text-center"></i>Đào tạo lại tôi phụ trách</a>
             <a href="javascript:void(0)" onclick="openSendNotificationModal()" 
                class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1] transition">
                 <i class="fa-solid fa-paper-plane w-5 text-center text-amber_brand"></i>
@@ -167,12 +203,12 @@
     <div>
         <h3 class="px-3 text-[11px] font-bold uppercase tracking-wider text-coffee-500 mb-2">Học tập & kiểm tra của tôi</h3>
         <nav class="space-y-1">
-            <a href="{{ route('courses.index') }}"
+            <a aria-current="{{ request()->routeIs('courses.index', 'courses.show', 'courses.lesson', 'lessons.*') ? 'page' : 'false' }}" href="{{ route('courses.index') }}"
                class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('courses.*', 'lessons.*') ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }} transition">
                 <i class="fa-solid fa-book-open w-5 text-center {{ request()->routeIs('courses.*', 'lessons.*') ? 'text-coffee-800' : 'text-slate-500' }}"></i>
                 <span>Khóa học & Bài giảng</span>
             </a>
-            <a href="{{ route('tests.index') }}"
+            <a aria-current="{{ request()->routeIs('tests.*') ? 'page' : 'false' }}" href="{{ route('tests.index') }}"
                class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('tests.*') ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }} transition">
                 <i class="fa-solid fa-clipboard-check w-5 text-center {{ request()->routeIs('tests.*') ? 'text-coffee-800' : 'text-slate-500' }}"></i>
                 <span>Kiểm tra của tôi</span>
@@ -185,28 +221,28 @@
     <h3 class="px-3 text-[11px] font-bold uppercase tracking-wider text-coffee-500 mb-2">Học Tập & Đánh Giá</h3>
     <nav class="space-y-1">
         <!-- Tổng quan lộ trình -->
-        <a href="{{ route('dashboard', ['user_id' => auth()->id() ?? request()->query('user_id', 1)]) }}" 
+        <a aria-current="{{ request()->routeIs('dashboard', 'courses.roadmap') ? 'page' : 'false' }}" href="{{ route('dashboard', ['user_id' => auth()->id() ?? request()->query('user_id', 1)]) }}" 
            class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('dashboard') ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }} transition">
             <i class="fa-solid fa-chart-pie w-5 text-center {{ request()->routeIs('dashboard') ? 'text-coffee-800' : 'text-slate-500' }}"></i>
             <span>Tổng quan lộ trình</span>
         </a>
 
         <!-- Khóa học & Bài giảng -->
-        <a href="{{ route('courses.index', ['user_id' => auth()->id() ?? request()->query('user_id', 1)]) }}" 
+        <a aria-current="{{ request()->routeIs('courses.index', 'courses.show', 'courses.lesson', 'lessons.*') ? 'page' : 'false' }}" href="{{ route('courses.index', ['user_id' => auth()->id() ?? request()->query('user_id', 1)]) }}" 
            class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('courses.*') ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }} transition">
             <i class="fa-solid fa-book-open w-5 text-center {{ request()->routeIs('courses.*') ? 'text-coffee-800' : 'text-slate-500' }}"></i>
             <span>Khóa học & Bài giảng</span>
         </a>
 
         <!-- Kiểm tra & Đánh giá -->
-        <a href="{{ route('tests.index', ['user_id' => auth()->id() ?? request()->query('user_id', 1)]) }}" 
+        <a aria-current="{{ request()->routeIs('tests.*') ? 'page' : 'false' }}" href="{{ route('tests.index', ['user_id' => auth()->id() ?? request()->query('user_id', 1)]) }}" 
            class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('tests.*') ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }} transition">
             <i class="fa-solid fa-clipboard-check w-5 text-center {{ request()->routeIs('tests.*') ? 'text-coffee-800' : 'text-slate-500' }}"></i>
             <span>Kiểm tra & Đánh giá</span>
         </a>
 
         <!-- Tiêu chuẩn năng lực -->
-        <a href="{{ route('assessments.show') }}" 
+        <a aria-current="{{ request()->routeIs('assessments.*') ? 'page' : 'false' }}" href="{{ route('assessments.show') }}" 
            class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('assessments.show') ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }} transition">
             <i class="fa-solid fa-list-check w-5 text-center {{ request()->routeIs('assessments.show') ? 'text-coffee-800' : 'text-slate-500' }}"></i>
             <span>Tiêu chuẩn năng lực</span>
@@ -227,19 +263,22 @@
         @endif
 
         <!-- DÙNG CHUNG CHO CẢ LEADER & NHÂN VIÊN -->
+        @if(!$isLeader && \Illuminate\Support\Facades\Schema::hasTable('retraining_rounds') && \Illuminate\Support\Facades\DB::table('retraining_rounds')->where('owner_id', auth()->id())->exists())
+            <a aria-current="{{ request()->routeIs('training.*') ? 'page' : 'false' }}" href="{{ route('training.assignments') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-coffee-100"><i class="fa-solid fa-user-check w-5 text-center"></i>Đào tạo lại tôi phụ trách</a>
+        @endif
        
 
-        <a href="{{ route('users.edit', ['id' => $currentUser->id ?? 1]) }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('users.edit') ? 'text-coffee-900 bg-[#F3ECE1] font-semibold' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }}">
+        <a aria-current="{{ request()->routeIs('users.*') ? 'page' : 'false' }}" href="{{ route('users.edit', ['id' => $currentUser->id ?? 1]) }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('users.edit') ? 'text-coffee-900 bg-[#F3ECE1] font-semibold' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }}">
             <i class="fa-solid fa-gear w-5 text-center text-slate-500"></i>
             <span>Cài đặt tài khoản</span>
         </a>
 
-        <a href="{{ route('policies.index', ['user_id' => $currentUser->id ?? 1]) }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('policies.index') ? 'text-coffee-900 bg-[#F3ECE1] font-semibold' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }}">
+        <a aria-current="{{ request()->routeIs('policies.*') ? 'page' : 'false' }}" href="{{ route('policies.index', ['user_id' => $currentUser->id ?? 1]) }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('policies.index') ? 'text-coffee-900 bg-[#F3ECE1] font-semibold' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }}">
             <i class="fa-solid fa-file-contract w-5 text-center text-slate-500"></i>
             <span>Nội quy & Chính sách</span>
         </a>
          <!-- Nút Trợ giúp & Hỗ trợ trong Sidebar -->
-<a href="{{ route('help.index') }}"
+<a aria-current="{{ request()->routeIs('help.*') ? 'page' : 'false' }}" href="{{ route('help.index') }}"
    class="flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all {{ request()->routeIs('help.*') ? 'bg-amber-100 text-amber-900 border border-amber-300 shadow-sm' : 'text-slate-600 hover:bg-amber-50/50' }}">
     <i class="fa-solid fa-headset text-base text-amber-700"></i>
     <span>Trợ giúp & Hỗ trợ</span>
@@ -285,6 +324,23 @@
         </div>
         <div id="sidebarResizeHandle" role="separator" tabindex="0" aria-label="Thay đổi độ rộng menu" aria-orientation="vertical" aria-valuemin="240" aria-valuemax="420" aria-valuenow="288" title="Kéo để thay đổi độ rộng menu; dùng phím mũi tên trái/phải" class="absolute right-0 top-0 bottom-0 w-2 cursor-col-resize touch-none hover:bg-coffee-300 focus:bg-coffee-300 focus:outline-none"></div>
     </aside>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            [['sopModal', 'openSOPModal()'], ['sendNotificationModal', 'openSendNotificationModal()'], ['incidentModal', 'openIncidentModal()']].forEach(([id, action]) => {
+                const modal = document.getElementById(id);
+                const link = document.querySelector(`#sidebar nav a[onclick="${action}"]`);
+                if (!modal || !link) return;
+                const update = () => {
+                    const open = !modal.classList.contains('hidden');
+                    link.dataset.modalActive = String(open);
+                    link.setAttribute('aria-expanded', String(open));
+                };
+                link.setAttribute('aria-controls', id);
+                new MutationObserver(update).observe(modal, { attributes: true, attributeFilter: ['class'] });
+                update();
+            });
+        });
+    </script>
 
     <!-- MAIN CONTENT WRAPPER -->
     <div id="mainContent" class="flex-1 flex flex-col min-w-0 min-h-screen">
@@ -416,10 +472,10 @@
 </div> <!-- Đóng div bên phải -->
 </header>
 
-<!-- Nút Quay lại đặt sát lề trái phần nội dung chính -->
-@if(!$isManager && !request()->routeIs('dashboard'))
-    <div class="fixed bottom-6 left-[320px] z-[9999]">
-        <button onclick="window.history.back()" 
+<!-- Nút quay lại dùng chung cho nhân viên, trưởng ca và quản lý cửa hàng -->
+    <div class="page-back-button">
+        <button onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = this.dataset.fallback; }"
+                data-fallback="{{ route($isManager ? 'manager.dashboard' : ($isLeader ? 'leader.dashboard' : 'dashboard')) }}"
                 type="button"
                 class="group inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-amber-950 bg-amber-100/90 backdrop-blur-md border border-amber-300/80 rounded-full shadow-lg hover:bg-amber-800 hover:text-white hover:border-amber-800 transition-all duration-200 active:scale-95 cursor-pointer">
             <svg class="w-4 h-4 text-amber-900 group-hover:text-white transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -428,7 +484,6 @@
             <span>Quay lại</span>
         </button>
     </div>
-@endif
 
 <!-- MAIN BODY CONTAINER -->
 <main class="p-4 md:p-8 space-y-7 max-w-7xl w-full mx-auto flex-1">

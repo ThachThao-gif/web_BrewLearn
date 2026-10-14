@@ -1,0 +1,595 @@
+Mở đầu
+Tính cấp thiết của đề tài
+Tin học hóa công tác quản lý sinh viên là một nhu cầu cần thiết trong trường đại học, đặc biệt là trong giai đoạn hiện nay khi lĩnh vực công nghệ ngày càng phát triển. Việc ứng dụng công nghệ thông tin để quản lý sinh viên giúp tiết kiệm thời gian, chi phí và hạn chế các sai sót trong quá trình xử lý công việc.….
+Mục đích nghiên cứu
+Xây dựng một hệ thống quản lý sinh viên trực tuyến đáp ứng các yêu cầu về quy trình, nghiệp vụ của hoạt động quản lý sinh viên, giúp trường đại học dễ dàng kiểm tra và đánh giá tất cả hoạt động dạy và học trong nhà trường, qua đó giúp nâng cao hiệu quả trong công tác đào tạo.
+Đối tượng và phạm vi nghiên cứu:
+Đối tượng nghiên cứu của đề tài là các trường đại học nói chung và trường Đại học XYZ… nói riêng.
+Phạm vi nghiên cứu là hệ thống quản lý sinh viên của các trường đại học.
+Ý nghĩa khoa học và tính thực tiễn của đề tài
+Việc xây dựng hệ thống quản lý sinh viên là một công việc quan trọng nhằm nâng cao chất lượng đào tạo trong trường đại học. Ngoài ra với các hệ thống quản lý trực tuyến, người dạy và người học có thể dễ dàng theo dõi được quá trình học tập và giảng dạy…..
+Phương pháp nghiên cứu
+Về lý thuyết: 
+Tìm hiểu về quy trình, nghiệp vụ của các hoạt động quản lý sinh viên.
+Tìm hiểu về ngôn ngữ lập trình PHP, Laravel framework.
+Tìm hiểu về cơ sở dữ liệu MySQL.
+Tìm hiểu về mô hình MVC trong PHP.
+Về thực nghiệm: 
+Phân chia hệ thống thành nhiều module chức năng dựa vào các quy trình, nghiệp vụ. 
+Phân tích, thiết kế và xây dựng lần lượt các module chức năng theo thứ tự độ ưu tiên.
+Kiểm thử các module đã hoàn thành và tích hợp vào hệ thống….
+Thời gian thực hiện
+Từ 25/09/2022 đến /12/2022.
+Kết quả dự kiến đạt được
+Thiết kế được hệ thống quản lý sinh viên….
+Tài liệu SRS …
+Viết được khóa luận theo yêu cầu của nhà trường
+Nội dung
+Đồ án có cấu trúc gồm 5 chương, cụ thể như sau:
+
+
+CHƯƠNG 1. TỔNG QUAN ĐỀ TÀI
+1.1. Lý do chọn đề tài
+Trong hoạt động kinh doanh cửa hàng cà phê, nhân sự tuyến đầu như nhân viên pha chế, thu ngân và phục vụ trực tiếp tham gia vào quá trình cung cấp sản phẩm, tiếp nhận yêu cầu và phục vụ khách hàng. Kiến thức nghiệp vụ, kỹ năng thực hành và tác phong của nhân viên có ảnh hưởng đến chất lượng dịch vụ và sự nhất quán trong vận hành giữa các cửa hàng. Vì vậy, đào tạo và đánh giá năng lực nhân viên là những hoạt động cần được tổ chức, theo dõi và cập nhật thường xuyên.
+Trong bối cảnh quản lý giả định của đề tài, thông tin đào tạo được lưu trữ phân tán, việc theo dõi tiến độ học tập và tổng hợp kết quả chủ yếu thực hiện bằng bảng tính hoặc trao đổi trực tiếp. Cách quản lý này gây khó khăn khi cần xác định nhân viên đã hoàn thành nội dung nào, còn thiếu yêu cầu nào, đã được đánh giá hay đang cần đào tạo lại. Việc lưu lịch sử phê duyệt và theo dõi kết quả qua nhiều lần đào tạo lại cũng chưa được tổ chức thống nhất.
+Bên cạnh đó, kết quả bài kiểm tra kiến thức chưa đủ để phản ánh toàn bộ năng lực thực hiện công việc. Nhân viên cần được đánh giá thêm về nghiệp vụ, kỹ năng, tuân thủ quy trình, phục vụ và tác phong. Đối với trường hợp chưa đạt, hệ thống cần hỗ trợ ghi nhận đề xuất, phê duyệt, phân công đào tạo lại và đánh giá lại để theo dõi quá trình cải thiện.
+Dữ liệu học tập và kiểm tra còn có thể được khai thác để xây dựng mô hình dự đoán nguy cơ chưa đạt chuẩn năng lực. Kết quả dự đoán cung cấp thêm một nguồn thông tin tham khảo cho quản lý, nhưng cần được phân biệt với kết quả đánh giá thực tế và không thay thế quyết định của người có trách nhiệm.
+Từ những yêu cầu trên, đề tài “Phân tích và thiết kế hệ thống thông tin quản lý đào tạo và dự đoán nguy cơ nhân viên chưa đạt chuẩn năng lực tại chuỗi cửa hàng cà phê BrewLearn” được thực hiện. Đề tài sử dụng bối cảnh doanh nghiệp giả định để phân tích quy trình, thiết kế hệ thống và xây dựng nguyên mẫu web minh họa các chức năng nghiệp vụ.
+1.2. Mục tiêu nghiên cứu
+1.2.1. Mục tiêu tổng quát
+Phân tích và thiết kế hệ thống thông tin quản lý đào tạo nhân viên cửa hàng cà phê, đồng thời xây dựng nguyên mẫu BrewLearn hỗ trợ học tập, kiểm tra, đánh giá năng lực, phê duyệt và quản lý đào tạo lại. Hệ thống tích hợp kết quả dự đoán nguy cơ từ dữ liệu học tập và kiểm tra để hỗ trợ quản lý theo dõi nhân viên.
+1.2.2. Mục tiêu cụ thể
+- Phân tích quy trình quản lý đào tạo hiện tại trong bối cảnh giả định, xác định hạn chế và đề xuất quy trình cải tiến.
+- Xác định yêu cầu chức năng, quy tắc nghiệp vụ và phạm vi truy cập của nhân viên, trưởng ca và quản lý cửa hàng.
+- Xây dựng các mô hình phân tích và thiết kế, gồm sơ đồ quy trình nghiệp vụ, sơ đồ phân rã chức năng, use case, sơ đồ dòng dữ liệu, ERD và từ điển dữ liệu.
+- Thiết kế cơ sở dữ liệu lưu thông tin nhân sự, nội dung đào tạo, tiến độ học tập, lịch sử kiểm tra, đánh giá và các vòng đào tạo lại.
+- Xác định bộ tiêu chí và công thức đánh giá năng lực; tổ chức theo dõi kết quả trước và sau các vòng đào tạo lại khi có dữ liệu phù hợp.
+- Xây dựng mô hình dự đoán minh họa trên dữ liệu giả lập, đánh giá kết quả và tích hợp khả năng đọc dữ liệu, lưu dự đoán vào hệ thống.
+- Xây dựng nguyên mẫu web bằng PHP, Laravel và MySQL; kiểm thử các chức năng và quy trình chính.
+- Thiết kế dashboard hiển thị xu hướng kết quả đánh giá đã duyệt và phân bố nguy cơ dự đoán.
+1.3. Câu hỏi nghiên cứu
+Đề tài tập trung trả lời các câu hỏi sau:
+1. Quy trình quản lý đào tạo trong bối cảnh giả định tồn tại những hạn chế nào về lưu trữ, theo dõi học tập, đánh giá và tổ chức đào tạo lại?
+2. Hệ thống cần có chức năng, cấu trúc dữ liệu và cơ chế phân quyền như thế nào để phục vụ nhân viên, trưởng ca và quản lý cửa hàng?
+3. Quy trình đánh giá, phê duyệt và đào tạo lại cần được tổ chức như thế nào để lưu được lịch sử và theo dõi kết quả qua từng vòng?
+4. Dữ liệu học tập và kiểm tra có thể được sử dụng như thế nào để xây dựng mô hình dự đoán nguy cơ chưa đạt chuẩn năng lực trên dữ liệu giả lập?
+5. Kết quả dự đoán cần được trình bày và sử dụng như thế nào để hỗ trợ quản lý mà không thay thế kết quả đánh giá thực tế?
+1.4. Đối tượng nghiên cứu
+Đối tượng nghiên cứu của đề tài gồm:
+- Quy trình đào tạo, kiểm tra kiến thức và đánh giá năng lực nhân viên cửa hàng cà phê.
+- Quy trình xét duyệt kết quả, phân công đào tạo lại và đánh giá lại.
+- Thông tin nhân sự, tiến độ học tập, kết quả kiểm tra và lịch sử đánh giá.
+- Phương pháp phân tích, thiết kế hệ thống thông tin và xây dựng ứng dụng web.
+- Phương pháp xây dựng, đánh giá và tích hợp mô hình dự đoán nguy cơ từ dữ liệu học tập và kiểm tra.
+1.5. Phạm vi nghiên cứu
+1.5.1. Phạm vi không gian
+Đề tài được xây dựng trên bối cảnh giả định của chuỗi cửa hàng cà phê BrewLearn. Bối cảnh này phục vụ việc xác định yêu cầu, thiết kế và minh họa hệ thống, không phải kết quả khảo sát tại một doanh nghiệp cụ thể.
+Hệ thống phục vụ ba nhóm người dùng: nhân viên, trưởng ca và quản lý cửa hàng. Nhóm nhân viên bao gồm các vị trí nghiệp vụ như pha chế, thu ngân và phục vụ. 
+1.5.2. Phạm vi thời gian và dữ liệu
+Thời gian thực hiện đề tài từ ngày 07/09/2026 đến ngày 14/11/2026.
+Dữ liệu dùng để huấn luyện và đánh giá mô hình dự đoán là dữ liệu giả lập. Dữ liệu trên nguyên mẫu được sử dụng để minh họa và kiểm thử quy trình, chưa đại diện cho một quá trình vận hành thực tế được khảo sát dài hạn.
+Mô hình hiện tại dự đoán nguy cơ từ dữ liệu học tập và kiểm tra tại thời điểm xử lý. Đề tài chưa có cơ sở thực nghiệm để khẳng định khả năng dự báo kết quả năng lực sau một hoặc ba tháng làm việc thực tế.
+1.5.3. Phạm vi chức năng
+Đối với nhân viên:
+- Xem lộ trình và nội dung đào tạo theo chức danh.
+- Học bài, theo dõi tiến độ và thực hiện bài kiểm tra.
+- Xem kết quả kiểm tra, lịch đánh giá và kết quả đánh giá đã được phê duyệt.
+- Học lại nội dung được phân công.
+- Sử dụng chức năng tài khoản, thông báo, tra cứu và gửi yêu cầu hỗ trợ.
+Đối với trưởng ca:
+- Theo dõi nhân viên trong phạm vi phụ trách.
+- Ghi nhận lỗi nghiệp vụ và gửi thông báo nhắc việc.
+- Lập lịch đánh giá khi nhân viên đáp ứng điều kiện.
+- Chấm điểm năng lực, nhập nhận xét và đề xuất xử lý khi chưa đạt.
+- Bổ sung đánh giá bị trả lại.
+- Xác nhận hoàn thành nội dung đào tạo khi được giao phụ trách.
+Đối với quản lý cửa hàng:
+- Xem tổng quan, hồ sơ và tình hình đào tạo tại cửa hàng.
+- Quản lý ca và cập nhật trạng thái làm việc.
+- Phê duyệt hoặc trả lại kết quả đánh giá.
+- Xét duyệt đề xuất, phân công và theo dõi các vòng đào tạo lại.
+- Lập lịch đánh giá lại khi đáp ứng điều kiện.
+- Xem xu hướng đánh giá đã duyệt và nguy cơ dự đoán đã lưu.
+1.5.4. Giới hạn của đề tài
+Đề tài không triển khai quản lý tiền lương, chấm công hoặc toàn bộ hoạt động quản trị nhân sự. Nội dung chương trình, bài học và câu hỏi kiểm tra được chuẩn bị trong cơ sở dữ liệu; chức năng biên soạn và xuất bản nội dung trên giao diện web chưa thuộc phạm vi hiện tại.
+Chương trình dự đoán chạy riêng và lưu kết quả để ứng dụng web đọc, chưa được cấu hình lịch chạy tự động. Kết quả dự đoán không tự phê duyệt đánh giá, không tự phân công đào tạo lại và không được gộp thành điểm đánh giá năng lực.
+1.6. Phương pháp nghiên cứu
+1.6.1. Nghiên cứu tài liệu và xây dựng bối cảnh nghiệp vụ
+Tìm hiểu các khái niệm về đào tạo nhân viên, kiểm tra kiến thức và đánh giá năng lực. Trên cơ sở đó, xây dựng bối cảnh giả định, xác định tác nhân, yêu cầu và quy tắc nghiệp vụ phù hợp với phạm vi đề tài.
+1.6.2. Phân tích và thiết kế hệ thống
+Sử dụng BPMN để mô tả quy trình hiện tại và quy trình cải tiến; sử dụng use case để xác định tương tác giữa người dùng và hệ thống; sử dụng BFD, DFD và từ điển dữ liệu để mô tả chức năng, luồng xử lý và dữ liệu.
+Thiết kế cơ sở dữ liệu bằng ERD, xác định thực thể, thuộc tính, khóa và các ràng buộc. Tổ chức nguyên mẫu theo mô hình MVC để phân chia phần dữ liệu, xử lý và giao diện.
+1.6.3. Thực nghiệm mô hình dự đoán
+Xây dựng dữ liệu giả lập với các đặc trưng: tỷ lệ tiến độ học tập, điểm kiểm tra trung bình, số lượt làm bài, tỷ lệ lượt không đạt và số lượt học. Nhãn mục tiêu biểu diễn trạng thái đạt hoặc chưa đạt theo quy tắc sinh dữ liệu giả lập.
+Khảo sát các thuật toán Logistic Regression, Decision Tree và Random Forest. Đánh giá kết quả bằng Accuracy, Precision, Recall, F1-score và ma trận nhầm lẫn. Phân tích giới hạn của thực nghiệm, đặc biệt là sự khác biệt giữa dữ liệu giả lập và dữ liệu vận hành thực tế.
+1.6.4. Xây dựng và kiểm thử nguyên mẫu
+Xây dựng ứng dụng web bằng PHP, Laravel và MySQL; sử dụng Python cho chương trình huấn luyện và dự đoán.
+Kiểm thử các chức năng chính, phạm vi truy cập, điều kiện đánh giá, phê duyệt, đào tạo lại nhiều vòng và dữ liệu dashboard. Các kịch bản kiểm thử bao gồm trường hợp hợp lệ, thiếu điều kiện, dữ liệu không hợp lệ và thao tác không phù hợp với trạng thái xử lý.
+1.7. Ý nghĩa nghiên cứu
+1.7.1. Ý nghĩa khoa học
+Đề tài minh họa việc kết hợp phân tích, thiết kế hệ thống thông tin với khai thác dữ liệu trong bài toán quản lý đào tạo nhân viên. Các mô hình nghiệp vụ và dữ liệu thể hiện mối liên hệ giữa học tập, kiểm tra, đánh giá thực tế và đào tạo lại.
+Phần thực nghiệm mô hình dự đoán trình bày quá trình xác định đặc trưng, xây dựng nhãn giả lập, huấn luyện và đánh giá mô hình. Kết quả được xem là minh họa phương pháp, chưa phải bằng chứng xác nhận hiệu quả dự đoán trên nhân viên thực tế.
+1.7.2. Ý nghĩa thực tiễn
+Nguyên mẫu BrewLearn hỗ trợ lưu trữ tập trung và theo dõi lịch sử đào tạo. Quy trình phê duyệt giúp phân biệt kết quả đang xử lý với kết quả đã được công bố; cấu trúc các vòng đào tạo lại giúp theo dõi phân công và kết quả từng lần thực hiện.
+Dashboard cung cấp thông tin tổng hợp về xu hướng đánh giá và nguy cơ dự đoán để quản lý tham khảo. Bộ tài liệu phân tích, thiết kế và nguyên mẫu có thể làm cơ sở cho việc phát triển, khảo sát và đánh giá hệ thống trong môi trường thực tế.
+Đề tài chưa khẳng định hệ thống làm giảm chi phí hoặc nâng cao chất lượng dịch vụ, vì những tác động này cần được đo lường trong quá trình áp dụng thực tế.
+1.8. Thời gian thực hiện
+Đề tài được thực hiện từ ngày 07/09/2026 đến ngày 14/11/2026, gồm các công việc:
+- Xác định yêu cầu và xây dựng bối cảnh nghiệp vụ.
+- Phân tích quy trình, chức năng và dữ liệu.
+- Thiết kế cơ sở dữ liệu và giao diện.
+- Xây dựng nguyên mẫu và mô hình dự đoán.
+- Kiểm thử, đánh giá và hoàn thiện báo cáo.
+1.9. Kết quả dự kiến đạt được
+- Bộ tài liệu phân tích và thiết kế, gồm quy trình AS-IS/TO-BE, BFD, use case và đặc tả, DFD, ERD, từ điển dữ liệu và thiết kế xử lý.
+- Cơ sở dữ liệu phục vụ học tập, kiểm tra, đánh giá, dự đoán và quản lý đào tạo lại.
+- Nguyên mẫu web BrewLearn phục vụ nhân viên, trưởng ca và quản lý cửa hàng.
+- Bộ tiêu chí và công thức đánh giá năng lực theo năm thành phần: nghiệp vụ, kỹ năng, quy trình, phục vụ và tác phong.
+- Mô hình dự đoán minh họa trên dữ liệu giả lập, kèm kết quả đánh giá và phân tích hạn chế.
+- Dashboard hiển thị xu hướng đánh giá đã duyệt và phân bố nguy cơ.
+- Kịch bản kiểm thử, kết quả kiểm thử và hướng dẫn sử dụng.
+- Báo cáo đồ án tốt nghiệp theo yêu cầu của nhà trường.
+1.10. Cấu trúc đồ án
+Đồ án được trình bày trong 5 chương:
+Chương 1. Tổng quan đề tài: Trình bày lý do chọn đề tài, mục tiêu, câu hỏi nghiên cứu, đối tượng, phạm vi, phương pháp và kết quả dự kiến.
+Chương 2. Phân tích hệ thống: Phân tích yêu cầu, quy trình nghiệp vụ, tác nhân, chức năng, use case, sơ đồ dòng dữ liệu và từ điển dữ liệu.
+Chương 3. Thiết kế hệ thống: Trình bày kiến trúc, cơ sở dữ liệu, ERD, thiết kế xử lý, mô hình dự đoán và cơ chế tổng hợp dashboard.
+Chương 4. Xây dựng giao diện và kiểm thử: Trình bày nguyên mẫu, giao diện theo vai trò, kết quả kiểm thử và thực nghiệm mô hình dự đoán.
+Chương 5. Kết luận và hướng phát triển: Tổng hợp kết quả, đóng góp, hạn chế và đề xuất phát triển hệ thống.
+
+
+CHƯƠNG 2. PHÂN TÍCH HỆ THỐNG
+Chương này phân tích nghiệp vụ quản lý đào tạo và đánh giá năng lực nhân viên trong bối cảnh chuỗi cửa hàng cà phê BrewLearn. Trên cơ sở phạm vi nghiên cứu đã xác định, chương trình bày các đối tượng sử dụng, quy trình nghiệp vụ, yêu cầu chức năng, yêu cầu phi chức năng và các quy tắc xử lý của hệ thống. Đồng thời, chương xác định vai trò của chức năng dự đoán nguy cơ chưa đạt chuẩn năng lực và cách sử dụng kết quả dự đoán trong hoạt động quản lý cửa hàng.
+Các yêu cầu được xây dựng từ kịch bản nghiệp vụ của đề tài và đối chiếu với nguyên mẫu BrewLearn. Những mô tả về quy trình trước khi ứng dụng hệ thống được xem là tình huống giả định phục vụ phân tích, không phải kết quả khảo sát thực địa tại một doanh nghiệp cụ thể.
+2.1. Cơ sở nghiệp vụ của hệ thống
+2.1.1. Đào tạo nhân viên tại cửa hàng cà phê
+Trong phạm vi đề tài, đào tạo nhân viên là quá trình cung cấp kiến thức và hướng dẫn thực hiện công việc theo yêu cầu của từng vị trí tại cửa hàng. Nội dung đào tạo được tổ chức thành các chương trình, mỗi chương trình bao gồm những bài học và bài kiểm tra có liên quan.
+Các vị trí nghiệp vụ được xem xét gồm nhân viên pha chế, thu ngân và phục vụ. Mỗi vị trí có yêu cầu riêng về kiến thức sản phẩm, kỹ năng thực hiện công việc, tuân thủ quy trình và giao tiếp với khách hàng. Vì vậy, hệ thống cần xác định nội dung học phù hợp với chức vụ của nhân viên thay vì áp dụng đồng nhất một chương trình cho toàn bộ người học.
+Thông tin cần theo dõi trong quá trình đào tạo gồm chương trình được phân công, tiến độ bài học, kết quả kiểm tra và lịch sử học tập. Những thông tin này là cơ sở kiểm tra điều kiện tham gia đánh giá năng lực thực tế.
+2.1.2. Đánh giá năng lực nhân viên
+Đánh giá năng lực là hoạt động xem xét khả năng thực hiện công việc của nhân viên theo các tiêu chí được xác định trong đề tài. Kết quả học tập và bài kiểm tra phản ánh quá trình tiếp thu kiến thức, trong khi đánh giá thực tế phản ánh khả năng vận dụng kiến thức và kỹ năng vào công việc.
+BrewLearn sử dụng năm nhóm tiêu chí đánh giá:
+
+Bảng 2.1. Các nhóm tiêu chí đánh giá năng lực trong BrewLearn
+
+Các trọng số và ngưỡng đạt là quy tắc của nguyên mẫu trong đề tài, không được xem là tiêu chuẩn chung đã được kiểm chứng cho toàn bộ ngành F&B.Trưởng ca thực hiện đánh giá và gửi kết quả cho quản lý cửa hàng xem xét. Kết quả được công bố cho nhân viên sau khi quản lý phê duyệt.
+2.1.3. Đào tạo lại
+Đào tạo lại là hoạt động bổ sung kiến thức, thực hành hoặc hướng dẫn đối với nhân viên chưa đáp ứng yêu cầu đánh giá. Nội dung đào tạo lại cần gắn với những hạn chế được ghi nhận trong lần đánh giá trước.
+Một kế hoạch có thể trải qua nhiều vòng đào tạo lại. Mỗi vòng cần lưu người phụ trách, nội dung thực hiện, thời hạn, xác nhận hoàn thành và kết quả đánh giá lại. Việc lưu riêng từng vòng giúp theo dõi quá trình cải thiện và tránh ghi đè lịch sử.
+Kế hoạch chỉ được hoàn tất khi kết quả đánh giá lại được quản lý phê duyệt và đáp ứng điều kiện đạt của hệ thống.
+2.1.4. Dự đoán nguy cơ chưa đạt chuẩn năng lực
+Chức năng dự đoán sử dụng dữ liệu học tập và kiểm tra để ước lượng nguy cơ nhân viên chưa đạt chuẩn năng lực. Kết quả có vai trò cung cấp thêm thông tin cho quản lý khi xem xét tình hình đào tạo.
+Cần phân biệt hai loại thông tin:
+Bảng 2.2. Phân biệt kết quả đánh giá và kết quả dự đoán
+Trong phiên bản hiện tại, kết quả dự đoán không tự động thay đổi kết quả đánh giá, phê duyệt hồ sơ hoặc giao đào tạo lại.
+2.2. Phân tích bối cảnh và nhu cầu quản lý
+2.2.1. Bối cảnh quản lý trước khi áp dụng hệ thống
+Đề tài xây dựng tình huống quản lý giả định trong đó tài liệu đào tạo, kết quả kiểm tra và nhận xét về nhân viên được lưu tại nhiều nơi. Nhân viên tiếp nhận tài liệu từ người hướng dẫn; trưởng ca theo dõi quá trình học và thực hành; quản lý cửa hàng tổng hợp kết quả để quyết định các hoạt động tiếp theo.
+Trong tình huống này, việc theo dõi phụ thuộc vào khả năng cập nhật và trao đổi thông tin giữa các bên. Khi một nhân viên tham gia nhiều nội dung học hoặc nhiều vòng đào tạo lại, quá trình tổng hợp lịch sử có thể trở nên phức tạp.
+2.2.2. Các vấn đề cần giải quyết
+Bảng 2.3. Các vấn đề và yêu cầu giải quyết
+2.2.3. Định hướng giải pháp
+BrewLearn tổ chức hoạt động quản lý thành ba nhóm quy trình chính:
+Chuẩn bị và học tập.
+Đánh giá năng lực và đào tạo lại.
+Xử lý dự đoán độc lập.
+Ba nhóm quy trình sử dụng dữ liệu có liên quan nhưng có mục đích khác nhau. Quy trình học tập cung cấp điều kiện đầu vào cho đánh giá; quy trình đánh giá và đào tạo lại quản lý kết quả nghiệp vụ; quy trình dự đoán tạo thông tin hỗ trợ từ dữ liệu học tập.
+Dashboard tổng hợp các dữ liệu đã lưu để quản lý theo dõi. Việc bổ sung biểu đồ đường là thay đổi cách trình bày thông tin tổng quan, không tạo thêm một quy trình phê duyệt hoặc một thực thể báo cáo riêng.
+2.3. Xác định tác nhân và phạm vi sử dụng
+2.3.1. Các tác nhân của hệ thống
+Bảng 2.4. Các tác nhân của BrewLearn
+Người phụ trách đào tạo lại là trách nhiệm được giao cho một người dùng phù hợp trong cửa hàng, có thể là nhân viên hoặc trưởng ca. Đây không phải một nhóm tác nhân độc lập.
+2.3.2. Phạm vi quản lý dữ liệu
+Nhân viên sử dụng dữ liệu học tập và hồ sơ của bản thân. Trưởng ca theo dõi các nhân viên thuộc phạm vi cửa hàng và ca làm việc được phân công. Quản lý cửa hàng theo dõi dữ liệu của nhân viên thuộc cửa hàng mình quản lý.
+HR và quản lý vùng không thuộc phạm vi tác nhân của đề tài. Chức năng soạn thảo chương trình đào tạo hoặc quản trị ngân hàng câu hỏi cũng không được đưa vào phạm vi giao diện nghiệp vụ hiện tại. Nội dung đào tạo và kiểm tra được chuẩn bị trước trong cơ sở dữ liệu.
+2.4. Phân tích quy trình nghiệp vụ
+2.4.1. Quy trình chuẩn bị và học tập
+Mục đích: giúp nhân viên tiếp cận nội dung đào tạo phù hợp và ghi nhận quá trình học tập.
+Đầu vào: tài khoản nhân viên, chức vụ, chương trình đào tạo, bài học và bài kiểm tra.
+Trình tự thực hiện:
+Nhân viên đăng nhập vào hệ thống.
+Hệ thống xác định nội dung đào tạo phù hợp với chức vụ.
+Nhân viên xem chương trình và lựa chọn bài học.
+Nhân viên đọc nội dung hoặc xem video hướng dẫn.
+Hệ thống ghi nhận tiến độ và trạng thái bài học.
+Nhân viên thực hiện bài kiểm tra thuộc nội dung được phân công.
+Hệ thống chấm điểm và lưu kết quả.
+Hệ thống cập nhật tiến độ, cung cấp thông tin phục vụ kiểm tra điều kiện đánh giá thực tế.
+Đầu ra: tiến độ học tập, kết quả kiểm tra và trạng thái đáp ứng điều kiện đánh giá.
+Nếu nhân viên chưa hoàn thành nội dung học hoặc chưa đạt bài kiểm tra bắt buộc, hệ thống tiếp tục ghi nhận phần còn thiếu để người học bổ sung.
+2.4.2. Quy trình đánh giá năng lực lần đầu
+Mục đích: đánh giá khả năng thực hiện công việc sau khi nhân viên đáp ứng điều kiện học tập.
+Trình tự thực hiện:
+Trưởng ca xem danh sách nhân viên trong phạm vi phụ trách.
+Hệ thống kiểm tra điều kiện học tập và kiểm tra của nhân viên.
+Trưởng ca chọn nhân viên đủ điều kiện, tiêu chuẩn và thời gian đánh giá.
+Hệ thống lưu lịch, đồng thời gửi thông báo cho nhân viên.
+Trưởng ca thực hiện đánh giá và nhập điểm theo năm nhóm tiêu chí.
+Hệ thống tính điểm tổng hợp và xác định đạt hoặc chưa đạt.
+Trưởng ca bổ sung nhận xét; trường hợp chưa đạt phải có đề xuất xử lý.
+Kết quả được gửi đến quản lý với trạng thái chờ phê duyệt.
+Quản lý phê duyệt hoặc trả lại để chỉnh sửa.
+Hệ thống công bố kết quả đã duyệt cho nhân viên.
+Đầu ra: hồ sơ đánh giá được phê duyệt hoặc hồ sơ cần chỉnh sửa.
+Việc đạt điểm bài kiểm tra không đồng nghĩa với đạt đánh giá thực tế. Hai kết quả phục vụ những mục đích nghiệp vụ khác nhau.
+2.4.3. Quy trình phê duyệt kết quả đánh giá
+Mục đích: kiểm tra tính đầy đủ và phù hợp của hồ sơ trước khi công bố kết quả.
+Quản lý xem điểm từng tiêu chí, điểm tổng hợp, nhận xét và đề xuất của trưởng ca. Nếu hồ sơ cần bổ sung, quản lý trả lại kèm lý do. Trưởng ca chỉnh sửa và gửi lại để xem xét.
+Nếu quản lý phê duyệt kết quả đạt, hệ thống lưu thông tin phê duyệt và thông báo cho nhân viên. Nếu phê duyệt kết quả chưa đạt có đề xuất đào tạo lại phù hợp, hệ thống có thể hình thành kế hoạch đào tạo lại đã được duyệt từ hồ sơ đó.
+Vì vậy, không phải mọi kế hoạch đào tạo lại đều phải trải qua thêm một lần phê duyệt riêng sau khi kết quả đánh giá đã được quản lý duyệt.
+2.4.4. Quy trình đào tạo lại và đánh giá lại
+Mục đích: quản lý việc khắc phục các hạn chế của nhân viên và lưu lịch sử cải thiện.
+Trình tự thực hiện:
+Quản lý xem kế hoạch đào tạo lại đã được duyệt.
+Quản lý giao người phụ trách, hướng dẫn thực hiện, thời hạn hoàn thành và thời gian dự kiến đánh giá lại.
+Hệ thống tạo hoặc cập nhật vòng đào tạo lại tương ứng.
+Nhân viên thực hiện nội dung học lại, kiểm tra lại và thực hành được yêu cầu.
+Người phụ trách theo dõi và xác nhận hoàn thành khi đủ điều kiện.
+Hệ thống kiểm tra điều kiện đánh giá lại của vòng hiện tại.
+Quản lý lựa chọn trưởng ca và tạo lịch đánh giá lại.
+Trưởng ca đánh giá, nhập kết quả và gửi quản lý phê duyệt.
+Nếu kết quả được duyệt và đạt, kế hoạch chuyển sang hoàn tất.
+Nếu kết quả được duyệt nhưng chưa đạt, kế hoạch tiếp tục để tổ chức vòng đào tạo tiếp theo.
+Kết quả kiểm tra và tiến độ từ trước vòng đào tạo lại không được mặc nhiên sử dụng để chứng minh nhân viên đã hoàn thành yêu cầu của vòng mới. Hệ thống cần xác định các hoạt động học và kiểm tra phù hợp với vòng đang thực hiện.
+2.4.5. Quy trình dự đoán độc lập
+Mục đích: tạo thông tin nguy cơ từ dữ liệu học tập và kiểm tra.
+Trình tự thực hiện:
+Chương trình xử lý lấy dữ liệu học tập và kiểm tra của nhân viên đang làm việc.
+Chương trình tổng hợp các chỉ số đầu vào.
+Chương trình kiểm tra mức độ đầy đủ của dữ liệu.
+Nếu đủ dữ liệu, mô hình thực hiện dự đoán.
+Nếu chưa đủ dữ liệu, ghi nhận trạng thái “Chưa đủ dữ liệu”.
+Kết quả được lưu cùng thời điểm dự đoán và thông tin mô hình khi có.
+Quản lý xem kết quả đã lưu trên Dashboard hoặc hồ sơ nhân viên.
+Trong phiên bản hiện tại, chương trình dự đoán được chạy độc lập. Việc mở Dashboard không đồng nghĩa với thực hiện một lượt dự đoán mới.
+2.5. Xác định yêu cầu người dùng
+Các yêu cầu người dùng được mô tả dưới dạng User Story để làm rõ tác nhân, nhu cầu và mục đích sử dụng. Đây là các yêu cầu được xây dựng cho đề tài, không được trình bày như kết quả phỏng vấn đã thực hiện.
+Bảng 2.5. Các yêu cầu người dùng chính
+2.6. Yêu cầu chức năng
+Bảng 2.6. Yêu cầu chức năng của BrewLearn
+FR20 mô tả chức năng xử lý nội bộ. Trong sơ đồ Use Case của ứng dụng web, không sử dụng chính hệ thống BrewLearn làm tác nhân bên ngoài của hệ thống.
+2.7. Yêu cầu phi chức năng
+Các yêu cầu dưới đây là tiêu chí cần kiểm chứng khi triển khai và kiểm thử, không mặc nhiên được xem là những kết quả hệ thống đã đạt.
+Bảng 2.7. Yêu cầu phi chức năng
+Đề tài không đặt các cam kết về số lượng truy cập đồng thời hoặc tỷ lệ sẵn sàng khi chưa có môi trường và kết quả đo tương ứng.
+2.8. Quy tắc nghiệp vụ
+2.8.1. Quy tắc học tập và điều kiện đánh giá
+2.8.2. Quy tắc tính kết quả đánh giá
+Gọi điểm năm nhóm tiêu chí lần lượt là N, K, Q, P, T, tương ứng với nghiệp vụ, kỹ năng, quy trình, phục vụ và tác phong. Điểm tổng hợp được tính như sau:
+
+Điểm tổng hợp được làm tròn đến một chữ số thập phân.
+Nhân viên được xác định đạt khi đồng thời thỏa mãn:
+
+và:
+
+Nếu một trong hai điều kiện không được đáp ứng, kết quả là chưa đạt. Trường hợp chưa đạt phải có ít nhất một đề xuất xử lý phù hợp trước khi gửi kết quả.
+2.8.3. Quy tắc phê duyệt và đào tạo lại
+2.8.4. Quy tắc dự đoán và Dashboard
+Bảng 2.8. Các quy tắc nghiệp vụ chính
+2.9. Mô hình hóa chức năng và dữ liệu
+2.9.1. Phân rã chức năng
+Hệ thống được phân thành sáu nhóm chức năng:
+Bảng 2.9. Phân rã chức năng của hệ thống
+2.9.2. Mô hình Use Case và quy trình nghiệp vụ
+Mô hình Use Case được sử dụng để xác định các chức năng của hệ thống BrewLearn và sự tương tác giữa hệ thống với các tác nhân. Trong phạm vi đề tài, hệ thống có ba tác nhân chính: nhân viên, trưởng ca và quản lý cửa hàng.
+Mô hình được trình bày thông qua bốn sơ đồ:
+Sơ đồ Use Case tổng quát: thể hiện phạm vi chức năng chính và sự tương tác của ba tác nhân với hệ thống.
+
+Sơ đồ Use Case của nhân viên: thể hiện các chức năng học tập, làm bài kiểm tra, theo dõi tiến độ, xem lịch và kết quả đánh giá, cùng các chức năng cá nhân được phép sử dụng.
+
+Sơ đồ Use Case của trưởng ca: thể hiện các chức năng theo dõi nhân viên, xếp lịch đánh giá, đánh giá năng lực, ghi nhận nhận xét và đề xuất xử lý.
+
+Sơ đồ Use Case của quản lý cửa hàng: thể hiện các chức năng xem tổng quan, theo dõi nhân viên, phê duyệt kết quả đánh giá, phân công đào tạo lại và tổ chức đánh giá lại.
+
+
+Các chức năng được thể hiện trực tiếp trong sơ đồ của từng tác nhân, không tiếp tục phân rã thành các sơ đồ Use Case riêng cho từng nghiệp vụ. Những chức năng quan trọng được mô tả bằng bảng đặc tả, gồm tác nhân, điều kiện trước, luồng xử lý chính, luồng thay thế và điều kiện sau.
+Các sơ đồ quy trình nghiệp vụ được trình bày riêng để mô tả trình tự thực hiện, điểm quyết định và trách nhiệm của các bên trong ba quy trình: chuẩn bị và học tập; đánh giá năng lực và đào tạo lại; dự đoán độc lập.
+
+2.9.3. Xác định luồng dữ liệu
+Ở mức ngữ cảnh, BrewLearn tiếp nhận thông tin đăng nhập, bài làm, điểm đánh giá, quyết định phê duyệt và thông tin phân công từ các tác nhân. Hệ thống trả về nội dung học, tiến độ, kết quả, lịch đánh giá, thông báo và thông tin tổng quan.
+Bảng 2.10. Luồng dữ liệu giữa tác nhân và hệ thống
+Khi phân rã DFD, có thể sử dụng các tiến trình xử lý tài khoản, học tập, đánh giá, phê duyệt, đào tạo lại và tổng hợp dữ liệu. Chương trình dự đoán là tiến trình nội bộ của phạm vi giải pháp, đọc dữ liệu học tập và ghi kết quả dự đoán vào kho dữ liệu.
+2.9.4. Từ điển dữ liệu nghiệp vụ
+Bảng 2.11. Các nhóm dữ liệu nghiệp vụ
+Bảng vung hiện có trong cơ sở dữ liệu và được liên kết với cửa hàng để lưu thông tin phân nhóm địa lý. Sự tồn tại của bảng này không đồng nghĩa với việc đưa tác nhân quản lý vùng vào phạm vi sử dụng của đề tài.
+Thiết kế thuộc tính, khóa, ràng buộc và quan hệ chi tiết được trình bày tại chương 3.
+2.10. Phân tích yêu cầu đối với mô hình dự đoán
+2.10.1. Dữ liệu đầu vào
+Mô hình hiện tại sử dụng năm chỉ số:
+Bảng 2.12. Các chỉ số đầu vào của mô hình
+2.10.2. Dữ liệu huấn luyện và nhãn
+Nguyên mẫu sử dụng dữ liệu giả lập để huấn luyện và so sánh mô hình. Nhãn được biểu diễn bởi biến competency_status, trong đó 0 biểu thị đạt và 1 biểu thị chưa đạt theo cơ chế sinh dữ liệu thử nghiệm.
+Nhãn giả lập không phải kết quả đánh giá thực tế đã được thu thập từ một tập nhân viên theo dõi trong thời gian dài. Vì vậy, kết quả thử nghiệm chỉ phản ánh khả năng học và phân loại trên dữ liệu được tạo cho đề tài.
+Phiên bản hiện tại chưa có cơ sở để khẳng định mô hình dự đoán chính xác trạng thái nhân viên sau một hoặc ba tháng.
+2.10.3. Phương án xử lý
+Nguyên mẫu xem xét ba thuật toán: Logistic Regression, Decision Tree và Random Forest. Các mô hình được so sánh thông qua Accuracy, Precision, Recall, F1-score và ma trận nhầm lẫn.
+Chi tiết quá trình chuẩn bị dữ liệu và thiết kế mô hình được trình bày trong chương thiết kế hệ thống. Kết quả thực nghiệm và các hạn chế của phương pháp đánh giá được trình bày trong chương triển khai và kiểm thử.
+2.10.4. Yêu cầu sử dụng kết quả
+Kết quả cần được thể hiện cùng thời điểm dự đoán để quản lý biết dữ liệu phản ánh thời điểm nào. Trường hợp thiếu dữ liệu phải được phân biệt với mức nguy cơ thấp.
+Quản lý xem xét kết quả dự đoán cùng hồ sơ học tập và kết quả đánh giá đã được phê duyệt. Quyết định đào tạo lại vẫn thực hiện theo quy trình nghiệp vụ, không dựa hoàn toàn vào điểm nguy cơ.
+2.11. Tiểu kết chương 2
+Chương 2 đã xác định cơ sở nghiệp vụ, các đối tượng sử dụng và yêu cầu của hệ thống BrewLearn. Ba tác nhân chính gồm nhân viên, trưởng ca và quản lý cửa hàng được phân định trách nhiệm trong quá trình học tập, đánh giá, phê duyệt và đào tạo lại.
+Các quy trình được tổ chức thành ba nhóm: chuẩn bị và học tập; đánh giá năng lực và đào tạo lại; dự đoán độc lập. Chương cũng làm rõ các quy tắc tính điểm, điều kiện đánh giá, quản lý nhiều vòng đào tạo lại và sử dụng kết quả dự đoán.
+Những nội dung này là cơ sở để thiết kế kiến trúc, cơ sở dữ liệu, các xử lý nghiệp vụ và giao diện của hệ thống trong chương tiếp theo.
+
+
+CHƯƠNG 3. THIẾT KẾ HỆ THỐNG
+Trên cơ sở các yêu cầu và quy trình nghiệp vụ đã xác định trong chương 2, chương này trình bày thiết kế hệ thống BrewLearn, bao gồm kiến trúc tổng thể, tổ chức cơ sở dữ liệu, thiết kế xử lý nghiệp vụ, mô hình dự đoán và phương pháp tổng hợp dữ liệu trên Dashboard.
+Thiết kế tập trung vào ba đối tượng sử dụng: nhân viên, trưởng ca và quản lý cửa hàng. Các thành phần học tập, đánh giá năng lực, phê duyệt và đào tạo lại được liên kết thông qua dữ liệu dùng chung. Thành phần dự đoán được tổ chức độc lập, tạo kết quả hỗ trợ quản lý mà không tự động thay thế quyết định đánh giá hoặc phê duyệt.
+3.1. Thiết kế kiến trúc hệ thống
+3.1.1. Kiến trúc tổng thể
+BrewLearn được xây dựng dưới dạng ứng dụng web. Người dùng truy cập hệ thống thông qua trình duyệt, gửi yêu cầu đến ứng dụng Laravel và nhận kết quả xử lý dưới dạng giao diện.
+Ứng dụng Laravel thực hiện xác thực người dùng, xử lý các nghiệp vụ học tập, kiểm tra, đánh giá và đào tạo lại. Cơ sở dữ liệu MySQL lưu thông tin nhân viên, cửa hàng, nội dung đào tạo và lịch sử xử lý.
+Thành phần Python thực hiện tổng hợp các chỉ số học tập, sử dụng mô hình học máy để dự đoán nguy cơ và lưu kết quả vào cơ sở dữ liệu. Ứng dụng web đọc kết quả đã lưu để hiển thị cho quản lý cửa hàng.
+		Bảng 3.1. Các thành phần trong kiến trúc BrewLearn
+3.1.2. Tổ chức ứng dụng theo mô hình MVC
+Phần ứng dụng web được tổ chức theo mô hình MVC, gồm ba thành phần:
+Model: biểu diễn dữ liệu và hỗ trợ các thao tác truy vấn, quan hệ và xử lý liên quan đến dữ liệu.
+View: hiển thị giao diện, biểu mẫu và kết quả xử lý cho người dùng.
+Controller: tiếp nhận yêu cầu, kiểm tra dữ liệu đầu vào, điều phối xử lý và trả về kết quả.
+Một số xử lý dùng chung được tổ chức trong các lớp hỗ trợ nghiệp vụ, chẳng hạn kiểm tra điều kiện đánh giá và tổng hợp tiến độ học tập. Cách tổ chức này giúp các chức năng sử dụng cùng một quy tắc thay vì tính toán riêng ở từng màn hình.
+3.1.3. Phân chia các thành phần chức năng
+Bảng 3.2. Các thành phần chức năng của hệ thống
+3.2. Thiết kế cơ sở dữ liệu
+3.2.1. Nguyên tắc thiết kế
+Cơ sở dữ liệu được thiết kế để lưu trữ dữ liệu của các chức năng và duy trì liên kết giữa những đối tượng nghiệp vụ.
+Các nguyên tắc được áp dụng gồm:
+Mỗi bản ghi có khóa chính để nhận diện.
+Các đối tượng có liên quan được liên kết bằng cột tham chiếu.
+Lịch sử kiểm tra, đánh giá và các vòng đào tạo lại được lưu thành những bản ghi riêng.
+Trạng thái xử lý được phân biệt với kết quả đạt hoặc chưa đạt.
+Dữ liệu tổng hợp trên Dashboard được truy vấn từ các bảng nghiệp vụ.
+Quan hệ được mô tả phù hợp với cấu trúc cơ sở dữ liệu và cách mã nguồn sử dụng.
+Trong triển khai hiện tại, một số quan hệ đã có ràng buộc khóa ngoại trong MySQL, một số quan hệ mới được thể hiện bằng cột tham chiếu và xử lý trong mã nguồn. Báo cáo cần phân biệt hai trường hợp này, không mô tả toàn bộ các liên kết như những ràng buộc đã được cơ sở dữ liệu bảo đảm.
+3.2.2. Xác định các thực thể
+Cơ sở dữ liệu nghiệp vụ gồm 18 bảng. Bảng sau trình bày mục đích và các thuộc tính chính; những thuộc tính kỹ thuật, thời gian cập nhật và cấu hình bổ sung được trình bày trong phần mô tả cấu trúc bảng.
+Bảng 3.3. Các thực thể nghiệp vụ của BrewLearn
+Thông tin tài khoản và nhân viên được lưu chung trong users. Chức danh được lưu tại ChucVu, vì vậy thiết kế hiện tại không có hai bảng độc lập nhan_vien và vai_tro.
+Bảng vung vẫn tồn tại và được cửa hàng tham chiếu. Tuy nhiên, quản lý vùng không thuộc phạm vi tác nhân của đề tài. Trường nguoi_quan_ly_id còn trong cấu trúc cũ không được dùng để khẳng định hệ thống có chức năng quản lý vùng.
+3.2.3. Các mối quan hệ giữa thực thể
+Trong bảng dưới đây, ký hiệu 1:N thể hiện một đối tượng phía thứ nhất có thể liên quan đến nhiều bản ghi phía thứ hai. Khi cột tham chiếu cho phép để trống, bản ghi phía thứ hai có thể chưa liên kết với đối tượng phía thứ nhất.
+Bảng 3.4. Các quan hệ trực tiếp giữa thực thể
+Từ các bảng liên kết, có thể xác định ba quan hệ nhiều–nhiều ở mức nghiệp vụ:
+Bảng 3.5. Các quan hệ nhiều–nhiều trong nghiệp vụ
+Khi vẽ ERD theo cấu trúc bảng, các quan hệ nhiều–nhiều được thể hiện qua bảng liên kết và các đường 1:N tương ứng.
+3.2.4. Sơ đồ quan hệ thực thể
+ERD thể hiện các bảng, khóa chính, cột tham chiếu và lực lượng quan hệ. Các bảng cần được bố trí theo nhóm nghiệp vụ nhưng vẫn thể hiện đầy đủ liên kết giữa các nhóm.
+users liên kết với dữ liệu học tập, đánh giá, dự đoán, đào tạo lại và thông báo. Các bảng chương trình, bài học và kiểm tra tạo thành nhóm nội dung đào tạo. Các bảng đánh giá, kế hoạch và vòng đào tạo lại tạo thành nhóm theo dõi kết quả và quá trình cải thiện.
+	
+Hình 3.2. Sơ đồ quan hệ thực thể của hệ thống BrewLearn.
+
+Dùng ERD tổng thể có liên kết giữa các bảng đã xây dựng. Với hình nhiều thuộc tính, nên đặt trên trang ngang để bảo đảm đọc được tên bảng, thuộc tính và ký hiệu quan hệ.
+3.2.5. Thiết kế khóa và ràng buộc dữ liệu
+Khóa chính của phần lớn các bảng là id. Các bảng nội dung đào tạo sử dụng tên khóa riêng: MaCTDT, MaBaiHoc và MaBaiKiemTra.
+Một số ràng buộc đáng chú ý gồm:
+retraining_rounds sử dụng ràng buộc duy nhất trên cặp (request_id, round_number) để phân biệt số vòng trong từng kế hoạch.
+assessment_id trong kế hoạch đào tạo lại có ràng buộc duy nhất để tránh gắn cùng một đánh giá nguồn với nhiều kế hoạch.
+assessment_id trong vòng đào tạo lại có ràng buộc duy nhất để tránh sử dụng cùng một đánh giá lại cho nhiều vòng.
+attempt_token hỗ trợ nhận diện lượt nộp bài kiểm tra.
+event_key hỗ trợ kiểm soát thông báo phát sinh từ cùng một sự kiện.
+Các thao tác cập nhật đồng thời nhiều bảng cần sử dụng giao dịch. Ví dụ, tạo lịch đánh giá và thông báo phải được xử lý thống nhất; phê duyệt kết quả đánh giá lại cần cập nhật hồ sơ đánh giá, vòng đào tạo và kế hoạch có liên quan.
+Cấu trúc hiện tại chưa có cột quản lý cửa hàng trong cua_hang, vì vậy không mô tả quan hệ quản lý cửa hàng–nhân viên là 1:1 được cơ sở dữ liệu bảo đảm. Phạm vi tài khoản quản lý được xác định bằng chức danh và cửa hàng của tài khoản.
+3.3. Thiết kế xử lý học tập và kiểm tra
+3.3.1. Xử lý hiển thị nội dung đào tạo
+Sau khi xác định người dùng, hệ thống sử dụng chức vụ để lựa chọn các chương trình và bài kiểm tra phù hợp. Nội dung bài học được sắp xếp theo thứ tự trong chương trình.
+Kết quả hiển thị gồm tên chương trình, danh sách bài học, tiến độ và trạng thái liên quan. Người học có thể lựa chọn nội dung để tiếp tục học.
+3.3.2. Xử lý tiến độ học tập
+Tiến độ của từng bài được lưu trong user_lesson_progresses, gắn với người dùng và bài học. Các thông tin theo dõi gồm vị trí xem gần nhất, phần trăm tiến độ, trạng thái hoàn thành và số lượt học.
+Từ tiến độ bài học, hệ thống đồng bộ thông tin tiến độ chương trình trong nhan_vien_khoa_hoc. Việc lưu ở hai mức giúp hiển thị cả tình trạng chi tiết của bài học và tình trạng tổng hợp của chương trình.
+3.3.3. Xử lý bài kiểm tra
+Hệ thống lấy câu hỏi thuộc bài kiểm tra, hiển thị phương án và tiếp nhận câu trả lời của nhân viên. Sau khi nộp bài, hệ thống đối chiếu đáp án, tính điểm và xác định trạng thái theo điểm chuẩn.
+Mỗi lượt làm bài được lưu thành một bản ghi riêng trong ket_qua_kiem_tra. Lịch sử này phục vụ theo dõi kết quả, kiểm tra điều kiện đánh giá và tổng hợp đầu vào cho mô hình dự đoán.
+3.4. Thiết kế xử lý đánh giá năng lực
+3.4.1. Kiểm tra điều kiện đánh giá
+Trước khi tạo lịch đánh giá lần đầu, hệ thống kiểm tra:
+Nhân viên thuộc đối tượng và phạm vi được phép đánh giá.
+Có nội dung đào tạo phù hợp để kiểm tra điều kiện.
+Các bài học bắt buộc đáp ứng điều kiện hoàn thành.
+Các bài kiểm tra bắt buộc có kết quả đạt.
+Không có hồ sơ đánh giá đang xử lý hoặc kế hoạch đào tạo lại cần tiếp tục giải quyết.
+Nếu chưa đủ điều kiện, hệ thống trả về danh sách nội dung còn thiếu để trưởng ca và nhân viên theo dõi.
+3.4.2. Tạo lịch đánh giá
+Trưởng ca chọn nhân viên đủ điều kiện, tiêu chuẩn và thời gian hẹn. Hệ thống tạo bản ghi trong danh_gia_nang_luc với trạng thái ChoDanhGia.
+Bản ghi đồng thời lưu người đánh giá và nhân viên được đánh giá. Thông báo về lịch được gửi đến nhân viên.
+3.4.3. Tính điểm và xác định kết quả
+Điểm đánh giá được lưu theo năm nhóm tiêu chí:
+Bảng 3.6. Thiết kế lưu điểm thành phần
+Điểm tổng hợp được tính theo công thức:
+
+Nhân viên đạt khi điểm tổng hợp từ 80 trở lên và mọi điểm thành phần từ 70 trở lên. Kết quả được lưu tại IsPassed, còn điểm tổng hợp được lưu tại Diem.
+Trường hợp chưa đạt, hồ sơ cần có đề xuất xử lý trước khi được gửi phê duyệt.
+3.4.4. Xử lý phê duyệt
+Quản lý xem hồ sơ có trạng thái chờ phê duyệt. Nếu chấp thuận, hệ thống lưu người duyệt, thời gian duyệt và cập nhật trạng thái. Nếu trả lại, hệ thống lưu lý do để trưởng ca chỉnh sửa.
+Bảng 3.7. Các trạng thái xử lý hồ sơ đánh giá
+Trạng thái phê duyệt và kết quả đạt/chưa đạt là hai thông tin riêng. Một hồ sơ đã duyệt vẫn có thể có kết quả chưa đạt.
+3.5. Thiết kế xử lý đào tạo lại
+3.5.1. Tổ chức kế hoạch và vòng đào tạo
+Bảng yeu_cau_dao_tao_lai lưu thông tin cấp kế hoạch: nhân viên, nguồn đề xuất, trạng thái xét duyệt và tiến trình chung.
+Bảng retraining_rounds lưu từng vòng thực hiện. Một kế hoạch có thể có nhiều vòng; mỗi vòng có nội dung, người phụ trách, thời hạn, xác nhận và kết quả riêng.
+Bảng 3.8. Tổ chức dữ liệu đào tạo lại
+3.5.2. Giao đào tạo lại
+Quản lý lựa chọn kế hoạch đã được duyệt và phân công người phụ trách phù hợp. Người phụ trách phải khác nhân viên được đào tạo.
+Khi bắt đầu vòng mới, hệ thống lưu các bài học và bài kiểm tra bắt buộc, dữ liệu mốc ban đầu và nội dung phân công. Những bài học cần học lại được cập nhật để theo dõi hoạt động thực hiện của vòng mới.
+Hệ thống gửi thông báo cho nhân viên và người phụ trách.
+3.5.3. Xác nhận hoàn thành và tạo lịch đánh giá lại
+Người phụ trách xem các vòng được giao và thực hiện xác nhận sau khi nhân viên đáp ứng yêu cầu học tập, kiểm tra và thực hành.
+Để tạo lịch đánh giá lại, hệ thống kiểm tra các điều kiện của vòng đang thực hiện, bao gồm xác nhận của người phụ trách. Nếu đủ điều kiện, quản lý lựa chọn trưởng ca và tạo lịch đánh giá lại.
+Lượt đánh giá được liên kết với vòng qua assessment_id. Kế hoạch cũng lưu tham chiếu đánh giá lại để phục vụ theo dõi tiến trình.
+3.5.4. Xử lý kết quả sau đào tạo lại
+Kết quả đánh giá lại tiếp tục đi qua bước phê duyệt của quản lý.
+Nếu kết quả được duyệt và đạt, hệ thống cập nhật vòng đào tạo và hoàn tất kế hoạch. Nếu kết quả được duyệt nhưng chưa đạt, vòng hiện tại được lưu kết quả và kế hoạch tiếp tục chờ phân công vòng tiếp theo.
+Lịch sử các vòng trước được giữ lại để thể hiện quá trình cải thiện của nhân viên.
+Các sơ đồ quy trình đánh giá và đào tạo lại đã trình bày ở chương 2 được sử dụng làm cơ sở cho phần xử lý này; không cần chèn lặp lại.
+3.6. Thiết kế thành phần dự đoán nguy cơ
+3.6.1. Xác định đầu vào và đầu ra
+Đầu vào của mô hình gồm năm chỉ số:
+Bảng 3.9. Đầu vào của mô hình dự đoán
+Đầu ra được xử lý để lưu điểm nguy cơ, mức cảnh báo, các chỉ số đầu vào, thông tin mô hình và thời điểm dự đoán.
+Các chỉ số đầu vào được lưu để đối chiếu dữ liệu đã sử dụng. Chúng không được mặc nhiên xem là lời giải thích về nguyên nhân dẫn đến kết quả của mô hình.
+3.6.2. Thiết kế dữ liệu huấn luyện
+Nguyên mẫu tạo 1.000 bản ghi giả lập với năm chỉ số đầu vào. Nhãn competency_status được sinh bằng quy tắc xác suất có bổ sung nhiễu, trong đó:
+Giá trị 0 biểu thị đạt.
+Giá trị 1 biểu thị chưa đạt.
+Dữ liệu được chia thành tập huấn luyện và tập kiểm tra theo tỷ lệ 80%–20%, có phân tầng theo nhãn và sử dụng hạt giống ngẫu nhiên cố định.
+Dữ liệu giả lập phục vụ xây dựng và thử nghiệm quy trình kỹ thuật. Kết quả trên tập này chưa chứng minh mô hình có khả năng dự đoán tương đương trên dữ liệu nhân viên thực tế.
+3.6.3. Thiết kế huấn luyện và lựa chọn mô hình
+Ba thuật toán được thử nghiệm gồm Logistic Regression, Decision Tree và Random Forest. Đối với Logistic Regression, dữ liệu đầu vào được chuẩn hóa; các mô hình cây sử dụng dữ liệu theo cách xử lý tương ứng trong chương trình.
+Chương trình đánh giá các mô hình bằng Accuracy, Precision, Recall, F1-score và ma trận nhầm lẫn, sau đó lựa chọn mô hình theo F1-score trên tập kiểm tra hiện có.
+Cách lựa chọn này phù hợp với nguyên mẫu thử nghiệm nhưng có giới hạn: tập được dùng để lựa chọn mô hình chưa phải một tập đánh giá cuối cùng hoàn toàn độc lập. Khi mở rộng nghiên cứu, cần bổ sung tập xác thực hoặc quy trình kiểm định phù hợp và đánh giá trên dữ liệu thực tế.
+
+
+
+Hình 3.3. Quy trình huấn luyện và sử dụng mô hình dự đoán nguy cơ.
+3.6.4. Xử lý dự đoán trong vận hành nguyên mẫu
+Chương trình Python đọc dữ liệu học tập và kiểm tra của nhân viên đang làm việc. Khi có dữ liệu phù hợp, chương trình tạo đầu vào cho mô hình và lưu kết quả vào du_doan_nguy_co.
+Nếu chưa có lượt kiểm tra hoặc lượt học, hệ thống ghi nhận:
+muc_canh_bao = ChuaDuDuLieu.
+Điểm nguy cơ để trống.
+Thông tin mô hình để trống.
+Chương trình hiện được chạy độc lập. Thiết kế không mô tả chức năng này như một tác vụ tự động theo lịch đã được triển khai.
+3.7. Thiết kế tổng hợp dữ liệu trên Dashboard
+3.7.1. Các nhóm thông tin tổng quan
+Dashboard của quản lý sử dụng dữ liệu trong phạm vi cửa hàng để tổng hợp tình hình nhân viên, hồ sơ chờ phê duyệt, kế hoạch đào tạo lại, xu hướng đánh giá và phân bố nguy cơ.
+Các số liệu được truy vấn từ bảng nghiệp vụ. Cơ sở dữ liệu hiện không tạo bảng riêng cho Dashboard, biểu đồ hoặc báo cáo tổng hợp.
+3.7.2. Biểu đồ đường về kết quả đánh giá
+Biểu đồ đường thể hiện tỷ lệ đạt và chưa đạt trong sáu tháng gần nhất.
+Quá trình tổng hợp thực hiện như sau:
+Xác định nhân viên thuộc phạm vi bộ lọc, đang làm việc và thuộc đối tượng đánh giá.
+Lấy những hồ sơ đã duyệt hoặc hoàn thành, có kết quả đạt/chưa đạt.
+Nhóm dữ liệu theo tháng của ngày đánh giá.
+Trong từng tháng, lấy kết quả cuối cùng của mỗi nhân viên theo ngày đánh giá; nếu trùng ngày, ưu tiên bản ghi có mã lớn hơn.
+Tính số lượng và tỷ lệ đạt, chưa đạt.
+Gọi là số nhân viên đạt và là tổng số nhân viên có kết quả phù hợp trong tháng m:
+
+
+					
+
+
+Nếu tỷ lệ được để trống. Mẫu số là số nhân viên có đánh giá phù hợp trong tháng, không phải toàn bộ nhân viên cửa hàng.
+
+3.7.3. Phân bố mức nguy cơ
+Phân bố nguy cơ sử dụng kết quả dự đoán mới nhất của từng nhân viên trong phạm vi tổng hợp. Các nhóm hiển thị gồm cao, trung bình, thấp và chưa đủ dữ liệu.
+Biểu đồ này mô tả thông tin dự đoán đã lưu. Nó không phải biểu đồ kết quả đánh giá thực tế và không được sử dụng để tự động thay đổi kết luận đạt/chưa đạt.
+3.8. Thiết kế kiểm soát truy cập và tính nhất quán
+3.8.1. Phạm vi quyền sử dụng
+Bảng 3.10. Phạm vi quyền sử dụng
+Việc kiểm soát phải thực hiện phía máy chủ. Ẩn chức năng trên giao diện chỉ hỗ trợ trải nghiệm sử dụng, không đủ để bảo vệ dữ liệu. Các yêu cầu cập nhật cần kiểm tra người thực hiện, đối tượng dữ liệu và trạng thái hồ sơ.
+3.8.2. Kiểm soát trạng thái và thao tác đồng thời
+Các thao tác cần kiểm tra trạng thái hiện tại trước khi xử lý, chẳng hạn:
+Chỉ phê duyệt hồ sơ đang chờ phê duyệt.
+Chỉ giao đào tạo lại khi kế hoạch thuộc trạng thái phù hợp.
+Chỉ xác nhận vòng đang thực hiện và do người dùng được giao phụ trách.
+Chỉ tạo đánh giá lại khi đủ điều kiện của vòng hiện tại.
+Giao dịch và khóa bản ghi được sử dụng trong những thao tác cần phối hợp nhiều cập nhật. Cơ chế này hỗ trợ tránh hai yêu cầu đồng thời xử lý cùng một hồ sơ theo các quyết định khác nhau.
+3.8.3. Lưu lịch sử và khả năng đối chiếu
+Hệ thống lưu người đánh giá, người duyệt, thời gian xử lý, lý do trả lại và lịch sử các vòng đào tạo. Kết quả dự đoán lưu thời điểm và đầu vào để đối chiếu.
+Các dữ liệu này hỗ trợ truy vết ở mức nghiệp vụ. Không mô tả hệ thống có nhật ký kiểm toán đầy đủ nếu chưa triển khai cơ chế ghi nhận mọi thay đổi.
+3.9. Tiểu kết chương 3
+Chương 3 đã trình bày kiến trúc tổng thể, tổ chức cơ sở dữ liệu và thiết kế xử lý của BrewLearn. Các bảng được liên kết để quản lý xuyên suốt quá trình học tập, kiểm tra, đánh giá, phê duyệt và đào tạo lại.
+Thiết kế phân biệt kết quả đánh giá thực tế với kết quả dự đoán, đồng thời tổ chức dữ liệu đào tạo lại theo từng vòng để giữ lịch sử. Dashboard tổng hợp dữ liệu đã lưu nhằm hỗ trợ quản lý theo dõi tình hình cửa hàng.
+Các nội dung thiết kế là cơ sở để triển khai giao diện, kiểm thử các chức năng và đánh giá kết quả nguyên mẫu trong chương 4.
+
+
+
+
+
+
+
+
+
+CHƯƠNG 4. THIẾT KẾ GIAO DIỆN, TRIỂN KHAI VÀ KIỂM THỬ HỆ THỐNG
+
+Chương này trình bày giao diện và cách triển khai các chức năng của hệ thống BrewLearn theo ba nhóm người dùng: nhân viên, trưởng ca và quản lý cửa hàng. Các giao diện được xây dựng nhằm hỗ trợ quá trình học tập, kiểm tra, đánh giá năng lực, phê duyệt và đào tạo lại.
+Bên cạnh giao diện, chương trình bày phương pháp kiểm thử chức năng và đánh giá thành phần dự đoán nguy cơ. Kết quả kiểm thử ứng dụng web và kết quả thực nghiệm mô hình được xem xét riêng để phản ánh đúng mục đích và giới hạn của từng thành phần.
+4.1. Môi trường và công nghệ triển khai
+4.1.1. Môi trường triển khai nguyên mẫu
+Nguyên mẫu BrewLearn được triển khai trong môi trường phát triển cục bộ. Ứng dụng web sử dụng Laravel để xử lý nghiệp vụ và MySQL để lưu trữ dữ liệu. Thành phần dự đoán được xây dựng bằng Python, đọc dữ liệu học tập và kiểm tra, thực hiện suy luận bằng mô hình đã huấn luyện và ghi kết quả trở lại cơ sở dữ liệu.
+
+Bảng 4.1. Các công nghệ và công cụ triển khai
+Thông số phiên bản, cấu hình máy tính và trình duyệt sử dụng cần được ghi theo môi trường thực tế khi tiến hành kiểm thử. Việc triển khai cục bộ phục vụ đánh giá nguyên mẫu, chưa thể hiện khả năng vận hành trên môi trường doanh nghiệp.
+4.1.2. Tổ chức triển khai
+Ứng dụng web và chương trình dự đoán sử dụng chung cơ sở dữ liệu nhưng được thực hiện theo những luồng riêng.
+Ứng dụng web xử lý các thao tác của người dùng, gồm học tập, kiểm tra, đánh giá, phê duyệt và đào tạo lại. Chương trình Python thực hiện một lượt xử lý dự đoán độc lập. Sau khi kết quả được lưu, ứng dụng web đọc dữ liệu để hiển thị trên Dashboard và hồ sơ nhân viên.
+Sơ đồ kiến trúc và quy trình huấn luyện đã được trình bày ở chương 3, do đó phần này tập trung mô tả sản phẩm triển khai.
+4.2. Nguyên tắc thiết kế giao diện
+Giao diện được tổ chức theo vai trò và nhiệm vụ của người dùng. Nhân viên ưu tiên tiếp cận nội dung học, kiểm tra và thông tin cá nhân; trưởng ca ưu tiên theo dõi nhân viên và đánh giá; quản lý cửa hàng ưu tiên tổng quan, phê duyệt và điều phối đào tạo lại.
+Các nguyên tắc thiết kế gồm:
+Tên chức năng thể hiện rõ mục đích sử dụng.
+Bố cục và cách điều hướng thống nhất giữa các màn hình.
+Trạng thái xử lý được phân biệt với kết quả đạt hoặc chưa đạt.
+Biểu mẫu thể hiện các thông tin bắt buộc và lỗi nhập liệu.
+Thông tin chưa có dữ liệu được hiển thị rõ, tránh gây hiểu nhầm.
+Các thao tác quan trọng cung cấp phản hồi sau khi xử lý.
+Việc hiển thị chức năng theo vai trò hỗ trợ người dùng thao tác phù hợp. Kiểm soát quyền truy cập và phạm vi dữ liệu vẫn cần được thực hiện phía máy chủ.
+4.3. Giao diện xác thực và chức năng chung
+4.3.1. Giao diện đăng nhập
+Giao diện đăng nhập tiếp nhận thông tin tài khoản để xác thực người dùng. Khi thông tin hợp lệ, hệ thống cho phép truy cập các chức năng phù hợp. Khi thông tin không hợp lệ, hệ thống hiển thị thông báo để người dùng kiểm tra và nhập lại.
+Thiết kế biểu mẫu cần giúp người dùng nhận biết trường thông tin, thao tác đăng nhập và phản hồi của hệ thống.
+
+
+Hình 4.1. Giao diện đăng nhập hệ thống BrewLearn.
+
+4.3.2. Giao diện hồ sơ và tài khoản
+Giao diện hồ sơ hiển thị thông tin cá nhân và các thông tin liên quan đến công việc. Người dùng cập nhật những trường được phép thay đổi hoặc thực hiện các thao tác tài khoản như thay đổi mật khẩu và thiết lập cá nhân.
+Các thông tin do quản lý điều chỉnh, chẳng hạn phân công ca hoặc trạng thái làm việc, cần được phân biệt với thông tin cá nhân người dùng tự cập nhật.
+
+Hình 4.2. Giao diện hồ sơ và cài đặt tài khoản.
+4.3.3. Giao diện thông báo
+Giao diện thông báo cung cấp các thông tin liên quan đến lịch đánh giá, kết quả đã được phê duyệt và nhiệm vụ đào tạo lại. Thông báo gắn với từng tài khoản và có trạng thái đã đọc hoặc chưa đọc.
+Thông báo hỗ trợ người dùng tiếp nhận thông tin, trong khi trạng thái chính thức của hồ sơ vẫn được xác định từ dữ liệu nghiệp vụ tương ứng.
+
+Hình 4.3. Giao diện thông báo của người dùng.
+4.4. Giao diện dành cho nhân viên
+4.4.1. Giao diện tổng quan học tập
+Giao diện tổng quan giúp nhân viên nhận biết nội dung đào tạo phù hợp với chức vụ và tình trạng học tập của bản thân. Từ giao diện này, nhân viên truy cập chương trình, tiếp tục bài học hoặc xem các nội dung cần hoàn thành.
+Thông tin tiến độ hỗ trợ người học theo dõi quá trình thực hiện, đồng thời cung cấp dữ liệu cho việc kiểm tra điều kiện đánh giá năng lực.
+
+Hình 4.4. Giao diện tổng quan học tập của nhân viên.
+4.4.2. Giao diện chương trình và bài học
+Giao diện chương trình hiển thị danh sách bài học theo thứ tự. Giao diện bài học cung cấp nội dung văn bản hoặc video hướng dẫn và ghi nhận tiến độ thực hiện.
+Tiến độ được gắn với từng nhân viên và bài học. Thông tin này giúp người học tiếp tục nội dung đang thực hiện và giúp hệ thống xác định phần học tập còn thiếu.
+
+Hình 4.5. Giao diện nội dung chương trình đào tạo.
+
+Hình 4.6. Giao diện tổng quan bài học
+
+Hình 4.7. Giao diện học bài
+4.4.3. Giao diện làm bài kiểm tra
+Giao diện kiểm tra hiển thị câu hỏi và các phương án trả lời. Nhân viên lựa chọn đáp án và nộp bài để hệ thống xử lý.
+Sau khi chấm điểm, hệ thống lưu kết quả của lượt làm bài. Lịch sử các lượt kiểm tra phục vụ theo dõi học tập và tổng hợp dữ liệu cho các chức năng liên quan.
+
+Hình 4.8. Giao diện làm bài kiểm tra.
+
+Hình 4.9. Giao diện chi tiết bài kiểm tra.
+4.4.4. Giao diện theo dõi đánh giá và đào tạo lại
+Nhân viên tiếp nhận lịch đánh giá và xem kết quả đã được quản lý phê duyệt. Trường hợp cần đào tạo lại, nhân viên theo dõi nội dung được giao, thời hạn và những yêu cầu cần hoàn thành.
+Phần hiển thị cần phân biệt kết quả kiểm tra kiến thức với kết quả đánh giá năng lực thực tế. Việc đạt bài kiểm tra không đồng nghĩa với việc đã đạt đánh giá năng lực.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Chương 5. KẾT LUẬN
+Khẳng định kết quả đạt được.
+Nêu những đóng góp mới và những đề xuất mới 	
+Những chức năng sẽ phát triển trong tương lai.
+
+DỰ KIẾN KẾ HOẠCH THỰC HIỆN
+

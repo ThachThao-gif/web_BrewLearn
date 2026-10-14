@@ -1,235 +1,47 @@
-import os
-import joblib
-import pandas as pd
+"""Default warning rules; normalized scores are NOT probabilities."""
+import math
+
+MODEL_NAME = "rules-v2"
+MAX_SCORE = 8
 
 
-# =====================================================
-# 1. ĐƯỜNG DẪN FILE
-# =====================================================
-
-BASE_DIR = os.path.dirname(
-    os.path.abspath(__file__)
-)
-
-MODEL_PATH = os.path.join(
-    BASE_DIR,
-    "best_model.pkl"
-)
-
-INFO_PATH = os.path.join(
-    BASE_DIR,
-    "model_info.pkl"
-)
-
-SCALER_PATH = os.path.join(
-    BASE_DIR,
-    "scaler.pkl"
-)
+def bounded_number(value, name, lower=0, upper=100):
+    if isinstance(value, bool):
+        raise ValueError(f"{name}: invalid number")
+    try:
+        number = float(value)
+    except (TypeError, ValueError, OverflowError) as exc:
+        raise ValueError(f"{name}: invalid number") from exc
+    if not math.isfinite(number) or not lower <= number <= upper:
+        raise ValueError(f"{name}: outside [{lower}, {upper}]")
+    return number
 
 
-# =====================================================
-# 2. LOAD MODEL VÀ THÔNG TIN MODEL
-# =====================================================
-
-model = joblib.load(
-    MODEL_PATH
-)
-
-model_info = joblib.load(
-    INFO_PATH
-)
-
-FEATURES = model_info[
-    "features"
-]
-
-
-# =====================================================
-# 3. LOAD SCALER NẾU MODEL CẦN
-# =====================================================
-
-scaler = None
-
-if model_info["use_scaler"]:
-
-    scaler = joblib.load(
-        SCALER_PATH
-    )
-
-
-# =====================================================
-# 4. HÀM DỰ ĐOÁN NGUY CƠ
-# =====================================================
-
-def predict_risk(
-    progress_percent,
-    avg_quiz_score,
-    quiz_attempts,
-    failed_rate,
-    learning_visits
-):
-
-    # Tạo dữ liệu đúng thứ tự feature
-    data = pd.DataFrame(
-        [[
-            progress_percent,
-            avg_quiz_score,
-            quiz_attempts,
-            failed_rate,
-            learning_visits
-        ]],
-        columns=FEATURES
-    )
-
-
-    # Nếu model cần chuẩn hóa
-    if model_info["use_scaler"]:
-
-        model_input = scaler.transform(
-            data
-        )
-
-    else:
-
-        model_input = data
-
-
-    # Xác suất thuộc lớp 1:
-    # 1 = Chưa đạt chuẩn năng lực
-    probability = model.predict_proba(
-        model_input
-    )[0][1]
-
-
-    # Chuyển sang %
-    percentage = (
-        probability * 100
-    )
-
-
-    # =================================================
-    # PHÂN LOẠI MỨC NGUY CƠ
-    # =================================================
-
-    if probability < 0.30:
-
-        risk_level = "Thấp"
-
-    elif probability < 0.60:
-
-        risk_level = "Trung bình"
-
-    else:
-
-        risk_level = "Cao"
-
-
-    # =================================================
-    # TRẢ KẾT QUẢ
-    # =================================================
-
+def predict_risk(progress_percent, avg_quiz_score, quiz_attempts, failed_rate, learning_visits):
+    """Keep legacy keyword arguments; distinct-quiz eligibility is checked upstream."""
+    progress = bounded_number(progress_percent, "progress_percent")
+    average = bounded_number(avg_quiz_score, "avg_quiz_score")
+    failed = bounded_number(failed_rate, "failed_rate", upper=1)
+    reasons = []
+    quiz_score = 3 if average < 60 else 2 if average < 80 else 0
+    if quiz_score:
+        reasons.append("Điểm quiz trung bình dưới 60" if average < 60 else "Điểm quiz trung bình từ 60 đến dưới 80")
+    failed_score = 3 if failed >= 0.5 else 1 if failed > 0 else 0
+    if failed_score:
+        reasons.append("Có ít nhất 50% số bài đã làm chưa đạt" if failed >= 0.5 else "Có bài kiểm tra chưa đạt, chiếm dưới 50% số bài đã làm")
+    progress_score = 2 if progress < 50 else 1 if progress < 80 else 0
+    if progress_score:
+        reasons.append("Tiến độ đào tạo dưới 50%" if progress < 50 else "Tiến độ đào tạo từ 50% đến dưới 80%")
+    total = quiz_score + failed_score + progress_score
+    score = total / MAX_SCORE
     return {
-
-        "probability":
-            round(
-                float(probability),
-                4
-            ),
-
-        "percentage":
-            round(
-                float(percentage),
-                2
-            ),
-
-        "risk_level":
-            risk_level,
-
-        "model_name":
-            model_info["model_name"]
+        "probability": score,
+        "percentage": round(score * 100, 1),
+        "risk_level": "Cao" if total >= 5 else "Trung bình" if total >= 3 else "Thấp",
+        "model_name": MODEL_NAME,
+        "details": {
+            "tong_diem": total,
+            "diem_thanh_phan": {"quiz_tb": quiz_score, "quiz_chua_dat": failed_score, "tien_do": progress_score},
+            "ly_do_canh_bao": reasons,
+        },
     }
-
-
-# =====================================================
-# 5. TEST MODEL
-# =====================================================
-
-if __name__ == "__main__":
-
-    test_cases = [
-
-        {
-            "name": "Học rất tốt",
-            "progress_percent": 100,
-            "avg_quiz_score": 92,
-            "quiz_attempts": 2,
-            "failed_rate": 0.00,
-            "learning_visits": 30
-        },
-
-        {
-            "name": "Học khá",
-            "progress_percent": 75,
-            "avg_quiz_score": 78,
-            "quiz_attempts": 3,
-            "failed_rate": 0.33,
-            "learning_visits": 15
-        },
-
-        {
-            "name": "Cần theo dõi",
-            "progress_percent": 65,
-            "avg_quiz_score": 68,
-            "quiz_attempts": 4,
-            "failed_rate": 0.50,
-            "learning_visits": 12
-        },
-
-        {
-            "name": "Nguy cơ cao",
-            "progress_percent": 45,
-            "avg_quiz_score": 55,
-            "quiz_attempts": 6,
-            "failed_rate": 0.67,
-            "learning_visits": 8
-        }
-    ]
-
-
-    print(
-        "\n================================"
-    )
-
-    print(
-        "MODEL ĐANG SỬ DỤNG:",
-        model_info["model_name"]
-    )
-
-    print(
-        "================================"
-    )
-
-
-    for case in test_cases:
-
-        result = predict_risk(
-            case["progress_percent"],
-            case["avg_quiz_score"],
-            case["quiz_attempts"],
-            case["failed_rate"],
-            case["learning_visits"]
-        )
-
-        print(
-            f"\n--- {case['name']} ---"
-        )
-
-        print(
-            f"Xác suất nguy cơ : "
-            f"{result['percentage']}%"
-        )
-
-        print(
-            f"Mức nguy cơ      : "
-            f"{result['risk_level']}"
-        )

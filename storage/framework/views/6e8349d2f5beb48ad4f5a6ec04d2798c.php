@@ -6,27 +6,22 @@
 <div class="space-y-6 pb-20">
 
     <!-- BREADCRUMB & HEADER -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <div class="flex items-center space-x-2 text-xs text-slate-400 mb-1">
-                <a href="<?php echo e(route('dashboard')); ?>" class="hover:text-coffee-800 transition">Trang chủ</a>
-                <span>&rsaquo;</span>
-                <span class="text-coffee-900 font-semibold"> Cài đặt tài khoản </span>
-            </div>
-            <h1 class="text-xl md:text-2xl font-extrabold text-coffee-900 tracking-tight">
-                Cài Đặt Tài Khoản
-            </h1>
-            <p class="text-xs text-slate-500 mt-0.5">
-                Quản lý thông tin cá nhân, liên hệ người thân, bảo mật, thông báo và giao diện.
-            </p>
+    <div class="space-y-3">
+        <div class="flex items-center space-x-2 text-xs text-slate-400">
+            <a href="<?php echo e(route('dashboard')); ?>" class="hover:text-coffee-800 transition">Trang chủ</a>
+            <span>&rsaquo;</span>
+            <span class="text-coffee-900 font-semibold">Cài đặt tài khoản</span>
         </div>
-
-        <div class="flex items-center shrink-0">
-            <a href="<?php echo e(route('users.edit', $user->id ?? auth()->id())); ?>" class="px-4 py-2.5 bg-white hover:bg-[#FAF7F2] border border-[#E8DFC8] text-coffee-900 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-2">
-                <i class="fa-regular fa-id-card text-amber_brand"></i>
-                Xem Hồ Sơ Nhân Sự & Năng Lực
-                <i class="fa-solid fa-arrow-right text-[10px] text-slate-400"></i>
-            </a>
+        <div class="page-banner flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-[#E8DFC8] shadow-sm">
+            <div>
+                <h1 class="text-xl md:text-2xl font-extrabold text-coffee-900 tracking-tight flex items-center gap-2">
+                    <i class="fa-solid fa-user-gear text-amber_brand" aria-hidden="true"></i>
+                    Cài đặt tài khoản
+                </h1>
+                <p class="text-xs md:text-sm text-slate-500 mt-1">
+                    Quản lý thông tin cá nhân, liên hệ người thân, bảo mật, thông báo và giao diện.
+                </p>
+            </div>
         </div>
     </div>
 
@@ -69,7 +64,7 @@
     </div>
 
     <!-- KHU VỰC NỘI DUNG TỪNG TAB -->
-    <div class="max-w-4xl space-y-6">
+    <div class="w-full min-w-0 space-y-6">
 
         <!-- TAB 1: THÔNG TIN CÁ NHÂN & LIÊN HỆ -->
         <div id="tab-contact" class="tab-panel space-y-6">
@@ -81,7 +76,7 @@
                         <i class="fa-solid fa-user-gear text-amber_brand"></i> Thông tin định danh & Nhân sự
                     </h2>
                     <span class="text-[10px] font-bold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">
-                        <i class="fa-solid fa-lock text-[9px] mr-0.5"></i> Do HR quản lý
+                        <i class="fa-solid fa-lock text-[9px] mr-0.5"></i> Chỉ xem
                     </span>
                 </div>
 
@@ -140,13 +135,12 @@
                     <!-- Email nội bộ (Read-only) -->
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1.5">
-                            Email nội bộ hệ thống <span class="text-slate-400 font-normal">(Do HR cấp • Chỉ xem)</span>
+                            Email nội bộ hệ thống <span class="text-slate-400 font-normal">(Chỉ xem)</span>
                         </label>
                         <div class="relative">
                             <input type="email" value="<?php echo e($user->email); ?>" disabled readonly class="w-full bg-slate-100 border border-slate-200 rounded-xl pl-3.5 pr-28 py-2 text-xs md:text-sm font-semibold text-slate-500 cursor-not-allowed">
                             <span class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-extrabold bg-emerald-100 text-emerald-800 px-2 py-1 rounded-md flex items-center gap-1">
-                                <i class="fa-solid fa-circle-check text-emerald-600"></i> <?php echo e($user->email_verified_at ? 'Đã xác thực' : 'Chưa xác thực'); ?>
-
+                                <i class="fa-solid fa-circle-check text-emerald-600"></i> Đã xác thực
                             </span>
                         </div>
                     </div>
@@ -383,23 +377,6 @@
             </div>
         </div>
 
-    </div>
-
-    <!-- KHU VỰC THÔNG TIN HR & YÊU CẦU CHỈNH SỬA KHỐI CHUNG -->
-    <div class="max-w-4xl pt-4 border-t border-[#E8DFC8]">
-        <div class="bg-white rounded-3xl p-5 border border-[#E8DFC8] shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div class="space-y-1">
-                <div class="text-xs font-extrabold text-coffee-900 flex items-center gap-2">
-                    <i class="fa-solid fa-circle-info text-amber_brand"></i> Yêu cầu thay đổi thông tin nhân sự?
-                </div>
-                <p class="text-[11px] text-slate-500">
-                    Các thông tin định danh như Họ tên, Ngày sinh, Số CCCD, Cửa hàng do Phòng Nhân sự (HR) quản lý.
-                </p>
-            </div>
-            <a href="<?php echo e(route('support.hr-request')); ?>" class="px-4 py-2.5 bg-[#FAF7F2] hover:bg-[#EFE7DA] border border-[#E8DFC8] text-coffee-900 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0 shadow-sm">
-                Gửi yêu cầu HR <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-            </a>
-        </div>
     </div>
 
 </div>

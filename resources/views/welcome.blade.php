@@ -6,7 +6,7 @@
 <div class="space-y-6">
 
     <!-- BANNER CHÀO CÁ NHÂN HÓA -->
-    <div class="relative bg-gradient-to-r from-[#2B1B15] via-[#3A261E] to-[#1A0F0B] text-white rounded-3xl p-6 md:p-8 shadow-xl overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+    <div class="page-banner relative bg-gradient-to-r from-[#2B1B15] via-[#3A261E] to-[#1A0F0B] text-white rounded-3xl p-6 md:p-8 shadow-xl overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div class="space-y-2 max-w-xl z-10">
             <div class="inline-flex items-center gap-2 bg-amber-500/20 text-amber-300 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border border-amber-500/30">
                 <i class="fa-solid fa-graduation-cap"></i> LỘ TRÌNH: {{ strtoupper($currentUser->ChucVu ?? 'BARISTA') }}
@@ -110,7 +110,7 @@
             <div>
                 <div class="text-2xl font-black text-slate-800">{{ $avgQuizScore ?? 0 }} <span class="text-xs font-semibold text-slate-400">/100</span></div>
                 <div class="text-xs font-bold text-slate-700">Điểm Quiz trung bình</div>
-                <div class="text-[10px] text-slate-400 mt-0.5">Trung bình kết quả các bài kiểm tra</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Trung bình các lượt thi thuộc bài được phân công, gồm thi lại</div>
             </div>
         </div>
 
@@ -122,7 +122,7 @@
     </div>
     <div>
         <!-- ĐÃ SỬA: Thay $completedQuizzesCount thành $completedTestsCount -->
-        <div class="text-2xl font-black text-slate-800">{{ $completedTestsCount ?? 0 }} <span class="text-xs font-normal text-slate-500">bài</span></div>
+        <div class="text-2xl font-black text-slate-800">{{ $completedTestsCount ?? 0 }}/{{ $totalTestsCount ?? 0 }} <span class="text-xs font-normal text-slate-500">bài</span></div>
         <div class="text-xs font-bold text-slate-700">Bài kiểm tra đã hoàn thành</div>
         <div class="text-[10px] text-slate-400 mt-0.5">Số bài kiểm tra đã đạt chuẩn</div>
     </div>

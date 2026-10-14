@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net"><diagram id="manager-usecase" name="Use case quản lý cửa hàng"><mxGraphModel dx="1500" dy="2300" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="2350" math="0" shadow="0"><root>
+<mxCell id="0"/>
+<mxCell id="1" parent="0"/>
+<mxCell id="system" value="BrewLearn – Phân hệ quản lý cửa hàng" style="swimlane;startSize=50;fillColor=#ffffff;strokeColor=#9E8B74;fontStyle=1;fontSize=21;" vertex="1" parent="1"><mxGeometry x="200" y="20" width="1250" height="2270" as="geometry"/></mxCell>
+<mxCell id="actor" value="Quản lý cửa hàng" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#ffffff;fontSize=15;" vertex="1" parent="1"><mxGeometry x="40" y="1040" width="70" height="110" as="geometry"/></mxCell>
+<mxCell id="u0" value="Đăng nhập" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="300" y="95" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a0" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u0"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u1" value="Đăng xuất" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="300" y="205" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a1" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u1"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u2" value="Xem / cập nhật hồ sơ và cài đặt tài khoản" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="300" y="315" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a2" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u2"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u3" value="Xem tổng quan cửa hàng và mức nguy cơ dự đoán" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="300" y="425" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a3" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u3"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u4" value="Xem / tìm nhân viên và lọc theo ca" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="300" y="535" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a4" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u4"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u5" value="Xem hồ sơ học tập, quiz và lịch sử đánh giá" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="300" y="645" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a5" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u5"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u6" value="Tạo ca làm việc" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="300" y="755" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a6" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u6"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u7" value="Phân ca cho nhân sự" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="300" y="865" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a7" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u7"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u8" value="Cập nhật trạng thái làm việc của nhân sự" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="300" y="975" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a8" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u8"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u9" value="Xem đánh giá chờ duyệt / bị trả lại / đã duyệt" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;strokeColor=#E87825;" vertex="1" parent="1"><mxGeometry x="300" y="1085" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a9" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u9"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u10" value="Duyệt đánh giá và đề xuất của trưởng ca" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;strokeColor=#E87825;" vertex="1" parent="1"><mxGeometry x="300" y="1195" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a10" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u10"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u11" value="Trả lại đánh giá kèm lý do bổ sung" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;strokeColor=#E87825;" vertex="1" parent="1"><mxGeometry x="300" y="1305" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a11" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u11"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u12" value="Duyệt / từ chối đề xuất đào tạo lại đang chờ duyệt" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;strokeColor=#E87825;" vertex="1" parent="1"><mxGeometry x="300" y="1415" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a12" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u12"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u13" value="Giao / cập nhật kế hoạch đào tạo lại từng vòng" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;strokeColor=#E87825;" vertex="1" parent="1"><mxGeometry x="300" y="1525" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a13" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u13"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u14" value="Theo dõi tiến trình và lịch sử các vòng đào tạo lại" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;strokeColor=#E87825;" vertex="1" parent="1"><mxGeometry x="300" y="1635" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a14" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u14"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u15" value="Tạo lịch đánh giá lại sau đào tạo" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;strokeColor=#E87825;" vertex="1" parent="1"><mxGeometry x="300" y="1745" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a15" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u15"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u16" value="Điều chỉnh và giao vòng đào tạo tiếp theo" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;strokeColor=#E87825;" vertex="1" parent="1"><mxGeometry x="300" y="1855" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a16" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u16"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u17" value="Xem thông báo duyệt, nhắc hạn đánh giá và đào tạo lại" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="300" y="1965" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a17" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u17"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="u18" value="Xem nội quy / chính sách và gửi yêu cầu hỗ trợ" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="300" y="2075" width="365" height="65" as="geometry"/></mxCell>
+<mxCell id="a18" value="" style="endArrow=none;startArrow=none;strokeColor=#333333;" edge="1" parent="1" source="actor" target="u18"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="notifyApproved" value="Thông báo kết quả đã duyệt
+cho nhân viên và trưởng ca" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="1040" y="1070" width="370" height="75" as="geometry"/></mxCell>
+<mxCell id="finish" value="Hoàn tất yêu cầu đào tạo lại" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;fillColor=#E8F5E9;strokeColor=#388E3C;" vertex="1" parent="1"><mxGeometry x="1040" y="1170" width="370" height="65" as="geometry"/></mxCell>
+<mxCell id="newPlan" value="Tạo yêu cầu đào tạo lại chờ giao" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="1040" y="1270" width="370" height="65" as="geometry"/></mxCell>
+<mxCell id="nextReady" value="Chuyển yêu cầu sang chờ giao vòng tiếp theo" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="1040" y="1370" width="370" height="65" as="geometry"/></mxCell>
+<mxCell id="notifyReturn" value="Thông báo yêu cầu bổ sung cho trưởng ca" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="1040" y="1470" width="370" height="65" as="geometry"/></mxCell>
+<mxCell id="notifyPlan" value="Thông báo kế hoạch cho nhân viên
+và trưởng ca phụ trách" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="1040" y="1630" width="370" height="75" as="geometry"/></mxCell>
+<mxCell id="check" value="Kiểm tra điều kiện hoàn thành của vòng hiện tại" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="1040" y="1830" width="370" height="65" as="geometry"/></mxCell>
+<mxCell id="notifySchedule" value="Thông báo lịch đánh giá lại
+cho nhân viên và trưởng ca đánh giá" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FAF7F2;strokeColor=#8C6D46;fontSize=14;" vertex="1" parent="1"><mxGeometry x="1040" y="1930" width="370" height="75" as="geometry"/></mxCell>
+<mxCell id="inc1" value="«include»" style="dashed=1;endArrow=open;endFill=0;html=1;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="u10" target="notifyApproved"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="ext1" value="«extend»
+[Đánh giá lại Đạt]" style="dashed=1;endArrow=open;endFill=0;html=1;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="finish" target="u10"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="ext2" value="«extend»
+[Chưa đạt, chưa có yêu cầu liên kết]" style="dashed=1;endArrow=open;endFill=0;html=1;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="newPlan" target="u10"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="ext3" value="«extend»
+[Đánh giá lại Chưa đạt]" style="dashed=1;endArrow=open;endFill=0;html=1;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="nextReady" target="u10"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="inc2" value="«include»" style="dashed=1;endArrow=open;endFill=0;html=1;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="u11" target="notifyReturn"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="inc3" value="«include»" style="dashed=1;endArrow=open;endFill=0;html=1;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="u13" target="notifyPlan"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="inc4" value="«include»" style="dashed=1;endArrow=open;endFill=0;html=1;fontSize=12;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=1;" edge="1" parent="1" source="u16" target="notifyPlan"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="inc5" value="«include»" style="dashed=1;endArrow=open;endFill=0;html=1;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="u15" target="check"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="inc6" value="«include»" style="dashed=1;endArrow=open;endFill=0;html=1;fontSize=12;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="u15" target="notifySchedule"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="n0" value="Tiền điều kiện chung: đã đăng nhập bằng tài khoản quản lý cửa hàng, trừ Đăng nhập.
+Quản lý xem dữ liệu trong cửa hàng mình, có lọc theo ca.
+Danh sách nguy cơ / đánh giá không bao gồm trưởng ca.
+Trưởng ca vẫn được phân ca và giao phụ trách đào tạo lại." style="shape=note;whiteSpace=wrap;html=1;size=18;fillColor=#FFF9D9;strokeColor=#C7B899;align=left;spacing=10;fontSize=13;" vertex="1" parent="1"><mxGeometry x="1020" y="95" width="390" height="170" as="geometry"/></mxCell>
+<mxCell id="n1" value="Hai nguồn độc lập:
+1. Model dự đoán từ dữ liệu học tập / quiz.
+2. Trưởng ca chấm năng lực theo 5 tiêu chí.
+Quản lý xem riêng từng nguồn để cân nhắc.
+Không gộp thành một điểm; không dùng điểm trưởng ca làm đầu vào tính nguy cơ.
+Nguy cơ hỗ trợ ưu tiên xem hồ sơ." style="shape=note;whiteSpace=wrap;html=1;size=18;fillColor=#FFF9D9;strokeColor=#C7B899;align=left;spacing=10;fontSize=13;" vertex="1" parent="1"><mxGeometry x="1020" y="295" width="390" height="175" as="geometry"/></mxCell>
+<mxCell id="n2" value="Trạng thái: Đang làm / Tạm ngưng / Nghỉ việc.
+Tạm ngưng và nghỉ việc: không tính nhắc hạn và không chạy dự đoán mới; giữ lịch sử học và đánh giá.
+Người đang làm nhưng chưa đủ điều kiện học vẫn xuất hiện trong danh sách nhắc hạn.
+Nhắc đánh giá trong 7 ngày; nhắc hạn đào tạo lại trong 3 ngày." style="shape=note;whiteSpace=wrap;html=1;size=18;fillColor=#FFF9D9;strokeColor=#C7B899;align=left;spacing=10;fontSize=13;" vertex="1" parent="1"><mxGeometry x="1020" y="500" width="390" height="170" as="geometry"/></mxCell>
+<mxCell id="n3" value="Chỉ duyệt / trả lại đánh giá đang chờ phê duyệt.
+Giữ nguyên điểm và kết quả trưởng ca đã chấm.
+Thiếu dữ liệu / cần làm rõ: trả lại kèm lý do.
+Chưa đạt có đề xuất: tạo yêu cầu đào tạo lại hoặc chờ giao vòng tiếp theo.
+Nhân viên nhận kết quả sau khi duyệt." style="shape=note;whiteSpace=wrap;html=1;size=18;fillColor=#FFF9D9;strokeColor=#C7B899;align=left;spacing=10;fontSize=13;" vertex="1" parent="1"><mxGeometry x="1020" y="700" width="390" height="150" as="geometry"/></mxCell>
+<mxCell id="n4" value="Đề xuất đào tạo lại độc lập: chỉ duyệt / từ chối khi trạng thái Chờ duyệt.
+Đề xuất trưởng ca gắn với đánh giá Chưa đạt được duyệt cùng đánh giá; không duyệt trùng.
+Nguồn trưởng ca và nguồn model được lưu phân biệt." style="shape=note;whiteSpace=wrap;html=1;size=18;fillColor=#FFF9D9;strokeColor=#C7B899;align=left;spacing=10;fontSize=13;" vertex="1" parent="1"><mxGeometry x="1020" y="870" width="390" height="135" as="geometry"/></mxCell>
+<mxCell id="n5" value="Giao kế hoạch: chọn trưởng ca phụ trách, nội dung, hạn hoàn thành và ngày dự kiến đánh giá lại." style="shape=note;whiteSpace=wrap;html=1;size=18;fillColor=#FFF9D9;strokeColor=#C7B899;align=left;spacing=10;fontSize=13;" vertex="1" parent="1"><mxGeometry x="1020" y="1530" width="390" height="75" as="geometry"/></mxCell>
+<mxCell id="n6" value="Trước khi tạo lịch đánh giá lại: hoàn thành bài học / đạt quiz liên quan trong vòng hiện tại và có xác nhận thực hành / theo dõi của trưởng ca phụ trách." style="shape=note;whiteSpace=wrap;html=1;size=18;fillColor=#FFF9D9;strokeColor=#C7B899;align=left;spacing=10;fontSize=13;" vertex="1" parent="1"><mxGeometry x="1020" y="1730" width="390" height="85" as="geometry"/></mxCell>
+<mxCell id="n7" value="Quản lý tạo lịch đánh giá lại, trưởng ca thực hiện chấm.
+Vòng tiếp theo chỉ được giao sau khi kết quả Chưa đạt của vòng trước đã được duyệt.
+Lưu riêng từng vòng: kế hoạch, xác nhận, đánh giá và kết quả duyệt.
+Cập nhật kế hoạch đang thực hiện không tạo vòng mới; đổi người phụ trách / nội dung phải xác nhận lại.
+Chỉ hoàn tất yêu cầu khi đánh giá lại Đạt được duyệt.
+Thông báo quản lý không lặp cảnh báo nguy cơ đã có ở Dashboard." style="shape=note;whiteSpace=wrap;html=1;size=18;fillColor=#FFF9D9;strokeColor=#C7B899;align=left;spacing=10;fontSize=13;" vertex="1" parent="1"><mxGeometry x="1020" y="2050" width="390" height="175" as="geometry"/></mxCell>
+</root></mxGraphModel></diagram></mxfile>

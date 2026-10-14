@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssessmentEligibility;
 use App\Models\AssessmentReminder;
 use App\Models\CourseProgress;
 use App\Models\User;
@@ -52,6 +53,9 @@ class LeaderEvaluationController extends Controller
 
         // 1. Tất cả danh sách nhân viên
         $staffs = $this->staffQuery()->get();
+        foreach ($staffs as $person) {
+            $person->eligibility = app(AssessmentEligibility::class)->initial($person);
+        }
 
         // Dùng cùng chu kỳ đánh giá và trạng thái làm việc với quản lý cửa hàng.
         $dueStaffs = app(AssessmentReminder::class)->decorate($staffs)->where('needs_reminder', true);
@@ -77,6 +81,20 @@ class LeaderEvaluationController extends Controller
             ->whereIn('danh_gia_nang_luc.TrangThai', ['ChoDanhGia', 'ChoPheDuyet', 'DaDuyet', 'HoanThanh', 'TraLai'])
             ->orderBy('danh_gia_nang_luc.NgayHen', 'asc')
             ->get();
+
+        $schedules = $schedules->groupBy('user_id')->flatMap(function ($history) {
+            $pending = $history->whereIn('TrangThai', ['ChoDanhGia', 'ChoPheDuyet', 'TraLai']);
+
+            // Keep every actionable schedule; completed history belongs in the staff profile.
+            return $pending->isNotEmpty() ? $pending : $history->sortBy([['NgayHen', 'desc'], ['id', 'desc']])->take(1);
+        })->sortBy('NgayHen')->values();
+
+        $schedules = $schedules->groupBy('user_id')->flatMap(function ($history) {
+            $pending = $history->whereIn('TrangThai', ['ChoDanhGia', 'ChoPheDuyet', 'TraLai']);
+
+            // Keep every actionable schedule; completed history belongs in the staff profile.
+            return $pending->isNotEmpty() ? $pending : $history->sortByDesc('NgayHen')->sortByDesc('id')->take(1);
+        })->sortBy('NgayHen')->values();
 
         if (Schema::hasColumn('danh_gia_nang_luc', 'ly_do_tra_lai')) {
             $reasons = DB::table('danh_gia_nang_luc')->whereIn('id', $schedules->pluck('id'))->pluck('ly_do_tra_lai', 'id');
@@ -142,6 +160,12 @@ class LeaderEvaluationController extends Controller
                 return back()->withErrors(['user_id' => 'Nhân viên đã có lịch đánh giá hoặc kết quả đang xử lý. Vui lòng xử lý lượt hiện tại trước.'])->withInput();
             }
             $now = now();
+            $eligibility = app(AssessmentEligibility::class)->initial($person);
+            if (! $eligibility['ready']) {
+                DB::rollBack();
+
+                return back()->withErrors(['user_id' => 'Chưa đủ điều kiện đánh giá: '.implode(' ', $eligibility['missing'])])->withInput();
+            }
             $leaderId = auth()->id() ?? 1;
 
             // 1. Lưu bản ghi lịch sát hạch cho 1 cá nhân
@@ -463,31 +487,6 @@ class LeaderEvaluationController extends Controller
                 ->where('id', $request->assessment_id)
                 ->update($updateData);
 
-            // 3. TỰ ĐỘNG BẮN THÔNG BÁO KẾT QUẢ CHO NHÂN VIÊN
-            $resultStatusText = $isPassed ? 'ĐẠT' : 'CHƯA ĐẠT';
-            $notifMessage = "Trưởng ca đã hoàn tất chấm điểm bài đánh giá của bạn.\n".
-                            "- Điểm tổng kết: {$diemTong}/100 ({$resultStatusText})\n\n".
-                            "Điểm chi tiết các tiêu chí:\n".
-                            "- Kiến thức nghiệp vụ: {$nv}/100\n".
-                            "- Thao tác công việc: {$kn}/100\n".
-                            "- Tuân thủ quy trình: {$qt}/100\n".
-                            "- Thái độ phục vụ: {$pv}/100\n".
-                            "- Tác phong & phối hợp: {$tp}/100\n";
-
-            if (! empty($request->comment)) {
-                $notifMessage .= "\nNhận xét của trưởng ca: ".$request->comment;
-            }
-
-            DB::table('notifications')->insert([
-                'user_id' => $assessment->user_id,
-                'title' => "Kết quả đánh giá năng lực: {$resultStatusText}",
-                'message' => $notifMessage,
-                'type' => 'general',
-                'is_read' => 0,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
             if (Schema::hasColumn('users', 'cua_hang_id')) {
                 $storeId = DB::table('users')->where('id', $assessment->user_id)->value('cua_hang_id');
                 if ($storeId) {
@@ -503,7 +502,7 @@ class LeaderEvaluationController extends Controller
             DB::commit();
 
             $msg = $isPassed
-                ? "Đã gửi kết quả đánh giá ĐẠT ({$diemTong}/100 điểm) cho Quản lý cửa hàng phê duyệt và thông báo tới nhân viên!"
+                ? "Đã gửi kết quả đánh giá ĐẠT ({$diemTong}/100 điểm) cho Quản lý cửa hàng phê duyệt. Nhân viên nhận kết quả sau khi được duyệt."
                 : "Đã gửi đề xuất xử lý cho nhân viên CHƯA ĐẠT ({$diemTong}/100 điểm) tới Quản lý cửa hàng!";
 
             return redirect()->back()->with('success', $msg);
@@ -542,24 +541,15 @@ class LeaderEvaluationController extends Controller
             ->unique('user_id')
             ->keyBy('user_id');
 
+        $coursePercentages = app(CourseProgress::class)->coursePercentages($staffs);
         foreach ($staffs as $staff) {
             $userChucVu = $staff->ChucVu ?? $staff->chuc_vu ?? '';
             $cleanChucVu = mb_strtoupper(trim($userChucVu), 'UTF-8');
 
-            $assignedCourses = app(CourseProgress::class)->assignedCourses($userChucVu);
-            $totalCoursesCount = $assignedCourses->count();
-            $totalProgressSum = 0;
-            $completedCoursesCount = 0;
-            foreach ($assignedCourses as $course) {
-                $progress = app(CourseProgress::class)->sync((int) $staff->id, (int) $course->MaCTDT);
-                $totalProgressSum += $progress;
-                if ($progress >= 100) {
-                    $completedCoursesCount++;
-                }
-            }
-            $staff->overall_progress = $totalCoursesCount > 0
-                ? round($totalProgressSum / $totalCoursesCount, 1)
-                : 0;
+            $percentages = $coursePercentages->get($staff->id, collect());
+            $totalCoursesCount = $percentages->count();
+            $completedCoursesCount = $percentages->filter(fn ($value) => $value >= 100)->count();
+            $staff->overall_progress = round($percentages->avg() ?? 0, 1);
 
             $staff->completed_courses_count = $completedCoursesCount;
             $staff->total_courses_count = $totalCoursesCount;

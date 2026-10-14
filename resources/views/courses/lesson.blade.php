@@ -16,7 +16,7 @@
     </div>
 
     <!-- HEADER BÀI HỌC -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+    <div class="page-banner flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <h1 class="text-xl md:text-2xl font-extrabold text-coffee-900">
             Bài {{ sprintf('%02d', $lesson->ThuTu ?? 1) }}: {{ $lesson->TenBaiHoc ?? 'Nội dung bài học' }}
         </h1>

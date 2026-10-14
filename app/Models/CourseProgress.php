@@ -8,6 +8,43 @@ use Illuminate\Support\Facades\Schema;
 
 class CourseProgress
 {
+    public function summarize(Collection $staff): Collection
+    {
+        return $this->coursePercentages($staff)->map(fn ($courses) => round($courses->avg() ?? 0, 1));
+    }
+
+    public function coursePercentages(Collection $staff): Collection
+    {
+        $courses = DB::table('chuong_trinh_dao_tao')->orderBy('MaCTDT')->get();
+        if ($courses->isEmpty()) {
+            return $staff->mapWithKeys(fn ($person) => [$person->id => collect()]);
+        }
+        $lessons = DB::table('bai_hoc')->whereIn('FK_MaCTDT', $courses->pluck('MaCTDT'))->get()->groupBy('FK_MaCTDT');
+        $records = DB::table('nhan_vien_khoa_hoc')->whereIn('user_id', $staff->pluck('id'))->get()->groupBy('user_id');
+        $progresses = DB::table('user_lesson_progresses')->whereIn('user_id', $staff->pluck('id'))->get()->groupBy('user_id');
+
+        return $staff->mapWithKeys(function ($person) use ($courses, $lessons, $records, $progresses) {
+            $assigned = $courses->filter(fn ($course) => in_array(mb_strtoupper(trim($course->ChucVuApDung)), [mb_strtoupper(trim($person->ChucVu ?? '')), 'ALL STAFF', 'ALL', 'TẤT CẢ']));
+            $saved = $records->get($person->id, collect())->keyBy('MaCTDT');
+            $completed = $progresses->get($person->id, collect())->keyBy('lesson_id');
+            $percentages = $assigned->mapWithKeys(function ($course) use ($lessons, $saved, $completed) {
+                $items = $lessons->get($course->MaCTDT, collect());
+                $record = $saved->get($course->MaCTDT);
+                if ($items->isEmpty() || ! $items->contains(fn ($lesson) => $completed->has($lesson->MaBaiHoc))) {
+                    return [$course->MaCTDT => (float) ($record->TienDo ?? 0)];
+                }
+
+                return [$course->MaCTDT => round($items->avg(function ($lesson) use ($completed, $record) {
+                    $value = $completed->get($lesson->MaBaiHoc);
+
+                    return $value ? ($value->is_completed || $value->progress_percent >= 95 ? 100 : min(100, max(0, (float) $value->progress_percent))) : (float) ($record->demo_progress_baseline ?? 0);
+                }), 1)];
+            });
+
+            return [$person->id => $percentages];
+        });
+    }
+
     public function assignedCourses(string $position): Collection
     {
         return DB::table('chuong_trinh_dao_tao')->where(function ($query) use ($position): void {

@@ -1,0 +1,31 @@
+{
+  "output": "D:\\wamp64\\Brewlearn\\output\\Do_an_MIS_da_sua_phan_du_doan.docx",
+  "tables": 35,
+  "images_preserved": 34,
+  "changes": [
+    "Về thiết kế, chức năng dự đoán hướng đến hỗ trợ theo dõi nguy cơ Chưa đạt ở lần đánh giá năng lực lần đầu hoặc",
+    "Chương trình dự đoán chạy riêng và lưu kết quả để ứng dụng web đọc, chưa được cấu hình lịch chạy tự động. Quản",
+    "Trong dữ liệu huấn luyện giả lập hiện tại, điểm quiz trung bình và số lượt chưa đạt được sinh riêng; số lượt c",
+    "Xem xét, phê duyệt hoặc trả lại. Quản lý xem điểm, nhận xét và đề xuất đào tạo lại, đồng thời có thể mở thông ",
+    "Sử dụng kết quả dự đoán. Python tổng hợp dữ liệu học tập và kiểm tra, không dùng điểm đánh giá thực hành làm đ",
+    "1. Quản lý mở hồ sơ Chờ phê duyệt.\n2. Hệ thống hiển thị điểm, kết luận, nhận xét và đề xuất. Quản lý có thể xe",
+    "Là Quản lý cửa hàng, tôi muốn xem mức nguy cơ và dữ liệu học tập, kiểm tra tại thời điểm tính để tham khảo khi",
+    "1. Quản lý mở tổng quan, danh sách hoặc hồ sơ nhân viên.\n2. Hệ thống xác định phạm vi dữ liệu được phép xem.\n3",
+    "BR-QL09-1: Chỉ xem dữ liệu thuộc cửa hàng được phép.\nBR-QL09-2: Python chạy riêng; chức năng xem đọc kết quả đ",
+    "Cách tính trong nguyên mẫu",
+    "Phạm vi giả lập",
+    "Trung bình TienDo các khóa áp dụng; khóa chưa có tiến độ tính 0.",
+    "Điểm quiz trung bình",
+    "Trung bình Diem của toàn bộ lượt quiz đã lưu của tài khoản.",
+    "Số lượt quiz",
+    "Tổng bản ghi kết quả quiz của tài khoản.",
+    "Tỷ lệ quiz chưa đạt",
+    "Hiện đếm lượt Diem < 80 rồi chia tổng lượt; chưa đồng bộ DiemChuan.",
+    "Số lượt mở bài",
+    "Tổng visit_count trong user_lesson_progresses.",
+    "Thông tin dự đoán được hiển thị theo mức Thấp, Trung bình, Cao hoặc Chưa đủ dữ liệu. Quản lý xem thời điểm dự ",
+    "Giao diện đọc kết quả Python đã lưu vào cơ sở dữ liệu. Quản lý có thể mở tổng quan hoặc hồ sơ để tham khảo khi",
+    "Chương cũng trình bày mục tiêu thiết kế chức năng dự đoán, cách tích hợp Python–MySQL–Laravel và kết quả phân ",
+    "Môi trường hiện có: Python 3.14.6; NumPy 2.5.3; pandas 3.0.6; scikit-learn 1.9.1; joblib 1.6.0. Phiên bản kiểm"
+  ]
+}

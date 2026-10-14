@@ -21,7 +21,7 @@
 
 <div class="space-y-6">
     <!-- HEADER TRANG -->
-    <div class="bg-white border border-coffee-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="page-banner bg-white border border-coffee-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <h1 class="text-xl md:text-2xl font-extrabold text-coffee-900">Chương Trình Đào Tạo</h1>
             <p class="text-xs text-slate-500 mt-1">Danh sách các khóa học tiêu chuẩn Barista phân theo cấp độ và chuyên môn.</p>
@@ -33,11 +33,7 @@
                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                 <input type="text" id="searchInput" onkeyup="filterCourses()" placeholder="Tìm khóa học..." class="pl-8 pr-3 py-2 bg-white border border-coffee-200/60 rounded-xl text-xs w-48 md:w-60 focus:outline-none focus:border-amber_brand">
             </div>
-            <select id="levelSelect" onchange="filterCourses()" class="px-3 py-2 bg-white border border-coffee-200/60 rounded-xl text-xs text-slate-600 focus:outline-none">
-                <option value="">Tất cả cấp độ</option>
-                <option value="CẤP ĐỘ 1">Cấp độ 1</option>
-                <option value="CẤP ĐỘ 2">Cấp độ 2</option>
-            </select>
+          
         </div>
     </div>
 

@@ -2,12 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Models\CourseProgress;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\TestWith;
 use Tests\TestCase;
 
@@ -59,11 +61,13 @@ class ManagerWorkflowTest extends TestCase
             $t->integer('lesson_id');
             $t->float('progress_percent');
             $t->boolean('is_completed');
+            $t->float('last_watched_seconds')->default(0);
         });
         Schema::create('bai_kiem_tra', function (Blueprint $t) {
             $t->id('MaBaiKiemTra');
             $t->string('TenBaiKiemTra');
             $t->float('DiemChuan')->default(80);
+            $t->integer('MaBaiHoc')->nullable();
         });
         Schema::create('ket_qua_kiem_tra', function (Blueprint $t) {
             $t->id();
@@ -80,6 +84,7 @@ class ManagerWorkflowTest extends TestCase
             $t->string('muc_canh_bao');
             $t->float('diem_rui_ro')->nullable();
             $t->string('phien_ban_mo_hinh')->nullable();
+            $t->json('chi_tiet_yeu_to')->nullable();
             $t->dateTime('ngay_du_doan');
         });
         Schema::create('danh_gia_nang_luc', function (Blueprint $t) {
@@ -117,6 +122,8 @@ class ManagerWorkflowTest extends TestCase
         (require database_path('migrations/2026_09_24_150516_create_notifications_table.php'))->up();
         (require database_path('migrations/2026_10_01_153056_create_manager_training_workflow.php'))->up();
         (require database_path('migrations/2026_10_01_165925_add_employment_status_to_users_table.php'))->up();
+        (require database_path('migrations/2026_10_02_100000_create_retraining_rounds_table.php'))->up();
+        (require database_path('migrations/2026_10_02_110000_add_retraining_completion_requirements.php'))->up();
         Schema::table('bai_hoc', fn (Blueprint $table) => $table->integer('ThuTu')->default(1));
         DB::table('cua_hang')->insert([['id' => 1, 'ten_cua_hang' => 'Flagship'], ['id' => 2, 'ten_cua_hang' => 'Cửa hàng khác']]);
         $this->manager = User::factory()->create(['ChucVu' => 'Quản lý cửa hàng', 'cua_hang_id' => 1, 'name' => 'Ngọc Bích', 'password' => Hash::make('test-manager-password')]);
@@ -131,12 +138,166 @@ class ManagerWorkflowTest extends TestCase
         return DB::table('danh_gia_nang_luc')->insertGetId(['user_id' => $this->employee->id, 'NguoiDanhGia_id' => $this->leader->id, 'TrangThai' => 'ChoPheDuyet', 'Diem' => $passed ? 90 : 80.4, 'IsPassed' => $passed, 'NgayDanhGia' => now(), 'ChiTietDeXuat' => $passed ? null : json_encode(['source' => 'Trưởng ca đề xuất', 'details' => ['theodoica' => ['behavior' => 'Bàn giao ca', 'shift_count' => 3]]]), 'created_at' => now(), 'updated_at' => now()]);
     }
 
+    public function test_staff_progress_is_read_in_batches_and_reflects_new_learning_without_writes(): void
+    {
+        $this->readyForInitialAssessment();
+        DB::table('bai_hoc')->insert(['MaBaiHoc' => 2, 'FK_MaCTDT' => 1, 'TenBaiHoc' => 'Bàn giao']);
+        DB::table('nhan_vien_khoa_hoc')->insert(['user_id' => $this->employee->id, 'MaCTDT' => 1, 'TienDo' => 10]);
+        $staff = collect([$this->employee, $this->leader, $this->other]);
+        DB::enableQueryLog();
+        DB::flushQueryLog();
+        $summary = app(CourseProgress::class)->summarize($staff);
+        $queries = DB::getQueryLog();
+        DB::disableQueryLog();
+        $this->assertSame(50.0, $summary->get($this->employee->id));
+        $this->assertCount(4, $queries);
+        $this->assertDatabaseHas('nhan_vien_khoa_hoc', ['user_id' => $this->employee->id, 'TienDo' => 10]);
+        DB::table('user_lesson_progresses')->insert(['user_id' => $this->employee->id, 'lesson_id' => 2, 'progress_percent' => 95, 'is_completed' => false]);
+        $this->assertSame(100.0, app(CourseProgress::class)->summarize($staff)->get($this->employee->id));
+    }
+
+    public function test_dashboard_fetches_notification_feed_only_once_despite_many_partials(): void
+    {
+        DB::enableQueryLog();
+        DB::flushQueryLog();
+        $this->get(route('manager.dashboard'))->assertOk();
+        $queries = collect(DB::getQueryLog());
+        DB::disableQueryLog();
+        $reads = $queries->filter(fn ($query) => str_contains($query['query'], 'from "notifications"'));
+        $this->assertCount(1, $reads);
+    }
+
+    public function test_supplementing_store_demo_is_additive_and_does_not_reset_new_web_records(): void
+    {
+        Storage::fake('local');
+        Schema::table('users', function (Blueprint $table) {
+            $table->integer('CapDo')->nullable();
+            $table->string('ChiNhanh')->nullable();
+        });
+        $this->travelTo(Carbon::parse('2026-10-04 12:00:00'));
+        $this->manager->forceFill(['email' => 'ngocbich@brewlearn.com'])->save();
+        $morning = DB::table('ca_lam_viec')->insertGetId(['cua_hang_id' => 1, 'ten_ca' => 'Ca sáng']);
+        $afternoon = DB::table('ca_lam_viec')->insertGetId(['cua_hang_id' => 1, 'ten_ca' => 'Ca chiều']);
+        $this->leader->forceFill(['ca_lam_viec_id' => $morning])->save();
+        User::factory()->create(['ChucVu' => 'Trưởng ca', 'cua_hang_id' => 1, 'ca_lam_viec_id' => $afternoon]);
+        $existing = $this->assessment(true);
+        $this->artisan('brewlearn:supplement-store-demo')->assertSuccessful();
+        $this->assertDatabaseHas('danh_gia_nang_luc', ['id' => $existing, 'TrangThai' => 'ChoPheDuyet']);
+        $demoIds = User::where('email', 'like', 'operations%.demo@brewlearn.com')->pluck('id');
+        $this->assertCount(6, $demoIds);
+        $this->assertSame(10, DB::table('danh_gia_nang_luc')->whereIn('user_id', $demoIds)->count());
+        $this->assertSame(2, DB::table('yeu_cau_dao_tao_lai')->whereIn('user_id', $demoIds)->where('trang_thai', 'HoanThanh')->count());
+        $this->assertSame(2, DB::table('retraining_rounds')->max('round_number'));
+        $this->assertSame(1, DB::table('yeu_cau_dao_tao_lai')->whereIn('user_id', $demoIds)->where('tien_trinh', 'DangThucHien')->count());
+        $person = User::findOrFail($demoIds->first());
+        $person->forceFill(['employment_status' => 'TamNgung'])->save();
+        DB::table('danh_gia_nang_luc')->where('id', $existing)->update(['NhanXet' => 'Nhận xét mới trên web']);
+        $this->artisan('brewlearn:supplement-store-demo')->assertSuccessful();
+        $this->assertDatabaseHas('users', ['id' => $person->id, 'employment_status' => 'TamNgung']);
+        $this->assertDatabaseHas('danh_gia_nang_luc', ['id' => $existing, 'NhanXet' => 'Nhận xét mới trên web']);
+        $this->assertSame(10, DB::table('danh_gia_nang_luc')->whereIn('user_id', $demoIds)->count());
+        $this->artisan('brewlearn:compact-report-demo')->assertSuccessful();
+        $this->artisan('brewlearn:compact-report-demo')->assertSuccessful();
+        $this->assertSame(10, DB::table('danh_gia_nang_luc')->whereIn('user_id', $demoIds)->count());
+        $this->assertDatabaseHas('danh_gia_nang_luc', ['id' => $existing, 'NhanXet' => 'Nhận xét mới trên web']);
+    }
+
+    public function test_leader_dashboard_shows_one_completed_assessment_per_employee_without_deleting_history(): void
+    {
+        foreach (['2026-05-15', '2026-06-15', '2026-10-09'] as $date) {
+            DB::table('danh_gia_nang_luc')->insert(['user_id' => $this->employee->id, 'NgayHen' => $date.' 10:00:00', 'TrangThai' => 'DaDuyet', 'Diem' => 90]);
+        }
+        $this->actingAs($this->leader)->get(route('leader.dashboard'))->assertOk()
+            ->assertViewHas('schedules', fn ($rows) => $rows->count() === 1 && $rows->first()->NgayHen === '2026-10-09 10:00:00');
+        $this->assertDatabaseCount('danh_gia_nang_luc', 3);
+        $pending = DB::table('danh_gia_nang_luc')->insertGetId(['user_id' => $this->employee->id, 'NgayHen' => '2026-10-13 10:00:00', 'TrangThai' => 'ChoDanhGia']);
+        $this->get(route('leader.dashboard'))->assertOk()
+            ->assertViewHas('schedules', fn ($rows) => $rows->count() === 1 && $rows->first()->id === $pending);
+    }
+
+    public function test_dashboard_charts_use_approved_latest_monthly_results_and_latest_risks(): void
+    {
+        $this->travelTo(Carbon::parse('2026-10-04 12:00:00'));
+        $second = User::factory()->create(['ChucVu' => 'Barista', 'cua_hang_id' => 1]);
+        $inactive = User::factory()->create(['ChucVu' => 'Barista', 'cua_hang_id' => 1, 'employment_status' => 'NghiViec']);
+        foreach ([[$this->employee, '2026-09-01', false, 'DaDuyet'], [$this->employee, '2026-09-15', true, 'DaDuyet'], [$second, '2026-09-10', false, 'HoanThanh'], [$second, '2026-09-20', true, 'ChoPheDuyet'], [$this->leader, '2026-09-10', true, 'DaDuyet'], [$this->other, '2026-09-10', true, 'DaDuyet'], [$inactive, '2026-09-10', true, 'DaDuyet']] as [$person, $date, $passed, $status]) {
+            DB::table('danh_gia_nang_luc')->insert(['user_id' => $person->id, 'NgayDanhGia' => $date.' 12:00:00', 'TrangThai' => $status, 'IsPassed' => $passed, 'Diem' => 85]);
+        }
+        foreach (['Cao', 'Thap'] as $index => $risk) {
+            DB::table('du_doan_nguy_co')->insert(['user_id' => $this->employee->id, 'cua_hang_id' => 1, 'muc_canh_bao' => $risk, 'phien_ban_mo_hinh' => 'rules-v2', 'ngay_du_doan' => '2026-10-0'.($index + 1)]);
+        }
+        $this->get(route('manager.dashboard'))->assertOk()
+            ->assertViewHas('assessmentTrend', function ($trend) {
+                $september = $trend->firstWhere('label', '09/2026');
+
+                return $september['total'] === 2 && $september['passRate'] === 50.0
+                    && $september['failRate'] === 50.0 && $trend->firstWhere('label', '08/2026')['passRate'] === null;
+            })
+            ->assertViewHas('riskDistribution', fn ($risk) => $risk->all() === ['Cao' => 0, 'TrungBinh' => 0, 'Thap' => 1, 'ChuaDuDuLieu' => 0, 'ChuaCoKetQua' => 1]);
+        $this->get(route('manager.dashboard', ['q' => 'không có nhân viên']))->assertOk()
+            ->assertViewHas('riskDistribution', fn ($risk) => $risk->sum() === 0)
+            ->assertViewHas('assessmentTrend', fn ($trend) => $trend->sum('total') === 0);
+    }
+
+    public function test_rule_warnings_exclude_ml_and_show_score_reasons_coverage_and_timestamps(): void
+    {
+        $details = json_encode(['completed_quiz_count' => 2, 'applicable_quiz_count' => 7,
+            'details' => ['tong_diem' => 1, 'ly_do_canh_bao' => ['Có bài kiểm tra chưa đạt']]]);
+        DB::table('du_doan_nguy_co')->insert([
+            ['user_id' => $this->employee->id, 'cua_hang_id' => 1, 'muc_canh_bao' => 'Thap', 'diem_rui_ro' => 0.125, 'phien_ban_mo_hinh' => 'rules-v2', 'chi_tiet_yeu_to' => $details, 'ngay_du_doan' => '2026-10-01 09:00:00'],
+            ['user_id' => $this->employee->id, 'cua_hang_id' => 1, 'muc_canh_bao' => 'Cao', 'diem_rui_ro' => 0.95, 'phien_ban_mo_hinh' => 'Logistic Regression', 'chi_tiet_yeu_to' => null, 'ngay_du_doan' => '2026-10-02 09:00:00'],
+        ]);
+        $this->get(route('manager.staff'))->assertOk()->assertSee('12.5/100')
+            ->assertSee('Đã làm 2/7')->assertSee('Có bài kiểm tra chưa đạt')
+            ->assertSee('01/10/2026 16:00:00')->assertDontSee('95.0/100');
+        $this->assessment();
+        $this->get(route('manager.assessments'))->assertOk()->assertSee('Có bài kiểm tra chưa đạt');
+        $this->get(route('manager.profile', $this->employee->id))->assertOk()->assertSee('12.5/100');
+        DB::table('du_doan_nguy_co')->where('phien_ban_mo_hinh', 'rules-v2')->delete();
+        $this->get(route('manager.dashboard'))->assertOk()
+            ->assertViewHas('staff', fn ($staff) => $staff->firstWhere('id', $this->employee->id)->risk === 'ChuaCoKetQua');
+    }
+
+    public function test_latest_rule_uses_id_for_tied_timestamps_and_keeps_insufficient_distinct(): void
+    {
+        foreach (['Cao', 'ChuaDuDuLieu'] as $risk) {
+            DB::table('du_doan_nguy_co')->insert(['user_id' => $this->employee->id, 'cua_hang_id' => 1,
+                'muc_canh_bao' => $risk, 'phien_ban_mo_hinh' => 'rules-v2', 'ngay_du_doan' => '2026-10-01 09:00:00']);
+        }
+        $this->get(route('manager.dashboard'))->assertOk()
+            ->assertViewHas('riskDistribution', fn ($risk) => $risk['ChuaDuDuLieu'] === 1 && $risk['ChuaCoKetQua'] === 0 && $risk['Cao'] === 0);
+    }
+
+    public function test_unknown_positions_are_not_counted_as_missing_rule_predictions(): void
+    {
+        $this->employee->forceFill(['ChucVu' => 'Thực Tập Sinh'])->save();
+        $this->get(route('manager.dashboard'))->assertOk()
+            ->assertViewHas('riskDistribution', fn ($risk) => $risk->sum() === 0);
+        $this->get(route('manager.staff'))->assertOk()->assertSee('Không thuộc đối tượng cảnh báo');
+    }
+
+    private function confirmRound(int $plan): void
+    {
+        DB::table('retraining_rounds')->where('request_id', $plan)->where('status', 'DangThucHien')
+            ->update(['confirmed_by' => $this->leader->id, 'confirmed_at' => now(), 'confirmation_note' => 'Đã thực hành đủ']);
+    }
+
+    private function readyForInitialAssessment(): void
+    {
+        DB::table('chuong_trinh_dao_tao')->insert(['MaCTDT' => 1, 'TenCTDT' => 'An toàn', 'ChucVuApDung' => 'ALL STAFF']);
+        DB::table('bai_hoc')->insert(['MaBaiHoc' => 1, 'FK_MaCTDT' => 1, 'TenBaiHoc' => 'Vệ sinh']);
+        DB::table('user_lesson_progresses')->insert(['user_id' => $this->employee->id, 'lesson_id' => 1, 'progress_percent' => 100, 'is_completed' => true]);
+        DB::table('bai_kiem_tra')->insert(['MaBaiKiemTra' => 1, 'TenBaiKiemTra' => 'Quiz vệ sinh', 'DiemChuan' => 90]);
+        DB::table('ket_qua_kiem_tra')->insert(['user_id' => $this->employee->id, 'MaBaiKiemTra' => 1, 'Diem' => 90]);
+    }
+
     public function test_leaders_are_not_assessment_targets_but_remain_learning_and_staff_members(): void
     {
         $this->leader->forceFill(['joined_at' => now()->subYear()])->save();
         $id = DB::table('danh_gia_nang_luc')->insertGetId(['user_id' => $this->leader->id, 'TrangThai' => 'ChoPheDuyet', 'IsPassed' => true, 'Diem' => 90, 'updated_at' => now()]);
         $this->get(route('manager.dashboard'))->assertViewHas('pendingCount', 0);
-        $this->get(route('manager.staff'))->assertSee($this->leader->name)->assertSee('Không áp dụng');
+        $this->get(route('manager.staff'))->assertDontSee($this->leader->name);
+        $this->get(route('manager.profile', $this->leader->id))->assertNotFound();
         $this->get(route('manager.assessments'))->assertViewHas('assessments', fn ($rows) => ! $rows->contains('id', $id));
         $this->post(route('manager.review', $id), ['action' => 'approve'])->assertNotFound();
         $this->artisan('brewlearn:remind-assessments')->assertSuccessful();
@@ -166,6 +327,17 @@ class ManagerWorkflowTest extends TestCase
         }
         $this->get(route('manager.profile', $this->employee->id))->assertOk()->assertSee('Tiến độ theo khóa học');
         $this->get(route('manager.profile', $this->other->id))->assertNotFound();
+    }
+
+    public function test_employee_opening_manager_page_can_switch_to_manager_account(): void
+    {
+        $this->flushSession();
+        $this->actingAs($this->employee)->get(route('manager.dashboard'))->assertForbidden()
+            ->assertSee($this->employee->name)->assertSee('Đổi tài khoản')->assertSee('ngocbich@brewlearn.com');
+        $this->post(route('logout'))->assertRedirect(route('login'));
+        $this->post(route('login.post'), ['email' => $this->manager->email, 'password' => 'test-manager-password'])
+            ->assertRedirect(route('manager.dashboard'));
+        $this->get(route('manager.dashboard'))->assertOk()->assertSee('Duyệt đánh giá');
     }
 
     public function test_assessment_tabs_split_statuses_and_keep_employee_filters(): void
@@ -206,9 +378,11 @@ class ManagerWorkflowTest extends TestCase
 
     public function test_prediction_stays_independent_of_approved_evaluation(): void
     {
-        DB::table('du_doan_nguy_co')->insert([['user_id' => $this->employee->id, 'cua_hang_id' => 1, 'muc_canh_bao' => 'Thap', 'ngay_du_doan' => now()->subDay()], ['user_id' => $this->employee->id, 'cua_hang_id' => 1, 'muc_canh_bao' => 'Cao', 'ngay_du_doan' => now()]]);
+        DB::table('du_doan_nguy_co')->insert([['user_id' => $this->employee->id, 'cua_hang_id' => 1, 'muc_canh_bao' => 'Thap', 'phien_ban_mo_hinh' => 'rules-v2', 'ngay_du_doan' => now()->subDay()], ['user_id' => $this->employee->id, 'cua_hang_id' => 1, 'muc_canh_bao' => 'Cao', 'phien_ban_mo_hinh' => 'rules-v2', 'ngay_du_doan' => now()]]);
         $this->get(route('manager.dashboard'))->assertOk()->assertViewHas('staff', fn ($staff) => $staff->first()->id === $this->employee->id && $staff->first()->risk === 'Cao');
         $this->post(route('manager.review', $this->assessment(true)), ['action' => 'approve'])->assertRedirect();
+        $this->assertDatabaseHas('notifications', ['user_id' => $this->employee->id, 'title' => 'Kết quả đánh giá đã duyệt: ĐẠT']);
+        $this->assertDatabaseHas('notifications', ['user_id' => $this->leader->id, 'title' => 'Đánh giá bạn gửi đã được duyệt']);
         $this->assertDatabaseCount('du_doan_nguy_co', 2);
         $this->assertDatabaseHas('du_doan_nguy_co', ['muc_canh_bao' => 'Cao']);
     }
@@ -249,15 +423,79 @@ class ManagerWorkflowTest extends TestCase
         $this->post(route('manager.review', $this->assessment()), ['action' => 'approve']);
         $plan = DB::table('yeu_cau_dao_tao_lai')->value('id');
         $payload = ['nguoi_phu_trach_id' => $this->leader->id, 'han_hoan_thanh' => now()->addWeek()->toDateString(), 'ngay_danh_gia_lai' => now()->addWeeks(2)->toDateString(), 'ghi_chu_thuc_hien' => 'Thực hành bàn giao 3 ca'];
+        $colleague = $this->employee->replicate();
+        $colleague->email = 'training-colleague@example.com';
+        $colleague->save();
+        $this->get(route('manager.training'))->assertOk()
+            ->assertViewHas('trainingOwners', fn ($owners) => $owners->pluck('id')->all() === [$this->leader->id]);
+        $this->put(route('manager.training.assign', $plan), array_replace($payload, ['nguoi_phu_trach_id' => $colleague->id]))->assertSessionHasErrors('nguoi_phu_trach_id');
+        $this->put(route('manager.training.assign', $plan), array_replace($payload, ['nguoi_phu_trach_id' => $this->employee->id]))->assertSessionHasErrors('nguoi_phu_trach_id');
+        $this->put(route('manager.training.assign', $plan), array_replace($payload, ['nguoi_phu_trach_id' => $this->manager->id]))->assertSessionHasErrors('nguoi_phu_trach_id');
         $this->put(route('manager.training.assign', $plan), array_replace($payload, ['nguoi_phu_trach_id' => $this->other->id]))->assertSessionHasErrors('nguoi_phu_trach_id');
         $this->put(route('manager.training.assign', $plan), $payload)->assertSessionHas('success');
+        $this->flushSession();
+        $this->actingAs($this->leader)->get(route('training.assignments'))->assertOk()
+            ->assertViewHas('rounds', fn ($rows) => $rows->count() === 1);
+        $this->flushSession();
+        $this->actingAs($this->manager);
+        $this->confirmRound($plan);
         $this->post(route('manager.training.reassess', $plan), ['assessor_id' => $this->leader->id, 'assessment_date' => now()->addWeeks(2)->toDateString(), 'assessment_time' => '09:30', 'criteria' => 'Tác phong bàn giao ca'])->assertSessionHas('success');
         $assessment = DB::table('yeu_cau_dao_tao_lai')->find($plan)->danh_gia_lai_id;
         $this->assertDatabaseHas('yeu_cau_dao_tao_lai', ['id' => $plan, 'tien_trinh' => 'ChoDanhGiaLai', 'ket_qua_sau_dao_tao_lai' => 'ChuaCoKetQua']);
+        $this->flushSession();
+        $this->actingAs($this->leader)->get(route('training.assignments'))->assertOk()
+            ->assertViewHas('rounds', fn ($rows) => $rows->isEmpty());
+        $this->flushSession();
+        $this->actingAs($this->manager);
         DB::table('danh_gia_nang_luc')->where('id', $assessment)->update(['Diem' => 90, 'IsPassed' => true, 'TrangThai' => 'ChoPheDuyet']);
         $this->post(route('manager.review', $assessment), ['action' => 'approve'])->assertSessionHas('success');
         $this->assertDatabaseHas('yeu_cau_dao_tao_lai', ['id' => $plan, 'trang_thai' => 'HoanThanh', 'tien_trinh' => 'HoanTat', 'ket_qua_sau_dao_tao_lai' => 'Dat']);
         $this->assertDatabaseCount('yeu_cau_dao_tao_lai', 1);
+        $roundId = DB::table('retraining_rounds')->where('request_id', $plan)->value('id');
+        $this->flushSession();
+        $this->actingAs($this->leader)->get(route('training.assignments'))->assertOk()
+            ->assertViewHas('rounds', fn ($rows) => $rows->isEmpty());
+        $this->post(route('training.confirm', $roundId), ['confirmation_note' => 'Xác nhận lại'])->assertStatus(409);
+        $this->assertDatabaseCount('retraining_rounds', 1);
+    }
+
+    public function test_multiple_retraining_rounds_preserve_history_and_close_only_after_approved_pass(): void
+    {
+        $this->post(route('manager.review', $this->assessment()), ['action' => 'approve']);
+        $plan = DB::table('yeu_cau_dao_tao_lai')->value('id');
+        $assessmentIds = [];
+        foreach ([1, 2, 3] as $number) {
+            $payload = ['nguoi_phu_trach_id' => $this->leader->id, 'han_hoan_thanh' => now()->addWeek()->toDateString(),
+                'ngay_danh_gia_lai' => now()->addWeeks(2)->toDateString(), 'ghi_chu_thuc_hien' => 'Nội dung vòng '.$number];
+            $this->put(route('manager.training.assign', $plan), $payload)->assertSessionHas('success');
+            // Updating an ongoing plan does not create a new round.
+            $this->put(route('manager.training.assign', $plan), $payload)->assertSessionHas('success');
+            $this->assertDatabaseCount('retraining_rounds', $number);
+            $this->confirmRound($plan);
+            $this->post(route('manager.training.reassess', $plan), ['assessor_id' => $this->leader->id,
+                'assessment_date' => now()->addWeeks(2)->toDateString(), 'assessment_time' => '09:30', 'criteria' => 'Phục vụ'])->assertSessionHas('success');
+            $assessmentId = DB::table('yeu_cau_dao_tao_lai')->find($plan)->danh_gia_lai_id;
+            $assessmentIds[] = $assessmentId;
+            $passed = $number === 3;
+            DB::table('danh_gia_nang_luc')->where('id', $assessmentId)->update(['Diem' => $passed ? 90 : 60,
+                'IsPassed' => $passed, 'TrangThai' => 'ChoPheDuyet', 'ChiTietDeXuat' => $passed ? null : json_encode(['details' => ['theodoica' => ['behavior' => 'Hướng dẫn vòng tiếp', 'shift_count' => 3]]])]);
+            $this->assertDatabaseHas('yeu_cau_dao_tao_lai', ['id' => $plan, 'trang_thai' => 'DaDuyet', 'tien_trinh' => 'ChoDanhGiaLai']);
+            if ($number === 2) {
+                $this->post(route('manager.review', $assessmentId), ['action' => 'return', 'reason' => 'Bổ sung nhận xét'])->assertSessionHas('success');
+                $this->assertDatabaseHas('retraining_rounds', ['round_number' => 2, 'result' => 'ChuaCoKetQua']);
+                DB::table('danh_gia_nang_luc')->where('id', $assessmentId)->update(['TrangThai' => 'ChoPheDuyet']);
+            }
+            $this->post(route('manager.review', $assessmentId), ['action' => 'approve'])->assertSessionHas('success');
+            $this->assertDatabaseHas('retraining_rounds', ['request_id' => $plan, 'round_number' => $number,
+                'assessment_id' => $assessmentId, 'instructions' => 'Nội dung vòng '.$number, 'result' => $passed ? 'Dat' : 'ChuaDat']);
+            $this->assertDatabaseHas('yeu_cau_dao_tao_lai', ['id' => $plan,
+                'trang_thai' => $passed ? 'HoanThanh' : 'DaDuyet', 'tien_trinh' => $passed ? 'HoanTat' : 'ChoGiao']);
+        }
+        $this->assertCount(3, array_unique($assessmentIds));
+        $this->assertDatabaseCount('yeu_cau_dao_tao_lai', 1);
+        $this->get(route('manager.training'))->assertOk()->assertSee('Đào tạo lại lần 1')->assertSee('Đào tạo lại lần 2')->assertSee('Đào tạo lại lần 3');
+        $this->get(route('manager.profile', $this->employee->id))->assertOk()->assertSee('Đào tạo lại lần 1');
+        $this->put(route('manager.training.assign', $plan), $payload)->assertStatus(409);
     }
 
     public function test_profile_displays_lesson_counts_and_all_attempts(): void
@@ -290,16 +528,24 @@ class ManagerWorkflowTest extends TestCase
         $this->flushSession();
         $this->actingAs($this->leader)->post(route('leader.saveScore'), $payload)->assertSessionHas('success');
         $this->assertDatabaseHas('notifications', ['user_id' => $this->manager->id, 'title' => 'Đánh giá chờ phê duyệt']);
+        $this->assertDatabaseMissing('notifications', ['user_id' => $this->employee->id]);
         $this->artisan('brewlearn:remind-assessments')->assertSuccessful();
         $this->assertSame(1, DB::table('notifications')->where('user_id', $this->manager->id)->where('title', 'Đánh giá chờ phê duyệt')->count());
         $this->flushSession();
         $this->actingAs($this->manager)->post(route('manager.review', $id), ['action' => 'return', 'reason' => 'Cần cụ thể hơn'])->assertSessionHas('success');
+        $this->assertDatabaseMissing('notifications', ['user_id' => $this->employee->id]);
+        $this->assertDatabaseHas('notifications', ['user_id' => $this->leader->id, 'title' => 'Đánh giá cần bổ sung']);
         $this->flushSession();
         $this->actingAs($this->leader)->post(route('leader.saveScore'), $payload)->assertSessionHas('success');
         $this->assertDatabaseHas('danh_gia_nang_luc', ['id' => $id, 'TrangThai' => 'ChoPheDuyet', 'nguoi_duyet_id' => null, 'ly_do_tra_lai' => null]);
         $this->flushSession();
         $this->actingAs($this->manager)->post(route('manager.review', $id), ['action' => 'approve'])->assertSessionHas('success');
         $this->assertDatabaseHas('yeu_cau_dao_tao_lai', ['assessment_id' => $id, 'nguon_de_xuat' => 'Trưởng ca đề xuất']);
+        $this->assertDatabaseHas('notifications', ['user_id' => $this->employee->id, 'title' => 'Kết quả đánh giá đã duyệt: CHƯA ĐẠT']);
+        $message = DB::table('notifications')->where('user_id', $this->employee->id)->value('message');
+        $this->assertStringContainsString('Theo dõi bàn giao', $message);
+        $this->assertStringContainsString('3 ca', $message);
+        $this->assertDatabaseHas('notifications', ['user_id' => $this->leader->id, 'title' => 'Đánh giá bạn gửi đã được duyệt']);
     }
 
     public function test_legacy_incomplete_evaluation_must_be_returned_for_details(): void
@@ -322,8 +568,7 @@ class ManagerWorkflowTest extends TestCase
         ]);
         $this->get(route('manager.dashboard'))->assertViewHas('staff', function ($staff) {
             return $staff->firstWhere('id', $this->employee->id)->due_at->toDateString() === '2026-10-05'
-                && $staff->firstWhere('id', $this->leader->id)->due_at === null
-                && ! $staff->firstWhere('id', $this->leader->id)->needs_reminder;
+                && ! $staff->contains('id', $this->leader->id);
         });
         $this->flushSession();
         $this->actingAs($this->leader)->get(route('leader.dashboard'))->assertSee('05/10/2026')->assertSee('Sắp đến hạn')->assertSee('Đang xử lý kết quả');
@@ -369,7 +614,7 @@ class ManagerWorkflowTest extends TestCase
         $this->leader->forceFill(['joined_at' => null])->save();
         $this->get(route('manager.dashboard'))->assertViewHas('staff', function ($staff) {
             return $staff->firstWhere('id', $this->employee->id)->due_at->toDateString() === '2026-04-30'
-                && $staff->firstWhere('id', $this->leader->id)->due_at === null;
+                && ! $staff->contains('id', $this->leader->id);
         });
     }
 
@@ -386,6 +631,7 @@ class ManagerWorkflowTest extends TestCase
 
     public function test_working_staff_can_receive_a_new_assessment_schedule_notification(): void
     {
+        $this->readyForInitialAssessment();
         $this->flushSession();
         $this->actingAs($this->leader)->post(route('leader.createSchedule'), [
             'user_id' => $this->employee->id, 'MaCTDT' => 'STD_BARISTA',
@@ -395,6 +641,61 @@ class ManagerWorkflowTest extends TestCase
         $this->assertDatabaseHas('danh_gia_nang_luc', ['user_id' => $this->employee->id, 'NguoiDanhGia_id' => $this->leader->id, 'TrangThai' => 'ChoDanhGia']);
         $this->assertDatabaseHas('notifications', ['user_id' => $this->employee->id, 'type' => 'schedule', 'title' => 'Lịch sát hạch năng lực mới từ Trưởng ca']);
         $this->assertDatabaseCount('notifications', 1);
+    }
+
+    public function test_initial_schedule_requires_all_lessons_and_quizzes_but_keeps_due_reminders(): void
+    {
+        $this->readyForInitialAssessment();
+        DB::table('user_lesson_progresses')->where('user_id', $this->employee->id)->update(['progress_percent' => 20, 'is_completed' => false]);
+        DB::table('ket_qua_kiem_tra')->where('user_id', $this->employee->id)->update(['Diem' => 85]);
+        $this->flushSession();
+        $this->actingAs($this->leader)->get(route('leader.dashboard'))->assertOk()->assertSee('Chưa đủ điều kiện đánh giá')->assertSee('Vệ sinh')->assertSee('Quiz vệ sinh');
+        $payload = ['user_id' => $this->employee->id, 'MaCTDT' => 'STD_BARISTA', 'NgayDanhGia' => now()->addDay()->format('Y-m-d\TH:i')];
+        $this->post(route('leader.createSchedule'), $payload)->assertSessionHasErrors('user_id');
+        $this->assertDatabaseCount('danh_gia_nang_luc', 0);
+        DB::table('user_lesson_progresses')->where('user_id', $this->employee->id)->update(['progress_percent' => 100, 'is_completed' => true]);
+        $this->post(route('leader.createSchedule'), $payload)->assertSessionHasErrors('user_id');
+        DB::table('ket_qua_kiem_tra')->where('user_id', $this->employee->id)->update(['Diem' => 90]);
+        $this->post(route('leader.createSchedule'), $payload)->assertSessionHas('success');
+        $this->assertDatabaseCount('danh_gia_nang_luc', 1);
+    }
+
+    public function test_reassessment_requires_fresh_target_learning_quiz_and_owner_confirmation_only(): void
+    {
+        $this->readyForInitialAssessment();
+        Schema::table('user_lesson_progresses', fn (Blueprint $t) => $t->timestamp('updated_at')->nullable());
+        DB::table('bai_hoc')->insert(['MaBaiHoc' => 2, 'FK_MaCTDT' => 1, 'TenBaiHoc' => 'Bài không được giao lại']);
+        DB::table('bai_kiem_tra')->where('MaBaiKiemTra', 1)->update(['MaBaiHoc' => 1]);
+        DB::table('ket_qua_kiem_tra')->where('user_id', $this->employee->id)->update(['created_at' => now()->subDay()]);
+        $id = $this->assessment();
+        DB::table('danh_gia_nang_luc')->where('id', $id)->update(['ChiTietDeXuat' => json_encode(['details' => ['hoclaibaihoc' => ['course_id' => 1, 'lesson_ids' => [1]]]])]);
+        $this->post(route('manager.review', $id), ['action' => 'approve']);
+        $plan = DB::table('yeu_cau_dao_tao_lai')->value('id');
+        $assignment = ['nguoi_phu_trach_id' => $this->leader->id, 'han_hoan_thanh' => now()->addWeek()->toDateString(),
+            'ngay_danh_gia_lai' => now()->addWeeks(2)->toDateString(), 'ghi_chu_thuc_hien' => 'Ôn vệ sinh trong ca'];
+        $this->put(route('manager.training.assign', $plan), $assignment)->assertSessionHas('success');
+        $round = DB::table('retraining_rounds')->first();
+        $this->assertDatabaseHas('user_lesson_progresses', ['user_id' => $this->employee->id, 'lesson_id' => 1, 'progress_percent' => 0]);
+        $schedule = ['assessor_id' => $this->leader->id, 'assessment_date' => now()->addWeeks(2)->toDateString(), 'assessment_time' => '09:30', 'criteria' => 'Vệ sinh'];
+        $this->post(route('manager.training.reassess', $plan), $schedule)->assertSessionHasErrors('training');
+        $this->flushSession();
+        $this->actingAs($this->other)->post(route('training.confirm', $round->id), ['confirmation_note' => 'Đã xong'])->assertNotFound();
+        $this->flushSession();
+        $this->actingAs($this->leader)->post(route('training.confirm', $round->id), ['confirmation_note' => 'Đã xong'])->assertSessionHasErrors('training');
+        DB::table('user_lesson_progresses')->where('user_id', $this->employee->id)->update(['progress_percent' => 100, 'is_completed' => true, 'updated_at' => now()]);
+        $this->post(route('training.confirm', $round->id), ['confirmation_note' => 'Đã xong'])->assertSessionHasErrors('training');
+        DB::table('ket_qua_kiem_tra')->insert(['user_id' => $this->employee->id, 'MaBaiKiemTra' => 1, 'Diem' => 90, 'created_at' => now()]);
+        $this->post(route('training.confirm', $round->id), ['confirmation_note' => 'Đã thực hành đủ 3 ca'])->assertSessionHas('success');
+        $this->get(route('training.assignments'))->assertOk()->assertSee('Đã thực hành đủ 3 ca');
+        $this->flushSession();
+        $this->actingAs($this->manager)->put(route('manager.training.assign', $plan), array_replace($assignment, ['ghi_chu_thuc_hien' => 'Đổi nội dung']))->assertSessionHas('success');
+        $this->assertDatabaseHas('retraining_rounds', ['id' => $round->id, 'confirmed_at' => null]);
+        $this->post(route('manager.training.reassess', $plan), $schedule)->assertSessionHasErrors('training');
+        $this->flushSession();
+        $this->actingAs($this->leader)->post(route('training.confirm', $round->id), ['confirmation_note' => 'Đã hoàn thành nội dung mới'])->assertSessionHas('success');
+        $this->flushSession();
+        $this->actingAs($this->manager)->post(route('manager.training.reassess', $plan), $schedule)->assertSessionHas('success');
+        $this->assertDatabaseCount('ket_qua_kiem_tra', 2);
     }
 
     #[TestWith(['2026-07-01', 'Quá hạn', true])]

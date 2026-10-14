@@ -2,9 +2,10 @@
 
 @section('content')
 <div class="max-w-5xl mx-auto p-6">
-    <h2 class="text-lg font-bold text-slate-800 mb-4">
-        Kết quả tìm kiếm cho: <span class="text-amber-800">"{{ $query }}"</span>
-    </h2>
+    <div class="page-banner mb-6">
+        <h1>Kết quả tìm kiếm</h1>
+        <p class="text-sm mt-1">Từ khóa: “{{ $query }}”</p>
+    </div>
 
     @if(count($lessons) > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">

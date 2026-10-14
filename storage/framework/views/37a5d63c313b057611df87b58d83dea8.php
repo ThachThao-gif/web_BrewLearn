@@ -4,10 +4,10 @@
 <div class="max-w-7xl mx-auto px-4 py-6 space-y-6">
 
     <!-- HEADER -->
-    <div class="bg-[#6F4E37] text-white rounded-3xl p-6 shadow-md flex justify-between items-center">
+    <div class="page-banner bg-[#6F4E37] text-white rounded-3xl p-6 shadow-md flex justify-between items-center">
         <div>
             <h1 class="text-2xl font-black flex items-center gap-2">
-                <i class="fa-solid fa-handshake-angle text-amber-300"></i> TRỢ GIÚP & HỖ TRỢ
+            <i></i> TRỢ GIÚP & HỖ TRỢ
             </h1>
             <p class="text-xs text-amber-100 mt-1">Giải đáp thắc mắc, hướng dẫn thao tác & tiếp nhận báo lỗi hệ thống</p>
         </div>

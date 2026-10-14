@@ -34,7 +34,7 @@
     <!-- CỘT TRÁI: TỔNG QUAN VÀ DANH SÁCH BÀI HỌC -->
     <div class="space-y-4">
         <!-- HÀNH TRÌNH HỌC TẬP CARD -->
-        <div class="bg-gradient-to-br from-[#2D1E18] to-[#1F1410] text-white p-5 rounded-3xl space-y-4 shadow-lg">
+        <div class="page-banner bg-gradient-to-br from-[#2D1E18] to-[#1F1410] text-white p-5 rounded-3xl space-y-4 shadow-lg">
             <div class="flex justify-between items-center text-[11px] font-bold tracking-wider text-amber-200/80 uppercase">
                 <span>HÀNH TRÌNH HỌC TẬP</span>
                 <i class="fa-solid fa-trophy text-amber-400 text-sm"></i>

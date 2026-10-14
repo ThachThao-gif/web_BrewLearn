@@ -4,7 +4,7 @@
 <div class="max-w-7xl mx-auto space-y-6">
 
     <!-- Header & Bar Điều Hướng -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+    <div class="page-banner flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
         <div>
             <h1 class="text-2xl font-bold text-slate-800">Quản Lý Đánh Giá Năng Lực</h1>
             <p class="text-sm text-slate-500 mt-1">Phân hệ điều hành và chấm điểm dành cho Trưởng Ca (Leader)</p>

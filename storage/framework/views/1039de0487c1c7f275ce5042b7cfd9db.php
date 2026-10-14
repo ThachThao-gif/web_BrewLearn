@@ -3,7 +3,7 @@
 <?php $__env->startSection('content'); ?>
 <div class="max-w-7xl mx-auto px-4 py-6">
     <!-- Header trang -->
-    <div class="mb-8">
+    <div class="page-banner mb-8">
         <h1 class="text-2xl font-bold text-slate-800">Sổ Tay Nội Quy & Quy Chuẩn Hoạt Động BrewLearn</h1>
         <p class="text-sm text-slate-500 mt-1">Hướng dẫn đầy đủ về phong cách làm việc, văn hóa ứng xử và quy định làm việc.</p>
     </div>

@@ -107,7 +107,7 @@ class AssessmentImprovementTest extends TestCase
         $this->assertSame(80.4, (float) $record->Diem);
         $this->assertSame(67.0, (float) $record->Diem_TacPhong);
         $this->assertFalse((bool) $record->IsPassed);
-        $this->assertDatabaseHas('notifications', ['user_id' => $staff->id, 'title' => 'Kết quả đánh giá năng lực: CHƯA ĐẠT']);
+        $this->assertDatabaseMissing('notifications', ['user_id' => $staff->id]);
         $this->get(route('leader.dashboard'))->assertOk()->assertSee('Xem nội dung đề xuất đã gửi');
     }
 

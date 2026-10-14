@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CourseProgress;
+use App\Models\QuizProgress;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,22 +45,13 @@ class CourseController extends Controller
             ? round($assignedCourses->avg('TienDo'), 1)
             : 0;
 
-        $avgQuizScore = round(
-            DB::table('ket_qua_kiem_tra')
-                ->where('user_id', $userId)
-                ->avg('Diem') ?? 0,
-            1
-        );
-
-        $completedTestsCount = DB::table('ket_qua_kiem_tra')
-            ->leftJoin('bai_kiem_tra', 'ket_qua_kiem_tra.MaBaiKiemTra', '=', 'bai_kiem_tra.MaBaiKiemTra')
-            ->where('ket_qua_kiem_tra.user_id', $userId)
-            ->where(function ($q) {
-                $q->whereIn('ket_qua_kiem_tra.TrangThai', ['Dat', 'DaDat'])
-                    ->orWhereRaw('ket_qua_kiem_tra.Diem >= COALESCE(bai_kiem_tra.DiemChuan, 80)');
-            })
-            ->distinct('ket_qua_kiem_tra.MaBaiKiemTra')
-            ->count('ket_qua_kiem_tra.MaBaiKiemTra');
+        $assignedTests = app(QuizProgress::class)->assignedTests($userChucVu);
+        $quizResults = app(QuizProgress::class)->results($userId, $assignedTests);
+        $avgQuizScore = round($quizResults->avg('Diem') ?? 0, 1);
+        $totalTestsCount = $assignedTests->count();
+        $completedTestsCount = $assignedTests->filter(fn ($test) => $quizResults->contains(
+            fn ($result) => (int) $result->MaBaiKiemTra === (int) $test->MaBaiKiemTra && $result->Diem >= ($test->DiemChuan ?? 80)
+        ))->count();
 
         $currentLesson = null;
 
@@ -71,6 +63,7 @@ class CourseController extends Controller
             'completedCoursesCount',
             'avgQuizScore',
             'completedTestsCount',
+            'totalTestsCount',
             'assignedCourses',
             'currentLesson'
         ));
@@ -389,12 +382,10 @@ class CourseController extends Controller
         $currentUser = User::find($userId) ?? User::first();
 
         // Lấy danh sách tất cả bài kiểm tra
-        $tests = DB::table('bai_kiem_tra')->get();
+        $tests = app(QuizProgress::class)->assignedTests($currentUser->ChucVu ?? '');
 
         // Lấy kết quả làm bài của user
-        $userResults = DB::table('ket_qua_kiem_tra')
-            ->where('user_id', $userId)
-            ->orderByDesc('created_at')->orderByDesc('id')->get()->groupBy('MaBaiKiemTra');
+        $userResults = app(QuizProgress::class)->results($userId, $tests)->groupBy('MaBaiKiemTra');
 
         // Ghép điểm và trạng thái vào từng bài test
         foreach ($tests as $test) {

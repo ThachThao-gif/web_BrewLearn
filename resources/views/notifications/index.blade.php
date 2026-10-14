@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="w-full max-w-5xl mx-auto p-4 md:p-6 space-y-4">
+    <div class="page-banner"><h1>Thông báo của tôi</h1><p class="text-sm mt-1">Theo dõi thông báo học tập, lịch đánh giá và kế hoạch đào tạo.</p></div>
     <!-- Header: Bộ lọc & Nút Đọc tất cả -->
     <div class="bg-white border border-[#E2D4C1] rounded-2xl p-4 flex items-center justify-between shadow-sm">
         <span class="text-xs font-bold text-slate-500 flex items-center gap-2">

@@ -9,6 +9,7 @@ use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SupportController;
+use App\Http\Controllers\TrainingCompletionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,11 @@ use Illuminate\Support\Facades\View;
 |--------------------------------------------------------------------------
 */
 View::composer('*', function ($view) {
+    if (request()->attributes->has('brewlearn.view-context')) {
+        $view->with(request()->attributes->get('brewlearn.view-context'));
+
+        return;
+    }
     $currentUser = auth()->user();
     $notifications = collect([]);
 
@@ -32,10 +38,12 @@ View::composer('*', function ($view) {
         $notifications = $query->orderByDesc('id')->get();
     }
 
-    $view->with([
+    $context = [
         'currentUser' => $currentUser,
         'notifications' => $notifications,
-    ]);
+    ];
+    request()->attributes->set('brewlearn.view-context', $context);
+    $view->with($context);
 });
 
 /*
@@ -53,6 +61,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->group(function () {
+    Route::get('/training/my-assignments', [TrainingCompletionController::class, 'index'])->name('training.assignments');
+    Route::post('/training/rounds/{id}/confirm', [TrainingCompletionController::class, 'confirm'])->name('training.confirm');
     Route::prefix('manager')->name('manager.')->controller(ManagerController::class)->group(function () {
         Route::get('/dashboard', 'dashboard')->name('dashboard');
         Route::get('/staff', 'staff')->name('staff');

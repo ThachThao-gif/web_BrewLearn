@@ -1,0 +1,3041 @@
+
+=== PDF PAGE 1 ===
+BỘ GIÁO DỤC VÀ ĐÀO TẠO        NGÂN HÀNG NHÀ NƯỚC VIỆT NAM 
+TRƯỜNG ĐẠI HỌC NGÂN HÀNG TP. HỒ CHÍ MINH  
+KHOA HỆ THỐNG THÔNG TIN QUẢN LÝ 
+ 
+ 
+   ĐỒ ÁN CHUYÊN NGÀNH 
+HỆ THỐNG THÔNG TIN KINH DOANH VÀ 
+CHUYỂN ĐỔI SỐ 
+ 
+ĐỀ TÀI: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG WEBSITE 
+ HỖ TRỢ DU LỊCH TÍCH HỢP AI 
+ 
+ 
+Sinh viên thực hiện:  Lương Thị Tường Vy 
+MSSV: 03038220304 
+Lớp: DH38CDS01 
+GVHD: TS. Ngô Thanh Hùng 
+ 
+ 
+Thành phố Hồ Chí Minh, tháng 9 năm 2025 
+
+
+=== PDF PAGE 2 ===
+BỘ GIÁO DỤC VÀ ĐÀO TẠO        NGÂN HÀNG NHÀ NƯỚC VIỆT NAM 
+TRƯỜNG ĐẠI HỌC NGÂN HÀNG TP. HỒ CHÍ MINH  
+KHOA HỆ THỐNG THÔNG TIN QUẢN LÝ 
+ 
+ 
+   ĐỒ ÁN CHUYÊN NGÀNH 
+HỆ THỐNG THÔNG TIN KINH DOANH VÀ 
+CHUYỂN ĐỔI SỐ 
+ 
+ĐỀ TÀI: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG WEBSITE 
+ HỖ TRỢ DU LỊCH TÍCH HỢP AI 
+ 
+ 
+Sinh viên thực hiện:  Lương Thị Tường Vy 
+MSSV: 03038220304 
+Lớp: DH38CDS01 
+GVHD: TS. Ngô Thanh Hùng 
+ 
+ 
+Thành phố Hồ Chí Minh, tháng 9 năm 2025 
+
+
+=== PDF PAGE 3 ===
+i 
+LỜI CẢM ƠN 
+Lời đầu tiên, em xin chân thành cảm ơn thầy Ngô Thanh Hùng  – Giảng viên khoa Hệ 
+thống thông tin quản lý đã tận tình hướng dẫn em trong suốt quá trình thực hiện đồ án . 
+Nhờ vào những góp ý quý báu và thời gian hỗ trợ tận tình của thầy, em đã có cơ hội hoàn 
+thành đồ án của mình một cách trọn vẹn hơn. 
+Tiếp đến, em xin gửi lời tri ân đến quý thầy cô Trường Đại học Ngân hàng  Thành phố 
+Hồ Chí Minh – Những người đã cùng góp sức truyền đạt kiến thức để giúp chúng em có 
+được nền tảng tốt như ngày hôm nay. 
+Ngoài ra, không thể không nhắc đến gia đình, bạn bè người thân đã là hậu phương vững 
+chắc, là chỗ dựa tinh thần của chúng em trong thời gian qua. Sự thành công của  đồ án 
+này không thể không kể đến công ơn của mọi người. 
+Tuy nhiên, em ý thức được rằng đồ án này vẫn còn những hạn chế nhất định. Mặc dù đã 
+có nhiều cố gắng, song đồ án không thể tránh những thiếu sót trong quá trình phân tích 
+và thiết kế hệ thống.  Em hy vọng sẽ nhận được sự thông cảm cùng những ý kiến đóng 
+góp từ các quý thầy cô, để em có thể hoàn thiện tốt hơn nữa. 
+Cuối cùng, em xin chân thành cảm ơn và kính chúc quý thầy cô có nhiều sức khỏe và an 
+vui trong cuộc sống. 
+ 
+ 
+ 
+ 
+  
+
+=== PDF PAGE 4 ===
+ii 
+LỜI CAM ĐOAN 
+Em xin cam đoan rằng, toàn bộ nội dung và kết quả của đồ án "  Phân tích và thiết 
+kế hệ thống Website hỗ trợ du lịch tích hợp AI  " là thành quả từ quá trình nghiên cứu 
+độc lập của em, được thực hiện dưới sự hướng dẫn của thầy Ngô Thanh Hùng. Các dữ 
+liệu, kết quả trong đồ án đều do em tự thu thập và xử lý, không sao chép từ bất kỳ nguồn 
+tài liệu nào mà không ghi rõ nguồn. Các tài liệu tham khảo đã được liệt kê đầy đủ và 
+chính xác trong phần tài liệu tham khảo của đồ án.  
+Em xin chịu hoàn toàn trách nhiệm về tính chính xác và sự trung thực của các thông 
+tin, dữ liệu trong đồ án này. Nếu có bất kỳ vi phạm nào liên quan đến đạo đức nghiên 
+cứu, em xin nhận hoàn toàn trách nhiệm và sẵn sàng chấp nhận các hình thức xử lý của 
+khoa Hệ thống thông tin quản lý và nhà trường.  
+TP. Hồ Chí Minh, ngày 26 tháng 09 năm 2025 
+ 
+Lương Thị Tường Vy 
+  
+
+
+=== PDF PAGE 5 ===
+iii 
+NHẬN XÉT CỦA GIẢNG VIÊN HƯỚNG DẪN  
+.....................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+.................................................................................................................................... 
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................ 
+ 
+    Thành phố Hồ Chí Minh, ngày…… tháng …… năm…… 
+     GIẢNG VIÊN HƯỚNG DẪN  
+     (Ký tên) 
+ 
+ 
+ 
+
+=== PDF PAGE 6 ===
+iv 
+NHẬN XÉT CỦA GIẢNG VIÊN PHẢN BIỆN 
+.....................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+.................................................................................................................................... 
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................
+............................................................................................................................................ 
+ 
+Thành phố Hồ Chí Minh, ngày…… tháng …… năm……  
+GIẢNG VIÊN PHẢN BIỆN  
+(Ký tên) 
+ 
+ 
+  
+
+=== PDF PAGE 7 ===
+v 
+MỤC LỤC 
+LỜI CẢM ƠN ................................ ................................ ................................ ............... i 
+MỤC LỤC ................................ ................................ ................................ ...................  v 
+DANH MỤC TỪ VIẾT TẮT ................................ ................................ ...................  viii 
+DANH MỤC BẢNG ................................ ................................ ................................ ... ix 
+DANH MỤC HÌNH ẢNH ................................ ................................ ...........................  xi 
+PHẦN I. MỞ ĐẦU ................................ ................................ ................................ ....... 1 
+1. Tính cấp thiết của đề tài ................................ ................................ ............................  1 
+2. Ý nghĩa khoa học và thực tiễn................................ ................................ ...................  1 
+3. Mục đích nghiên cứu ................................ ................................ ................................  2 
+4. Phương pháp và phạm vi nghiên cứu ................................ ................................ ........ 2 
+5. Phương pháp nghiên cứu ................................ ................................ ..........................  3 
+PHẦN II. NỘI DUNG ................................ ................................ ................................ .. 5 
+CHƯƠNG 1. GIỚI THIỆU ĐỀ TÀI ................................ ................................ ............. 5 
+1.1. Cơ sở lý thuyết ................................ ................................ ................................ ...... 5 
+1.2. Hệ thống Website hỗ trợ du lịch tích hợp AI ................................ ..........................  7 
+1.3. Tiểu kết chương 1 ................................ ................................ ................................ .. 8 
+CHƯƠNG 2. KHẢO SÁT HỆ THỐNG ................................ ................................ ....... 9 
+2.1. Thu thập yêu cầu ................................ ................................ ................................ ... 9 
+2.2. Yêu cầu hệ thống ................................ ................................ ................................ . 12 
+2.3. Tiểu kết chương 2 ................................ ................................ ................................  13 
+CHƯƠNG 3. PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG ................................ ........... 14 
+3.1. Quy trình nghiệp vụ ................................ ................................ .............................  14 
+
+=== PDF PAGE 8 ===
+vi 
+3.2. Mô hình hóa yêu cầu (Use case) ................................ ................................ .......... 16 
+3.3. Sơ đồ dòng dữ liệu (DFD) ................................ ................................ ...................  60 
+3.4. Từ điển kho dữ liệu và luồng dữ liệu ................................ ................................ ... 61 
+3.5. Tiểu kết chương 3 ................................ ................................ ................................  61 
+CHƯƠNG 4. THIẾT KẾ CƠ SỞ DỮ LIỆU ................................ ...............................  62 
+4.1. Xác định thực thể và các thuộc tính ................................ ................................ ..... 62 
+4.2. Mô tả ERD ................................ ................................ ................................ .......... 63 
+4.3. Lược đồ dữ liệu quan hệ ................................ ................................ ......................  65 
+4.4. Tiểu kết chương 4 ................................ ................................ ................................  66 
+CHƯƠNG 5. THIẾT KẾ GIAO DIỆN ................................ ................................ ....... 67 
+5.1. Giao diện đăng nhập/ Đăng ký ................................ ................................ ............. 67 
+5.2. Giao diện trang chủ hệ thống ................................ ................................ ...............  68 
+5.3. Giao diện tìm kiếm dịch vụ ................................ ................................ ..................  70 
+5.4. Giao diện chi tiết dịch vụ ................................ ................................ .....................  71 
+5.5. Giao diện hồ sơ cá nhân ................................ ................................ .......................  72 
+5.6. Giao diện lịch sử đặt dịch vụ................................ ................................ ................  73 
+5.7. Giao diện đặt dịch vụ ................................ ................................ ...........................  74 
+5.8. Giao diện đăng ký trở thành Đối tác................................ ................................ ..... 75 
+5.9. Giao diện thêm dịch vụ ................................ ................................ ........................  76 
+5.10. Giao diện quản lý đặt dịch vụ ................................ ................................ ............ 78 
+5.11. Giao diện chỉnh sửa trạng thái/ thông tin dịch vụ ................................ ...............  79 
+5.12. Giao diện xem báo cáo đơn đặt dịch vụ................................ ..............................  80 
+5.13. Giao diện duyệt tài khoản đối tác ................................ ................................ ....... 81 
+5.14. Giao diện gợi ý hoạt động ở gần ................................ ................................ ........ 83 
+
+=== PDF PAGE 9 ===
+vii 
+5.15. Giao diện chatbox hỗ trợ trực truyến ................................ ................................ .. 84 
+5.16. Tiểu kết chương 5 ................................ ................................ ..............................  84 
+PHẦN III. KẾT LUẬN ................................ ................................ ..............................  86 
+1.1. Kết quả đạt được ................................ ................................ ................................ .. 86 
+1.2. Hạn chế và Đề xuất hướng phát triển ................................ ................................ ... 86 
+TÀI LIỆU THAM KHẢO ................................ ................................ ........................  xiii 
+Tài liệu tham khảo Tiếng Việt ................................ ................................ ..................  xiii 
+Tài liệu tham khảo Tiếng Anh ................................ ................................ ..................  xiii 
+PHỤ LỤC................................ ................................ ................................ ..................  xiv 
+Phụ lục 1: Phỏng vấn khách hàng ................................ ................................ ..............  xiv 
+Phụ lục 2: Phỏng vấn Đối tác ................................ ................................ ......................  xv 
+Phụ lục 3: Từ điển kho dữ liệu ................................ ................................ ...................  xvi 
+Phụ lục 4: Từ điển luồng dữ liệu ................................ ................................ ................  xxi 
+  
+  
+
+=== PDF PAGE 10 ===
+viii 
+DANH MỤC TỪ VIẾT TẮT 
+STT Từ viết tắt Tiếng anh Tiếng việt 
+1 UX/UI User Experience/ User Interface  
+2 SDLC Systems Development Life Cycle Chu trình phát triển hệ thống 
+3 CR Conversion Rate Tỷ lệ chuyển đổi 
+4 AI Artificial Intelligence Trí tuệ nhân tạo 
+5 DoD Definition of Done Định nghĩa hoàn thành 
+6 WBS Work Breakdown Structure Phân rã công việc 
+7 ERD Entity-Relationship Diagram Sơ đồ Quan hệ Thực thể 
+8 DFD Data Flow Diagram Sơ đồ luồng dữ liệu 
+  
+
+=== PDF PAGE 11 ===
+ix 
+DANH MỤC BẢNG 
+Bảng 1: Danh sách Use case ................................ ................................ ......................  21 
+Bảng 2: Đặc tả Use case Đăng nhập ................................ ................................ .......... 23 
+Bảng 3: Đặc tả Use case Tìm kiếm và xem dịch vụ ................................ .....................  24 
+Bảng 4: Đặc tả Use case case Đặt dịch vụ du lịch ................................ ......................  26 
+Bảng 5: Đặc tả Use case Hủy đặt dịch vụ du lịch ................................ .......................  28 
+Bảng 6: Xem lịch sử đặt dịch vụ ................................ ................................ .................  30 
+Bảng 7: Đặc tả Use case Hỗ trợ khách hàng trực tuyến ................................ ............. 32 
+Bảng 8: Đặc tả Use case Quản lý tài khoản ................................ ................................  33 
+Bảng 9: Đặc tả Use case Đánh giá dịch vụ ................................ ................................ . 35 
+Bảng 10: Đặc tả Use case Đăng ký tài khoản đối tác ................................ .................  37 
+Bảng 11: Đặc tả Use case Thêm dịch vụ ................................ ................................ ..... 38 
+Bảng 12: Đặc tả Use case Chỉnh sửa dịch vụ ................................ .............................  40 
+Bảng 13: Đặc tả Use case Thay đổi trạng thái dịch vụ ................................ ...............  41 
+Bảng 14: Đặc tả Use case Xem chi tiết đơn đặt ................................ ..........................  42 
+Bảng 15: Đặc tả Use case cập nhật trạng thái đơn ................................ .....................  44 
+Bảng 16: Đặc tả Use case Xem Báo cáo đơn đặt dịch vụ ................................ ............ 45 
+Bảng 17: Đặc tả Use case Xem báo cáo đánh giá dịch vụ ................................ .......... 47 
+Bảng 18: Đặc tả Use case Xem Báo cáo doanh thu ................................ ....................  48 
+Bảng 19: Đặc tả Use case Xem đánh giá từ khách hàng ................................ ............. 50 
+Bảng 20: Đặc tả Use case Phản hồi đánh giá ................................ .............................  51 
+Bảng 21: Đặc tả Use case Duyệt tài khoản đối tác mới ................................ ..............  53 
+Bảng 22: Đặc tả Use case Kiểm duyệt thông tin dịch vụ ................................ ............. 54 
+Bảng 23: Đặc tả Use case Xem báo cáo đánh giá phản hồi ................................ ........ 56 
+Bảng 24: Đặc tả Use case Xem báo cáo số lượng đơn đặt toàn hệ thống ....................  58 
+Bảng 25: Kết quả phỏng vấn khách hàng ................................ ................................ ... xv 
+Bảng 26: Kết quả phỏng vấn đối tác ................................ ................................ .......... xvi 
+
+=== PDF PAGE 12 ===
+x 
+Bảng 27:  Bảng mô tả kho dữ liệu Hồ sơ Đối tác ................................ ......................  xvii 
+Bảng 28: Bảng mô tả kho dữ liệu Thông tin dịch vụ ................................ ................  xviii 
+Bảng 29: Bảng mô tả kho dữ liệu Thông tin dịch vụ ................................ ................  xviii 
+Bảng 30: Bảng mô tả kho dữ liệu Dịch vụ ................................ ................................ . xix 
+Bảng 31: Bảng mô tả kho dữ liệu Tài khoản khách hàng ................................ ............ xx 
+Bảng 32: Bảng mô tả kho dữ liệu  Đơn đặt dịch vụ ................................ ....................  xxi 
+Bảng 33: Bảng mô tả dòng dữ liệu Thông tin tài khoản Đối tác................................ . xxi 
+Bảng 34: Bảng mô tả dòng dữ liệu Thông tin dịch vụ ................................ ...............  xxii 
+Bảng 35: Bảng mô tả dòng dữ liệu Quyết định kiểm duyệt dịch vụ...........................  xxiii 
+Bảng 36: Bảng mô tả dòng dữ liệu Thông tin Đối tác ................................ ..............  xxiv 
+Bảng 37: Bảng mô tả dòng dữ liệu Quyết định kiểm duyệt Đối tác ...........................  xxv 
+Bảng 38: Bảng mô tả dòng dữ liệu Dữ liệu dịch vụ ................................ ..................  xxv 
+Bảng 39: Bảng mô tả dòng dữ liệu Thông tin tìm kiếm dịch vụ ................................  xxvi 
+Bảng 40: Bảng mô tả dòng dữ liệu Kết quả tìm kiếm dịch vụ ................................ .. xxvii 
+Bảng 41: Bảng mô tả dòng dữ liệu Gợi ý dịch vụ AI ................................ ...............  xxvii 
+Bảng 42: Bảng mô tả dòng dữ liệu Thông tin đặt dịch vụ ................................ ...... xxviii 
+Bảng 43: Bảng mô tả dòng dữ liệu Thông tin tài khoản Khách hàng .......................  xxix 
+Bảng 44: Bảng mô tả dòng dữ liệu Thông tin dịch vụ ................................ ..............  xxix 
+Bảng 45: Bảng mô tả dòng dữ liệu Thông tin đơn đặt dịch vụ ................................ .. xxx 
+Bảng 46: Bảng mô tả dòng dữ liệu Trạng thái đơn đặt ................................ ............ xxxi 
+Bảng 47: Bảng mô tả dòng dữ liệu Báo cáo & thống kê đơn đặt ..............................  xxxi 
+Bảng 48: Bảng mô tả dòng dữ liệu Báo cáo & thống kê hệ thống ...........................  xxxii 
+ 
+ 
+  
+
+=== PDF PAGE 13 ===
+xi 
+DANH MỤC HÌNH ẢNH 
+Hình 1: 7 giai đoạn của chu trình phát triển hệ thống ................................ ..................  6 
+Hình 2: Use case Phân hệ khách hàng................................ ................................ ........ 16 
+Hình 3: Use case Phân hệ Đối tác ................................ ................................ ..............  17 
+Hình 4: Use case Phân hệ Quản trị viên ................................ ................................ ..... 18 
+Hình 5: Sơ đồ hoạt đông Đặt dịch vụ ................................ ................................ .......... 58 
+Hình 6: Sơ đồ hoạt động Duyệt tài khoản đối tác ................................ .......................  59 
+Hình 7: Sơ đồ DFD mức ngữ cảnh. ................................ ................................ ............ 60 
+Hình 8: Sơ đồ DFD mức 0. ................................ ................................ .........................  61 
+Hình 9: Lược đồ dữ liệu quan hệ ................................ ................................ ................  65 
+Hình 10: Lược đồ ER................................ ................................ ................................ .. 66 
+Hình 11: Giao diện Đăng nhập/ Đăng ký ................................ ................................ ... 67 
+Hình 12: Giao diện trang chủ ................................ ................................ .....................  68 
+Hình 13: Giao diện trang chủ ................................ ................................ .....................  68 
+Hình 14: Giao diện tìm kiếm dịch vụ ................................ ................................ .......... 70 
+Hình 15: Giao diện chi tiết dịch vụ ................................ ................................ ............. 71 
+Hình 16: Giao diện hồ sơ cá nhân ................................ ................................ ..............  72 
+Hình 17: Giao diện lịch sử đặt dịch vụ ................................ ................................ ....... 73 
+Hình 18: Giao diện đặt dịch vụ ................................ ................................ ...................  74 
+Hình 19: Giao diện đặt dịch vụ ................................ ................................ ...................  74 
+Hình 20: Giao diện đăng ký trở thành Đối tác ................................ ............................  75 
+Hình 21: Giao diện thêm dịch vụ ................................ ................................ ................  76 
+Hình 22: Giao diện thêm dịch vụ ................................ ................................ ................  77 
+Hình 23: Giao diện quản lý đặt dịch vụ ................................ ................................ ...... 78 
+Hình 24: Giao diện quản lý đặt dịch vụ ................................ ................................ ...... 78 
+Hình 25: Giao diện chỉnh sửa trạng thái/ thông tin dịch ................................ ............. 79 
+Hình 26: Giao diện xem báo cáo đơn đặt dịch vụ ................................ .......................  80 
+
+=== PDF PAGE 14 ===
+xii 
+Hình 27: Giao diện duyệt tài khoản đối tác ................................ ................................  81 
+Hình 28: Giao diện duyệt tài khoản đối tác ................................ ................................  81 
+Hình 29: Giao diện duyệt tài khoản đối tác ................................ ................................  82 
+Hình 30: Giao diện gợi ý hoạt động ở gần ................................ ................................ .. 83 
+Hình 31: Giao diện chatbox hỗ trợ trực truyến ................................ ...........................  84 
+ 
+ 
+ 
+
+=== PDF PAGE 15 ===
+1 
+PHẦN I. MỞ ĐẦU 
+1. Tính cấp thiết của đề tài 
+Ngành du lịch và lưu trú đang phát triển nhanh chóng, kéo theo nhu cầu tìm kiếm, so 
+sánh và lựa chọn dịch vụ lưu trú ngày càng cao. Các hệ thống hỗ trợ du lịch trực tu yến 
+hiện nay tuy mang lại sự tiện lợi, nhưng vẫn chủ yếu dừng lại ở những chức năng cơ bản 
+như hiển thị giá, hình ảnh và đánh giá từ khách hàng, chưa khai thác hiệu quả các công 
+nghệ hiện đại để nâng cao trải nghiệm người dùng. 
+Trong bối cảnh đó, việc xây dựng một hệ thống đặt phòng thông minh, tích hợp trí tuệ 
+nhân tạo (AI) với các tính năng như gợi ý điểm đến, tour du lịch, món ăn đặc trưng, đồng 
+thời hỗ trợ tư vấn qua trợ lý ảo là một hướng tiếp cận phù hợp. Hệ thống này không chỉ 
+giúp du khách dễ dàng t ìm kiếm, so sánh và lựa chọn phương án tối ưu, mà còn hỗ trợ 
+các cơ sở dịch vụ du lịch nâng cao hiệu quả khai thác dịch vụ, tối ưu hóa doanh thu và 
+cải thiện chất lượng dịch vụ. 
+Xuất phát từ nhu cầu thực tiễn trên, đề tài tập trung vào việc nghiên cứu và x ây dựng 
+“Hệ thống website hỗ trợ du lịch tích hợp AI” , nhằm mang lại trải nghiệm cá nhân hóa 
+cho du khách và góp phần thúc đẩy chuyển đổi số trong lĩnh vực du lịch – lưu trú. 
+2. Ý nghĩa khoa học và thực tiễn 
+Về mặt khoa học: Đề tài góp phần mở rộng ứng dụng các kỹ thuật trí tuệ nhân tạo trong 
+lĩnh vực quản lý và phát triển hệ thống thông tin du lịch. Việc áp dụng các phương pháp 
+xử lý dữ liệu người dùng, học máy và gợi ý thông minh không chỉ nâng cao hiệu quả kỹ 
+thuật mà còn làm phong phú thêm kho tàng n ghiên cứu về hệ thống thông tin tích hợp 
+AI. 
+Về mặt thực tiễn: Hệ thống khi được triển khai thực tế sẽ giúp khách hàng tiết kiệm 
+thời gian và công sức trong việc tìm kiếm và đặt dịch vụ phù hợp. Đồng thời, các doanh 
+
+=== PDF PAGE 16 ===
+2 
+nghiệp khách sạn và homestay, tour,.. có  thể tận dụng hệ thống để tối ưu hóa công suất 
+sử dụng phòng, tour tham quan, cải thiện chất lượng dịch vụ và gia tăng khả năng cạnh 
+tranh trên thị trường. 
+3. Mục đích nghiên cứu 
+Phần mềm được xây dựng với mục đích tạo ra một hệ thống trung gian hỗ trợ ngư ời 
+dùng đặt phòng khách sạn và homestay trực tuyến một cách thuận tiện, nhanh chóng và 
+dễ sử dụng. Bên cạnh đó, hệ thống tích hợp trí tuệ nhân tạo (AI) để phân tích dữ liệu 
+người dùng và thông tin lưu trú, từ đó đưa ra gợi ý cá nhân hóa về phòng ở, tour du lịch, 
+điểm tham quan, nhà hàng và dịch vụ giải trí phù hợp. Mục tiêu cuối cùng là nâng cao 
+trải nghiệm khách hàng trong quá trình đặt phòng, đồng thời giúp các nhà cung cấp dịch 
+vụ lưu trú và du lịch cải thiện hiệu quả kinh doanh. 
+4. Phương pháp và phạm vi nghiên cứu 
+ Đối tượng nghiên cứu: 
+Đối tượng nghiên cứu của đề tài là hệ thống website hỗ trợ du lịch, bao gồm các chức 
+năng chính như: Quản lý đặt dịch vụ, quản lý đăng ký đối tác, quản lý đăng ký dịch vụ, 
+gợi ý các hoạt động gần dịch vụ sử dụng AI, đán h giá và phản hổi, cùng với các chức 
+năng báo cáo và thống kê. 
+ Phạm vi nghiên cứu:  
+Phạm vi của đề tài được xác định như sau: 
+Phạm vi địa lý 
+- Hệ thống được triển khai phục vụ nhu cầu đặt phòng và các dịch vụ tại Việt Nam. 
+Giao diện và nội dung mặc định sử  dụng tiếng Việt, có khả năng bổ sung tiếng 
+Anh ở giai đoạn mở rộng khi cần phục vụ du khách quốc tế lưu trú tại Việt Nam. 
+Toàn bộ xử lý thanh toán, chính sách giá và quy định hiển thị được tuân thủ theo 
+pháp luật Việt Nam và thông lệ thị trường nội địa. 
+
+=== PDF PAGE 17 ===
+3 
+Phạm vi chức năng 
+- Website đóng vai trò trung gian hỗ trợ các công việc chính trong quy trình đặt 
+dịch vụ, bao gồm: tìm kiếm và tham khảo thông tin lưu trú,tour,.. so sánh và lựa 
+chọn theo nhu cầu, thực hiện đặt chỗ, cũng như hỗ trợ quản lý thông tin phòng, 
+dịch vụ và tình trạng đặt cho phía nhà cung cấp. Hệ thống đồng thời tích hợp AI 
+nhằm gợi ý các lựa chọn lưu trú và trải nghiệm phù hợp, giúp nâng cao hiệu quả 
+cho cả khách hàng và doanh nghiệp. 
+Về phạm vi thực hiện đồ án 
+- Đề tài tập trung vào giai đoạn phân  tích và thiết kế hệ thống: thu thập yêu cầu, 
+xây dựng mô hình nghiệp vụ, thiết kế cơ sở dữ liệu, sơ đồ chức năng, sơ đồ luồng 
+dữ liệu, và bản mẫu giao diện. 
+- Không yêu cầu hoàn thiện toàn bộ hệ thống phần mềm, nhưng có thể triển khai 
+nguyên mẫu (prototype) để minh họa. 
+5. Phương pháp nghiên cứu 
+ Phương pháp thu thập dữ liệu: 
+Nghiên cứu tài liệu: Tham khảo các tài liệu, nghiên cứu liên quan đến quản lý tuyển 
+thủ, các hệ thống tương tự, tiêu chuẩn thiết kế phần mềm và các bài toán quản lý hệ 
+thống. 
+ Phương pháp phân tích: 
+Phân tích quy trình: Sử dụng các sơ đồ như Use Case và DFD để mô tả và phân tích 
+quy trình hoạt động của hệ thống, xác định các tác nhân và luồng dữ liệu  tương tác với 
+hệ thống. 
+ Phương pháp thiết kế hệ thống: 
+- Thiết kế hệ thống: Sử dụng ER D để thiết kế cơ sở dữ liệu, mô tả mối quan hệ  
+giữa các thực thể trong hệ thống. Sử dụng sơ đồ phân rã chức năng để phân chia 
+các chức năng chính thành các chức năng con. 
+
+=== PDF PAGE 18 ===
+4 
+- Thiết kế giao diện người dùng: Sử dụng mockup để thiết kế giao diện người  
+dùng, đảm bảo hệ thống dễ sử dụng và thân thiện với người dùng. 
+6. Thời gian thực hiện 
+Thời gian thực hiện: Từ ngày 21/07/2025 đến ngày 26/09/2025. 
+7. Kết quả đạt được 
+ Mô hình Use Case Diagram, Data Flow Diagram và từ điển dữ liệu cho các nghiệp 
+vụ chính. 
+ Sơ đồ ERD. 
+ Giao diện mẫu cho người dùng. 
+ Báo cáo đồ án. 
+ 
+  
+
+=== PDF PAGE 19 ===
+5 
+PHẦN II. NỘI DUNG 
+CHƯƠNG 1. GIỚI THIỆU ĐỀ TÀI 
+1.1. Cơ sở lý thuyết 
+1.1.1. Hệ thống là gì 
+Hệ thống là một khái niệm quan trọng giúp chúng ta hiểu cách thức các doanh nghiệp 
+có thể cung cấp giá trị cho khách hàng và làm thế nào để hoạt động một cách hiệu quả. 
+Như đã nêu bởi Phạm Thị Thanh Hồng và Phạm Minh Tuấn (Tuấn, 2007), hệ thống được 
+định nghĩa là một tập hợp các thành phần liên kết và hoạt động cùng nhau để đạt được 
+một mục tiêu chung bằng cách nhận đầu  vào từ môi trường, xử lý và xuất ra trả lại môi 
+trường: 
+- Mục đích: Lý do tồn tại của hệ thống và là tiêu chí để đánh giá mức độ thành 
+công của hệ thống đó. 
+- Phạm vi: Phân định những gì nằm trong hệ thống và những gì không thuộc về hệ 
+thống. 
+- Môi trường: Bao gồm các yếu tố bên ngoài ảnh hưởng đến hệ thống, nhưng 
+không thuộc về nó. 
+- Đầu vào: Các thông tin hoặc đối tượng được lấy từ môi trường bên ngoài và được 
+đưa vào hệ thống để xử lý. 
+- Đầu ra: Kết quả, thông tin hay sản phẩm được tạo ra từ hệ thống và chuyển giao 
+trở lại cho môi trường bên ngoài. 
+1.1.2. Chu kỳ phát triển hệ thống (SDLC) 
+Chu trình phát triển hệ thống (SDLC - Systems Development Life Cycle) là phương 
+pháp tiếp cận có hệ thống để phát triển các hệ thống thông tin, bao gồm một loạt các giai 
+đoạn cụ thể nhằm phân tích, thiết kế và triển khai hệ thống. Mỗi giai đoạn đều có sự hợp 
+
+=== PDF PAGE 20 ===
+6 
+tác giữa nhà phân tích và người dùng để đảm bảo rằng hệ thống được phát triển hiệu quả, 
+chính xác và đáp ứng nhu cầu của tổ chức. 
+ 
+Hình 1: 7 giai đoạn của chu trình phát triển hệ thống 
+Dưới sự trình bày bởi Kendall (Kendall, 2020), SDLC là phương pháp tiếp cận theo 
+từng giai đoạn, dựa trên giả định rằng hệ thống được phát triển tốt nhất thông qua một 
+chu trình cụ thể của các hoạt động giữa nhà phân tích và người dùng, tương tự như 
+phương pháp thác nước (Waterfall Method). Các giai đoạn của SDLC bao gồm: 
+1. Xác định vấn đề, cơ hội và mục tiêu: Nhà phân tích xác định các vấn đề và mục 
+tiêu của tổ chức để quyết định xem dự án có thể tiếp tục hay không. 
+2. Xác định yêu cầu thông tin của người dùng: Phân tích các yêu cầu thông tin của 
+người dùng qua phương pháp như phỏng vấn, khảo sát và thử nghiệm dữ liệu. 
+3. Phân tích nhu cầu hệ thống: Dựa trên sơ đồ luồng dữ liệu và các công cụ phân 
+tích khác, xác định các yêu cầu hệ thống và phát triển từ điển dữ liệu. 
+4. Thiết kế giải pháp: Thiết kế hệ thống thông tin bao gồm cơ sở dữ liệu và đầu ra, 
+đáp ứng nhu cầu của người dùng. 
+
+
+=== PDF PAGE 21 ===
+7 
+5. Phát triển và lưu trữ tài liệu phần mềm: Lập trình viên phát triển phần mềm, tạo 
+tài liệu hướng dẫn và kiểm tra chất lượng mã. 
+6. Kiểm thử và bảo trì hệ thống: Hệ thống được kiểm thử để phát hiện lỗi và bảo trì 
+liên tục trong suốt vòng đời hệ thống. 
+7. Triển khai và đánh giá hệ thống: Giai đoạn cuối cùng liên quan đến việc triển khai 
+hệ thống, bao gồm đào tạo người dùng và chuyển đổi từ hệ thống cũ sang mới. 
+Việc đào tạo được giám sát bởi nhà phân tích, trong khi quá trình chuyển đổi dữ 
+liệu và cài đặt thiết bị cũng được thực hiện. 
+1.2. Hệ thống Website hỗ trợ du lịch tích hợp AI  
+1.2.1. Tổng quan 
+Website hỗ trợ du lịch tích hợp AI là một nền tảng trực tuyến dàn h cho khách hàng 
+muốn tìm kiếm và đặt dịch vụ du lịch, bao gồm các dịch vụ lưu trú, tour du lịch, vé tham 
+quan và các dịch vụ bổ trợ khác. Mục tiêu của hệ thống là cung cấp cho khách hàng một 
+trải nghiệm du lịch dễ dàng và tiện lợi, giúp họ lên kế hoạch và tận hưởng chuyến đi mà 
+không gặp phải các vấn đề phát sinh do thông tin thiếu sót hoặc sự cố trong việc đặt dịch 
+vụ. 
+Thông qua việc tích hợp trí tuệ nhân tạo (AI), hệ thống không chỉ giúp khách hàng 
+tìm kiếm dịch vụ du lịch phù hợp mà còn cung cấp những gợi ý cá nhân hóa dựa trên sở 
+thích và hành vi tìm kiếm của người dùng, cải thiện trải nghiệm người dùng và tối ưu 
+hóa thời gian lên kế hoạch. 
+Các dịch vụ chính cung cấp trên website: 
+ Dịch vụ lưu trú:  Cho phép khách hàng tìm kiếm và đặt phòng khách sạn, 
+homestay, nhà nghỉ với các lựa chọn đa dạng về giá cả và vị trí. 
+ Tour du lịch: Hệ thống cung cấp các gói tour trong nước, với các dịch vụ dẫn 
+tour chuyên nghiệp và linh hoạt về thời gian. 
+
+=== PDF PAGE 22 ===
+8 
+ Trở thành đối tác : Cung cấp cơ hội cho các đối tác tham gia vào hệ thốn g và 
+cung cấp dịch vụ của mình cho khách hàng. 
+ Quản lý dịch vụ:  Cho phép đối tác quản lý và theo dõi các dịch vụ du lịch, từ 
+việc cung cấp dịch vụ cho đến việc cập nhật thông tin, lịch trình và tình trạng dịch 
+vụ. 
+1.3. Tiểu kết chương 1 
+Chương 1 đã giới thiệu cơ sở lý thuyết và các khái niệm nền tảng liên quan đến đề 
+tài, từ khái niệm hệ thống và chu trình phát triển hệ thống (SDLC) cho đến tổng quan về 
+hệ thống website hỗ trợ du lịch tích hợp AI. Hệ thống này được thiết kế nhằm cung cấp 
+cho khách hàng một nền tảng trực tuyến tiện lợi, giúp họ tìm kiếm và đặt các dịch vụ du 
+lịch phù hợp, từ dịch vụ lưu trú đến các tour du lịch và các dịch vụ bổ trợ khác . Những 
+nền tảng lý thuyết này sẽ là cơ sở vững chắc cho các giai đoạn nghiên cứu, thiết kế và 
+triển khai hệ thống trong các chương tiếp theo của đồ án. 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+
+=== PDF PAGE 23 ===
+9 
+CHƯƠNG 2. KHẢO SÁT HỆ THỐNG 
+2.1. Thu thập yêu cầu  
+Mô tả kết quả thu thập được từ các bên liên quan thành user story và ánh xạ sang 
+use case tương ứng. 
+CHỨC 
+NĂNG VAI TRÒ USER STORY 
+Đăng 
+nhập/Đăng 
+xuất 
+Khách hàng  
+Là du khách, tôi muốn đăng nhập bằng email hoặc tài 
+khoản mạng xã hội để truy cập các tính năng, lưu lịch 
+sử tìm kiếm và nhận gợi ý phù hợp; đồng thời có thể 
+đăng xuất để bảo mật thông tin. 
+Doanh nghiệp/ 
+Đối tác 
+Là doanh nghiệp, tôi muốn đăng ký/đăng nhập tài 
+khoản đối tác để quản lý dịch vụ, theo dõi lượt đặt và 
+nhận gợi ý cải thiện; đồng thời có thể đăng xuất khi 
+cần. 
+Quản trị viên  
+Là quản trị viên, tôi muốn đăng nhập bằng tài khoản 
+quản trị để quản lý toàn bộ người dùng, doanh nghiệp 
+và theo dõi hoạt động. 
+Quản lý 
+tài khoản 
+Khách hàng  
+Là du khách, tôi muốn chỉnh sửa thông tin cá nhân (họ 
+tên, email, số điện thoại, hộ chiếu, sở thích du lịch), 
+thay đổi mật khẩu, bật xác thực bảo mật hoặc xóa tài 
+khoản khi cần. 
+Doanh nghiệp/ 
+Đối tác 
+Là doanh nghiệp, tôi muốn cập nhật thông tin dịch vụ 
+(mô tả, hình ảnh, bảng giá), quản lý tài khoản doanh 
+
+=== PDF PAGE 24 ===
+10 
+nghiệp và hủy đăng ký dịch vụ khi không còn hoạt 
+động. 
+Quản trị viên 
+Là quản trị viên, tôi muốn quản lý tất cả tài khoản, 
+khóa tài khoản vi phạm hoặc xóa tài khoản giả mạo 
+Tìm kiếm 
+và Đặt 
+phòng trực 
+tuyến 
+Khách hàng 
+Là du khách, tôi muốn tìm kiếm, so sánh và đặt phòng 
+trực tuyến để chọn được chỗ lưu trú phù hợp nhất. 
+Doanh nghiệp/ 
+Đối tác 
+Là doanh nghiệp, tôi muốn nhận thông báo đặt phòng 
+và xác nhận nhanh chóng để chuẩn bị dịch vụ kịp thời. 
+Quản lý 
+dịch vụ 
+lưu trú 
+Doanh nghiệp/ 
+Đối tác 
+Là doanh nghiệp, tôi muốn thêm, chỉnh sửa và quản lý 
+thông tin phòng (mô tả, giá, hình ảnh, tình trạng), đồng 
+thời tạo chương trình khuyến mãi để thu hút khách. 
+Quản trị viên 
+Là quản trị viên, tôi muốn kiểm duyệt thông tin dịch vụ 
+(phòng, giá, hình ảnh, tiện ích) để đảm bảo minh bạch 
+và chính xác. 
+Phản hồi 
+& đánh 
+giá 
+Khách hàng 
+Là du khách, tôi muốn để lại đánh giá/xếp hạng sau trải 
+nghiệm để chia sẻ thông tin cho cộng đồng. 
+Doanh nghiệp/ 
+Đối tác 
+Là doanh nghiệp, tôi muốn phản hồi lại đánh giá và xử 
+lý khiếu nại để cải thiện dịch vụ. 
+Quản trị viên 
+Là quản trị viên, tôi muốn loại bỏ đánh giá không phù 
+hợp. 
+
+=== PDF PAGE 25 ===
+11 
+ 
+ 
+Trợ lý trực 
+tuyến   
+Khách hàng  
+Là du khách, tôi muốn chatbot hỗ trợ 24/7 để giải đáp 
+đặt phòng, chính sách và gợi ý nhanh. 
+Doanh nghiệp 
+Là doanh nghiệp, tôi muốn hệ thống tích hợp chatbot 
+để trả lời câu hỏi thường gặp để giảm tải cho nhân 
+viên. 
+Quản trị viên 
+Là quản trị viên, tôi muốn quản lý dữ liệu huấn luyện 
+chatbot và theo dõi hiệu quả. 
+Báo cáo & 
+thống kê 
+Doanh nghiệp/ 
+Đối tác  
+Là doanh nghiệp, tôi muốn xem báo cáo doanh thu, tỷ 
+lệ lấp phòng và phản hồi để tối ưu hoạt động. 
+Quản trị viên 
+Là quản trị viên, tôi muốn theo dõi báo cáo tổng hợp, 
+phân tích xu hướng và phát hiện rủi ro trong hệ thống. 
+Gợi ý trải 
+nghiệm du 
+lịch ( Hoạt 
+đồng gần 
+dịch vụ) 
+Khách hàng 
+Là du khách du lịch, tôi muốn được hệ thống gợi ý 
+những tour, điểm tham quan, nhà hàng và dịch vụ phù 
+hợp với sở thích của tôi để có trải nghiệm thuận tiện và 
+thú vị hơn. 
+ 
+Doanh nghiệp 
+Là doanh nghiệp, tôi muốn dịch vụ của mình được gợi 
+ý đến khách phù hợp để tăng khả năng tiếp cận. 
+Quản trị viên 
+Là quản trị viên, tôi muốn giám sát và tinh chỉnh mô 
+hình AI để nâng cao chất lượng đề xuất. 
+
+=== PDF PAGE 26 ===
+12 
+2.2. Yêu cầu hệ thống 
+2.2.1. Yêu cầu chức năng 
+- Quản lý tài khoản người dùng: Cho phép đăng ký, đăng nhập, phân quyền (khách 
+hàng, doanh nghiệp, quản trị viên), quản lý thông tin cá nhân và đảm bảo bảo mật truy 
+cập. 
+- Quản lý đặt phòng trực tuyến: Hỗ trợ tìm kiếm phòng, xem thông tin chi tiết, thực 
+hiện đặt/hủy phòng và xử lý thanh toán trực tuyến. 
+- Quản lý dịch vụ lưu trú: Cho phép doanh nghiệp đăng tải, chỉnh sửa, cập nhật tình 
+trạng phòng, giá cả, khuyến mãi; đồng thời hệ thống kiểm duyệt và hiển thị thôn g tin 
+cho khách hàng. 
+- Quản lý phản hồi và đánh giá: Ghi nhận, lưu trữ và hiển thị đánh giá từ khách hàng; 
+hỗ trợ doanh nghiệp phản hồi và xử lý khiếu nại. 
+- Hỗ trợ khách hàng trực tuyến: Tích hợp chatbot và kênh hỗ trợ để giải đáp thắc 
+mắc, hướng dẫn thao tác, hoặc kết nối với nhân viên khi cần thiết. 
+- Gợi ý dịch vụ thông minh: Ứng dụng AI để phân tích hành vi và nhu cầu, từ đó 
+đưa ra gợi ý về phòng, tour du lịch hoặc dịch vụ phù hợp. 
+- Quản lý báo cáo và thống kê: Cung cấp số liệu về doanh thu, số lư ợng đặt phòng, 
+mức độ hài lòng của khách hàng; hỗ trợ doanh nghiệp và quản trị viên trong công tác 
+quản lý. 
+2.2.2. Yêu cầu phi chức năng  
+- Hiệu năng: Hệ thống phải có khả năng xử lý đồng thời tối thiểu 500 yêu cầu truy 
+cập trong cùng một thời điểm mà không bị gián đoạn. 
+- Bảo mật: Dữ liệu người dùng (thông tin cá nhân, thông tin thanh toán) phải được 
+mã hóa và chỉ những người có thẩm quyền mới được truy cập. 
+- Tính sẵn sàng: Hệ thống cần duy trì trạng thái hoạt động tối thiểu 99,5% thời 
+gian/năm, hạn chế tối đa thời gian gián đoạn dịch vụ. 
+
+=== PDF PAGE 27 ===
+13 
+- Khả năng mở rộng: Hệ thống có thể mở rộng để hỗ trợ số lượng người dùng tăng 
+gấp đôi mà không làm giảm đáng kể hiệu năng. 
+- Khả năng sử dụng: Giao diện cần thân thiện, dễ sử dụng cho cả khách hàng phổ 
+thông và doanh nghiệp 
+- Khả năng tương thích: Hệ thống hoạt động ổn định trên nhiều thiết bị (máy tính, 
+máy tính bảng, điện thoại thông minh) và các trình duyệt phổ biến. 
+- Sao lưu và khôi phục: Dữ liệu phải được sao lưu định kỳ hằng ngày, đảm bảo có 
+thể khôi phục trong trường hợp sự cố hệ thống. 
+2.3. Tiểu kết chương 2 
+Trong Chương 2, tác giả đã tiến hành khảo sát thông qua phỏng vấn đối tác, phát 
+hành bảng hỏi đến khách hàng sử dụng hệ thống và quan sát quy trình vận hành hiện tại. 
+Dựa trên dữ liệu thu thập được, tác giả đã phân tích v à đánh giá nhu cầu sử dụng, từ đó 
+xác định các yêu cầu chức năng và phi chức năng cần có cho hệ thống đặt dịch vụ du 
+lịch tích hợp AI. Những kết quả này sẽ là cơ sở quan trọng cho giai đoạn thiết kế và triển 
+khai hệ thống trong các chương tiếp theo. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+
+=== PDF PAGE 28 ===
+14 
+CHƯƠNG 3. PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG  
+3.1. Quy trình nghiệp vụ 
+3.1.1. Đăng ký/Đăng nhập tài khoản 
+- Khách hàng: Có thể đăng ký tài khoản bằng Email hoặc Google. Sau khi đăng ký 
+thành công, thông tin được lưu vào hồ sơ khách hàng và khách hàng có thể đăng nhập 
+để sử dụng các chức năng đặt dịch vụ, xem lịch sử đặt, viết đánh giá. 
+- Đối tác: Khi đăng ký tài khoản, thông tin sẽ được lưu với trạng thái “C hờ kiểm 
+duyệt”. Quản trị viên sẽ xem xét hồ sơ và phê duyệt. Sau khi tài khoản được duyệt, đối 
+tác mới có quyền đăng tải và quản lý dịch vụ. 
+- Quản trị viên: Sử dụng tài khoản quản trị để đăng nhập vào hệ thống và thực hiện 
+kiểm duyệt, thống kê. 
+3.1.2. Quản lý dịch vụ  
+- Đăng tải dịch vụ mới: Đối tác nhập thông tin dịch vụ (tên, loại, mô tả, giá, hình 
+ảnh). Hệ thống lưu dịch vụ với trạng thái “Chờ kiểm duyệt”. Sau khi quản trị viên phê 
+duyệt, dịch vụ sẽ hiển thị cho khách hàng. 
+- Chỉnh sửa dịch vụ: Đối tác có thể chỉnh sửa thông tin dịch vụ đã đăng. Sau khi 
+chỉnh sửa, dịch vụ sẽ quay lại trạng thái “Chờ kiểm duyệt”. 
+- Ẩn/hiện dịch vụ: Đối tác có thể tạm ẩn dịch vụ khỏi danh sách hiển thị. Khi cần, 
+dịch vụ có thể được bật lại để khách hàng đặt. 
+- Phản hồi đánh giá: Đối tác xem đánh giá từ khách hàng và viết phản hồi. Phản hồi 
+hiển thị ngay bên dưới đánh giá khách hàng. 
+3.1.3. Đặt dịch vụ  
+- Khách hàng: Sau khi tìm kiếm và chọn dịch vụ, khách hàng điền thông tin đặt 
+(ngày, số lượng khách, yêu cầu đặc biệt) và gửi đơn đặt. Hệ  thống lưu đơn đặt ở trạng 
+thái “Đang chờ xác nhận”. 
+
+=== PDF PAGE 29 ===
+15 
+- Đối tác: Nhận thông tin đơn đặt, xác nhận nếu còn khả dụng, hoặc hủy nếu không 
+đáp ứng được (kèm lý do hủy như: hết chỗ, dịch vụ tạm ngưng). Hệ thống gửi thông báo 
+trạng thái cho khách hàng. 
+- Hệ thống: Lưu lại toàn bộ thông tin đơn đặt và lịch sử thay đổi để phục vụ tra cứu 
+và báo cáo. 
+3.1.4. Gợi ý dịch vụ bằng AI 
+- Khi khách hàng truy cập và xem chi tiết một dịch vụ chính (ví dụ: homestay tại Đà 
+Lạt), hệ thống AI sẽ tự động phân tích thông tin dịch vụ như loại hình và vị trí. Dựa trên 
+dữ liệu này, hệ thống tìm kiếm và tổng hợp các dịch vụ liên quan gần đó, bao gồm tour 
+tham quan, hoạt động trải nghiệm, vé tham quan hoặc các địa điểm ăn uống. Các dịch 
+vụ này sau đó được hệ thống xếp hạng theo mức độ phù hợp và hiển thị dưới dạng gợi ý 
+AI ngay trong giao diện chi tiết dịch vụ. Khách hàng có thể lựa chọn một trong các gợi 
+ý này để xem thông tin chi tiết. 
+3.1.5. Quản lý báo cáo và thống kê 
+Đối tác có thể truy cập vào chức năng Xem báo cáo thống kê để theo dõi hiệu q uả 
+hoạt động kinh doanh. Hệ thống cho phép đối tác xem báo cáo doanh thu theo tháng, với 
+các chỉ số cụ thể như: tổng doanh thu, số lượng đơn đặt dịch vụ thành công, tỷ lệ hủy đặt 
+dịch vụ. Ngoài ra, hệ thống còn cung cấp thống kê chi tiết về mức độ hài lòng của khách 
+hàng thông qua điểm đánh giá trung bình và phân loại đánh giá tích cực/tiêu cực. 
+Báo cáo có thể được hiển thị dưới dạng biểu đồ trực quan (cột, đường, tròn) để giúp 
+đối tác dễ dàng so sánh, phân tích xu hướng và đưa ra quyết định cải thiện dịch vụ. 
+3.1.6. Kiểm duyệt và cảnh báo  
+- Kiểm duyệt tài khoản: Khi có đối tác mới đăng ký, quản trị viên xem hồ sơ và 
+quyết định duyệt hoặc từ chối. 
+- Kiểm duyệt dịch vụ: Mọi dịch vụ do đối tác đăng tải đều phải được quản trị viên 
+xem xét trước khi hiển thị. 
+
+=== PDF PAGE 30 ===
+16 
+- Cảnh báo/Khóa tài khoản: Nếu đối tác vi phạm chính sách (ví dụ: dịch vụ bị đánh 
+giá thấp nhiều lần, khiếu nại từ khách hàng), hệ thống cảnh báo cho quản trị viên. Quản 
+trị viên có thể quyết định gửi cảnh báo, tạm khóa dịch vụ hoặc khóa tài khoản đối tác. 
+3.2. Mô hình hóa yêu cầu (Use case) 
+ 
+Hình 2: Use case Phân hệ khách hàng  
+
+
+=== PDF PAGE 31 ===
+17 
+ 
+Hình 3: Use case Phân hệ Đối tác 
+
+
+=== PDF PAGE 32 ===
+18 
+ 
+Hình 4: Use case Phân hệ Quản trị viên 
+3.2.1. Danh sách Use case  
+# ID NAME BRIEF DESCRIPTION 
+1 UC-CUS01 Đăng nhập Cho phép khách hàng đăng nhập vào 
+website 
+2 UC-CUS02 Tìm kiếm và xem 
+dịch vụ 
+Khách hàng tạo tài khoản mới để sử 
+dụng hệ thống. 
+4 UC-CUS04 Lọc và sắp xếp kết 
+quả 
+Hỗ trợ khách hàng lọc và sắp xếp dịch 
+vụ theo tiêu chí (giá, vị trí, tiện ích). 
+
+
+=== PDF PAGE 33 ===
+19 
+5 UC-CUS05 Xem gợi ý từ AI Hệ thống AI gợi ý dịch vụ phù hợp nhu 
+cầu khách hàng. 
+6 UC-CUS06 Xem đánh giá Cho phép khách hàng xem đánh giá của 
+người dùng khác về dịch vụ. 
+7 UC-CUS07 Đặt dịch vụ du lịch 
+Khách hàng đặt dịch vụ 
+phòng/homestay/ tour thông qua hệ 
+thống. 
+8 UC-CUS08 Hủy đơn đặt phòng Cho phép khách hàng hủy đơn đặt 
+phòng (trong trạng thái chờ xác nhận). 
+9 UC-CUS09 Xem lịch sử đặt 
+dịch vụ 
+Khách hàng xem lại các giao dịch, đơn 
+đặt phòng đã thực hiện. 
+10 UC-CUS10 Đánh giá dịch vụ Sau khi sử dụng, khách hàng có thể 
+đánh giá dịch vụ. 
+11 UC-CUS11 Quản lý tài khoản Khách hàng chỉnh sửa, cập nhật thông 
+tin cá nhân. 
+12 UC-CUS12 Hỗ trợ khách hàng 
+trực tuyến 
+Cho phép khách hàng được hỗ trợ trực 
+tuyến thông qua Chatbox 
+13 UC-CUS13 Đăng xuất Khách hàng thoát khỏi hệ thống. 
+13 UC-PAR01 Đăng ký tài khoản 
+đối tác 
+Cho phép đối tác tạo tài khoản mới để 
+sử dụng hệ thống 
+14 UC-PAR02 Đăng nhập Cho phép đối tác đăng nhập vào hệ 
+thống 
+15 UC-PAR03 Lấy lại mật khẩu Hỗ trợ đối tác khôi phục mật khẩu khi 
+quên 
+16 UC-PAR04 Đăng xuất Cho phép đối tác thoát khỏi hệ thống 
+
+=== PDF PAGE 34 ===
+20 
+17 UC-PAR05 Quản lý danh mục 
+dịch vụ 
+Cho phép đối tác quản lý nhóm dịch vụ 
+cung cấp 
+18 UC-PAR06 Thêm dịch vụ Cho phép đối tác thêm dịch vụ mới vào 
+hệ thống 
+19 UC-PAR07 Cập nhật dịch vụ Cho phép đối tác chỉnh sửa thông tin 
+dịch vụ đã đăng 
+20 UC-PAR08 Thay đổi trạng thái 
+dịch vụ 
+Cho phép đối tác bật/tắt dịch vụ đang 
+cung cấp 
+21 UC-PAR09 Xem danh sách đơn 
+đặt Hiển thị toàn bộ đơn hàng khách đã đặt 
+22 UC-PAR10 Xem chi tiết đơn đặt Hiển thị chi tiết thông tin từng đơn đặt 
+dịch vụ 
+23 UC-PAR11 Cập nhật trạng thái 
+đơn 
+Cho phép đối tác thay đổi trạng thái đơn 
+(xử lý, hoàn tất, hủy) 
+24 UC-PAR12 Xem báo cáo & 
+thống kê 
+Hiển thị báo cáo về dịch vụ, doanh thu 
+và đơn hàng 
+25 UC-PAR13 Xem đánh giá từ 
+khách hàng 
+Cho phép đối tác xem phản hồi khách 
+hàng về dịch vụ 
+26 UC-PAR14 Phản hồi đánh giá Cho phép đối tác trả lời đánh giá của 
+khách hàng 
+27 UC-ADM01 Đăng nhập Cho phép quản trị viên đăng nhập vào 
+hệ thống 
+28 UC-ADM02 Duyệt tài khoản đối 
+tác mới 
+Quản trị viên kiểm tra và phê duyệt tài 
+khoản đối tác vừa đăng ký 
+29 UC-ADM03 Khóa tài khoản Quản trị viên khóa tài khoản đối tác vi 
+phạm hoặc không còn hoạt động 
+
+=== PDF PAGE 35 ===
+21 
+30 UC-ADM04 Kiểm duyệt thông 
+tin dịch vụ 
+Quản trị viên xem xét và phê duyệt 
+thông tin dịch vụ do đối tác cung cấp 
+31 UC-ADM05 Xem báo cáo toàn 
+bộ hệ thống 
+Quản trị viên theo dõi báo cáo và thống 
+kê tổng quan toàn bộ hệ thống 
+Bảng 1: Danh sách Use case 
+3.2.2. Đặc tả Use case 
+3.2.2.1. Đặc tả Use case Phân hệ khách hàng 
+Use case name Đăng nhập 
+Use case ID UC - CUS01 
+Description 
+Là người dùng, tôi muốn đăng nhập vào ứng dụng để sử dụng 
+dịch vụ từ trang web. 
+Actor(s) Khách hàng (Customer) 
+Trigger Người dùng muốn đăng nhập vào trang web  
+Pre - 
+Condition(s) 
+- Tài khoản người dùng đã được đăng ký 
+- Thiết bị của người dùng đã được kết nối Internet khi thực hiện 
+đăng nhập 
+Post  - 
+Condition(s) 
+- Người dùng đăng nhập được vào hệ thống thành công 
+- Hệ thống ghi nhận hoạt động đăng nhập thành công vào File 
+Log 
+Basic Flow 
+1. Người dùng truy cập trang web Hệ thống hỗ trợ du lịch  
+2. Người dùng chọn phương thức đăng nhập bằng tài khoản email 
+
+=== PDF PAGE 36 ===
+22 
+3. Người dùng nhập email và chọn lệnh đăng nhập 
+4. Hệ thống gửi mã xác minh đăng nhập vào email của người 
+dùng 
+5. Người dùng nhập mã xác minh vào hệ thống  
+6. Hệ thống xác thực thông tin đăng nhập thành công và cho phép 
+người dùng truy cập ứng dụng 
+7. Hệ thống ghi nhận hoạt động đăng nhập thành công vào File 
+Log. 
+Alternative 
+Flow 
+2a. Người dùng chọn phương thức đăng nhập bằng tài khoản 
+Gmail 
+2a1. Hệ thống chuyển sang màn hình đăng nhập của Google 
+3a. Người dùng nhập tài khoản Google và chọn lệnh đăng nhập 
+6a. Google xác thực thông tin đăng nhập thành công và cho phép 
+người dùng truy cập ứng dụng 
+→ Use Case tiếp tục bước 7. 
+Exception Flow 
+6c. Hệ thống xác thực thông tin đăng nhập không thành công và 
+hiển thị thông báo. 
+→ Use Case dừng lại. 
+Business Rule 
+- BRCUS01-1: Người dùng nhập sai thông tin đăng nhập ở lần 
+thứ 6 liên tiếp sẽ bị khóa tài khoản 30 phút. 
+
+=== PDF PAGE 37 ===
+23 
+Non - 
+Functional 
+Requirement 
+- NFRCUS01-1: Time out cho màn hình đăng nhập dưới 60 giây. 
+- NFRCUS01-2: Mật khẩu của người dùng phải được hash bằng 
+MD5. 
+- NFRCUS01-3: Giao diện đăng nhập phải thân thiện với người 
+dùng, dễ sử dụng trên mọi thiết bị. 
+- NFRCUS01-4: Hệ thống đăng nhập phải xử lý nhanh chóng và 
+sẵn sàng, với thời gian phản hồi không quá 2 giây 
+Bảng 2: Đặc tả Use case Đăng nhập 
+Use case name Tìm kiếm và xem dịch vụ 
+Use case ID UC - CUS02 
+Description 
+Khách hàng sử dụng chức năng tìm kiếm để lọc và tra cứu dịch vụ 
+(homestay, phòng, cà phê). Sau đó có thể chọn dịch vụ cụ thể để 
+xem chi tiết thông tin. Xem đánh giá, xem gợi ý từ Ai, lọc và sắp 
+xếp kết quả tìm kiếm theo.  
+Actor(s) Khách hàng 
+Trigger 
+Khách hàng muốn tìm dịch vụ phù hợp theo nhu cầu (giá, vị trí, 
+loại hình, ngày,..) 
+Pre - 
+Condition(s) 
+- Khách hàng đã truy cập vào hệ thống (không bắt buộc đăng 
+nhập). 
+- Hệ thống sẵn sàng hoạt động. 
+
+=== PDF PAGE 38 ===
+24 
+Post  - 
+Condition(s) 
+- Danh sách dịch vụ hiển thị theo tiêu chí tìm kiếm. 
+- Thông tin chi tiết dịch vụ được hiển thị khi khách hàng chọn. 
+Basic Flow 
+1. Khách hàng truy cập trang chủ  
+2. Khách hàng nhập từ khóa hoặc chọn các bộ lọc (loại hình, giá, 
+vị trí…). 
+3. Hệ thống xử lý và trả về danh sách dịch vụ phù hợp. 
+4. Khách hàng chọn một dịch vụ từ danh sách. 
+5. Hệ thống hiển thị thông tin chi tiết dịch vụ (Tổng quan, Thông 
+tin và giá, Tiện nghi, Quy tắc chung, Đánh giá của khách). 
+Alternative 
+Flow 
+3a. Hệ thống thông báo “Không tìm thấy kết quả”  
+3a1. Hệ thống gợi ý điều chỉnh bộ lọc nếu không có dịch vụ nào 
+phù hợp. 
+Exception Flow 
+1b. Hệ thống mất kết nối hoặc lỗi máy chủ → hiển thị thông báo 
+“Không thể kết nối, vui lòng thử lại sau”. 
+Business Rule 
+- BRCUS02-1: Khách hàng không cần đăng nhập vẫn có thể tìm 
+kiếm và xem thông tin dịch vụ. 
+- BRCUS02-2: Thông tin hiển thị phải lấy từ cơ sở dữ liệu dịch vụ 
+đã được duyệt. 
+Non- 
+Functional 
+Requirement 
+- NFRCUS02-1: Thời gian phản hồi tìm kiếm < 3 giây. 
+- NFRCUS02-2: Hình ảnh và thông tin dịch vụ phải rõ ràng, đầy 
+đủ. 
+Bảng 3: Đặc tả Use case Tìm kiếm và xem dịch vụ 
+
+=== PDF PAGE 39 ===
+25 
+Use case name Đặt dịch vụ du lịch 
+Use case ID UC-CUS-07 
+Description 
+Cho phép Khách hàng tạo một yêu cầu đặt chỗ (booking) cho dịch 
+vụ du lịch (lưu trú, tour, trải nghiệm, vé tham quan) thông qua hệ 
+thống trung gian. Hệ thống ghi nhận yêu cầu và chuyển thông tin 
+đến Đối tác để xác nhận. 
+Actor(s) Khách hàng 
+Trigger 
+Khách hàng muốn đặt một dịch vụ du lịch đã chọn từ trang danh 
+sách dịch vụ 
+Pre  
+Condition(s) 
+-Khách hàng đã chọn được dịch vụ mong muốn. 
+- Hệ thống sẵn sàng hoạt động và kết nối với cơ sở dữ liệu dịch 
+vụ. 
+Post - 
+Condition(s) 
+- Yêu cầu đặt dịch vụ được tạo thành công và ghi nhận trong hệ 
+thống. 
+- Thông tin đặt đặt dịch vụ được chuyển cho Đối tác để xác nhận. 
+- Khách hàng nhận được thông báo qua email  
+Basic - Flow 
+1. Khách hàng chọn nút “Đặt dịch vụ” trên trang chi tiết dịch vụ. 
+2. Hệ thống hiển thị giao diện form đặt chỗ (họ tên, Email, quốc 
+gia, số điện thoại). 
+3. Khách hàng điền đầy đủ thông tin cần thiết và xác nhận đặt 
+dịch vụ. 
+
+=== PDF PAGE 40 ===
+26 
+4. Hệ thống kiểm tra thông tin hợp lệ → tạo yêu cầu đặt dịch vụ. 
+5. Hệ thống gửi thông tin booking đến Hệ thống của Đối tác cung 
+cấp dịch vụ 
+Alternative 
+Flow 
+5a. Hệ thống thông báo “Yêu cầu đang chờ xác nhận” và sẽ gửi 
+thông báo qua email đến Đối tác  
+→ Tiếp tục với Use case UC-PAR04 
+Exception Flow 
+4b. Hệ thống hiển thị lỗi và yêu cầu nhập lại nếu dữ liệu không 
+hợp lệ. 
+→ Use case tiếp tục bước 3 
+ 
+Business Rule 
+- BRCUS07-1: Khách hàng không bắt buộc đăng nhập để đặt dịch 
+vụ. 
+- BRCUS07-2: Thông tin khách hàng phải hợp lệ (số điện thoại, 
+email có thể liên lạc được). 
+- BRCUS07-3: Email và số điện thoại là bắt buộc để xác thực đặt 
+dịch vụ. 
+Non - 
+Functional 
+Requirement 
+- NFRCUS07-1: Thời gian phản hồi khi tạo booking < 5 giây. 
+- NFRCUS07-2: Giao diện form đặt dịch vụ thân thiện, hỗ trợ đa 
+thiết bị 
+Bảng 4: Đặc tả Use case case Đặt dịch vụ du lịch 
+Use case name Hủy dịch vụ du lịch 
+
+=== PDF PAGE 41 ===
+27 
+Use case ID UC-CUS-08 
+Description 
+Cho phép khách hàng hủy yêu cầu đặt dịch vụ du lịch đã tạo trong 
+hệ thống. Sau khi hủy, thông tin hủy đặt sẽ được ghi nhận và 
+thông báo đến Đối tác cùng với lý do hủy  
+Actor(s) Khách hàng 
+Trigger - Khách hàng muốn hủy yêu cầu đặt dịch vụ đã tạo. 
+Pre  -
+Condition(s) - Khách hàng đã tạo yêu cầu đặt dịch vụ thành công 
+Post  - 
+Condition(s) 
+-Yêu cầu hủy dịch vụ được ghi nhận trong hệ thống. 
+- Thông tin hủy đơn được chuyển đến Đối tác để cập nhật trạng 
+thái. 
+- Khách hàng nhận được thông báo qua email về việc hủy dịch vụ. 
+Basic Flow 
+1. Khách hàng chọn yêu cầu đặt dịch vụ muốn hủy từ danh sách 
+yêu cầu. 
+2. Hệ thống hiển thị chi tiết yêu cầu dịch vụ và trạng thái hiện tại 
+(Chờ xác nhận/Đang chờ hoàn tất). 
+3. Khách hàng chọn "Hủy yêu cầu" và hệ thống yêu cầu Khách 
+hàng nhập lý do hủy (tuỳ chọn). 
+4. Khách hàng xác nhận hủy yêu cầu. Hệ thống cập nhật trạng thái 
+yêu cầu là “Đã hủy”. 
+5. Hệ thống gửi thông báo hủy yêu cầu đến Đối tác và Khách 
+hàng qua email. 
+
+=== PDF PAGE 42 ===
+28 
+Alternative 
+Flow 
+4a. Khách hàng không muốn nhập lý do hủy → Hệ thống vẫn cho 
+phép hủy yêu cầu mà không cần nhập lý do. 
+→ Use case tiếp tục bước 5. 
+Exception Flow 
+4b. Nếu khách hàng không xác nhận yêu cầu hủy, hệ thống sẽ giữ 
+nguyên trạng thái đơn đặt dịch vụ 
+→ Use case kết thúc 
+Business Rule 
+- BRCUS08-1: Khách hàng chỉ có thể hủy yêu cầu nếu trạng thái 
+của yêu cầu là "Chờ xác nhận" hoặc "Đang xử lý" và trước 24h 
+ngày nhận dịch vụ. 
+- BRCUS08-2: Hệ thống phải ghi nhận lý do hủy nếu khách hàng 
+cung cấp. Nếu không, lý do hủy sẽ được để trống. 
+- BRCUS08-3: Nếu yêu cầu đã hoàn tất, khách hàng không thể 
+hủy yêu cầu. 
+Non - 
+Functional 
+Requirement 
+- NFR-CUS08-1: Thời gian phản hồi khi khách hàng thực hiện 
+hủy yêu cầu không quá 3 giây. 
+- NFR-CUS08-2: Hệ thống phải gửi thông báo về việc hủy yêu 
+cầu đến khách hàng và Đối tác trong vòng 5 giây. 
+ 
+Bảng 5: Đặc tả Use case Hủy đặt dịch vụ du lịch 
+Use case name Xem lịch sử đặt dịch vụ 
+Use case ID UC-CUS-09 
+
+=== PDF PAGE 43 ===
+29 
+Description 
+Cho phép Khách hàng xem lại toàn bộ lịch sử các yêu cầu đặt chỗ 
+(booking) mà họ đã thực hiện trên hệ thống, bao gồm cả dịch vụ 
+lưu trú và tour/trải nghiệm.  
+Actor(s) Khách hàng (Customer)  
+Trigger 
+Khách hàng truy cập vào trang  " Đơn đặt của tôi " từ menu tài 
+khoản cá nhân. 
+Pre - 
+Condition(s) 
+- Khách hàng đã đăng nhập thành công vào hệ thống. 
+Post  - 
+Condition(s) 
+- Khách hàng xem được danh sách lịch sử đơn đặt. 
+- Khách hàng xem được chi tiết của một đơn đặt cụ thể. 
+- Hệ thống hiển thị thông báo lỗi hoặc thông báo "Bạn chưa có 
+đơn đặt nào". 
+Basic Flow 
+1. Khách hàng đăng nhập và nhấp vào mục "Đơn đặt của tôi". 
+2. Hệ thống hiển thị danh sách toàn bộ các đơn đặt theo thứ tự 
+thời gian (mới nhất ở trên). 
+3. Với mỗi đơn, Hệ thống hiển thị thông tin tóm tắt: Tên dịch vụ, 
+Ngày đặt, Tổng tiền, Trạng thái ("Chờ xác nhận", "Đang chờ hoàn 
+tất", "Đã hoàn thành", "Đã hủy") 
+4. Khách hàng nhấp vào một đơn cụ thể. 
+5. Hệ thống hiển thị trang chi tiết đơn hàng với đầy đủ thông tin: 
+thông tin dịch vụ, thông tin người tham gia, ngày tham gia, và liên 
+hệ của đối tác. 
+
+=== PDF PAGE 44 ===
+30 
+Alternative 
+Flow 
+2a. Khách hàng chọn tiêu chí lọc: Trạng thái (ví dụ: chỉ xem các 
+đơn "Đã hoàn thành")  
+2a1. Hệ thống làm mới danh sách để hiển thị chỉ các đơn đặt phù 
+hợp với bộ lọc. 
+→ Use Case tiếp tục bước 4 
+Exception Flow 
+2b. Nếu khách hàng chưa từng đặt đơn nào, hệ thống hiển thị 
+thông báo: "Bạn chưa có đơn đặt nào. Hãy khám phá các dịch vụ 
+của chúng tôi!" kèm theo nút dẫn về trang chủ. 
+Business Rule 
+- BRCUS09-1: Khách hàng chỉ có thể xem được lịch sử đơn đặt 
+của chính họ. 
+- BRCUS09-2: Trạng thái đơn hàng phải được cập nhật chính xác 
+từ phía Đối tác (Chờ xác nhận, Đã xác nhận, Đã hủy, Đã hoàn 
+thành). 
+Non - 
+Functional 
+Requirement 
+- NFRCUS09-1: Thời gian tải trang lịch sử đơn đặt phải dưới 3 
+giây 
+- NFRCUS09-2: Giao diện hiển thị lịch sử phải rõ ràng, dễ hiểu, 
+cho phép lọc và tìm kiếm dễ dàng. 
+Bảng 6: Xem lịch sử đặt dịch vụ 
+Use case name Hỗ trợ khách hàng trực tuyến 
+Use case ID UC-CUS12 
+
+=== PDF PAGE 45 ===
+31 
+Description 
+Cho phép khách hàng được hỗ trợ trực tuyến thông qua chatbot tự 
+động. Hệ thống cung cấp trả lời nhanh cho các câu hỏi thường 
+gặp, hướng dẫn thao tác cho người dùng 
+Actor(s) Khách hàng, Chatbot AI 
+Trigger Khách hàng muốn giải đáp thắc mắc trong quá trình đặt dịch vụ 
+Pre - 
+Condition(s) 
+- Chức năng chatbot/hỗ trợ trực tuyến đã tích hợp và hoạt động. 
+Post  - 
+Condition(s) 
+- Khách hàng nhận được câu trả lời từ chatbot hoặc nhân viên. 
+Basic Flow 
+1. Khách hàng chọn biểu tượng “Hỗ trợ” trên giao diện. 
+2. Hệ thống hiển thị cửa sổ trò chuyện với chatbot. 
+3. Khách hàng nhập câu hỏi/thắc mắc. 
+4. Chatbot phân tích câu hỏi và đưa ra câu trả lời tự động dựa trên 
+kiến thức đã được huấn luyện và khả năng hiểu ngữ cảnh. 
+5. Hệ thống lưu lịch sử hỗ trợ. 
+Alternative 
+Flow 
+N/A 
+Exception Flow N/A 
+Business Rule 
+- BRCUS12-2: Các cuộc trò chuyện được lưu lại để phân tích và 
+cải thiện chất lượng dịch vụ. 
+
+=== PDF PAGE 46 ===
+32 
+Non - 
+Functional 
+Requirement 
+- NFRCUS12-1: Chatbot phải phản hồi trong vòng < 3 giây. 
+- NFRCUS12-2: Hệ thống Chatbox hỗ trợ phải hoạt động 24/7. 
+Bảng 7: Đặc tả Use case Hỗ trợ khách hàng trực tuyến 
+Use case name Quản lý tài khoản 
+Use case ID UC-CUS-11 
+Description 
+Cho phép Khách hàng truy cập vào mục quản lý tài khoản để 
+xem, chỉnh sửa và cập nhật thông tin cá nhân (họ tên, số điện 
+thoại, mật khẩu,…) 
+Actor(s) Khách hàng 
+Trigger Khách hàng chọn mục “Hồ sơ của tôi” trên hệ thống. 
+Pre - 
+Condition(s) 
+- Khách hàng đã đăng nhập hợp lệ. 
+Post  - 
+Condition(s) 
+- Thông tin cá nhân của Khách hàng được cập nhật thành công 
+trong hệ thống. 
+Basic Flow 
+1. Khách hàng chọn mục “Tài khoản của tôi”. 
+2. Hệ thống hiển thị thông tin cá nhân 
+3. Khách hàng chọn chỉnh sửa thông tin cá nhân 
+4. Khách hàng nhập thông tin mới (ví dụ: họ tên, email, số điện 
+thoại, mật khẩu, sở thích du lịch). 
+
+=== PDF PAGE 47 ===
+33 
+5. Khách hàng ấn nút “Lưu” 
+6. Hệ thống kiểm tra dữ liệu hợp lệ, hệ thống cập nhật cơ sở dữ 
+liệu. 
+7. Hệ thống thông báo cập nhật thành công và hiển thị thông tin 
+mới. 
+Alternative 
+Flow 
+3a. Khách hàng chỉ muốn xem thông tin mà không chỉnh sửa 
+→ Use case kết thúc tại bước 2. 
+Exception Flow 
+5c. Nếu dữ liệu nhập không hợp lệ (mật khẩu quá ngắn, số điện 
+thoại không hợp lệ) → hệ thống hiển thị thông báo lỗi 
+→ Use case quay lại bước 4. 
+Business Rule 
+- BRCUS11-1: Email trong hệ thống là duy nhất cho mỗi tài 
+khoản. 
+- BRCUS11-2: Mật khẩu phải đạt độ dài tối thiểu (ví dụ: 8 ký tự, 
+có cả chữ, số). 
+Non - 
+Functional 
+Requirement 
+- NFRCUS11-1:  Thao tác chỉnh sửa/cập nhật phải phản hồi trong 
+≤ 3 giây. 
+- NFRCUS11-2: Thông tin nhạy cảm (mật khẩu) phải được mã 
+hóa và ẩn khi hiển thị. 
+- NFCUS11-3: Dữ liệu sở thích được lưu trữ an toàn và bảo mật. 
+Bảng 8: Đặc tả Use case Quản lý tài khoản 
+Use case name Đánh giá dịch vụ 
+
+=== PDF PAGE 48 ===
+34 
+Use case ID UC-CUS-10 
+Description 
+Cho phép Khách hàng sau khi đã sử dụng dịch vụ (lưu trú, tour, trải 
+nghiệm, vé tham quan) có thể để lại đánh giá và nhận xét trên hệ 
+thống. Các đánh giá này sẽ được lưu trữ, hiển thị cho người dùng 
+khác tham khảo 
+Actor(s) Khách hàng 
+Trigger Khách hàng chọn mục “Đánh giá dịch vụ” trong lịch sử đặt chỗ 
+Pre - 
+Condition(s) 
+- Khách hàng đã đăng nhập. 
+- Khách hàng đã hoàn tất sử dụng dịch vụ. 
+Post  - 
+Condition(s) 
+- Đánh giá của khách hàng được lưu thành công trong hệ thống. 
+- Đánh giá hiển thị công khai. 
+Basic Flow 
+1. Khách hàng chọn mục “Đánh giá dịch vụ”. 
+2. Hệ thống hiển thị form nhập đánh giá (số sao, nội dung bình luận, 
+hình ảnh đính kèm nếu có). 
+3. Khách hàng điền thông tin và gửi đánh giá. 
+4. Hệ thống kiểm tra dữ liệu hợp lệ. 
+5. Hệ thống lưu đánh giá vào cơ sở dữ liệu  và hiển thị thông báo 
+“Đánh giá đã được ghi nhận”. 
+Alternative 
+Flow 
+2a. Khách hàng chỉ đánh giá bằng số sao, không nhập bình luận → 
+hệ thống vẫn chấp nhận → Use case tiếp tục bước 5 
+
+=== PDF PAGE 49 ===
+35 
+Exception Flow N/A 
+Business Rule 
+- BRCUS10-1: Khách hàng chỉ được đánh giá dịch vụ khi đã có ít 
+nhất một lần đặt và sử dụng dịch vụ hoàn tất đó. 
+- BRCUS10-2: Mỗi lần đặt dịch vụ  chỉ được gửi một đánh giá, 
+nhưng có thể chỉnh sửa trong vòng 24 giờ sau khi gửi. 
+- BRCUS10-4: Điểm số đánh giá (sao) được tính trung bình từ tất 
+cả người dùng và hiển thị công khai. 
+Non - 
+Functional 
+Requirement 
+- NFCUS10-1:  Thời gian phản hồi khi gửi đánh giá ≤ 3 giây. 
+- NFCUS10-2:  Nội dung đánh giá phải được lưu trữ an toàn, có cơ 
+chế backup. 
+Bảng 9: Đặc tả Use case Đánh giá dịch vụ 
+3.2.2.2. Đặc tả use case phân hệ Đối tác 
+Use case name Đăng ký tài khoản đối tác 
+Use case ID UC-PAR01 
+Description 
+Cho phép doanh nghiệp/đối tác (khách sạn, homestay, đơn vị tổ 
+chức tour…) đăng ký tài khoản trên hệ thống để có thể quản lý dịch 
+vụ lưu trú hoặc dịch vụ du lịch của mình. 
+Actor(s) Đối tác cung cấp dịch vụ 
+Trigger Đối tác chọn chức năng “Trở thành đối tác” từ trang chủ  
+
+=== PDF PAGE 50 ===
+36 
+Pre - 
+Condition(s) 
+- Đối tác chưa có tài khoản trong hệ thống. 
+ 
+Post  - 
+Condition(s) 
+- Tài khoản đối tác được tạo thành công. 
+- Hệ thống lưu trữ thông tin đối tác vào cơ sở dữ liệu. 
+- Email xác thực và thông báo đăng ký được gửi đến đối tác. 
+Basic Flow 
+1. Đối tác chọn “Đăng ký tài khoản đối tác”. 
+2. Hệ thống hiển thị giao diện yêu cầu nhập email. 
+3. Đối tác nhập email và nhấn “Đăng ký”. 
+4. Hệ thống gửi mã xác thực đến email. 
+5. Đối tác nhập mã xác thực. 
+6. Nếu mã hợp lệ → Hệ thống hiển thị form đăng ký thông tin (tên, 
+số điện thoại, loại hình dịch vụ…). 
+7. Đối tác điền đầy đủ thông tin và gửi đăng ký. 
+8. Hệ thống tạo tài khoản ở trạng thái “Chờ  duyệt” và gửi email 
+thông báo cho Đối tác. 
+Alternative 
+Flow 
+7a. Thông tin đăng ký thiếu/bị sai định dạng 
+7a1. Hệ thống báo lỗi và yêu cầu khách hàng nhập lại. 
+→ Use case tiếp tục bước 8 
+4b. Đối tác không nhận được mã xác thực email  
+4b1. Yêu cầu hệ thống gửi lại mã. 
+→ Use case tiếp tục bước 5 
+5c. Đối tác nhập sai mã xác thực  
+
+=== PDF PAGE 51 ===
+37 
+5c1. Hệ thống báo lỗi và yêu cầu nhập lại. 
+ → Use case tiếp tục bước 6 
+Exception Flow 
+3d. Email đã tồn tại trong hệ thống 
+3d1. Hệ thống hiển thị thông báo “Email đã được đăng ký”. 
+→ Kết thúc Use case tại bước 2 
+Business Rule 
+-BRPAR01-1: Email đăng ký phải là duy nhất trong hệ thống. 
+-BRPAR01-2: Tài khoản mới tạo phải qua bước phê duyệt của quản 
+trị viên trước khi kích hoạt. 
+Non - 
+Functional 
+Requirement 
+-NFRPAR01-1: Thời gian gửi mã xác thực qua email ≤ 1 phút. 
+Bảng 10: Đặc tả Use case Đăng ký tài khoản đối tác 
+Use case name Thêm dịch vụ 
+Use case ID UC-PAR05 
+Description 
+Cho phép Đối tác thêm mới dịch vụ (homestay, tour, gói trải 
+nghiệm, vé tham quan, …) vào hệ thống để cung cấp cho khách 
+hàng. 
+Actor(s) Đối tác- Đã đăng nhập. 
+Trigger 
+Đối tác chọn chức năng “Quản lý danh mục dịch vụ” trên giao diện 
+tài khoản đối tác. 
+
+=== PDF PAGE 52 ===
+38 
+Pre - 
+Condition(s) 
+- Đối tác đã có tài khoản và đăng nhập thành công. 
+- Tài khoản đối tác đã được duyệt kích hoạt. 
+Post  - 
+Condition(s) 
+Dịch vụ mới được lưu trong danh mục của đối tác với trạng thái 
+“Chờ duyệt”. 
+Basic Flow 
+1. Đối tác chọn chức năng “Quản lý danh mục dịch vụ”. 
+2. Hệ thống hiển thị danh mục hiện có (nếu có). 
+3. Đối tác có thể chọn Thêm mới một dịch vụ. 
+4. Hệ thống hiển thị form nhập thông tin dịch vụ (tên, loại dịch vụ, 
+mô tả, giá, hình ảnh, chính sách). 
+5. Đối tác nhập thông tin và gửi yêu cầu. 
+6. Hệ thống lưu dịch vụ vào danh mục và cập nhật trạng thái “Chờ 
+duyệt”. 
+Alternative 
+Flow 
+5a. Nếu thông tin nhập thiếu hoặc sai định dạng  
+→ Hệ thống báo lỗi, yêu cầu nhập lại. 
+Exception Flow N/A 
+Business Rule 
+- BRPAR05-1: Dịch vụ mới thêm phải được kiểm duyệt bởi quản 
+trị viên trước khi hiển thị cho khách hàng. 
+Non - 
+Functional 
+Requirement 
+-NFRPAR05-1: Thông tin cập nhật dịch vụ phản hồi ≤ 3 giây. 
+Bảng 11: Đặc tả Use case Thêm dịch vụ 
+
+=== PDF PAGE 53 ===
+39 
+Use case name Chỉnh sửa dịch vụ 
+Use case ID UC-PAR06 
+Description 
+Cho phép Đối tác chỉnh sửa thông tin các dịch vụ hiện có trong 
+danh mục quản lý. 
+Actor(s) Đối tác - Đã đăng nhập. 
+Trigger Đối tác chọn “Chỉnh sửa dịch vụ” từ danh mục quản lý dịch vụ. 
+Pre - 
+Condition(s) 
+- Đối tác đã có tài khoản và đăng nhập thành công. 
+- Tài khoản đối tác đã được kiểm duyệt hoạt động. 
+Post  - 
+Condition(s) 
+Dịch vụ được chỉnh sửa được lưu lại trong danh mục của đối tác 
+với trạng thái “Chờ duyệt”. 
+Basic Flow 
+1. Đối tác chọn “Chỉnh sửa dịch vụ”. 
+2. Hệ thống hiển thị form với thông tin hiện tại. 
+3. Đối tác chỉnh sửa các thông tin cần thay đổi và Gửi yêu cầu xác 
+nhận 
+4. Hệ thống lưu thông tin cập nhật và đặt trạng thái dịch vụ “Chờ 
+duyệt lại”. 
+Alternative 
+Flow 
+3a. Nếu đối tác nhập thiếu/sai định dạng 
+ → Hệ thống báo lỗi và yêu cầu nhập lại. 
+Exception Flow N/A 
+
+=== PDF PAGE 54 ===
+40 
+Business Rule 
+- BRPAR05-1: Mọi chỉnh sửa dịch vụ phải được quản trị viên kiểm 
+duyệt lại. 
+Non - 
+Functional 
+Requirement 
+ -NFRPAR05-1: Thông tin cập nhật dịch vụ phản hồi ≤ 3 giây. 
+Bảng 12: Đặc tả Use case Chỉnh sửa dịch vụ 
+Use case name Thay đổi trạng thái dịch vụ 
+Use case ID UC-PAR07 
+Description 
+Cho phép Đối tác tạm thời ẩn dịch vụ khỏi khách hàng hoặc bật 
+lại để hiển thị. 
+Actor(s) Đối tác- Đã đăng nhập. 
+Trigger 
+Đối tác chọn “Ẩn/Hiện” trên một dịch vụ từ danh mục quản lý 
+dịch vụ. 
+Pre - 
+Condition(s) 
+- Đối tác đã đăng nhập. 
+- Dịch vụ đã được duyệt và đang hoạt động. 
+Post  - 
+Condition(s) 
+- Trạng thái dịch vụ được thay đổi thành “Ẩn” hoặc “Hiển thị”. 
+Basic Flow 
+1. Đối tác chọn “Ẩn/Hiện dịch vụ”. 
+2. Hệ thống hiển thị hộp thoại xác nhận. 
+3. Đối tác chọn “xác nhận”. 
+
+=== PDF PAGE 55 ===
+41 
+4. Hệ thống cập nhật trạng thái dịch vụ và ẩn dịch vụ trên hệ 
+thống. 
+Alternative 
+Flow 
+N/A 
+Exception Flow 
+3a. Nếu đối tác hủy thao tác  
+→ Hệ thống giữ nguyên trạng thái dịch vụ. 
+Business Rule 
+- BRPAR07-1: Dịch vụ ẩn sẽ không hiển thị với khách hàng 
+nhưng vẫn tồn tại trong danh mục đối tác. 
+Non - 
+Functional 
+Requirement 
+- NFRPAR07-1: Thông tin cập nhật dịch vụ phản hồi ≤ 3 giây. 
+- NFRPAR07-2: Trạng thái thay đổi được ghi nhận vào log hệ 
+thống. 
+Bảng 13: Đặc tả Use case Thay đổi trạng thái dịch vụ 
+Use case name Xem chi tiết đơn đặt 
+Use case ID UC-PAR03 
+Description 
+Cho phép Đối tác xem toàn bộ thông tin chi tiết của một đơn đặt cụ 
+thể, bao gồm thông tin dịch vụ, thông tin khách hàng, thời gian, 
+trạng thái và các yêu cầu đặc biệt. 
+Actor(s) Đối tác (Đã đăng nhập) 
+Trigger 
+Đối tác nhấp vào một đơn đặt cụ thể từ danh sách đơn đặt trong 
+trang quản lý. 
+
+=== PDF PAGE 56 ===
+42 
+Pre - 
+Condition(s) 
+- Đối tác đã đăng nhập thành công vào hệ thống. 
+- Đối tác đã truy cập vào trang "Danh sách đơn đặt". 
+- Có ít nhất một đơn đặt thuộc về đối tác. 
+Post  - 
+Condition(s) 
+- Hệ thống hiển thị đầy đủ thông tin chi tiết đơn đặt. 
+Basic Flow 
+1. Đối tác chọn một đơn đặt từ danh sách. 
+2. Hệ thống hiển thị thông tin chi tiết: mã đơn, khách hàng, dịch vụ, 
+ngày giờ, số lượng, trạng thái, phương thức thanh toán, ghi chú. 
+Alternative 
+Flow 
+2b. Nếu đơn đã bị hủy bới khách hàng, hệ thống hiển thị trạng thái 
+“Đã hủy”  
+Exception Flow Không có 
+Business Rule Không có 
+Non - 
+Functional 
+Requirement 
+- NFRPAR03-1: Thời gian hiển thị chi tiết đơn đặt ≤ 4 giây. 
+Bảng 14: Đặc tả Use case Xem chi tiết đơn đặt 
+Use case name Cập nhật trạng thái đơn 
+Use case ID UC-PAR04 
+Description 
+Cho phép Đối tác xác nhận hoặc hủy đơn đặt dịch vụ khi đơn đang 
+ở trạng thái “Chờ xác nhận”. 
+
+=== PDF PAGE 57 ===
+43 
+Actor(s) Đối tác 
+Trigger Đối tác xử lý đơn đặt mới từ khách hàng. 
+Pre - 
+Condition(s) 
+- Đối tác đã đăng nhập thành công. 
+- Đơn đặt dịch vụ tồn tại trong hệ thống và thuộc về Đối tác. 
+- Đơn chưa ở trạng thái cuối cùng (hoàn tất hoặc hủy). 
+Post  - 
+Condition(s) 
+- Nếu Đối tác xác nhận: Đơn chuyển sang trạng thái “ Đang Hoàn 
+tất” và khách hàng nhận được thông báo. 
+- Nếu Đối tác hủy: Đơn chuyển sang trạng thái “Đã hủy” và khách 
+hàng nhận được thông báo kèm lý do. 
+Basic Flow 
+1. Đối tác mở danh sách đơn đặt và chọn đơn cần xử lý. 
+2. Hệ thống hiển thị chi tiết đơn và trạng thái “Đang xử lý”. 
+3. Đối tác chọn Xác nhận → Hệ thống cập nhật trạng thái thành 
+“Đang chờ hoàn tất”. 
+4. Hệ thống gửi thông báo cập nhật qua email cho khách hàng. 
+Alternative 
+Flow 
+3a. Hủy đơn → Hệ thống yêu cầu nhập lý do hủy → Lưu lý do và 
+Hệ thống cập nhật trạng thái thành “Đã hủy”. 
+→ Use case tiếp tục bước 4 
+Exception Flow Không có 
+Business Rule 
+- BRPAR04-1: Hệ thống phải gửi thông báo qua email đến khách 
+hàng sau khi Đối tác cập nhật 
+
+=== PDF PAGE 58 ===
+44 
+- BRPAR04-2: Nếu hủy đơn, Đối tác bắt buộc nhập lý do. 
+Non - 
+Functional 
+Requirement 
+- NFRPAR04-1: Cập nhật trạng thái ≤ 3 giây. 
+Bảng 15: Đặc tả Use case cập nhật trạng thái đơn 
+Use case name Báo cáo đơn đặt dịch vụ 
+Use case ID UC-PAR08 
+Description 
+Cho phép Đối tác xem báo cáo tổng hợp về số lượng đơn đặt, số 
+lượng đơn hủy, và các chỉ số liên quan đến đơn đặt hàng trong 
+một khoảng thời gian nhất định. 
+Actor(s) Đối tác 
+Trigger 
+Đối tác muốn theo dõi tình hình đơn đặt hàng trong một khoảng 
+thời gian cụ thể. 
+Pre - 
+Condition(s) 
+- Đối tác đã đăng nhập thành công. 
+- Hệ thống có dữ liệu đơn đặt dịch vụ 
+Post  - 
+Condition(s) 
+- Báo cáo và thống kê được hiển thị chính xác theo khoảng thời 
+gian mà Đối tác chọn. 
+Basic Flow 
+1. Đối tác đăng nhập vào hệ thống. 
+2. Đối tác chọn mục "Báo cáo & Thống kê" từ menu chính trên 
+giao diện. 
+
+=== PDF PAGE 59 ===
+45 
+3. Đối tác chọn mục “Báo cáo đơn đặt hàng” từ Sidebar. 
+4. Hệ thống mặc định hiển thị báo cáo đơn đặt hàng của tháng gần 
+nhất. 
+5. Đối tác chọn tiêu chí cần xem (tháng, năm, dịch vụ). 
+6. Hệ thống hiển thị thông tin thống kê về đơn đặt hàng 
+7. Đối tác có thể tải báo cáo dưới dạng file (PDF/Excel). 
+ 
+Alternative 
+Flow 
+Không có  
+Exception Flow 
+5a. Nếu không có đơn đặt hàng trong khoảng thời gian đã chọn, 
+hệ thống hiển thị thông báo: “Không có dữ liệu để thống kê!” 
+Business Rule 
+- BRPAR08-1: Báo cáo chỉ hiển thị dữ liệu thuộc phạm vi dịch vụ 
+của Đối tác. 
+Non - 
+Functional 
+Requirement 
+- NFRPAR08-1: Thời gian tải báo cáo ≤ 5 giây. 
+- NFRPAR08-2: Dữ liệu hiển thị rõ ràng, có biểu đồ trực quan. 
+Bảng 16: Đặc tả Use case Xem Báo cáo đơn đặt dịch vụ 
+Use case name Xem Báo cáo đánh giá dịch vụ 
+Use case ID UC-PAR09 
+Description 
+Cho phép Đối tác xem báo cáo về mức độ đánh giá dịch vụ của 
+khách hàng đối với dịch vụ của họ 
+
+=== PDF PAGE 60 ===
+46 
+Actor(s) Đối tác 
+Trigger 
+Đối tác muốn theo dõi mức độ hài lòng của khách hàng đối với 
+dịch vụ mà họ cung cấp. 
+Pre - 
+Condition(s) 
+- Đối tác đã đăng nhập thành công. 
+- Hệ thống có dữ liệu đánh giá từ khách hàng. 
+Post  - 
+Condition(s) 
+- Báo cáo và thống kê được hiển thị chính xác theo khoảng thời 
+gian mà Đối tác chọn. 
+Basic Flow 
+1. Đối tác chọn mục “Báo cáo đánh giá dịch vụ” từ sidebar. 
+2. Hệ thống mặc định hiển thị báo cáo đánh giá dịch vụ của tháng 
+gần nhất. 
+3. Đối tác chọn tiêu chí cần xem (ngày, tháng, năm, dịch vụ). 
+4. Hệ thống hiển thị thống kê về các chỉ số đánh giá dịch vụ (Mức 
+độ đánh giá trung bình, Tỉ lệ khách hàng hài lòng/không hài 
+lòng,..) 
+Alternative 
+Flow 
+Không có  
+Exception Flow 
+4a. Nếu không có đơn đặt hàng trong khoảng thời gian đã chọn, 
+hệ thống hiển thị thông báo: “Không có dữ liệu để thống kê.” 
+Business Rule 
+- BRPAR09-1: Báo cáo chỉ hiển thị các phản hồi từ khách hàng 
+đối với dịch vụ của Đối tác. 
+
+=== PDF PAGE 61 ===
+47 
+Non - 
+Functional 
+Requirement 
+- NFRPAR09-1: Thời gian tải báo cáo ≤ 5 giây. 
+- NFRPAR09-2: Dữ liệu hiển thị rõ ràng, có biểu đồ trực quan. 
+Bảng 17: Đặc tả Use case Xem báo cáo đánh giá dịch vụ 
+Use case name Xem Báo cáo doanh thu 
+Use case ID UC-PAR10 
+Description 
+Cho phép Đối tác xem báo cáo về doanh thu từ các dịch vụ đã 
+cung cấp trong một khoảng thời gian nhất định. 
+Actor(s) Đối tác 
+Trigger 
+Đối tác muốn theo dõi mức độ hài lòng của khách hàng đối với 
+dịch vụ mà họ cung cấp. 
+Pre - 
+Condition(s) 
+- Đối tác đã đăng nhập thành công. 
+- Hệ thống có dữ liệu về doanh thu từ các dịch vụ. 
+Post  - 
+Condition(s) 
+- Hệ thống hiển thị báo cáo doanh thu theo khoảng thời gian mà 
+Đối tác đã chọn. 
+Basic Flow 
+1. Đối tác chọn mục “Báo cáo & Thống kê” từ menu chính trên 
+giao diện. 
+2. Đối tác chọn mục “Báo cáo doanh thu” từ Sidebar. 
+3. Hệ thống mặc định hiển thị báo cáo doanh thu của tháng gần 
+nhất. 
+3a1. Đối tác chọn tiêu chí thời gian cần xem  
+
+=== PDF PAGE 62 ===
+48 
+3a2. Hệ thống cập nhật và hiển thị báo cáo doanh thu theo tiêu chí 
+thời gian đã chọn. 
+4. Đối tác có thể tải báo cáo dưới dạng file (PDF/Excel). 
+Alternative 
+Flow 
+N/A 
+Exception Flow 
+3a2a. Nếu không có dữ liệu trong khoảng thời gian đã chọn, hệ 
+thống hiển thị thông báo: "Không có dữ liệu trong khoảng thời 
+gian này." 
+Business Rule 
+- BRPAR010-1: Báo cáo chỉ hiển thị các phản hồi từ khách hàng 
+đối với dịch vụ của Đối tác. 
+Non - 
+Functional 
+Requirement 
+- NFRPAR10-1: Thời gian tải báo cáo ≤ 5 giây. 
+- NFRPAR10-2: Dữ liệu hiển thị rõ ràng, có biểu đồ trực quan. 
+Bảng 18: Đặc tả Use case Xem Báo cáo doanh thu 
+Use case name Xem đánh giá từ khách hàng 
+Use case ID UC-PAR11 
+Description 
+Cho phép Đối tác truy cập và xem các phản hồi/đánh giá mà 
+khách hàng đã để lại về dịch vụ (homestay, tour, …). Thông tin 
+bao gồm điểm đánh giá, nội dung nhận xét, thời gian và thông tin 
+cơ bản của khách hàng. 
+Actor(s) Đối tác 
+
+=== PDF PAGE 63 ===
+49 
+Trigger Đối tác muốn phản hồi một đánh giá cụ thể của khách hàng. 
+Pre - 
+Condition(s) 
+- Đối tác đã đăng nhập hệ thống thành công. 
+- Dịch vụ đã có ít nhất một đánh giá từ khách hàng. 
+Post  - 
+Condition(s) 
+- Phản hồi của Đối tác được lưu trữ và hiển thị công khai cùng với 
+đánh giá tương ứng 
+- Khách hàng và người dùng khác có thể xem được phản hồi của 
+Đối tác. 
+ 
+Basic Flow 
+1. Đối tác chọn “Quản lý danh mục dịch vụ” 
+2. Hệ thống hiển thị danh sách dịch vụ mà đối tác cung cấp. 
+3. Đối tác chọn “Xem đánh giá” một dịch vụ cụ thể. 
+4. Hệ thống hiển thị danh sách đánh giá từ khách hàng cho dịch 
+vụ đó. 
+5.Đối tác chọn lọc/sắp xếp đánh giá 
+6. Hệ thống hiển thị danh sách đánh giá từ khách hàng cho dịch 
+vụ sau khi lọc. 
+Alternative 
+Flow N/A 
+Exception Flow 4a. Nếu dịch vụ chưa có đánh giá nào → Hệ thống hiển thị thông 
+báo “Chưa có đánh giá từ khách hàng”. 
+Business Rule - BRPAR10-1 Chỉ hiển thị các đánh giá của khách hàng đã sử 
+dụng dịch vụ của Đối tác. 
+
+=== PDF PAGE 64 ===
+50 
+Non - 
+Functional 
+Requirement 
+- NFRPAR10-1: Thời gian tải danh sách đánh giá không quá 3 
+giây với tối đa 500 đánh giá. 
+- NFRPAR10-2: Hệ thống cho phép lọc/sắp xếp đánh giá một 
+cách mượt mà, phản hồi dưới 3 giây. 
+Bảng 19: Đặc tả Use case Xem đánh giá từ khách hàng 
+Use case name Phản hồi đánh giá 
+Use case ID UC-PAR11 
+Description 
+Cho phép Đối tác viết và gửi phản hồi đối với đánh giá mà khách 
+hàng đã để lại về dịch vụ. Phản hồi sẽ được hiển thị công khai cùng 
+với đánh giá tương ứng để những khách hàng khác có thể tham 
+khảo. 
+Actor(s) Đối tác cung cấp dịch vụ 
+Trigger Đối tác muốn phản hồi một đánh giá cụ thể của khách hàng. 
+Pre - 
+Condition(s) 
+- Đối tác đã đăng nhập thành công vào hệ thống. 
+- Có ít nhất một đánh giá của khách hàng tồn tại trên hệ thống. 
+- Đối tác có quyền quản lý dịch vụ tương ứng với đánh giá. 
+Post  - 
+Condition(s) 
+- Phản hồi của Đối tác được lưu trữ và hiển thị kèm theo đánh giá. 
+- Khách hàng và các người dùng khác có thể xem được phản hồi. 
+Basic Flow 
+1. Đối tác truy cập vào chức năng “Xem đánh giá”. 
+2. Đối tác chọn một đánh giá cụ thể muốn phản hồi. 
+3. Hệ thống hiển thị giao diện nhập nội dung phản hồi. 
+
+=== PDF PAGE 65 ===
+51 
+4. Đối tác nhập nội dung phản hồi và nhấn “Gửi”. 
+5. Hệ thống kiểm tra định dạng nội dung hợp lệ (không rỗng, không 
+vi phạm từ cấm). 
+6. Hệ thống hiển thị phản hồi của Đối tác kèm đánh giá tương ứng. 
+Alternative 
+Flow Không có 
+Exception Flow 4b. Đối tác nhấn “Hủy” thay vì gửi phản hồi 
+4b1. Hệ thống quay lại danh sách đánh giá mà không lưu thay đổi. 
+Business Rule - BRPAR11-1: Đối tác chỉ được phép phản hồi đánh giá đối với 
+dịch vụ mà mình cung cấp. 
+Non - 
+Functional 
+Requirement 
+- NFRPAR11-1: Thời gian xử lý và lưu phản hồi không quá 5 giây. 
+- NFRPAR11-2: Phản hồi phải được đồng bộ và hiển thị ngay cho 
+khách hàng. 
+Bảng 20: Đặc tả Use case Phản hồi đánh giá 
+3.2.2.3. Đặc tả use case phân hệ Quản trị viên 
+Use case name Duyệt tài khoản đối tác mới 
+Use case ID UC-ADM02 
+Description 
+Là Quản trị viên, tôi muốn kiểm tra, phê duyệt hoặc từ chối các yêu 
+cầu đăng ký tài khoản đối tác mới để đảm bảo tính hợp lệ và uy tín 
+của các đối tác trên hệ thống. 
+Actor(s) Quản trị viên (Admin) 
+
+=== PDF PAGE 66 ===
+52 
+Trigger 
+Quản trị viên truy cập vào trang "Duyệt tài khoản đối tác" và thấy 
+có yêu cầu mới cần duyệt. 
+Pre - 
+Condition(s) 
+- Quản trị viên đã đăng nhập thành công vào hệ thống với quyền 
+Admin. 
+- Có ít nhất một yêu cầu đăng ký tài khoản đối tác mới ở trạng thái 
+"Chờ duyệt". 
+Post  - 
+Condition(s) 
+Tài khoản đối tác chuyển sang trạng thái “Hoạt động”, có thể đăng 
+nhập và quản lý dịch vụ. 
+Basic Flow 
+1. Quản trị viên truy cập vào mục “Duyệt tài khoản đối tác”. 
+2. Hệ thống hiển thị danh sách các tài khoản đối tác mới đang chờ 
+duyệt. 
+3. Quản trị viên chọn một tài khoản để xem chi tiết. 
+4. Hệ thống hiển thị thông tin đối tác (họ tên, email, thông tin doanh 
+nghiệp, giấy phép…). 
+5. Quản trị viên nhấn “Phê duyệt”  
+6. Hệ thống cập nhật trạng thái tài khoản và gửi thông báo đến đối 
+tác. 
+Alternative 
+Flow 
+5a. Quản trị viên chọn “Từ chối”  
+6a. Hệ thống yêu cầu nhập lý do từ chối  (thông tin lý do được gửi 
+đến đối tác kèm thông báo). 
+ 
+Exception Flow 
+2b. Nếu không có tài khoản chờ duyệt  
+→ Hệ thống hiển thị thông báo “Không có tài khoản mới cần phê 
+duyệt”. 
+
+=== PDF PAGE 67 ===
+53 
+Business Rule 
+- BRADM2-1: Chỉ Quản trị viên có quyền duyệt tài khoản đối tác. 
+- BRADM2-2: Tài khoản đối tác chỉ chuyển sang trạng thái “Hoạt 
+động” khi đã được phê duyệt. 
+Non - 
+Functional 
+Requirement 
+- NFRADM2-1: Thời gian tải danh sách tài khoản chờ duyệt không 
+quá 3 giây. 
+- NFRADM2-2: Dữ liệu phê duyệt phải được lưu trữ an toàn, không 
+bị chỉnh sửa ngoài hệ thống. 
+- NFRADM2-3: Thông báo gửi đến đối tác trong vòng 1 phút sau 
+khi Quản trị viên thao tác. 
+Bảng 21: Đặc tả Use case Duyệt tài khoản đối tác mới 
+Use case name Kiểm duyệt thông tin dịch vụ 
+Use case ID UC-ADM04 
+Description 
+Quản trị viên xem xét và phê duyệt thông tin dịch vụ (phòng, tour, 
+trải nghiệm, vé tham quan…) mà Đối tác cung cấp trước khi hiển 
+thị cho khách hàng trên hệ thống. 
+Actor(s) Quản trị viên (Admin) 
+Trigger 
+Đối tác thêm mới hoặc chỉnh sửa thông tin dịch vụ và gửi yêu cầu 
+phê duyệt. 
+Pre - 
+Condition(s) 
+- Quản trị viên đã đăng nhập hệ thống. 
+- Có ít nhất một dịch vụ mới hoặc dịch vụ được chỉnh sửa do Đối 
+tác đăng tải, ở trạng thái "Chờ kiểm duyệt".. 
+
+=== PDF PAGE 68 ===
+54 
+Post  - 
+Condition(s) 
+- Dịch vụ được phê duyệt sẽ hiển thị công khai cho khách hàng. 
+- Nếu bị từ chối, hệ thống lưu lý do và thông báo lại cho Đối tác. 
+Basic Flow 
+1. Quản trị viên truy cập mục “Dịch vụ chờ duyệt”. 
+2. Hệ thống hiển thị danh sách dịch vụ chờ phê duyệt. 
+3. Quản trị viên chọn một dịch vụ để xem chi tiết. 
+4. Quản trị viên kiểm tra thông tin (mô tả, giá, hình ảnh, khuyến 
+mãi…). 
+5. Quản trị viên chọn “Phê duyệt”  
+6. Hệ thống cập nhật trạng thái dịch vụ và thông báo cho Đối tác. 
+Alternative 
+Flow 
+5a. Nếu chọn “Từ chối”, Quản trị viên nhập lý do từ chối 
+6a. Hệ thống lưu lại và gửi thông báo cho Đối tác. 
+Exception Flow Không có 
+Business Rule 
+- BRADM04-1: Chỉ dịch vụ đã được phê duyệt mới được phép hiển 
+thị công khai. 
+- BRADM04-2: Mọi quyết định từ chối phải có lý do cụ thể. 
+Non - 
+Functional 
+Requirement 
+- NFRADM04-1: Thời gian tải danh sách dịch vụ chờ duyệt không 
+vượt quá 3 giây. 
+Bảng 22: Đặc tả Use case Kiểm duyệt thông tin dịch vụ 
+Use case name Xem báo cáo đánh giá phản hồi 
+Use case ID UC-ADM05 
+
+=== PDF PAGE 69 ===
+55 
+Description 
+Cho phép Quản trị viên xem báo cáo tổng hợp phản hồi từ khách 
+hàng về dịch vụ/đối tác, bao gồm các góp ý, khiếu nại và đánh 
+giá, nhằm hỗ trợ kiểm duyệt chất lượng dịch vụ và đưa ra quyết 
+định xử lý (ví dụ: cảnh báo đối tác, khóa tài khoản). 
+Actor(s) Quản trị viên (Admin) 
+Trigger 
+Quản trị viên chọn chức năng “Xem báo cáo phản hồi” trên giao 
+diện quản trị. 
+Pre - 
+Condition(s) 
+- Quản trị viên đã đăng nhập hệ thống 
+- Dữ liệu hệ thống đã được lưu trữ đầy đủ (đơn đặt chỗ, tài khoản, 
+doanh thu, đánh giá, dịch vụ).  
+Post  - 
+Condition(s) 
+- Quản trị viên xem được danh sách và thống kê điểm đánh giá 
+dịch vụ. 
+Basic Flow 
+1. Quản trị viên chọn “Báo cáo đánh giá”. 
+2. Quản trị viên lọc theo thời gian, loại dịch vụ, đối tác  
+3. Hệ thống truy vấn dữ liệu từ các kho dữ liệu và hiển thị báo cáo 
+dưới dạng bảng số liệu theo đối tác. 
+Alternative 
+Flow 
+Không có 
+Exception Flow 
+2b. Hệ thống không có dữ liệu trong khoảng thời gian được chọn 
+→ Thông báo “Không có dữ liệu hiển thị”. 
+Business Rule 
+- BRADM05-1: Chỉ tài khoản Admin mới có quyền truy cập báo 
+cáo toàn hệ thống. 
+
+=== PDF PAGE 70 ===
+56 
+- BRADM05-2: Dữ liệu báo cáo phải được cập nhật theo thời gian 
+thực hoặc gần nhất. 
+- BRADM05-3: Dữ liệu xuất ra phải tuân thủ các quy định về bảo 
+mật thông tin (không tiết lộ thông tin cá nhân khách hàng quá 
+mức cần thiết). 
+Non - 
+Functional 
+Requirement 
+- NFRADM05-1: Giao diện báo cáo phải trực quan, dễ theo dõi. 
+- NFRADM05-2: Báo cáo phải hiển thị trong vòng ≤ 6 giây với 
+dữ liệu dưới 500 bản ghi. 
+Bảng 23: Đặc tả Use case Xem báo cáo đánh giá phản hồi 
+Use case name Xem báo cáo số lượng đơn đặt toàn hệ thống 
+Use case ID UC-ADM0 
+Description 
+Cho phép Quản trị viên xem báo cáo về số lượng đơn đặt, đơn 
+hủy của các đơn trên toàn hệ thống trong một khoảng thời gian cụ 
+thể. 
+Actor(s) Quản trị viên (Admin) 
+Trigger 
+Quản trị viên chọn mục “Báo cáo số lượng đơn đặt” từ menu 
+“Báo cáo & Thống kê”. 
+Pre - 
+Condition(s) 
+- Quản trị viên đã đăng nhập hệ thống 
+- Dữ liệu về đơn đặt và trạng thái của các đơn đã được lưu trữ đầy 
+đủ. 
+
+=== PDF PAGE 71 ===
+57 
+Post  - 
+Condition(s) 
+- Hệ thống hiển thị báo cáo số lượng đơn đặt, đơn hủy và các 
+thông tin liên quan, bao gồm số liệu về tỷ lệ lấp phòng và số 
+lượng đơn hủy. 
+Basic Flow 
+1. Quản trị viên chọn mục “Báo cáo số lượng đơn đặt” từ menu 
+“Báo cáo & Thống kê”. 
+2. Hệ thống tự động hiển thị báo cáo mặc định trong khoảng thời 
+gian gần nhất (1 tháng gần đây) 
+3. Quản trị viên có thể lọc báo cáo thêm theo các tiêu chí và nhấn 
+“Xem báo cáo” 
+4. Hệ thống hiển thị báo cáo số lượng đơn đặt, đơn hủy dưới dạng 
+bảng số liệu và biểu đồ trực quan cho Quản trị viên. 
+5. Quản trị viên có thể tải báo cáo dưới dạng file PDF hoặc Excel 
+nếu cần. 
+Alternative 
+Flow 
+Không có 
+Exception Flow 
+4a. Hệ thống không có dữ liệu trong khoảng thời gian được chọn 
+→ Thông báo “Không có dữ liệu hiển thị”.  
+Business Rule 
+- BRADM05-1: Chỉ tài khoản Admin mới có quyền truy cập vào 
+báo cáo số lượng đơn đặt của toàn hệ thống. 
+- BRADM05-2: Dữ liệu báo cáo phải được cập nhật theo thời gian 
+thực gần nhất. 
+Non - 
+Functional 
+Requirement 
+- NFRADM05-1: Dữ liệu báo cáo phải luôn đảm bảo tính chính 
+xác và đồng bộ với cơ sở dữ liệu trong thời gian thực gần thực 
+
+=== PDF PAGE 72 ===
+58 
+Bảng 24: Đặc tả Use case Xem báo cáo số lượng đơn đặt toàn hệ thống 
+3.2.3. Sơ đồ hoạt động (Activity Diagram) 
+Để hiểu rõ một số quy trình nghiệp vụ, hai sơ đồ hoạt động dưới đây được trình bày 
+làm ví dụ minh họa: Quy trình Đặt dịch vụ và Duyệt tài khoản đối tác giúp người đọc 
+hình dung luồng xử lý thông tin và các bước thao tác của hai quy trình nghiệp vụ trong 
+hệ thống. 
+ 
+Hình 5: Sơ đồ hoạt đông Đặt dịch vụ 
+
+
+=== PDF PAGE 73 ===
+59 
+ 
+Hình 6: Sơ đồ hoạt động Duyệt tài khoản đối tác 
+
+
+=== PDF PAGE 74 ===
+60 
+3.3. Sơ đồ dòng dữ liệu (DFD) 
+3.3.1. Sơ đồ DFD mức ngữ cảnh 
+ 
+Hình 7: Sơ đồ DFD mức ngữ cảnh. 
+ 
+ 
+
+=== PDF PAGE 75 ===
+61 
+3.3.2. Sơ đồ DFD mức 0 
+ 
+Hình 8: Sơ đồ DFD mức 0. 
+3.4. Từ điển kho dữ liệu và luồng dữ liệu  
+(Xem chi tiết tại phụ lục 3 và 4). 
+3.5. Tiểu kết chương 3 
+Chương 3 đã trình bày chi tiết quy trình nghiệp vụ,  mô hình hóa yêu cầu sử dụng 
+use case, sơ đồ dòng dữ liệu (DFD), và từ điển dữ liệu cho hệ thống website hỗ trợ du 
+lịch tích hợp AI. Các quy trình nghiệp vụ đã được xác định rõ, mô tả cách thức hoạt động 
+của hệ thống trong việc quản lý dịch vụ du lịch, từ tìm kiếm đến đặt dịch vụ. Mô hình 
+use case đã ánh xạ các yêu cầu chức năng của từng đối tượng người dùng như khách 
+hàng, doanh nghiệp và quản trị viên. Những yếu tố này sẽ là cơ sở vững chắc để thiết kế 
+và triển khai hệ thống trong các giai đoạn tiếp theo. 
+
+
+=== PDF PAGE 76 ===
+62 
+CHƯƠNG 4. THIẾT KẾ CƠ SỞ DỮ LIỆU 
+4.1. Xác định thực thể và các thuộc tính 
+Nguoi_dung (ID_nguoidung, ten_dang_nhap, mat_khau, trang_thai, 
+FK_ID_nhom_nguoidung) 
+Nhom_nguoi_dung (ID_nhom_nguoidung, FK_ID_nguoidung, ten_nhomnguoidung) 
+Chitiet_nguoidung (FK_ID_nhom_nguoidung, FK_ID_nguoidung) 
+Chuc_nang (ID_chucnang, ten_chuc_nang) 
+Chitiet_chucnang (FK_ID_chucnang, FK_ID_nhom_nguoidung) 
+Taikhoan (ma_tai_khoan PK, email UK, so_dien_thoai UK, mat_khau_bam, 
+vai_tro, trang_thai, ngay_tao) 
+Khach_hang (ID_khachhang, ten_khach_hang, so_dien_thoai, email, 
+dia_chi) 
+Quan_tri_vien (ID_qtvien, hoten, diachi, sodienthoai) 
+Doi_tac (  ID_doitac, tencongty,    masothue, giayphepkinhdoanh, nguoilienhe,  
+dienthoai, email, diachi, thanhpho, tinhthanh, ngay_tao, ngaycapnhat, 
+trangthai,   solancanhbao) 
+DichVu (ID_doitac,ID_dichvu, tenDichVu, moTa, gia, donViTienTe,ID_LoaiDichVu 
+,hinhAnh, sucChua, trangThai, danhGia, tongSoDat, hanhDong) 
+LoaiDichVu (ID_LoaiDichVu, TenLoaiDichVu, MoTa, TrangThai, NgayTao, 
+NgayCapNhat) 
+DatDichVu (ID_khachhang,  ID_doitac, ID_dichvu,ID_don, NgayNhanPhong, 
+NgayTraPhong, SoLuongKhach, TongTien, TrangThai, YeuCauDacBiet) 
+Trang_thai_don (ID_trangthai, FK_ID_booking, trang_thai_cu, trang_thai_moi, 
+FK_thay_doi_boi, ly_do, ngay_thay_doi ) 
+
+=== PDF PAGE 77 ===
+63 
+DanhGia(   ID_don,  ID_khachhang,  ID_doitac,  ID_dichvu,  danhgia,  binhluan,  hin
+hanh, phanhoi_doitac,  ngay_phanhoi, hanhdong) 
+Phienchat (ID_phienchat, FK_ID_khachhang, ngay_bat_dau, ngay_ket_thuc) 
+Tinnhanchat (ID_tinnhan, FK_ID_phienchat, FK_ID_khachhang, noi_dung, ngay_gui) 
+4.2. Mô tả ERD 
+Hệ thống hỗ trợ du lịch tích hợp AI được thiết kế nhằm cung cấp một nền tảng đặt 
+dịch vụ du lịch toàn diện, bao gồm lưu trú, tour tham quan, vé tham quan, và các dịch 
+vụ trải nghiệm khác. Hệ thống phục vụ ba nhóm người dùng chính: khách hàng, doanh 
+nghiệp đối tác và quản trị viên. 
+Mỗi người dùng trong hệ thống sẽ có một tài khoản cá nhân với các thông tin cơ bản 
+như email, số điện thoại, mật khẩu, vai trò, trạng thái tài khoản và ngày tạo. Từ mỗi tài 
+khoản, hệ thống sẽ liên kết đến hồ sơ người dùng tương ứng: hồ sơ khách hàng, hồ sơ 
+doanh nghiệp đối tác hoặc hồ sơ quản trị viên. Khách hàng có thông tin cá nhân như họ 
+tên, số điện thoại, email, địa chỉ, lịch sử đặt dịch vụ. Đối tác có hồ sơ doanh nghiệp, bao 
+gồm tên công ty, mã số thuế, giấ y phép kinh doanh, người liên hệ, địa chỉ và trạng thái 
+kiểm duyệt. Quản trị viên quản lý toàn bộ hệ thống, có thông tin cơ bản để phục vụ công 
+tác giám sát và kiểm duyệt. 
+Hệ thống quản lý thông tin dịch vụ du lịch qua bảng Dịch vụ, với các thuộc tính như 
+mã dịch vụ, tên dịch vụ, mô tả, giá, hình ảnh, sức chứa, trạng thái và loại dịch vụ. Mỗi 
+dịch vụ được liên kết với một doanh nghiệp đối tác. Loại dịch vụ (lưu trú, tour, khu tham 
+quan, nhà hàng, …) được quản lý riêng trong bảng Loại dịch vụ, hỗ trợ phân loại và tìm 
+kiếm hiệu quả. 
+Khách hàng có thể thực hiện đặt dịch vụ trực tuyến, thông qua bảng Đặt dịch vụ, 
+bao gồm các thông tin: dịch vụ được chọn, thời gian nhận/trả, số lượng khách, tổng tiền 
+và trạng thái đơn. Trạng thái đơn (chờ xác nhận, đã xác nhận, h ủy…) được ghi nhận 
+
+=== PDF PAGE 78 ===
+64 
+trong bảng Trạng thái đơn, cùng với lý do thay đổi và người thực hiện thay đổi (khách 
+hàng, đối tác hoặc quản trị viên). 
+Hệ thống cũng hỗ trợ quản lý phản hồi và đánh giá. Sau khi hoàn thành dịch vụ, 
+khách hàng có thể để lại đánh giá, xế p hạng và bình luận. Các đánh giá này được lưu 
+trong bảng Đánh giá, liên kết với dịch vụ, khách hàng và đối tác. Đối tác có thể phản hồi 
+lại đánh giá, phản hồi này sẽ được hiển thị ngay bên dưới nhận xét của khách hàng. Điều 
+này giúp tăng tính minh bạch và hỗ trợ doanh nghiệp cải thiện chất lượng dịch vụ. 
+Để hỗ trợ trải nghiệm, hệ thống tích hợp AI gợi ý dịch vụ liên quan. Khi khách hàng 
+xem chi tiết một dịch vụ chính (ví dụ: homestay ở Đà Lạt), hệ thống AI sẽ phân tích loại 
+hình dịch vụ và vị trí, sau đó g ợi ý các dịch vụ bổ sung gần đó như tour, quán ăn, hoặc 
+điểm tham quan gần đó. Danh sách gợi ý sẽ được hiển thị trực tiếp trong giao diện dịch 
+vụ tại mục Hoạt động gần đây, giúp khách hàng dễ dàng lựa chọn thêm trải nghiệm phù 
+hợp. 
+Ngoài ra, hệ thống còn hỗ trợ báo cáo và thống kê. Đối tác có thể xem báo cáo doanh 
+thu theo tháng, số lượng đặt dịch vụ, tỷ lệ hủy, và thống kê đánh giá của khách hàng. 
+Các báo cáo được hiển thị dưới dạng bảng hoặc biểu đồ trực quan. Quản trị viên có thể 
+xem báo cáo tổng hợp toàn hệ thống để phân tích xu hướng và phát hiện rủi ro. 
+Các mối quan hệ trong hệ thống bao gồm cả 1-1, 1-N và N-N. Một tài khoản người 
+dùng liên kết với một hồ sơ khách hàng hoặc đối tác. Một đối tác có thể cung cấp nhiều 
+dịch vụ, mỗi dịch vụ có thể có nhiều  đơn đặt và nhiều đánh giá. Một khách hàng có thể 
+đặt nhiều dịch vụ khác nhau, để lại nhiều đánh giá. Đánh giá có thể có phản hồi từ đối 
+tác. AI gợi ý được liên kết với dữ liệu dịch vụ và hành vi khách hàng để cá nhân hóa trải 
+nghiệm. 
+
+=== PDF PAGE 79 ===
+65 
+4.3. Lược đồ dữ liệu quan hệ 
+ 
+Hình 9: Lược đồ dữ liệu quan hệ 
+
+
+=== PDF PAGE 80 ===
+66 
+4.4. Lược đồ ER 
+ 
+Hình 10: Lược đồ ER 
+4.5. Tiểu kết chương 4 
+Qua chương 4, tác giả đã tiến hành thiết kế cơ sở dữ liệu cho hệ thống website hỗ 
+trợ du lịch tích hợp AI. Quá trình thiết kế này bao gồm việc xây dựng sơ đồ ERD 
+(EntityRelationship Diagram) và sơ đồ dữ liệu quan hệ, thông qua việc xác định các thực 
+thể, thuộc tính liên quan, cùng các mối quan hệ giữa các thực thể trong hệ thống. 
+ 
+  
+
+
+=== PDF PAGE 81 ===
+67 
+CHƯƠNG 5. THIẾT KẾ GIAO DIỆN 
+Dưới đây là một số giao diện chính mô tả tổng quan của hệ thống quản lý trung tâm 
+chăm sóc thú cưng. Tùy thuộc vào vai trò và quyền hạn của người dùng, một số chức 
+năng và trường dữ liệu sẽ được ẩn hoặc vô hiệu hóa để đảm bảo sự phân quyền của mỗi 
+nhóm người dùng trên hệ thống. 
+5.1. Giao diện đăng nhập/ Đăng ký 
+Hình 11: Giao diện Đăng nhập/ Đăng ký 
+
+
+=== PDF PAGE 82 ===
+68 
+5.2. Giao diện trang chủ hệ thống 
+ 
+Hình 12: Giao diện trang chủ 
+ 
+ 
+Hình 13: Giao diện trang chủ 
+Mô tả: 
+Header với Logo & Navigation Bar: Phần đầu trang chủ bao gồm logo “TravelAI” 
+ở góc trái, cùng với menu điều hướng (Hồ sơ, Booking của tôi, Tên người dùng) và nút 
+
+
+=== PDF PAGE 83 ===
+69 
+đăng xuất dạng button ở góc phải. Người dùng có thể dễ dàng truy cập vào các phần 
+quản lý tài khoản hoặc đăng xuất. 
+Hero Section: Vùng nổi bật với tiêu đề “Khám phá Việt Nam”, kèm theo một dòng 
+mô tả ngắn và một Search Bar đa trường, cho phép người dùng tìm kiếm bằng cách điền 
+tên địa điểm, thành phố, ngày đến/đi. Nút tìm kiếm giúp người dùng nhanh  chóng tìm 
+được các dịch vụ du lịch phù hợp. 
+Grid - Địa điểm phổ biến: Khu vực này trình bày các Card điểm đến (Đà Lạt, Nha 
+Trang, Hồ Chí Minh, Phú Quốc, Hội An) trên bố cục lưới (grid layout), mỗi card có hình 
+ảnh và tên địa điểm, giúp người dùng dễ dàng duyệt qua các lựa chọn điểm đến. 
+Grid - Lưu trú nổi bật: Phần này hiển thị các Property Cards với thông tin chi tiết 
+như ảnh, tên, vị trí, xếp hạng sao, và các tag dịch vụ như Wi-Fi, bãi đỗ xe... Mỗi card có 
+nút “Xem chi tiết” dạng button, cho phép người dùng xem thêm thông tin về dịch vụ lưu 
+trú. 
+Filter Control: Nút “Bộ lọc” dạng icon button, cho phép người dùng lọc các dịch vụ 
+và lựa chọn phù hợp theo yêu cầu riêng (giá, loại phòng, tiện nghi,...). 
+Action Button: Nút tròn nằm ở góc dưới bên phải, giúp ngư ời dùng dễ dàng trò 
+chuyện với trợ lý ảo. Chức năng này hỗ trợ người dùng giải đáp các thắc mắc nhanh 
+chóng về dịch vụ. 
+ 
+
+=== PDF PAGE 84 ===
+70 
+5.3.  Giao diện tìm kiếm dịch vụ 
+ 
+Hình 14: Giao diện tìm kiếm dịch vụ 
+Mô tả: 
+Result Section: Kết quả tìm kiếm được hiển thị dưới dạng Listing Cards theo bố cục 
+lưới (grid layout). Mỗi card bao gồm các thông tin như ảnh, tên homestay, vị trí, đánh 
+giá sao, các tag dịch vụ như Wi -Fi, bãi đỗ xe, quán cà phê, và nút “Xem chi tiết” để 
+người dùng có thể tìm hiểu thêm thông tin chi tiết về homestay. 
+Filter Control: Nút “Bộ lọc” dạng icon button, giúp người dùng lọc kết quả tìm kiếm 
+theo các tiêu chí như giá, loại dịch vụ, tiện nghi, và vị trí, giúp tối ưu hóa quá trình tìm 
+kiếm. 
+ 
+
+
+=== PDF PAGE 85 ===
+71 
+5.4. Giao diện chi tiết dịch vụ 
+ 
+Hình 15: Giao diện chi tiết dịch vụ 
+Mô tả: 
+Navigation Bar: Menu điều hướng (Trang chủ, Đặt chỗ của tôi, Hồ sơ) giúp người 
+dùng dễ dàng điều hướng đến các trang thông tin tương ứng. Tại đây, người dùng có thể 
+truy cập vào trang chủ để quay lại tìm kiếm dịch vụ, xem lịch sử đặt chỗ của mình hoặc 
+chỉnh sửa thông tin hồ sơ cá nhân. 
+Giao diện chi tiết dịch vụ:  Khi người dùng nhấn vào nút “Xem chi tiết”  từ các 
+Listing Card, giao diện sẽ hiển thị thông tin chi tiết về dịch vụ. Giao diện này bao gồm: 
+ Ảnh dịch vụ: Hiển thị các hình ảnh nổi bật của dịch vụ (homestay, khách sạn, 
+tour, v.v.). 
+
+
+=== PDF PAGE 86 ===
+72 
+ Thông tin dịch vụ: Bao gồm tên, vị trí, mô tả chi tiết, đánh giá sao, tiện nghi 
+(Wi-Fi, bãi đỗ xe, nhà hàng, ...). 
+ Nút đặt dịch vụ: Nút "Đặt ngay" cho phép người dùng thực hiện thao tác đặt 
+dịch vụ trực tuyến. 
+ Các đánh giá của khách hàng: Hiển thị các đánh giá và phản hồi của khách 
+hàng trước đó, giúp người dùng có cái nhìn tổng quan về chất lượng dịch vụ. 
+5.5. Giao diện hồ sơ cá nhân 
+ 
+Hình 16: Giao diện hồ sơ cá nhân 
+Mô tả: 
+Hồ sơ cá nhân: Giao diện hồ sơ cá nhân cho phép người dùng xem và chỉnh sửa các 
+thông tin cá nhân của mình, bao gồm họ tên, email, số điện thoại, ảnh đại diện, và thông 
+tin thanh toán. Người dùng có thể dễ dàng cập nhật thông tin cá nhân v à thay đổi mật 
+khẩu để bảo mật tài khoản của mình. Giao diện được thiết kế rõ ràng, dễ sử dụng và giúp 
+người dùng quản lý thông tin cá nhân một cách thuận tiện. 
+
+
+=== PDF PAGE 87 ===
+73 
+5.6. Giao diện lịch sử đặt dịch vụ 
+ 
+Hình 17: Giao diện lịch sử đặt dịch vụ 
+Mô tả:  
+Tab Navigation: Tab filter với các mục "Tất cả", "Chờ xác nhận", "Đã xác nhận", 
+"Hoàn thành", "Đã hủy" giúp người dùng dễ dàng lọc và xem các đơn đặt phòng của 
+mình theo trạng thái cụ thể. Tính năng này giúp khách hàng nhanh chóng tìm thấy thông 
+tin về đơn đặt dịch vụ của mình, từ các đơn đang chờ xác nhận đến các đơn đã hoàn tất 
+hoặc bị hủy. 
+List: Lịch sử đơn đặt dịch vụ hiển thị dưới dạng danh sách, với các mục thông tin cơ 
+bản như tên dịch vụ, ngày đặt, trạng thái đơn, và tổng số tiền thanh toán. Mỗi mục trong 
+danh sách có thể nhấp vào để xem chi tiết về đơn đặt, bao gồm thông tin về dịch vụ đã 
+chọn, thời gian lưu trú, và trạng thái xác nhận. 
+ 
+
+
+=== PDF PAGE 88 ===
+74 
+5.7. Giao diện đặt dịch vụ 
+ 
+Hình 18: Giao diện đặt dịch vụ 
+ 
+Hình 19: Giao diện đặt dịch vụ 
+Mô tả:  
+Giao diện đặt phòng hiển thị bên phải thông tin dịch vụ. Khi người dùng đã đăng 
+nhập, các thông tin sẽ tự động được điền. Nếu chưa đăng nhập, người dùng cần nhập 
+thông tin Số điện thoại, Email và Số khách để tiếp tục. Các trường Check-in / Check-out 
+được chọn qua calendar picker, và người dùng có thể chọn Số khách từ dropdown. Phần 
+
+
+=== PDF PAGE 89 ===
+75 
+Yêu cầu đặc biệt cho phép người dùng ghi chú các yêu cầu riêng. Cuối cùng, người dùng 
+nhấn nút “Đặt phòng ngay” để hoàn tất việc đặt phòng. G iao diện dễ sử dụng và tối ưu 
+cho thao tác nhanh chóng. 
+5.8. Giao diện đăng ký trở thành Đối tác 
+ 
+Hình 20: Giao diện đăng ký trở thành Đối tác 
+Mô tả: 
+Giao diện đăng ký đối tác bắt đầu với tiêu đề và icon minh họa, giúp người dùng 
+nhận diện chức năng đăng ký nhanh chóng. Các thông tin cá nhân cần nhập bao gồm Họ 
+và tên, Email, Số điện thoại, và Số CMND/CCCD. Người dùng sẽ chọn Loại hình kinh 
+doanh (Cá nhân hoặc Doanh nghiệp) thông qua dropdown, để hệ thống phân loại đối tác 
+
+
+=== PDF PAGE 90 ===
+76 
+đúng cách. Phần tải lên ảnh CMND/CCCD được thiết kế với icon và hướng dẫn trực 
+quan, giúp người dùng dễ dàng thao tác. 
+Nút “Gửi đăng ký” cho phép người dùng gửi toàn bộ thông tin đăng ký đến hệ thống 
+để xét duyệt. Nếu muốn quay lại, người dùng có thể nhấn vào liên kết “Quay lại trang 
+chủ” nằm ở trên cùng để trở về trang chủ của TravelAI. 
+5.9. Giao diện thêm dịch vụ 
+ 
+Hình 21: Giao diện thêm dịch vụ 
+
+
+=== PDF PAGE 91 ===
+77 
+ 
+Hình 22: Giao diện thêm dịch vụ 
+Mô tả:  
+Giao diện đăng tải dịch vụ cho phép quản trị viên thêm dịch vụ mới bằng cách nhấn 
+vào nút “Thêm dịch vụ” ở góc phải trên cùng của màn hình. Khi mở form nhập dữ liệu, 
+quản trị viên cần điền các thông tin bắt buộc như Tên dịch vụ, Giá (VNĐ), và Địa điểm, 
+cùng với các trường thông tin mô tả khác như Loại dịch vụ, Mô tả dịch vụ, và Chính 
+sách. Giao diện được thiết kế để đơn giản, dễ thao tác, giúp quản trị viên nhanh chóng 
+hoàn thành việc đăng tải dịch vụ lên hệ thống. 
+
+
+=== PDF PAGE 92 ===
+78 
+5.10. Giao diện quản lý đặt dịch vụ 
+ 
+Hình 23: Giao diện quản lý đặt dịch vụ 
+ 
+Hình 24: Giao diện quản lý đặt dịch vụ 
+Mô tả:  
+Giao diện quản lý đặt dịch vụ cho phép đối tác truy cập vào mục Quản lý đặt chỗ từ 
+sidebar để xem danh sách tất cả các đơn đặt dịch vụ. Bảng dữ liệu hiển thị chi tiết từng 
+đơn đặt, bao gồm các thông tin đơn đặt dịch vụ 
+
+
+=== PDF PAGE 93 ===
+79 
+Với các đơn Chờ xử lý, người dùng có thể nhấn Xác nhận để xác nhận đơn đặt chỗ 
+hoặc nhấn Hủy để từ chối và hủy đơn. Trong trường hợp hủy đơn, một popup “Hủy đặt 
+chỗ” sẽ hiển thị ở giữa màn hình, cho phép đối tác xem chi tiết đơn đặt và chọn lý do 
+hủy từ danh sách có sẵn hoặc nhập lý do khác để báo cho khách hàng. Sau khi nhấn “Hủy 
+đặt chỗ”, hộp thoại xác nhận sẽ xuất hiện để đối tác xác nhận hành động. Trạng thái của 
+đơn trên danh sách chính sẽ được cập nhật thành Đã hủy, và hệ thống sẽ gửi thông báo 
+đến khách hàng về việc hủy đơn đặt. 
+5.11. Giao diện chỉnh sửa trạng thái/ thông tin dịch vụ 
+ 
+Hình 25: Giao diện chỉnh sửa trạng thái/ thông tin dịch  
+Mô tả:  
+Giao diện chỉnh sửa trạng thái/thông tin dịch vụ hiển thị danh sách dịch vụ dưới dạng 
+bảng, liệt kê các dịch vụ với thông tin cơ bản như Tên, Loại, Giá, Địa điểm, và Trạng 
+thái. Trong cột “Hành động”, có icon button Chỉnh sửa cho phép đối tác chỉnh sửa thông 
+tin chi tiết của dịch vụ. Bên cạnh đó, có icon button Ẩn/Hiện giúp thay đổi trạng thái 
+hiển thị của dịch vụ, cho phép đối tác ẩn dịch vụ hoặc công khai dịch vụ cho khách hàng. 
+Trạng thái của dịc h vụ được hiển thị rõ ràng như “Tạm dừng”, “Đang hoạt động”, và 
+“Chờ duyệt”, giúp đối tác dễ dàng theo dõi và quản lý tình trạng của các dịch vụ 
+
+
+=== PDF PAGE 94 ===
+80 
+5.12. Giao diện xem báo cáo đơn đặt dịch vụ 
+ 
+Hình 26: Giao diện xem báo cáo đơn đặt dịch vụ 
+Mô tả:  
+Giao diện báo cáo đơn đặt dịch vụ có thanh điều hướng bên trái với các mục chính 
+như Báo cáo & Thống kê. Tiêu đề “Báo cáo & Thống kê” kèm bộ lọc thời gian giúp 
+người dùng xem dữ liệu theo khoảng thời gian mong muốn. Các chỉ số thống kê quan 
+trọng như doanh thu tổng, số đơn đặt, và điểm đánh giá trung bình được hiển thị rõ ràng. 
+Các biểu đồ trực quan giúp người dùng dễ dàng theo dõi xu hướng doanh thu, số lượng 
+đặt chỗ, trạng thái đơn đặt và doanh thu theo từng loại dịch vụ. 
+
+
+=== PDF PAGE 95 ===
+81 
+5.13. Giao diện duyệt tài khoản đối tác 
+ 
+Hình 27: Giao diện duyệt tài khoản đối tác 
+ 
+Hình 28: Giao diện duyệt tài khoản đối tác 
+
+
+=== PDF PAGE 96 ===
+82 
+ 
+Hình 29: Giao diện duyệt tài khoản đối tác 
+Mô tả: 
+Danh sách tài khoản đối tác được hiể n thị dưới dạng card component, với thông tin 
+cơ bản về Tên doanh nghiệp/đối tác, Trạng thái, Người liên hệ, Email, và Số điện thoại. 
+Quản trị viên có thể khóa tài khoản nếu cần thông qua nút “Khóa tài khoản”. Khi nhấp 
+vào một card đối tác, giao diện sẽ hiển thị thông tin chi tiết đơn đăng ký đối tácQuản trị 
+viên có thể thực hiện các thao tác như Duyệt, Từ chối, hoặc Khóa tài khoản trực tiếp từ 
+giao diện này. 
+ 
+
+
+=== PDF PAGE 97 ===
+83 
+5.14. Giao diện gợi ý hoạt động ở gần 
+ 
+Hình 30: Giao diện gợi ý hoạt động ở gần 
+Mô tả: 
+Phần tiêu đề “Hoạt động gần đây” kèm mô tả ngắn gợi ý khám phá các địa điểm 
+hoặc hoạt động xung quanh địa điểm. Các Card gợi ý hoạt động được hiển thị dưới dạng 
+lưới (grid), mỗi card bao gồm thông tin về Tên địa điểm/dịch vụ, Danh mục (Nhà hàng, 
+Điểm tham quan, v.v.), Mô tả ngắn về hoạt động và Khoảng cách từ vị trí hiện tại (ví dụ: 
+1.5 km, 2 km). Giao diện này giúp người dùng dễ dàng khám phá các hoạt động xung 
+quanh dịch vụ mình đã chọn. 
+
+
+=== PDF PAGE 98 ===
+84 
+5.15. Giao diện chatbox hỗ trợ trực truyến 
+ 
+Hình 31: Giao diện chatbox hỗ trợ trực truyến 
+Mô tả: 
+Giao diện Chatbox hỗ trợ được hiển thị ở góc dưới bên phải màn hình, với nút tròn 
+để người dùng có thể dễ dàng mở và bắt đầu trò chuyện. Khi mở, Chatbox cung cấp giao 
+diện trò chuyện với trợ lý ảo, c ho phép người dùng đặt câu hỏi, yêu cầu hỗ trợ về dịch 
+vụ, thông tin đặt chỗ hoặc các vấn đề khác liên quan đến dịch vụ. Người dùng có thể 
+nhập câu hỏi vào ô chat và nhận các gợi ý trả lời tự động từ hệ thống . Giao diện được 
+thiết kế đơn giản, dễ sử dụng và có khả năng tự động lưu lại lịch sử trò chuyện, giúp 
+người dùng theo dõi thông tin đã trao đổi. 
+5.16. Tiểu kết chương 5 
+Chương này đã mô tả chi tiết các giao diện chính của hệ thống, bao gồm giao diện 
+đặt dịch vụ, quản lý tài khoản đối tác, gợi ý hoạt động, v à các tính năng hỗ trợ như 
+chatbox và báo cáo. Mỗi giao diện được thiết kế để mang lại trải nghiệm người dùng dễ 
+dàng và trực quan, giúp thực hiện các thao tác nhanh chóng và hiệu quả. Các giao diện 
+
+
+=== PDF PAGE 99 ===
+85 
+này giúp hình dung rõ ràng các chức năng quan trọng và là m cơ sở cho việc phát triển 
+các tính năng chi tiết cũng như phân quyền người dùng trong các giai đoạn tiếp theo. 
+  
+
+=== PDF PAGE 100 ===
+86 
+PHẦN III. KẾT LUẬN 
+1.1. Kết quả đạt được 
+Qua quá trình nghiên cứu và thực hiện đề tài “Phân tích và thiết kế hệ thống website 
+hỗ trợ du lịch tích hợp AI”, em đã xây dựng được mô hình phân tích và thiết kế hệ thống 
+với các chức năng cốt lõi. Cụ thể, hệ thống đáp ứng các nghiệp vụ chính như: quản lý 
+thông tin dịch vụ lưu trú, hỗ trợ tìm kiếm và so sánh dịch vụ, cũng như cung cấp gợi ý 
+điểm đến, tour du lịch và hoạt động liên quan dựa trên trí tuệ nhân tạo. Bên cạnh đó, hệ 
+thống được thiết kế theo hướng cá nhân hóa trải nghiệm, giúp khách hàng dễ dàng tìm 
+được dịch vụ phù hợp với nhu cầu. 
+Đối với doanh nghiệp cung cấp dịch vụ du lịch, hệ thống hỗ trợ việc quản lý  dịch 
+vụ, tiếp nhận và xử lý đơn đặt chỗ, đồng thời cung cấp báo cáo và thống kê phục vụ hoạt 
+động kinh doanh. Mặc dù hệ thống mới dừng lại ở mức thiết kế, kết quả này đã góp phần 
+giải quyết những hạn chế của các nền tảng đặt dịch vụ hiện có, đồng thời tạo  cơ sở cho 
+việc phát triển, mở rộng và triển khai hệ thống trong thực tế. 
+1.2. Hạn chế và Đề xuất hướng phát triển 
+Do phạm vi nghiên cứu và thời gian thực hiện có hạn, hệ thống hiện tại mới dừng ở 
+mức phân tích và thiết kế, chưa được triển khai và kiểm thử đầy đủ trong môi trường 
+thực tế. Một số tính năng nâng cao, như tối ưu hóa thuật toán AI để cá nhân hóa gợi ý 
+du lịch chính xác hơn, hay tích hợp các dịch vụ bản đồ và thanh toán trực tuyến, vẫn 
+chưa được thực hiện. Trong các phiên bản phát triển tiếp theo, hệ thống có thể được mở 
+rộng với các chức năng như: nâng cao độ chính xác của AI trong việc gợi ý dịch vụ, bổ 
+sung công cụ báo cáo và phân tích chuyên sâu cho đối tác, tích hợp bản đồ số và hệ thống 
+thanh toán an toàn, cũng như phát triển ứng dụng di động để mở rộng khả năng tiếp cận. 
+Những cải tiến này sẽ giúp hệ thống phục vụ tốt hơn nhu cầu của khách hàng, đồng thời 
+hỗ trợ doanh nghiệp nâng cao hiệu quả hoạt động và khả năng cạnh tranh trên thị trường 
+du lịch. 
+
+=== PDF PAGE 101 ===
+xiii 
+TÀI LIỆU THAM KHẢO 
+Tài liệu tham khảo Tiếng Việt 
+1. Tuấn, P. T. (2007). Giáo trình Hệ thống thông tin quản lý.  Trường đại học Bách 
+khoa Hà Nội: NXB Khoa học và Kỹ thuật. 
+2. Đồng, L. S. (2016). Giáo trình Hệ thống thông tin quản lý.  TP. Hồ Chí Minh: 
+Trường đại học Ngân hàng TP.HCM. 
+3.  Thúy, T. (2024). OTA là gì? Kinh doanh đại lý lữ hành là gì? TP. Hồ Chí Minh: 
+Thư viện pháp luật. 
+Tài liệu tham khảo Tiếng Anh 
+1. Kendall, K. E., & Kendall, J. E. (2020). Systems analysis and design  (10th ed., 
+Global ed.). Pearson.  
+2. Tilley, S. (2020). Systems analysis and design (12th ed.). Cengage Learning.  
+3. Dumas, M., La Rosa, M., Mendling, J., & Reijers, H. A. (2018). Fundamentals of 
+business process management (2nd ed.). Springer. (Madar, 2024) 
+4.  Madar, A. (2024). How onl ine travel agencies boost confidence and 
+accommodation bookings. Click. Magazine. 
+  
+
+=== PDF PAGE 102 ===
+xiv 
+PHỤ LỤC 
+Phụ lục 1: Phỏng vấn khách hàng 
+Câu hỏi Trả lời 
+Bạn thường sử dụng hệ 
+thống đặt dịch vụ này như 
+thế nào? 
+Tôi sử dụng hệ thống chủ yếu để tìm kiếm và đặt phòng 
+khách sạn, tour du lịch và các dịch vụ du lịch khác. 
+Quy trình đặt dịch vụ qua 
+hệ thống có dễ dàng 
+không? 
+Quy trình khá dễ dàng, tôi chỉ cần chọn dịch vụ, điền 
+thông tin và thanh toán. Giao diện dễ sử dụng. 
+Bạn cảm thấy thế nào về 
+các gợi ý dịch vụ mà hệ 
+thống đưa ra? 
+Các gợi ý từ hệ thống khá phù hợp với nhu cầu của tôi, 
+nhưng đôi khi tôi muốn có thêm thông tin phù hợp với 
+sở thích của tôi hơn 
+Bạn có gặp phải vấn đề gì 
+khi sử dụng hệ thống để 
+đặt dịch vụ không? 
+Đôi khi hệ thống không cập nhật kịp thời tình trạng 
+phòng trống hoặc dịch vụ, tôi phải liên hệ lại để xác 
+nhận. 
+Hệ thống có cung cấp đủ 
+thông tin về các dịch vụ 
+không? 
+Hệ thống cung cấp thông tin khá đầy đủ, nhưng tôi vẫn 
+mong muốn có thêm các đánh giá từ người dùng trước 
+khi quyết định đặt dịch vụ. 
+Bạn có cảm thấy hệ thống 
+dễ sử dụng và thân thiện 
+không? 
+Có, hệ thống rất dễ sử dụng, giao diện rất thân thiện và 
+không có khó khăn gì khi tìm kiếm hoặc đặt dịch vụ. 
+
+=== PDF PAGE 103 ===
+xv 
+Hệ thống có hỗ trợ tốt khi 
+bạn cần thay đổi hoặc hủy 
+dịch vụ không? 
+Hệ thống có hỗ trợ hủy dịch vụ khá nhanh chóng trong 
+thời gian cho phép, nhưng tôi mong muốn có thêm 
+thông báo xác nhận rõ ràng khi thực hiện các thay đổi. 
+Bạn có đề xuất gì để cải 
+thiện hệ thống đặt dịch vụ 
+này? 
+Tôi nghĩ hệ thống có thể cung cấp thêm các gợi ý liên 
+quan đến các hoạt động thú vị hoặc các dịch vụ ăn uống 
+ở gần điểm du lịch mà tôi đã đặt. 
+Bảng 25: Kết quả phỏng vấn khách hàng 
+Phụ lục 2: Phỏng vấn Đối tác 
+Câu hỏi Trả lời 
+Bạn đã sử dụng hệ thống 
+đặt dịch vụ này như thế 
+nào? 
+Chúng tôi sử dụng hệ thống để quản lý các dịch vụ lưu 
+trú, tour du lịch và các dịch vụ liên quan khác. 
+Quy trình đăng ký dịch vụ 
+của bạn lên hệ thống có dễ 
+dàng không? 
+Quy trình đăng ký dịch vụ lên hệ thống khá dễ dàng, 
+nhưng tôi nghĩ sẽ tiện lợi hơn nếu thời gian kiểm duyệt 
+nhanh hơn 
+Bạn có gặp khó khăn gì khi 
+cập nhật thông tin dịch vụ 
+của mình không? 
+Đôi khi hệ thống không cập nhật ngay lập tức thông tin 
+dịch vụ mới của chúng tôi, cần thêm tính năng tự động 
+cập nhật. 
+Hệ thống có hỗ trợ bạn 
+trong việc quảng bá dịch vụ 
+của mình không? 
+Có, hệ thống giúp tăng khả năng tiếp cận khách hàng, 
+nhưng tôi mong muốn có thêm các công cụ marketing 
+tích hợp như email marketing hoặc chương trình 
+khuyến mãi. 
+
+=== PDF PAGE 104 ===
+xvi 
+Bạn có thấy hệ thống dễ sử 
+dụng và quản lý dịch vụ 
+của mình không? 
+Hệ thống khá dễ sử dụng, nhưng cần cải thiện một chút 
+về giao diện quản lý dịch vụ để thuận tiện hơn cho 
+nhân viên của chúng tôi. 
+Bạn có muốn hệ thống tích 
+hợp thêm tính năng nào để 
+hỗ trợ công việc của bạn? 
+Tôi nghĩ nếu có tính năng phân tích và báo cáo chi tiết 
+về hiệu suất dịch vụ (số lượng khách đặt, doanh thu, 
+phản hồi khách hàng) sẽ rất hữu ích. 
+Bạn có đề xuất gì để cải 
+thiện hệ thống hỗ trợ dịch 
+vụ này? 
+Tôi đề xuất hệ thống có thể thêm các công cụ giúp tạo 
+chương trình khuyến mãi hoặc ưu đãi cho khách hàng, 
+giúp tăng cường sự cạnh tranh và thu hút khách hàng 
+hơn. 
+Bảng 26: Kết quả phỏng vấn đối tác 
+ 
+Phụ lục 3: Từ điển kho dữ liệu 
+Bảng mô tả kho dữ liệu 
+Số hiệu: D1 Tên: Hồ sơ Đối tác 
+Mô tả: Kho lưu trữ thông tin về các đối tác cung cấp dịch vụ. 
+Các đặc trưng của kho 
+Loại: Computer 
+Dạng: Database 
+Kích thước mẫu tin: 200 (ký tự) 
+Số lượng mẫu tin: Tối đa: 500.000  
+Trung bình: 200.000 
+Tăng trưởng hàng trăm: 5% 
+
+=== PDF PAGE 105 ===
+xvii 
+Cấu trúc dữ liệu: Thông tin Đối tác 
+Ghi chú:  
+- Kho dữ liệu này được sử dụng để lưu trữ thông tin về các đối tác cung cấp dịch vụ, 
+bao gồm các chi tiết về tên, địa chỉ, thông tin liên lạc và các điều khoản hợp đồng.  
+- Mỗi đối tác sẽ có một mẫu tin riêng, và kho dữ liệu sẽ được cập nhật khi có sự thay 
+đổi thông tin đối tác. 
+Bảng 27:  Bảng mô tả kho dữ liệu Hồ sơ Đối tác 
+Bảng mô tả kho dữ liệu 
+Số hiệu: D2 Tên: Thông tin dịch vụ 
+Mô tả: Kho lưu trữ thông tin chi tiết về các dịch vụ cung cấp, bao gồm tên dịch vụ, 
+giá cả, mô tả và các nguyên tắc. 
+Các đặc trưng của kho 
+Loại: Computer 
+Dạng: Database 
+Kích thước mẫu tin: 500 (ký tự) 
+Số lượng mẫu tin: Tối đa: 500.000  
+Trung bình: 50.000 
+Tăng trưởng hàng trăm: 3% 
+Cấu trúc dữ liệu: Thông tin dịch vụ 
+Ghi chú:  
+- Kho này sẽ lưu trữ các dịch vụ được cung cấp từ các đối tác. Các thông tin như giá 
+cả, mô tả dịch vụ, và các nguyên tắc sử dụng sẽ được lưu tại đây.  
+
+=== PDF PAGE 106 ===
+xviii 
+- Quản trị viên sẽ thực hiện kiểm duyệt để cập nhật trạng thái dịch vụ trước khi hiển 
+thị cho khách hàng. 
+Bảng 28: Bảng mô tả kho dữ liệu Thông tin dịch vụ 
+Bảng mô tả kho dữ liệu 
+Số hiệu: D2 Tên: Thông tin dịch vụ 
+Mô tả: Kho lưu trữ thông tin chi tiết về các dịch vụ cung cấp, bao gồm tên dịch vụ, 
+giá cả, mô tả và các nguyên tắc. 
+Các đặc trưng của kho 
+Loại: Computer 
+Dạng: Database 
+Kích thước mẫu tin: 500 (ký tự) 
+Số lượng mẫu tin: Tối đa: 500.000  
+Trung bình: 50.000 
+Tăng trưởng hàng trăm: 3% 
+Cấu trúc dữ liệu: Thông tin dịch vụ 
+Ghi chú:  
+- Kho này sẽ lưu trữ các dịch vụ được cung cấp từ các đối tác. Các thông tin như giá 
+cả, mô tả dịch vụ, và các nguyên tắc sử dụng sẽ được lưu tại đây. 
+- Quản trị viên sẽ thực hiện kiểm duyệt để cập nhật trạng thái dịch vụ trước khi hiển 
+thị cho khách hàng. 
+Bảng 29: Bảng mô tả kho dữ liệu Thông tin dịch vụ 
+Bảng mô tả kho dữ liệu 
+
+=== PDF PAGE 107 ===
+xix 
+Số hiệu: D3 Tên: Dịch vụ 
+Mô tả: Kho lưu trữ thông tin chi tiết về các dịch vụ mà hệ thống cung cấp, bao gồm 
+tên dịch vụ, mô tả, giá cả và các điều kiện sử dụng. 
+Các đặc trưng của kho 
+Loại: Computer 
+Dạng: Database 
+Kích thước mẫu tin: 500 (ký tự) 
+Số lượng mẫu tin: Tối đa: 200.000  
+Trung bình: 50.000 
+Tăng trưởng hàng trăm: 3% 
+Cấu trúc dữ liệu: Thông tin dịch vụ 
+Ghi chú:  
+- Kho này lưu trữ các thông tin về dịch vụ mà khách hàng có thể chọn, bao gồm mô 
+tả dịch vụ, giá cả, thời gian cung cấp, và các nguyên tắc sử dụng. 
+- Dữ liệu này sẽ được sử dụng để phục vụ khách hàng trong quá trình đặt dịch vụ 
+Bảng 30: Bảng mô tả kho dữ liệu Dịch vụ 
+Bảng mô tả kho dữ liệu 
+Số hiệu: D4 Tên: Tài khoản khách hàng 
+Mô tả: Kho lưu trữ thông tin về các tài khoản của khách hàng, bao gồm tên, email, 
+thông tin liên lạc, trạng thái tài khoản và lịch sử đặt dịch vụ,.... 
+Các đặc trưng của kho 
+Loại: Computer 
+
+=== PDF PAGE 108 ===
+xx 
+Dạng: Database 
+Kích thước mẫu tin: 500 (ký tự) 
+Số lượng mẫu tin: Tối đa: 200.000  
+Trung bình: 50.000 
+Tăng trưởng hàng trăm: 3% 
+Cấu trúc dữ liệu: Thông tin tài khoản 
+Ghi chú:  
+- Kho dữ liệu này lưu trữ tất cả các thông tin liên quan đến tài khoản khách hàng, bao 
+gồm thông tin cá nhân, trạng thái tài khoản, và lịch sử đặt dịch vụ. 
+- Dữ liệu này được sử dụng để xác thực tài khoản và phục vụ cho các giao dịch và 
+yêu cầu dịch vụ của khách hàng. 
+Bảng 31: Bảng mô tả kho dữ liệu Tài khoản khách hàng 
+Bảng mô tả kho dữ liệu 
+Số hiệu: D5 Tên: Đơn đặt dịch vụ 
+Mô tả: Kho lưu trữ thông tin về các đơn đặt dịch vụ của khách hàng, bao gồm các 
+chi tiết về dịch vụ, khách hàng, trạng thái, và thông tin thanh toán. 
+Các đặc trưng của kho 
+Loại: Computer 
+Dạng: Database 
+Kích thước mẫu tin: 500 (ký tự) 
+Số lượng mẫu tin: Tối đa: 200.000  
+Trung bình: 50.000 
+Tăng trưởng hàng trăm: N/A 
+
+=== PDF PAGE 109 ===
+xxi 
+Cấu trúc dữ liệu: Thông tin đơn đặt 
+Ghi chú:  
+- Kho dữ liệu này lưu trữ các thông tin chi tiết về đơn đặt dịch vụ của khách hàng, 
+bao gồm thông tin về dịch vụ khách hàng đã đặt, trạng thái đơn đặt, thông tin thanh 
+toán, và các dữ liệu liên quan khác. 
+Bảng 32: Bảng mô tả kho dữ liệu  Đơn đặt dịch vụ 
+Phụ lục 4: Từ điển luồng dữ liệu 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 1 Tên: Thông tin tài khoản Đối tác 
+Mô tả: Dòng dữ liệu chứa các thông tin đăng ký tài khoản nhà cung cấp dịch vụ (Đối 
+tác) gửi từ đối tác đến hệ thống để tạo tài khoản mới. Thông tin này sẽ được kiểm 
+duyệt trước khi được lưu trữ chính thức trong hồ sơ đối tác. 
+Nguồn: Đối tác Đích: Đăng ký Tài khoản (Process) 
+Loại dòng dữ liệu: Form 
+Cấu trúc dữ liệu: Thông tin 
+Đối tác 
+Tần suất: Theo yêu cầu của đối tác (khi có đối tác mới 
+đăng ký tài khoản). 
+Ghi chú: Dữ liệu này sẽ được kiểm duyệt trước khi chính thức lưu vào Hồ sơ Đối tác 
+(D1). 
+Bảng 33: Bảng mô tả dòng dữ liệu Thông tin tài khoản Đối tác 
+Bảng mô tả dòng dữ liệu 
+
+=== PDF PAGE 110 ===
+xxii 
+Số hiệu: 2 Tên: Thông tin dịch vụ 
+Mô tả: Dòng dữ liệu chứa thông tin về dịch vụ mà đối tác muốn cung cấp, bao gồm 
+mô tả dịch vụ, giá cả, và các thông tin khác để quản lý và kiểm duyệt. 
+Nguồn: Đối tác Đích: Quản lý dịch vụ  (Process) 
+Loại dòng dữ liệu: Form 
+Cấu trúc dữ liệu: Thông tin 
+Đối tác 
+Tần suất: Khi đối tác đăng ký hoặc cập nhật dịch vụ 
+đã có. 
+Ghi chú: Dữ liệu này sẽ được gửi đến tiến trình Kiểm duyệt dịch vụ trước khi hiển 
+thị cho khách hàng. 
+Bảng 34: Bảng mô tả dòng dữ liệu Thông tin dịch vụ 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 3 Tên: Quyết định kiểm duyệt dịch vụ 
+Mô tả: Dòng dữ liệu hai chiều giữa hệ thống kiểm duyệt dịch vụ và kho dữ liệu dịch 
+vụ. Khi đối tác đăng ký dịch vụ, dịch vụ sẽ được lưu vào kho dữ liệu với trạng thái 
+"Chờ kiểm duyệt". Sau khi dịch vụ được kiểm duyệt, hệ thống sẽ cập nhật trạng thái 
+của dịch vụ trong kho từ "Chờ kiểm duyệt" thành "Đã phê duyệt" hoặc "Từ chối". 
+Nếu dịch vụ được phê duyệt, dịch vụ sẽ có trạng thái "Đã phê duyệt" 
+Nguồn: P3- Kiểm duyệt Dịch vụ 
+(Gửi quyết định) 
+Kho Dịch vụ (D2) (Gửi thông tin 
+chờ duyệt) 
+Đích: Kho Dịch vụ (D2) (Nhận quyết định) 
+P3- Kiểm duyệt Dịch vụ (Nhận thông tin chờ 
+duyệt) 
+
+=== PDF PAGE 111 ===
+xxiii 
+Loại dòng dữ liệu: Điều khiển 
+Cấu trúc dữ liệu: Thông báo  
+ 
+Tần suất: Mỗi khi có dịch vụ mới cần kiểm 
+duyệt hoặc dịch vụ cập nhật. 
+Ghi chú:  
+- Dữ liệu này sẽ được sử dụng để cập nhật trạng thái của dịch vụ trong kho dữ liệu 
+dịch vụ (D2). Nếu dịch vụ được phê duyệt, trạng thái sẽ thay đổi thành "Đã phê 
+duyệt". Nếu dịch vụ bị từ chối, trạng thái sẽ thay đổi thành "Từ chối" và lý do từ chối 
+sẽ được ghi lại trong hệ thống. Hệ thống sẽ gửi thông báo cho đối tác về kết quả 
+kiểm duyệt. 
+Bảng 35: Bảng mô tả dòng dữ liệu Quyết định kiểm duyệt dịch vụ 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 5 Tên: Thông tin Đối tác 
+Mô tả: Dữ liệu chứa thông tin đầy đủ của đối tác sau khi đã được phê duyệt bởi hệ 
+thống. Dữ liệu này sẽ được sử dụng để tạo và quản lý các dịch vụ của đối tác. 
+Nguồn: Kho Hồ sơ đối tác Đích: Tạo dữ liệu dịch vụ (Process) 
+Loại dòng dữ liệu: Data 
+Cấu trúc dữ liệu: Thông tin đối 
+tác 
+Tần suất: Mỗi khi có Đối tác mới được duyệt tài 
+khoản. 
+Ghi chú:  
+- Chỉ những Đối tác đã được duyệt tài khoản mới có dữ liệu được chuyển sang tiến 
+trình Tạo dữ liệu dịch vụ. 
+
+=== PDF PAGE 112 ===
+xxiv 
+Bảng 36: Bảng mô tả dòng dữ liệu Thông tin Đối tác 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 6 Tên: Quyết định kiểm duyệt Đối tác 
+Mô tả: Dòng dữ liệu hai chiều giữa hệ thống kiểm duyệt và kho Hồ sơ đối tác. Dữ 
+liệu này thể hiện kết quả kiểm duyệt tài khoản đối tác, bao gồm thông tin về tình 
+trạng tài khoản và lý do từ chối (nếu có). Khi đối tác đăng ký tài khoản, dịch vụ sẽ 
+được lưu vào kho Hồ sơ đối tác với trạng thái “Chờ kiểm duyệt”. Sau khi hệ thống 
+thực hiện kiểm duyệt, hệ thống sẽ cập nhật trạng thái của tài khoản từ "Chờ duyệt" 
+sang "Đã duyệt" nếu tài khoản hợp lệ, hoặc "Từ chối" nếu có vấn đề với tài khoản. 
+Dữ liệu này được truyền đi giữa kho Hồ sơ đối tác và hệ thống kiểm duyệt, và nếu từ 
+chối, lý do từ chối cũng được gửi về đối tác để họ chỉnh sửa. 
+Nguồn: Kho Hồ sơ đối tác (chưa 
+kiểm duyệt) 
+Đích: Hệ thống (cập nhật trạng thái vào D1) 
+Loại dòng dữ liệu: Data 
+Cấu trúc dữ liệu: Thông tin đối 
+tác 
+- Trạng thái kiểm duyệt 
+ 
+Tần suất: Mỗi khi hệ thống cập nhật trạng thái 
+của tài khoản chờ duyệt 
+Ghi chú:  
+- Dữ liệu này được truyền đi hai chiều: 
+ Từ kho Hồ sơ đối tác: Hệ thống nhận thông tin đối tác chưa kiểm duyệt để 
+thực hiện kiểm duyệt tài khoản. 
+
+=== PDF PAGE 113 ===
+xxv 
+ Đến kho Hồ sơ đối tác: Sau khi kiểm duyệt, hệ thống cập nhật trạng thái tài 
+khoản đối tác (phê duyệt hoặc từ chối). Nếu tài khoản được phê duyệt, đối tác 
+sẽ có quyền đăng ký dịch vụ. Nếu bị từ chối, lý do từ chối sẽ được ghi nhận 
+và thông báo cho đối tác để yêu cầu chỉnh sửa, bổ sung thông tin.  
+Bảng 37: Bảng mô tả dòng dữ liệu Quyết định kiểm duyệt Đối tác 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 7 Tên: Dữ liệu dịch vụ 
+Mô tả: Dữ liệu chứa thông tin về dịch vụ đã được phê duyệt và được đưa vào kho dữ 
+liệu dịch vụ để phục vụ cho các chức năng tìm kiếm, đặt chỗ, và báo cáo thống kê. 
+Dữ liệu này không chỉ bao gồm các thông tin dịch vụ (mô tả dịch vụ, giá cả, v.v.) mà 
+còn tích hợp thông tin của đối tác (tên, thông tin liên hệ, dịch vụ đã đăng ký) sau khi 
+đã được kiểm duyệt thành công. 
+Nguồn: Tạo dữ liệu dịch vụ 
+(Process) 
+Đích: Kho dữ liệu dịch vụ (D3) 
+Loại dòng dữ liệu: Data 
+Cấu trúc dữ liệu: Thông tin 
+dịch vụ 
+Tần suất: Mỗi khi có tài khoản đối tác dịch vụ được 
+tạo sau khi kiểm duyệt thành công 
+Ghi chú: 
+- Dữ liệu này là cơ sở cho chức năng tìm kiếm dịch vụ của khách hàng và quản lý 
+báo cáo thống kê của đối tác, admin. 
+Bảng 38: Bảng mô tả dòng dữ liệu Dữ liệu dịch vụ 
+
+=== PDF PAGE 114 ===
+xxvi 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 8 Tên: Thông tin tìm kiếm dịch vụ 
+Mô tả: Dữ liệu chứa các thông tin mà khách hàng nhập để tìm kiếm dịch vụ, bao 
+gồm địa điểm, loại dịch vụ, vị trí, khoảng giá, thời gian sử dụng,… Hệ thống sẽ sử 
+dụng dữ liệu này để truy vấn trong kho dữ liệu dịch vụ và trả kết quả phù hợp. 
+Nguồn: Khách hàng Đích: Quản lý đặt dịch vụ (Process 6) 
+Loại dòng dữ liệu: Data 
+Cấu trúc dữ liệu: Thông tin tìm 
+kiếm 
+Tần suất: Mỗi khi khách hàng thực hiện thao tác tìm 
+kiếm dịch vụ. 
+Ghi chú:  
+- Dữ liệu này chỉ phục vụ mục đích lọc và truy vấn, không được lưu trữ lâu dài. 
+Bảng 39: Bảng mô tả dòng dữ liệu Thông tin tìm kiếm dịch vụ 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 9 Tên: Kết quả tìm kiếm dịch vụ 
+Mô tả: Dữ liệu trả về cho khách hàng sau khi hệ thống xử lý yêu cầu tìm kiếm, bao 
+gồm danh sách dịch vụ phù hợp với tiêu chí tìm kiếm của khách hàng. 
+Nguồn: Quản lý đặt dịch vụ 
+(Process 6) 
+Đích:Khách hàng 
+Loại dòng dữ liệu: Data 
+
+=== PDF PAGE 115 ===
+xxvii 
+Cấu trúc dữ liệu: Kết quả tìm 
+kiếm 
+Tần suất: Sau mỗi lần khách hàng thực hiện thao tác 
+tìm kiếm dịch vụ. 
+Ghi chú:  
+- Kết quả tìm kiếm sẽ hiển thị trên giao diện người dùng. Khách hàng có thể chọn dịch 
+vụ để xem chi tiết. 
+Bảng 40: Bảng mô tả dòng dữ liệu Kết quả tìm kiếm dịch vụ 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 10 Tên: Gợi ý dịch vụ AI 
+Mô tả: Dữ liệu do hệ thống AI tạo ra, gợi ý các dịch vụ phù hợp dựa trên hành vi tìm 
+kiếm của khách hàng, lịch sử đặt dịch vụ, hoặc xu hướng tìm kiếm của các khách 
+hàng khác. 
+Nguồn: Quản lý đặt dịch vụ 
+(Process 6) 
+Đích:Khách hàng 
+Loại dòng dữ liệu: Data 
+Cấu trúc dữ liệu: Danh sách 
+dịch vụ 
+Tần suất: Sau mỗi lần khách hàng thực hiện thao tác 
+nhấn nút "Xem gợi ý AI". 
+Ghi chú:  
+Bảng 41: Bảng mô tả dòng dữ liệu Gợi ý dịch vụ AI 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 11 Tên: Thông tin đặt dịch vụ 
+
+=== PDF PAGE 116 ===
+xxviii 
+Mô tả: Dữ liệu khách hàng gửi yêu cầu đặt chỗ cho một dịch vụ, bao gồm thông tin 
+về dịch vụ mà khách hàng muốn đặt, thời gian sử dụng, và các yêu cầu đặc biệt (nếu 
+có). 
+Nguồn: Khách hàng Đích: Quản lý đặt chỗ (Process 6) 
+Loại dòng dữ liệu: Data 
+Cấu trúc dữ liệu: Thông tin đặt dịch 
+vụ 
+Tần suất: Mỗi khi khách hàng xác nhận đặt 
+dịch vụ. 
+Ghi chú:  
+Bảng 42: Bảng mô tả dòng dữ liệu Thông tin đặt dịch vụ 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 12 Tên: Thông tin tài khoản Khách hàng 
+Mô tả:  Dòng dữ liệu chứa thông tin cá nhân và tài khoản đăng ký của Khách hàng 
+trên hệ thống. Thông tin này được sử dụng để xác thực, quản lý đặt dịch vụ và hỗ trợ 
+gợi ý dịch vụ phù hợp. 
+Nguồn: Khách hàng Đích: Quản lý tài khoản (Process 5) 
+Loại dòng dữ liệu: Form 
+Cấu trúc dữ liệu: Thông tin 
+khách hàng 
+Tần suất: Khi khách hàng đăng ký, đăng nhập hoặc 
+cập nhật thông tin tài khoản. 
+Ghi chú:  
+
+=== PDF PAGE 117 ===
+xxix 
+- Dữ liệu này được lưu trữ tại kho Hồ sơ khách hàng (D4). 
+- Là cơ sở cho việc xử lý đặt dịch vụ, thanh toán và cá nhân hóa gợi ý AI. 
+Bảng 43: Bảng mô tả dòng dữ liệu Thông tin tài khoản Khách hàng 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 13 Tên: Thông tin dịch vụ 
+Mô tả: Dòng dữ liệu chứa thông tin chi tiết về dịch vụ mà đối tác cung cấp, bao gồm 
+các dịch vụ như homestay, tour, hoạt động trải nghiệm,... Dữ liệu này sẽ được sử 
+dụng để hiển thị cho khách hàng khi tìm kiếm, đặt dịch vụ hoặc tham khảo các gợi ý 
+AI. 
+Nguồn: Kho dữ liệu dịch vụ 
+(D3) 
+Đích: Quản lý Đặt dịch vụ (Process 6) 
+Loại dòng dữ liệu: Form 
+Cấu trúc dữ liệu: Thông tin 
+khách hàng 
+Tần suất: Khi khách hàng thực hiện tìm kiếm, xem 
+chi tiết hoặc đặt dịch vụ. 
+Ghi chú:  
+- Chỉ những dịch vụ đã được kiểm duyệt mới được đưa vào dữ liệu hiển thị cho 
+khách hàng. 
+Bảng 44: Bảng mô tả dòng dữ liệu Thông tin dịch vụ 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 14 Tên: Thông tin đơn đặt dịch vụ 
+
+=== PDF PAGE 118 ===
+xxx 
+Mô tả: Dòng dữ liệu ghi nhận toàn bộ chi tiết về một đơn đặt dịch vụ mà Khách hàng 
+thực hiện, được hệ thống sử dụng để quản lý trạng thái đặt chỗ, thanh toán và hỗ trợ 
+báo cáo. 
+Nguồn: Kho dữ liệu dịch vụ 
+(D3) Đích: Quản lý Đặt dịch vụ (Process 6) 
+Loại dòng dữ liệu: Form 
+Cấu trúc dữ liệu: Thông tin đặt 
+dịch vụ 
+Tần suất: Phát sinh mỗi khi Khách hàng đặt một 
+đơn đặt dịch vụ. 
+Ghi chú:  
+- Hệ thống dựa vào thông tin này để gửi xác nhận cho Khách hàng và thông báo đến 
+Đối tác cung cấp dịch vụ. 
+Bảng 45: Bảng mô tả dòng dữ liệu Thông tin đơn đặt dịch vụ 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 15 Tên: Trạng thái đơn đặt 
+Mô tả:Dòng dữ liệu ghi nhận trạng thái hiện tại của một đơn đặt dịch vụ, như đã xác 
+nhận hoặc bị hủy. 
+Nguồn: Đối tác Đích: Xác nhận đơn đặt (Process 7) 
+Loại dòng dữ liệu: Data 
+Cấu trúc dữ liệu: Thông tin đặt 
+dịch vụ 
+Tần suất: Phát sinh khi có thay đổi trạng thái của 
+đơn đặt dịch vụ 
+
+=== PDF PAGE 119 ===
+xxxi 
+Ghi chú:  
+- Dữ liệu này được sử dụng để thông báo qua hệ thống Email/SMS tới các bên liên 
+quan về trạng thái đơn đặt dịch vụ. 
+Bảng 46: Bảng mô tả dòng dữ liệu Trạng thái đơn đặt 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 18 Tên: Báo cáo & thống kê đơn đặt 
+Mô tả: Dòng dữ liệu tổng hợp báo cáo và thống kê về các đơn đặt dịch vụ cho các 
+đối tác. 
+Nguồn: Thống kê & Báo cáo 
+(process 9) 
+Đích: Đối tác 
+Loại dòng dữ liệu: Data 
+Cấu trúc dữ liệu: Thông báo 
+trạng thái đơn 
+Tần suất: Phát sinh theo thời gian để tổng hợp báo 
+cáo đơn đặt dịch vụ và doanh thu 
+Ghi chú:  
+Bảng 47: Bảng mô tả dòng dữ liệu Báo cáo & thống kê đơn đặt 
+Bảng mô tả dòng dữ liệu 
+Số hiệu: 19 Tên: Báo cáo & thống kê hệ thống 
+Mô tả: Dòng dữ liệu tổng hợp các báo cáo và thống kê liên quan đến các đơn đặt 
+dịch vụ và báo cáo phản hồi đánh giá trong hệ thống. 
+
+=== PDF PAGE 120 ===
+xxxii 
+Nguồn: Thống kê & Báo cáo 
+(process 9) 
+Đích: Hệ thống quản trị viên 
+Loại dòng dữ liệu: Report 
+Cấu trúc dữ liệu: Báo cáo thống kê 
+Tần suất: Phát sinh định kỳ để tổng hợp báo 
+cáo hệ thống 
+Ghi chú:  
+- Dữ liệu này cung cấp thông tin cho các báo cáo quản lý và giám sát toàn bộ quá 
+trình đặt dịch vụ. 
+Bảng 48: Bảng mô tả dòng dữ liệu Báo cáo & thống kê hệ thống 
+ 
+ 
+ 

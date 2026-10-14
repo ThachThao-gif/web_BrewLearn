@@ -1,4 +1,4 @@
-<div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-coffee-900 via-coffee-800 to-coffee-700 px-6 py-7 md:px-8 text-white shadow-lg">
+<div class="page-banner relative overflow-hidden rounded-3xl px-6 py-7 md:px-8 text-white shadow-lg">
     <div class="absolute -right-5 -top-8 h-48 w-48 rounded-full border-[24px] border-white/5 pointer-events-none"></div>
     <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div><p class="text-[10px] font-bold uppercase tracking-[.2em] text-coffee-300 mb-2"><i class="fa-solid fa-mug-hot mr-2"></i>BrewLearn • Quản lý cửa hàng</p><h1 class="text-2xl md:text-3xl font-extrabold"><?php echo e($heading); ?></h1><p class="text-sm text-coffee-200 mt-2 max-w-2xl"><?php echo e($description); ?></p></div>
