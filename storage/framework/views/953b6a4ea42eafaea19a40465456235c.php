@@ -1,4 +1,4 @@
-<?php echo $__env->make('manager.risk', ['risk' => $person->risk], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php if($showBadge ?? true): ?><?php echo $__env->make('manager.risk', ['risk' => $person->risk], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php endif; ?>
 <?php if($person->risk === 'KhongApDung'): ?>
     <p class="text-xs text-slate-500 mt-2">Bộ luật chỉ áp dụng cho Barista, Thu ngân và Phục vụ.</p>
 <?php elseif($person->prediction): ?>

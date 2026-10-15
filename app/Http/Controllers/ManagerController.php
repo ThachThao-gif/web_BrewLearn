@@ -171,7 +171,7 @@ class ManagerController extends Controller
         $assessments = $query->whereIn('TrangThai', $statusTab === 'approved' ? ['DaDuyet', 'HoanThanh'] : ['ChoPheDuyet', 'TraLai'])
             ->orderByRaw('COALESCE(NgayDanhGia, created_at, updated_at) ASC')->orderBy('id')->get();
 
-        return view('manager.assessments', array_merge($data, $this->proposalData(), compact('assessments', 'statusTab', 'tabCounts')));
+        return view('manager.assessments', array_merge($data, $this->proposalData(), compact('assessments', 'statusTab', 'tabCounts', 'statusCounts')));
     }
 
     public function review(Request $request, int $id): RedirectResponse

@@ -1,6 +1,15 @@
-<form method="GET" class="flex flex-wrap items-end gap-3 bg-white border border-coffee-200 p-4 rounded-2xl">
+@if(session('success'))<div role="status" class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{{ session('success') }}</div>@endif
+@if($errors->any())<div role="alert" class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800"><p class="font-bold">Vui lòng kiểm tra thông tin:</p><ul class="list-disc pl-5">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
+<form method="GET" class="flex flex-1 flex-wrap items-center gap-2">
     @isset($statusTab)<input type="hidden" name="status" value="{{ $statusTab }}">@endisset
-    <label class="text-xs font-semibold text-coffee-700">Ca làm việc<select name="shift" class="block mt-1 rounded-xl border border-coffee-300 px-3 py-2.5 text-sm bg-coffee-50 min-w-44"><option value="">Toàn cửa hàng</option><option value="none" @selected(request('shift') === 'none')>Chưa phân ca</option>@foreach($shifts as $shift)<option value="{{ $shift->id }}" @selected((string)request('shift') === (string)$shift->id)>{{ $shift->ten_ca }}</option>@endforeach</select></label>
-    <label class="flex-1 min-w-44 text-xs font-semibold text-coffee-700">Tìm nhân viên<input name="q" value="{{ request('q') }}" placeholder="Tên nhân viên..." class="block w-full mt-1 rounded-xl border border-coffee-300 px-3 py-2.5 text-sm"></label>
-    <button class="rounded-xl bg-amber_brand text-white font-bold px-5 py-2.5 text-sm">Áp dụng</button><a href="{{ isset($statusTab) ? route('manager.assessments', ['status' => $statusTab]) : url()->current() }}" class="py-2.5 px-2 text-sm text-coffee-600">Xóa lọc</a>
+    <select name="shift" aria-label="Ca làm việc" class="rounded-xl border border-coffee-200 bg-white px-3 py-2.5 text-sm">
+        <option value="">Toàn cửa hàng</option>
+        <option value="none" @selected(request('shift') === 'none')>Chưa phân ca</option>
+        @foreach($shifts as $shift)<option value="{{ $shift->id }}" @selected((string) request('shift') === (string) $shift->id)>{{ $shift->ten_ca }}</option>@endforeach
+    </select>
+    <input name="q" value="{{ request('q') }}" aria-label="Tìm nhân viên" placeholder="Tìm nhân viên..." class="min-w-40 flex-1 rounded-xl border border-coffee-200 bg-white px-3 py-2.5 text-sm">
+    <button class="rounded-xl bg-amber_brand px-4 py-2.5 text-sm font-bold text-white">Lọc</button>
+    @if(request()->filled('shift') || request()->filled('q'))
+        <a href="{{ isset($statusTab) ? route('manager.assessments', ['status' => $statusTab]) : url()->current() }}" class="px-1 text-sm text-coffee-600 hover:underline">Xóa lọc</a>
+    @endif
 </form>

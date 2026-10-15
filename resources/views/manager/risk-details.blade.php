@@ -1,4 +1,4 @@
-@include('manager.risk', ['risk' => $person->risk])
+@if($showBadge ?? true)@include('manager.risk', ['risk' => $person->risk])@endif
 @if($person->risk === 'KhongApDung')
     <p class="text-xs text-slate-500 mt-2">Bộ luật chỉ áp dụng cho Barista, Thu ngân và Phục vụ.</p>
 @elseif($person->prediction)
