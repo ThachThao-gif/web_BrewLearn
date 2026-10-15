@@ -17,6 +17,8 @@ use Illuminate\Validation\ValidationException;
 
 class ManagerController extends Controller
 {
+    public const MAX_RETRAINING_ROUNDS = 3;
+
     private function storeId(): int
     {
         abort_unless(in_array(mb_strtolower(trim(auth()->user()->ChucVu ?? '')), ['quản lý cửa hàng', 'quan ly cua hang', 'manager']) && auth()->user()->cua_hang_id, 403);
@@ -186,14 +188,19 @@ class ManagerController extends Controller
             DB::table('danh_gia_nang_luc')->where('id', $id)->update(['TrangThai' => $approve ? 'DaDuyet' : 'TraLai', 'nguoi_duyet_id' => auth()->id(), 'ngay_duyet' => now(), 'ly_do_tra_lai' => $approve ? null : $data['reason'], 'updated_at' => now()]);
             $priorPlan = DB::table('yeu_cau_dao_tao_lai')->where('danh_gia_lai_id', $id)->lockForUpdate()->first();
             $reviewRound = DB::table('retraining_rounds')->where('assessment_id', $id)->first();
+            $limitReached = $priorPlan && ! $assessment->IsPassed && $reviewRound
+                && $reviewRound->round_number >= self::MAX_RETRAINING_ROUNDS;
             if ($approve && $priorPlan) {
                 DB::table('retraining_rounds')->where('assessment_id', $id)->update([
                     'status' => 'DaDuyet', 'result' => $assessment->IsPassed ? 'Dat' : 'ChuaDat',
                     'score' => $assessment->Diem, 'approved_by' => auth()->id(), 'approved_at' => now(), 'updated_at' => now(),
                 ]);
-                $next = $assessment->IsPassed ? [] : ['danh_gia_lai_id' => null, 'nguoi_phu_trach_id' => null,
+                $next = ($assessment->IsPassed || $limitReached) ? [] : ['danh_gia_lai_id' => null, 'nguoi_phu_trach_id' => null,
                     'ghi_chu_thuc_hien' => null, 'han_hoan_thanh' => null, 'ngay_danh_gia_lai' => null];
-                DB::table('yeu_cau_dao_tao_lai')->where('id', $priorPlan->id)->update($next + ['trang_thai' => $assessment->IsPassed ? 'HoanThanh' : 'DaDuyet', 'tien_trinh' => $assessment->IsPassed ? 'HoanTat' : 'ChoGiao', 'ket_qua_sau_dao_tao_lai' => $assessment->IsPassed ? 'Dat' : 'ChuaDat', 'ke_hoach' => $assessment->IsPassed ? $priorPlan->ke_hoach : $assessment->ChiTietDeXuat, 'updated_at' => now()]);
+                DB::table('yeu_cau_dao_tao_lai')->where('id', $priorPlan->id)->update($next + ['trang_thai' => $assessment->IsPassed ? 'HoanThanh' : 'DaDuyet', 'tien_trinh' => $assessment->IsPassed ? 'HoanTat' : ($limitReached ? 'DungDaoTao' : 'ChoGiao'), 'ket_qua_sau_dao_tao_lai' => $assessment->IsPassed ? 'Dat' : 'ChuaDat', 'ke_hoach' => ($assessment->IsPassed || $limitReached) ? $priorPlan->ke_hoach : $assessment->ChiTietDeXuat, 'updated_at' => now()]);
+                if ($limitReached) {
+                    $this->notify(auth()->id(), 'Đào tạo lại đã đạt giới hạn', 'Nhân viên #'.$assessment->user_id.' vẫn chưa đạt sau 3 vòng đào tạo lại của yêu cầu #'.$priorPlan->id.'. Đã dừng đào tạo lại; quản lý cần xem xét hướng xử lý.', 'training-limit-'.$priorPlan->id);
+                }
             } elseif ($approve && ! $assessment->IsPassed && $assessment->ChiTietDeXuat) {
                 DB::table('yeu_cau_dao_tao_lai')->insert(['user_id' => $assessment->user_id, 'assessment_id' => $id, 'nguoi_de_xuat_id' => $assessment->NguoiDanhGia_id, 'nguoi_duyet_id' => auth()->id(), 'nguon_de_xuat' => 'Trưởng ca đề xuất', 'ly_do' => 'Đánh giá chưa đạt: '.($assessment->NhanXet ?? ''), 'ke_hoach' => $assessment->ChiTietDeXuat, 'trang_thai' => 'DaDuyet', 'tien_trinh' => 'ChoGiao', 'ket_qua_sau_dao_tao_lai' => 'ChuaCoKetQua', 'ngay_de_xuat' => now(), 'ngay_duyet' => now(), 'created_at' => now(), 'updated_at' => now()]);
             }
@@ -205,7 +212,7 @@ class ManagerController extends Controller
                 if ($reviewRound) {
                     $message .= "\nĐào tạo lại lần {$reviewRound->round_number}: ".($assessment->IsPassed
                         ? 'Đạt. Yêu cầu đào tạo lại đã hoàn thành.'
-                        : 'Chưa đạt. Yêu cầu tiếp tục được xử lý; quản lý sẽ điều chỉnh và giao vòng tiếp theo.');
+                        : ($limitReached ? 'Chưa đạt sau 3 vòng. Đã dừng đào tạo lại; quản lý sẽ xem xét hướng xử lý.' : 'Chưa đạt. Yêu cầu tiếp tục được xử lý; quản lý sẽ điều chỉnh và giao vòng tiếp theo.'));
                 }
                 foreach (['Diem_NghiepVu' => 'Nghiệp vụ', 'Diem_KyNang' => 'Kỹ năng', 'Diem_QuyTrinh' => 'Quy trình', 'Diem_PhucVu' => 'Phục vụ', 'Diem_TacPhong' => 'Tác phong'] as $column => $label) {
                     $message .= "\n{$label}: ".($assessment->$column ?? '—').'/100';
@@ -213,7 +220,7 @@ class ManagerController extends Controller
                 if (trim($assessment->NhanXet ?? '') !== '') {
                     $message .= "\nNhận xét của trưởng ca: ".$assessment->NhanXet;
                 }
-                if (! $assessment->IsPassed && $assessment->ChiTietDeXuat) {
+                if (! $assessment->IsPassed && $assessment->ChiTietDeXuat && ! $limitReached) {
                     $summary = view('components.assessment-improvement-summary', array_merge($this->proposalData(), ['savedProposal' => json_decode($assessment->ChiTietDeXuat, true)]))->render();
                     $summary = preg_replace('/[ \t]+/', ' ', html_entity_decode(strip_tags($summary), ENT_QUOTES, 'UTF-8'));
                     $summary = preg_replace('/\n\s*\n/', "\n", $summary);
@@ -253,6 +260,7 @@ class ManagerController extends Controller
         foreach ($plans as $plan) {
             $plan->rounds = $rounds->get($plan->id, collect());
             $plan->next_round_number = ($plan->rounds->max('round_number') ?? 0) + 1;
+            $plan->round_limit_reached = $plan->next_round_number > self::MAX_RETRAINING_ROUNDS;
             foreach ($plan->rounds as $round) {
                 $round->eligibility = app(AssessmentEligibility::class)->round($round, $plan->user_id);
             }
@@ -279,6 +287,7 @@ class ManagerController extends Controller
             abort_unless($plan->trang_thai === 'DaDuyet' && in_array($plan->tien_trinh, ['ChoGiao', 'DangThucHien']), 409);
             $round = DB::table('retraining_rounds')->where('request_id', $id)->orderByDesc('round_number')->first();
             $number = $plan->tien_trinh === 'DangThucHien' && $round ? $round->round_number : (($round->round_number ?? 0) + 1);
+            abort_if($number > self::MAX_RETRAINING_ROUNDS, 409, 'Chỉ được thực hiện tối đa 3 vòng đào tạo lại cho mỗi yêu cầu.');
             DB::table('retraining_rounds')->updateOrInsert(['request_id' => $id, 'round_number' => $number],
                 ['assigned_by' => auth()->id(), 'owner_id' => $data['nguoi_phu_trach_id'], 'instructions' => $data['ghi_chu_thuc_hien'],
                     'proposal' => $plan->ke_hoach, 'deadline' => $data['han_hoan_thanh'], 'assessment_date' => $data['ngay_danh_gia_lai'],

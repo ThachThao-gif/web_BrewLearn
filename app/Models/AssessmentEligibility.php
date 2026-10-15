@@ -21,7 +21,9 @@ class AssessmentEligibility
         if ($courses->isEmpty() || $lessons->isEmpty()) {
             $missing[] = 'Chưa có khóa học / bài học được phân công để kiểm tra điều kiện.';
         }
-        if (Schema::hasTable('yeu_cau_dao_tao_lai') && DB::table('yeu_cau_dao_tao_lai')->where('user_id', $user->id)->whereIn('trang_thai', ['ChoDuyet', 'DaDuyet'])->exists()) {
+        if (Schema::hasTable('yeu_cau_dao_tao_lai') && DB::table('yeu_cau_dao_tao_lai')->where('user_id', $user->id)
+            ->whereIn('trang_thai', ['ChoDuyet', 'DaDuyet'])
+            ->where(fn ($query) => $query->whereNull('tien_trinh')->orWhere('tien_trinh', '!=', 'DungDaoTao'))->exists()) {
             $missing[] = 'Có yêu cầu đào tạo lại đang xử lý; tạo đánh giá lại từ vòng đào tạo hiện tại.';
         }
 

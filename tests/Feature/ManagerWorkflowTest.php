@@ -459,7 +459,9 @@ class ManagerWorkflowTest extends TestCase
         $this->assertDatabaseCount('retraining_rounds', 1);
     }
 
-    public function test_multiple_retraining_rounds_preserve_history_and_close_only_after_approved_pass(): void
+    #[TestWith([true])]
+    #[TestWith([false])]
+    public function test_multiple_retraining_rounds_stop_after_three_rounds(bool $passesFinalRound): void
     {
         $this->post(route('manager.review', $this->assessment()), ['action' => 'approve']);
         $plan = DB::table('yeu_cau_dao_tao_lai')->value('id');
@@ -476,7 +478,7 @@ class ManagerWorkflowTest extends TestCase
                 'assessment_date' => now()->addWeeks(2)->toDateString(), 'assessment_time' => '09:30', 'criteria' => 'Phục vụ'])->assertSessionHas('success');
             $assessmentId = DB::table('yeu_cau_dao_tao_lai')->find($plan)->danh_gia_lai_id;
             $assessmentIds[] = $assessmentId;
-            $passed = $number === 3;
+            $passed = $number === 3 && $passesFinalRound;
             DB::table('danh_gia_nang_luc')->where('id', $assessmentId)->update(['Diem' => $passed ? 90 : 60,
                 'IsPassed' => $passed, 'TrangThai' => 'ChoPheDuyet', 'ChiTietDeXuat' => $passed ? null : json_encode(['details' => ['theodoica' => ['behavior' => 'Hướng dẫn vòng tiếp', 'shift_count' => 3]]])]);
             $this->assertDatabaseHas('yeu_cau_dao_tao_lai', ['id' => $plan, 'trang_thai' => 'DaDuyet', 'tien_trinh' => 'ChoDanhGiaLai']);
@@ -489,13 +491,21 @@ class ManagerWorkflowTest extends TestCase
             $this->assertDatabaseHas('retraining_rounds', ['request_id' => $plan, 'round_number' => $number,
                 'assessment_id' => $assessmentId, 'instructions' => 'Nội dung vòng '.$number, 'result' => $passed ? 'Dat' : 'ChuaDat']);
             $this->assertDatabaseHas('yeu_cau_dao_tao_lai', ['id' => $plan,
-                'trang_thai' => $passed ? 'HoanThanh' : 'DaDuyet', 'tien_trinh' => $passed ? 'HoanTat' : 'ChoGiao']);
+                'trang_thai' => $passed ? 'HoanThanh' : 'DaDuyet', 'tien_trinh' => $passed ? 'HoanTat' : ($number === 3 ? 'DungDaoTao' : 'ChoGiao')]);
         }
         $this->assertCount(3, array_unique($assessmentIds));
         $this->assertDatabaseCount('yeu_cau_dao_tao_lai', 1);
         $this->get(route('manager.training'))->assertOk()->assertSee('Đào tạo lại lần 1')->assertSee('Đào tạo lại lần 2')->assertSee('Đào tạo lại lần 3');
         $this->get(route('manager.profile', $this->employee->id))->assertOk()->assertSee('Đào tạo lại lần 1');
         $this->put(route('manager.training.assign', $plan), $payload)->assertStatus(409);
+        if (! $passesFinalRound) {
+            $this->get(route('manager.training'))->assertSee('Đã đạt giới hạn 3 vòng')->assertDontSee('Lưu & giao đào tạo lại');
+            $this->assertDatabaseHas('notifications', ['user_id' => $this->manager->id, 'title' => 'Đào tạo lại đã đạt giới hạn']);
+            // Existing requests waiting for a fourth round must also be blocked.
+            DB::table('yeu_cau_dao_tao_lai')->where('id', $plan)->update(['tien_trinh' => 'ChoGiao']);
+            $this->put(route('manager.training.assign', $plan), $payload)->assertStatus(409);
+            $this->assertDatabaseCount('retraining_rounds', 3);
+        }
     }
 
     public function test_profile_displays_lesson_counts_and_all_attempts(): void
@@ -658,6 +668,28 @@ class ManagerWorkflowTest extends TestCase
         DB::table('ket_qua_kiem_tra')->where('user_id', $this->employee->id)->update(['Diem' => 90]);
         $this->post(route('leader.createSchedule'), $payload)->assertSessionHas('success');
         $this->assertDatabaseCount('danh_gia_nang_luc', 1);
+    }
+
+    public function test_stopped_retraining_does_not_block_periodic_assessments_but_active_requests_do(): void
+    {
+        $this->readyForInitialAssessment();
+        $plan = DB::table('yeu_cau_dao_tao_lai')->insertGetId([
+            'user_id' => $this->employee->id, 'trang_thai' => 'DaDuyet',
+            'tien_trinh' => 'DungDaoTao', 'ket_qua_sau_dao_tao_lai' => 'ChuaDat',
+            'ly_do' => 'Chưa đạt sau 3 vòng đào tạo lại',
+        ]);
+        $payload = ['user_id' => $this->employee->id, 'MaCTDT' => 'STD_BARISTA',
+            'NgayDanhGia' => now()->addDay()->format('Y-m-d\TH:i')];
+        $this->actingAs($this->leader);
+        foreach (['ChoGiao', 'DangThucHien', 'ChoDanhGiaLai'] as $progress) {
+            DB::table('yeu_cau_dao_tao_lai')->where('id', $plan)->update(['tien_trinh' => $progress]);
+            $this->post(route('leader.createSchedule'), $payload)->assertSessionHasErrors('user_id');
+            $this->assertDatabaseCount('danh_gia_nang_luc', 0);
+        }
+        DB::table('yeu_cau_dao_tao_lai')->where('id', $plan)->update(['tien_trinh' => 'DungDaoTao']);
+        $this->post(route('leader.createSchedule'), $payload)->assertSessionHas('success');
+        $this->assertDatabaseHas('danh_gia_nang_luc', ['user_id' => $this->employee->id, 'TrangThai' => 'ChoDanhGia']);
+        $this->assertDatabaseHas('yeu_cau_dao_tao_lai', ['id' => $plan, 'tien_trinh' => 'DungDaoTao', 'ket_qua_sau_dao_tao_lai' => 'ChuaDat']);
     }
 
     public function test_reassessment_requires_fresh_target_learning_quiz_and_owner_confirmation_only(): void
