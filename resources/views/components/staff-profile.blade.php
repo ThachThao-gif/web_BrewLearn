@@ -120,7 +120,7 @@
                     <dt class="text-xs text-slate-500">Cảnh báo theo luật</dt>
                     <dd class="mt-1.5">@include('manager.risk', ['risk' => $staff->risk])</dd>
                     @if($staff->prediction?->diem_rui_ro !== null)
-                        <p class="mt-1 text-xs text-slate-500">Điểm {{ number_format($staff->prediction->diem_rui_ro * 100, 1) }}/100 · chỉ để tham khảo</p>
+                        <p class="mt-1 text-xs text-slate-500">Điểm {{ (int) round($staff->prediction->diem_rui_ro * 10) }}/10 · chỉ để tham khảo</p>
                     @endif
                 </div>
             @endif
