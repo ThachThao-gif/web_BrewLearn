@@ -102,9 +102,10 @@ def chuan_bi_du_lieu():
 
 def chuan_bi_du_lieu_canh_bao():
     """Tiền đề cho KB07, tính tay trước theo bộ quy tắc ở mục 4.5:
-    tiến độ 60% → S3 = 1; ba bài 90, 80, 40 → trung bình 70 → S1 = 2, 1/3 bài chưa đạt → S2 = 1;
+    tiến độ 60% → S3 = 1; ba bài 90, 80, 40 → trung bình 70 → S1 = 2, 1/3 bài chưa đạt → S2 = 1,
+    yếu tố kiểm tra = max(S1, S2) = 2;
     chưa có đánh giá được duyệt → S4 = 0; lỗi nghiêm trọng do KB07 ghi qua giao diện → S5 = 2.
-    Tổng 6/13 → 46,2/100, mức Cao.
+    Tổng 2 + 1 + 0 + 2 = 5/10 → 50,0/100, mức Cao.
     """
     nhan_vien = truy_van("SELECT id FROM users WHERE email = %s", NHAN_VIEN_CANH_BAO)[0]["id"]
     chuong_trinh = [row["MaCTDT"] for row in truy_van(
@@ -463,18 +464,19 @@ class LuongNghiepVuTest(unittest.TestCase):
                               env=dict(os.environ, DB_DATABASE=CSDL_KIEM_THU), capture_output=True)
         self.assertEqual(0, lenh.returncode)
 
-        # Bước 3: quản lý mở hồ sơ, kết quả trùng với kết quả tính tay: 6/13 điểm → 46,2/100, mức Cao
+        # Bước 3: quản lý mở hồ sơ, kết quả trùng với kết quả tính tay: 5/10 điểm → 50,0/100, mức Cao
         self.dang_nhap(QUAN_LY)
         self.mo(f"/manager/staff/{nhan_vien}")
         self.bam("//*[@id='tab-risk']")
         noi_dung = self.cho(EC.visibility_of_element_located((By.ID, "panel-risk"))).text
-        for mong_doi in ("Cao", "Điểm cảnh báo 46.2/100", "Đã làm 3/",
+        for mong_doi in ("Cao", "Điểm cảnh báo 50.0/100", "Đã làm 3/",
                          "Điểm quiz trung bình từ 60 đến dưới 80",
-                         "Có bài kiểm tra chưa đạt, chiếm dưới 50% số bài đã làm",
                          "Tiến độ đào tạo từ 50% đến dưới 80%",
                          "Có 1 lỗi nghiệp vụ trong 30 ngày gần nhất, trong đó 1 lỗi nghiêm trọng"):
             self.assertIn(mong_doi, noi_dung)
         self.assertNotIn("Kết quả đánh giá năng lực gần nhất được duyệt là Chưa đạt", noi_dung)
+        # S2 = 1 thấp hơn S1 = 2 nên không được tính thêm và không hiện thành lý do riêng
+        self.assertNotIn("Có bài kiểm tra chưa đạt, chiếm dưới 50% số bài đã làm", noi_dung)
 
 
 if __name__ == "__main__":

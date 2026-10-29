@@ -1,8 +1,8 @@
 """Default warning rules; normalized scores are NOT probabilities."""
 import math
 
-RULES_VERSION = "rules-v3"
-MAX_SCORE = 13
+RULES_VERSION = "rules-v4"
+MAX_SCORE = 10
 
 
 def bounded_number(value, name, lower=0, upper=100):
@@ -24,11 +24,13 @@ def predict_risk(progress_percent, avg_quiz_score, quiz_attempts, failed_rate, l
     average = bounded_number(avg_quiz_score, "avg_quiz_score")
     failed = bounded_number(failed_rate, "failed_rate", upper=1)
     reasons = []
+    # S1 và S2 cùng phản ánh mức nắm kiến thức: chỉ lấy dấu hiệu mạnh hơn để không tính trùng.
     quiz_score = 3 if average < 60 else 2 if average < 80 else 0
-    if quiz_score:
-        reasons.append("Điểm quiz trung bình dưới 60" if average < 60 else "Điểm quiz trung bình từ 60 đến dưới 80")
     failed_score = 3 if failed >= 0.5 else 1 if failed > 0 else 0
-    if failed_score:
+    knowledge_score = max(quiz_score, failed_score)
+    if knowledge_score and quiz_score == knowledge_score:
+        reasons.append("Điểm quiz trung bình dưới 60" if average < 60 else "Điểm quiz trung bình từ 60 đến dưới 80")
+    if knowledge_score and failed_score == knowledge_score:
         reasons.append("Có ít nhất 50% số bài đã làm chưa đạt" if failed >= 0.5 else "Có bài kiểm tra chưa đạt, chiếm dưới 50% số bài đã làm")
     progress_score = 2 if progress < 50 else 1 if progress < 80 else 0
     if progress_score:
@@ -42,7 +44,7 @@ def predict_risk(progress_percent, avg_quiz_score, quiz_attempts, failed_rate, l
     if error_score:
         reasons.append(f"Có {errors} lỗi nghiệp vụ trong 30 ngày gần nhất"
                        + (f", trong đó {serious} lỗi nghiêm trọng" if serious else ""))
-    total = quiz_score + failed_score + progress_score + assessment_score + error_score
+    total = knowledge_score + progress_score + assessment_score + error_score
     score = total / MAX_SCORE
     return {
         "normalized_score": score,
@@ -51,7 +53,8 @@ def predict_risk(progress_percent, avg_quiz_score, quiz_attempts, failed_rate, l
         "rules_version": RULES_VERSION,
         "details": {
             "tong_diem": total,
-            "diem_thanh_phan": {"quiz_tb": quiz_score, "quiz_chua_dat": failed_score, "tien_do": progress_score,
+            "diem_thanh_phan": {"kiem_tra": knowledge_score, "quiz_tb": quiz_score, "quiz_chua_dat": failed_score,
+                                "tien_do": progress_score,
                                 "danh_gia_gan_nhat": assessment_score, "loi_nghiep_vu": error_score},
             "ly_do_canh_bao": reasons,
         },
