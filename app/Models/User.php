@@ -21,6 +21,28 @@ class User extends Authenticatable
             : $query;
     }
 
+    public function isLeader(): bool
+    {
+        return in_array(mb_strtolower(trim($this->ChucVu ?? '')), self::LEADER_POSITIONS, true);
+    }
+
+    /**
+     * Nhân viên đang làm thuộc phạm vi trưởng ca phụ trách: cùng cửa hàng, cùng ca (nếu trưởng ca đã được gán ca).
+     */
+    public function scopeLedBy(Builder $query, User $leader): Builder
+    {
+        $query->working()->assessmentEligible()->where('id', '!=', $leader->id);
+        if ($leader->cua_hang_id && Schema::hasColumn('users', 'cua_hang_id')) {
+            $query->where('cua_hang_id', $leader->cua_hang_id)
+                ->whereRaw("LOWER(TRIM(COALESCE(ChucVu, ''))) NOT IN (?, ?, ?, ?)", ['quản lý cửa hàng', 'quản lý vùng', 'hr', 'hr đào tạo']);
+            if ($leader->ca_lam_viec_id && Schema::hasColumn('users', 'ca_lam_viec_id')) {
+                $query->where('ca_lam_viec_id', $leader->ca_lam_viec_id);
+            }
+        }
+
+        return $query;
+    }
+
     public function scopeWorking(Builder $query): Builder
     {
         return Schema::hasColumn('users', 'employment_status') ? $query->where('employment_status', 'DangLam') : $query;
@@ -176,7 +198,7 @@ class User extends Authenticatable
     }
 
     /**
-     * 8. Số lần làm Quiz không đạt (< 80 điểm, đồng bộ mô hình dự đoán)
+     * 8. Số lần làm Quiz không đạt (< 80 điểm, đồng bộ bộ quy tắc cảnh báo)
      */
     public function getQuizFailedCountAttribute()
     {

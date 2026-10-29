@@ -3,12 +3,10 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\HelpController;
-use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\LeaderEvaluationController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SearchController;
-use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TrainingCompletionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\DB;
@@ -73,7 +71,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/assessments', 'assessments')->name('assessments');
         Route::post('/assessments/{id}/review', 'review')->name('review');
         Route::get('/training', 'training')->name('training');
-        Route::post('/training/{id}/review', 'reviewTraining')->name('training.review');
         Route::put('/training/{id}', 'assignTraining')->name('training.assign');
         Route::post('/training/{id}/reassess', 'reassess')->name('training.reassess');
         Route::get('/notifications', 'notifications')->name('notifications');
@@ -87,7 +84,6 @@ Route::middleware(['auth'])->group(function () {
     // Phân hệ Thông báo
     Route::prefix('notifications')->name('notifications.')->group(function () {
         Route::get('/', [NotificationController::class, 'index'])->name('index');
-        Route::post('/store', [NotificationController::class, 'store'])->name('store');
         Route::post('/read-all', [NotificationController::class, 'markAllAsRead'])->name('readAll');
 
         Route::get('/{id}', [NotificationController::class, 'show'])->name('show');
@@ -96,9 +92,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Phân hệ Sự cố / Lỗi
-    Route::prefix('incidents')->name('incidents.')->group(function () {
-        Route::post('/store', [IncidentController::class, 'store'])->name('store');
-    });
 
     // 2. Phân hệ Khóa học
     Route::prefix('courses')->name('courses.')->group(function () {
@@ -131,7 +124,6 @@ Route::middleware(['auth'])->group(function () {
     Route::view('/assessments/3-months', 'assessments.show')->name('assessments.show');
 
     // 5. Hồ sơ cá nhân & Tài khoản
-    Route::get('/staff/{id}/detail', [UserController::class, 'getStaffDetail'])->name('staff.detail');
     Route::get('/profile/edit/{id?}', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/profile/update/{id}', [UserController::class, 'update'])->name('users.update');
     Route::put('/account/update-contact', [UserController::class, 'updateContact'])->name('account.update-contact');
@@ -139,14 +131,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/account/logout-other-devices', [UserController::class, 'logoutOtherDevices'])->name('account.logout-other-devices');
     Route::put('/account/update-notifications', [UserController::class, 'updateNotifications'])->name('account.update-notifications');
     Route::put('/account/update-preferences', [UserController::class, 'updatePreferences'])->name('account.update-preferences');
-    Route::get('/support/hr-request', [SupportController::class, 'hrRequest'])->name('support.hr-request');
 
     // 6. Phân hệ Quản lý (Trưởng ca)
     Route::prefix('leader')->name('leader.')->group(function () {
         Route::get('/dashboard', [LeaderEvaluationController::class, 'index'])->name('dashboard');
+        Route::get('/scoring', [LeaderEvaluationController::class, 'index'])->name('scoring');
         Route::get('/staff-list', [LeaderEvaluationController::class, 'staffList'])->name('staffList');
+        Route::get('/staff/{id}', [LeaderEvaluationController::class, 'staffProfile'])->whereNumber('id')->name('staffProfile');
         Route::post('/create-schedule', [LeaderEvaluationController::class, 'createSchedule'])->name('createSchedule');
-        Route::post('/submit-evaluation/{MaDGNL}', [LeaderEvaluationController::class, 'submitEvaluation'])->name('submitEvaluation');
         Route::post('/save-score', [LeaderEvaluationController::class, 'saveScore'])->name('saveScore');
         Route::post('/send-notification', [LeaderEvaluationController::class, 'sendNotification'])->name('sendNotification');
         Route::post('/record-incident', [LeaderEvaluationController::class, 'recordIncident'])->name('recordIncident');

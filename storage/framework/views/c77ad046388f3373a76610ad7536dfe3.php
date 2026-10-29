@@ -12,32 +12,59 @@
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
     <section class="xl:col-span-2 rounded-2xl border border-coffee-200 bg-white p-5" aria-labelledby="trend-heading">
         <div class="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 id="trend-heading" class="text-base font-extrabold text-coffee-900">Kết quả đánh giá đã duyệt <span class="text-xs font-normal text-slate-400">6 tháng gần nhất</span></h2>
-            <div class="flex gap-4 text-xs"><span class="text-emerald-700">● Đạt</span><span class="text-red-600">● Chưa đạt</span></div>
+            <h2 id="trend-heading" class="text-base font-extrabold text-coffee-900">Kết quả đánh giá đã duyệt <span class="text-xs font-normal text-slate-400">số lượt mỗi tháng · <?php echo e($trendYear ? 'năm '.$trendYear : '6 tháng gần nhất'); ?></span></h2>
+            <form method="GET" action="<?php echo e(route('manager.dashboard')); ?>" class="flex items-center gap-2 text-xs">
+                <?php $__currentLoopData = request()->only('shift', 'q'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $name => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><input type="hidden" name="<?php echo e($name); ?>" value="<?php echo e($value); ?>"><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <label for="trend-year" class="text-slate-500">Xem theo</label>
+                <select id="trend-year" name="year" onchange="this.form.submit()" class="rounded-lg border border-coffee-200 bg-white px-2 py-1 text-xs font-semibold text-coffee-900 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    <option value="">6 tháng gần nhất</option>
+                    <?php $__currentLoopData = $trendYears; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $year): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($year); ?>" <?php if($trendYear === $year): echo 'selected'; endif; ?>>Năm <?php echo e($year); ?></option><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </select>
+                <noscript><button class="rounded-lg bg-coffee-800 px-2 py-1 text-white">Xem</button></noscript>
+            </form>
+            <div class="flex gap-4 text-xs text-slate-600"><span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm bg-emerald-500"></span>Đạt</span><span class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm bg-red-500"></span>Chưa đạt</span><span class="text-slate-400">· số nhân viên</span></div>
         </div>
-        <svg viewBox="0 0 650 290" class="mt-3 h-56 w-full" role="img" aria-labelledby="trend-heading trend-description">
-            <desc id="trend-description">Tỷ lệ Đạt và Chưa đạt theo tháng. Tháng không có đánh giá để trống. Bảng số liệu nằm dưới biểu đồ.</desc>
-            <?php $__currentLoopData = [0, 25, 50, 75, 100]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rate): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <line x1="55" x2="620" y1="<?php echo e(235 - $rate * 2); ?>" y2="<?php echo e(235 - $rate * 2); ?>" stroke="#e2e8f0" />
-                <text x="45" y="<?php echo e(239 - $rate * 2); ?>" text-anchor="end" fill="#64748b" font-size="12"><?php echo e($rate); ?>%</text>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        <?php
+            $trendMax = max(4, (int) $assessmentTrend->max('total'));
+            $trendStep = (int) ceil($trendMax / 4);
+            $trendTop = $trendStep * 4;
+            $chartBase = 235;
+            $chartHeight = 200;
+            $slotWidth = 570 / max($assessmentTrend->count(), 1);
+            $barWidth = min(46, $slotWidth * 0.55);
+            $toY = fn (float $value) => $chartBase - $value / $trendTop * $chartHeight;
+        ?>
+        <svg viewBox="0 0 650 280" class="mt-3 h-56 w-full" role="img" aria-labelledby="trend-heading trend-description">
+            <desc id="trend-description">Số nhân viên Đạt và Chưa đạt theo tháng (cột chồng). Tháng không có đánh giá để trống. Bảng số liệu nằm dưới biểu đồ.</desc>
+            <?php for($tick = 0; $tick <= $trendTop; $tick += $trendStep): ?>
+                <line x1="55" x2="625" y1="<?php echo e($toY($tick)); ?>" y2="<?php echo e($toY($tick)); ?>" stroke="#e2e8f0" stroke-width="1" />
+                <text x="45" y="<?php echo e($toY($tick) + 4); ?>" text-anchor="end" fill="#64748b" font-size="12"><?php echo e($tick); ?></text>
+            <?php endfor; ?>
             <?php $__currentLoopData = $assessmentTrend; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $month): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <text x="<?php echo e(65 + $index * 108); ?>" y="265" text-anchor="middle" fill="#64748b" font-size="12"><?php echo e($month['label']); ?></text>
-                <?php if($month['total'] === 0): ?>
-                    <text x="<?php echo e(65 + $index * 108); ?>" y="282" text-anchor="middle" fill="#94a3b8" font-size="10">Chưa có</text>
-                <?php endif; ?>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-            <?php $__currentLoopData = ['passRate' => '#10b981', 'failRate' => '#ef4444']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <?php $__currentLoopData = $assessmentTrend; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $month): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <?php if($month[$key] !== null): ?>
-                        <?php if($index > 0 && $assessmentTrend[$index - 1][$key] !== null): ?>
-                            <line x1="<?php echo e(65 + ($index - 1) * 108); ?>" y1="<?php echo e(235 - $assessmentTrend[$index - 1][$key] * 2); ?>" x2="<?php echo e(65 + $index * 108); ?>" y2="<?php echo e(235 - $month[$key] * 2); ?>" stroke="<?php echo e($color); ?>" stroke-width="3" stroke-dasharray="<?php echo e($key === 'failRate' ? '6 4' : 'none'); ?>" />
-                        <?php endif; ?>
-                        <circle cx="<?php echo e(65 + $index * 108); ?>" cy="<?php echo e(235 - $month[$key] * 2); ?>" r="<?php echo e($key === 'failRate' ? 3 : 6); ?>" fill="<?php echo e($color); ?>" stroke="white" stroke-width="1"><title><?php echo e($month['label']); ?>: <?php echo e($key === 'passRate' ? 'Đạt' : 'Chưa đạt'); ?> <?php echo e($month[$key]); ?>% (<?php echo e($month['total']); ?> nhân viên được đánh giá)</title></circle>
+                <?php
+                    $centerX = 55 + $slotWidth * ($index + 0.5);
+                    $barX = $centerX - $barWidth / 2;
+                    $passTop = $toY($month['passed']);
+                    $totalTop = $toY($month['total']);
+                ?>
+                <g>
+                    <title><?php echo e($month['label']); ?>: <?php echo e($month['total']); ?> nhân viên được duyệt đánh giá — Đạt <?php echo e($month['passed']); ?>, Chưa đạt <?php echo e($month['failed']); ?></title>
+                    <rect x="<?php echo e($barX - 14); ?>" y="<?php echo e($chartBase - $chartHeight); ?>" width="<?php echo e($barWidth + 28); ?>" height="<?php echo e($chartHeight); ?>" fill="transparent" />
+                    <?php if($month['passed'] > 0): ?>
+                        <rect x="<?php echo e($barX); ?>" y="<?php echo e($passTop); ?>" width="<?php echo e($barWidth); ?>" height="<?php echo e($chartBase - $passTop); ?>" rx="<?php echo e($month['failed'] > 0 ? 0 : 4); ?>" fill="#10b981" />
+                        <?php if($month['failed'] === 0): ?><rect x="<?php echo e($barX); ?>" y="<?php echo e($chartBase - 4); ?>" width="<?php echo e($barWidth); ?>" height="4" fill="#10b981" /><?php endif; ?>
                     <?php endif; ?>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <?php if($month['failed'] > 0): ?>
+                        <rect x="<?php echo e($barX); ?>" y="<?php echo e($totalTop); ?>" width="<?php echo e($barWidth); ?>" height="<?php echo e($passTop - $totalTop - ($month['passed'] > 0 ? 2 : 0)); ?>" rx="4" fill="#ef4444" />
+                        <rect x="<?php echo e($barX); ?>" y="<?php echo e($passTop - ($month['passed'] > 0 ? 2 : 0) - 4); ?>" width="<?php echo e($barWidth); ?>" height="4" fill="#ef4444" />
+                    <?php endif; ?>
+                    <text x="<?php echo e($centerX); ?>" y="<?php echo e($month['total'] > 0 ? $totalTop - 8 : $chartBase - 8); ?>" text-anchor="middle" font-size="12" fill="<?php echo e($month['total'] > 0 ? '#1e293b' : '#94a3b8'); ?>" font-weight="<?php echo e($month['total'] > 0 ? 600 : 400); ?>"><?php echo e($month['total'] > 0 ? $month['total'] : ($trendYear ? '–' : 'Không có')); ?></text>
+                </g>
+                <text x="<?php echo e($centerX); ?>" y="258" text-anchor="middle" fill="#64748b" font-size="12"><?php echo e($trendYear ? $month['short'] : $month['label']); ?></text>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <line x1="55" x2="625" y1="<?php echo e($chartBase); ?>" y2="<?php echo e($chartBase); ?>" stroke="#94a3b8" stroke-width="1" />
         </svg>
+        <p class="mt-1 text-[11px] text-slate-500">Mỗi nhân viên được đánh giá định kỳ 3 tháng/lần và lần đầu sau 3 tháng làm việc, nên mỗi tháng chỉ một phần nhân viên đến kỳ.</p>
         <?php if($assessmentTrend->sum('total') === 0): ?>
             <p class="text-center text-sm text-slate-500">Chưa có kết quả đánh giá đã duyệt trong 6 tháng này.</p>
         <?php endif; ?>

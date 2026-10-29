@@ -51,8 +51,8 @@ class RiskRulesTest(unittest.TestCase):
                 result = predict_risk(progress, average, 2, failed, 0)
                 self.assertEqual(total, result['details']['tong_diem'])
                 self.assertEqual(level, result['risk_level'])
-                self.assertEqual(total / 8, result['probability'])
-                self.assertEqual('rules-v2', result['model_name'])
+                self.assertEqual(total / 13, result['normalized_score'])
+                self.assertEqual('rules-v3', result['rules_version'])
 
     def test_invalid_scoring_inputs(self):
         for value in [None, float('nan'), float('inf'), -1, 101, True]:
@@ -73,6 +73,8 @@ class RiskRulesTest(unittest.TestCase):
             CREATE TABLE user_lesson_progresses (user_id INTEGER, lesson_id INTEGER, visit_count INTEGER);
             CREATE TABLE du_doan_nguy_co (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, cua_hang_id INTEGER,
                 diem_rui_ro REAL, muc_canh_bao TEXT, chi_tiet_yeu_to TEXT, phien_ban_mo_hinh TEXT, ngay_du_doan TEXT);
+            CREATE TABLE danh_gia_nang_luc (id INTEGER, user_id INTEGER, TrangThai TEXT, IsPassed INTEGER, ngay_duyet TEXT);
+            CREATE TABLE loi_nghiep_vu (id INTEGER, user_id INTEGER, thoi_diem_xay_ra TEXT, muc_do TEXT DEFAULT 'Nhanh');
             INSERT INTO users (id, ChucVu) VALUES (1, 'Barista');
             INSERT INTO chuong_trinh_dao_tao VALUES (1, 'ALL STAFF'), (2, 'Barista'), (3, 'Thu ngân');
             INSERT INTO nhan_vien_khoa_hoc VALUES (1, 1, 100);
@@ -122,7 +124,7 @@ class RiskRulesTest(unittest.TestCase):
         result = du_doan_nhan_vien(data)
         self.assertEqual('ChuaDuDuLieu', result['muc_canh_bao'])
         self.assertIsNone(result['diem_rui_ro'])
-        self.assertEqual('rules-v2', result['phien_ban_mo_hinh'])
+        self.assertEqual('rules-v3', result['phien_ban_mo_hinh'])
 
     def test_no_courses_and_no_quizzes(self):
         self.conn.db.execute("UPDATE users SET ChucVu = 'Unknown'")
@@ -187,12 +189,77 @@ class RiskRulesTest(unittest.TestCase):
         result = du_doan_nhan_vien(data)
         ghi_ket_qua_du_doan(self.conn, 1, 1, result, self.at)
         row = self.conn.db.execute('SELECT * FROM du_doan_nguy_co').fetchone()
-        self.assertEqual(.5, row['diem_rui_ro'])
+        self.assertEqual(4 / 13, row['diem_rui_ro'])
         self.assertEqual('TrungBinh', row['muc_canh_bao'])
         details = json.loads(row['chi_tiet_yeu_to'])
         self.assertEqual([2, 1], [r['result_id'] for r in details['selected_results']])
         self.assertEqual(1, details['failed_quiz_count'])
         self.assertEqual(4, details['details']['tong_diem'])
+
+    def assessment(self, id, passed, approved_at='2026-10-10 09:00:00', status='DaDuyet'):
+        self.conn.db.execute('INSERT INTO danh_gia_nang_luc VALUES (?, 1, ?, ?, ?)', (id, status, passed, approved_at))
+
+    def error(self, id, time, level='Nhanh'):
+        self.conn.db.execute('INSERT INTO loi_nghiep_vu VALUES (?, 1, ?, ?)', (id, time, level))
+
+    def test_assessment_and_error_scoring(self):
+        cases = [(False, 0, 0), (True, 0, 3), (False, 1, 1), (False, 2, 2), (False, 5, 2), (True, 2, 5)]
+        for failed, errors, total in cases:
+            with self.subTest(failed=failed, errors=errors):
+                result = predict_risk(100, 90, 2, 0, 0, latest_assessment_failed=failed, recent_error_count=errors)
+                self.assertEqual(total, result['details']['tong_diem'])
+        self.assertEqual('Cao', predict_risk(100, 90, 2, 0, 0, True, 2)['risk_level'])
+        self.assertEqual('Trung bình', predict_risk(100, 90, 2, 0, 0, True, 0)['risk_level'])
+
+    def test_one_serious_error_scores_like_repeated_errors(self):
+        cases = [(1, 0, 1), (1, 1, 2), (2, 0, 2), (3, 1, 2)]
+        for errors, serious, total in cases:
+            with self.subTest(errors=errors, serious=serious):
+                result = predict_risk(100, 90, 2, 0, 0, recent_error_count=errors, recent_serious_error_count=serious)
+                self.assertEqual(total, result['details']['diem_thanh_phan']['loi_nghiep_vu'])
+        reason = predict_risk(100, 90, 2, 0, 0, recent_error_count=1, recent_serious_error_count=1)['details']['ly_do_canh_bao']
+        self.assertEqual(['Có 1 lỗi nghiệp vụ trong 30 ngày gần nhất, trong đó 1 lỗi nghiêm trọng'], reason)
+        with self.assertRaises(ValueError):
+            predict_risk(100, 90, 2, 0, 0, recent_error_count=1, recent_serious_error_count=2)
+
+    def test_latest_approved_failed_assessment_raises_warning_even_with_good_quizzes(self):
+        self.result(1, 1, 95)
+        self.result(2, 2, 95)
+        self.assessment(1, 1, '2026-09-01 09:00:00')
+        self.assessment(2, 0, '2026-10-10 09:00:00')
+        self.assessment(3, 1, '2026-10-12 09:00:00', 'ChoPheDuyet')  # not approved yet
+        self.assessment(4, 1, '2026-10-15 09:00:00')  # approved after calculation time
+        data = lay_du_lieu_du_doan(self.conn, 1, self.at)
+        self.assertTrue(data['latest_assessment_failed'])
+        self.assertEqual(2, data['latest_assessment_id'])
+        result = du_doan_nhan_vien(data)
+        self.assertEqual(3, result['chi_tiet_yeu_to']['details']['diem_thanh_phan']['danh_gia_gan_nhat'])
+
+    def test_later_passed_assessment_clears_assessment_factor(self):
+        self.result(1, 1, 95)
+        self.result(2, 2, 95)
+        self.assessment(1, 0, '2026-09-01 09:00:00')
+        self.assessment(2, 1, '2026-10-10 09:00:00')
+        self.assertFalse(lay_du_lieu_du_doan(self.conn, 1, self.at)['latest_assessment_failed'])
+
+    def test_approved_assessment_without_result_is_rejected(self):
+        self.assessment(1, None)
+        with self.assertRaises(ValueError):
+            lay_du_lieu_du_doan(self.conn, 1, self.at)
+
+    def test_only_errors_within_30_days_before_calculation_count(self):
+        self.error(1, '2026-09-14 12:00:00')  # exactly 30 days earlier: excluded
+        self.error(2, '2026-09-14 12:00:01')
+        self.error(3, '2026-10-14 12:00:00')
+        self.error(4, '2026-10-14 12:00:01')  # after calculation time
+        self.assertEqual(2, lay_du_lieu_du_doan(self.conn, 1, self.at)['recent_error_count'])
+
+    def test_serious_errors_are_counted_within_the_same_window(self):
+        self.error(1, '2026-09-10 12:00:00', 'NghiemTrong')  # outside 30 days
+        self.error(2, '2026-10-10 12:00:00', 'NghiemTrong')
+        self.error(3, '2026-10-11 12:00:00', 'TrungBinh')
+        data = lay_du_lieu_du_doan(self.conn, 1, self.at)
+        self.assertEqual((2, 1), (data['recent_error_count'], data['recent_serious_error_count']))
 
     def test_duplicate_progress_is_reported_instead_of_double_counting(self):
         self.conn.db.execute('INSERT INTO nhan_vien_khoa_hoc VALUES (1, 1, 50)')

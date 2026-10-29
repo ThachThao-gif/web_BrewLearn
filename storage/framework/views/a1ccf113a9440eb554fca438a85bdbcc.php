@@ -31,8 +31,13 @@
     <!-- Header & Navigation -->
     <div class="page-banner flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800">Quản Lý Đánh Giá Năng Lực</h1>
-            <p class="text-sm text-slate-500 mt-1">Tiến hành đánh giá năng lực sau 3 tháng </p>
+            <?php if($page === 'scoring'): ?>
+                <h1 class="text-2xl font-bold text-slate-800">Chấm Điểm Đánh Giá Năng Lực</h1>
+                <p class="text-sm text-slate-500 mt-1">Chấm năm tiêu chí theo lịch đã hẹn và gửi kết quả cho quản lý cửa hàng phê duyệt</p>
+            <?php else: ?>
+                <h1 class="text-2xl font-bold text-slate-800">Xếp Lịch Đánh Giá Năng Lực</h1>
+                <p class="text-sm text-slate-500 mt-1">Theo dõi hạn đánh giá định kỳ 3 tháng và gửi lịch hẹn cho nhân viên đủ điều kiện</p>
+            <?php endif; ?>
         </div>
         
         <!-- Nút chuyển sang trang Danh sách nhân sự -->
@@ -40,74 +45,91 @@
     </div>
 
     <!-- Cảnh báo nhân viên đến kỳ sát hạch 3 tháng -->
-    <?php if(isset($dueStaffs) && $dueStaffs->count() > 0): ?>
+    <?php if($page === 'schedule' && isset($dueStaffs) && $dueStaffs->count() > 0): ?>
     <?php
-        $dueTones = ['Quá hạn' => 'border-rose-300 text-rose-700', 'Đến hạn' => 'border-rose-300 text-rose-700', 'Sắp đến hạn' => 'border-amber-300 text-amber-800'];
+        $today = now('Asia/Ho_Chi_Minh')->startOfDay();
+        foreach ($dueStaffs as $due) {
+            $pending = $due->scheduled_assessment;
+            $due->stage = ! $pending ? ($due->eligibility['ready'] ? 'ready' : 'blocked') : ($pending->TrangThai === 'ChoDanhGia' ? 'scheduled' : ($pending->TrangThai === 'TraLai' ? 'returned' : 'reviewing'));
+            $daysLeft = (int) $today->diffInDays($due->due_at->copy()->startOfDay(), false);
+            $due->due_note = $daysLeft < 0 ? 'trễ '.abs($daysLeft).' ngày' : ($daysLeft === 0 ? 'đến hạn hôm nay' : 'còn '.$daysLeft.' ngày');
+        }
+        $stageLabels = ['scheduled' => 'Đã xếp lịch', 'reviewing' => 'Chờ quản lý duyệt', 'returned' => 'Cần bổ sung'];
         $reminderSummary = [
-            ['Quá hạn', $dueStaffs->where('due_status', 'Quá hạn')->count(), 'text-rose-600'],
-            ['Đến hạn / sắp đến hạn', $dueStaffs->whereIn('due_status', ['Đến hạn', 'Sắp đến hạn'])->count(), 'text-amber-600'],
-            ['Đã xếp lịch', $dueStaffs->filter(fn ($due) => $due->scheduled_assessment)->count(), 'text-blue-600'],
-            ['Chưa đủ điều kiện', $dueStaffs->filter(fn ($due) => ! $due->scheduled_assessment && ! $due->eligibility['ready'])->count(), 'text-slate-500'],
+            'ready' => ['Cần xếp lịch', $dueStaffs->where('stage', 'ready')->count()],
+            'blocked' => ['Chưa đủ điều kiện', $dueStaffs->where('stage', 'blocked')->count()],
+            'scheduled' => ['Đã xếp lịch', $dueStaffs->where('stage', 'scheduled')->count()],
+            'review' => ['Chờ duyệt / cần bổ sung', $dueStaffs->whereIn('stage', ['reviewing', 'returned'])->count()],
         ];
-        $reminderGrid = 'md:grid md:grid-cols-[3rem_minmax(0,2fr)_7rem_8rem_minmax(0,2fr)_9rem] md:items-center md:gap-3';
+        $th = 'border border-slate-200 bg-slate-50 px-3 py-2 text-left text-xs font-semibold text-slate-600';
+        $td = 'border border-slate-200 px-3 py-2 align-top';
     ?>
-    <section aria-labelledby="assessment-reminder-title" class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div class="flex items-center justify-between gap-3 px-5 pt-4">
-            <h3 id="assessment-reminder-title" class="flex items-center gap-2 text-sm font-bold text-slate-800"><i class="fa-regular fa-calendar-check text-amber-600" aria-hidden="true"></i>Nhắc hạn đánh giá</h3>
-            <span class="text-xs text-slate-500"><?php echo e($dueStaffs->count()); ?> nhân viên cần theo dõi</span>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-slate-100">
-            <?php $__currentLoopData = $reminderSummary; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as [$label, $count, $tone]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <div class="px-5 py-3"><span class="block text-2xl font-extrabold <?php echo e($tone); ?>"><?php echo e($count); ?></span><span class="text-xs text-slate-500"><?php echo e($label); ?></span></div>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    <section aria-labelledby="assessment-reminder-title" x-data="{ filter: null }" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <h3 id="assessment-reminder-title" class="text-sm font-bold text-slate-800">Nhắc hạn đánh giá</h3>
+            <div class="flex flex-wrap items-center gap-1 text-xs" role="group" aria-label="Lọc theo tình trạng">
+                <button type="button" @click="filter = null" :aria-pressed="! filter" :class="! filter ? 'bg-slate-800 text-white' : 'text-slate-600 hover:bg-slate-100'" class="rounded-lg px-2.5 py-1 font-semibold">Tất cả (<?php echo e($dueStaffs->count()); ?>)</button>
+                <?php $__currentLoopData = $reminderSummary; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group => [$label, $count]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <button type="button" @click="filter = filter === '<?php echo e($group); ?>' ? null : '<?php echo e($group); ?>'" :aria-pressed="filter === '<?php echo e($group); ?>'"
+                            :class="filter === '<?php echo e($group); ?>' ? 'bg-slate-800 text-white' : 'text-slate-600 hover:bg-slate-100'" class="rounded-lg px-2.5 py-1 font-semibold"><?php echo e($label); ?> (<?php echo e($count); ?>)</button>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </div>
         </div>
 
-        <div class="hidden <?php echo e($reminderGrid); ?> border-t border-slate-100 bg-slate-50 px-5 py-2.5 text-xs font-semibold text-slate-600">
-            <span>STT</span><span>Nhân viên</span><span>Hạn đánh giá</span><span>Tình trạng</span><span>Điều kiện</span><span class="text-right">Thao tác</span>
+        <div class="mt-4 overflow-x-auto">
+            <table class="w-full border-collapse text-sm">
+                <thead>
+                    <tr><th class="<?php echo e($th); ?> w-12 text-center">STT</th><th class="<?php echo e($th); ?>">Nhân viên</th><th class="<?php echo e($th); ?>">Chức danh</th><th class="<?php echo e($th); ?>">Hạn đánh giá</th><th class="<?php echo e($th); ?>">Tình trạng</th><th class="<?php echo e($th); ?>">Ghi chú</th></tr>
+                </thead>
+                <tbody>
+                    <?php $__currentLoopData = $dueStaffs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $due): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <tr x-show="! filter || filter === '<?php echo e(in_array($due->stage, ['reviewing', 'returned']) ? 'review' : $due->stage); ?>'">
+                            <td class="<?php echo e($td); ?> text-center text-slate-500"><?php echo e($loop->iteration); ?></td>
+                            <td class="<?php echo e($td); ?> font-semibold text-slate-800"><?php echo e($due->name); ?></td>
+                            <td class="<?php echo e($td); ?> text-slate-600"><?php echo e($due->ChucVu); ?></td>
+                            <td class="<?php echo e($td); ?>"><?php echo e($due->due_at->format('d/m/Y')); ?> <span class="text-slate-500">(<?php echo e($due->due_note); ?>)</span></td>
+                            <td class="<?php echo e($td); ?>"><?php echo e($stageLabels[$due->stage] ?? $due->due_status); ?></td>
+                            <td class="<?php echo e($td); ?> text-slate-600">
+                                <?php if($due->stage === 'scheduled'): ?>
+                                    Hẹn <?php echo e(\Carbon\Carbon::parse($due->scheduled_assessment->NgayHen)->format('H:i d/m/Y')); ?>
+
+                                <?php elseif($due->stage === 'returned'): ?>
+                                    Quản lý trả lại, cần chấm bổ sung
+                                <?php elseif($due->stage === 'reviewing'): ?>
+                                    Đã chấm, chờ quản lý duyệt
+                                <?php elseif(! $due->eligibility['ready']): ?>
+                                    Chưa đủ điều kiện đánh giá:
+                                    <button type="button" onclick="document.getElementById('due-<?php echo e($due->id); ?>').showModal()" aria-haspopup="dialog" class="font-semibold text-slate-800 underline underline-offset-2">còn thiếu <?php echo e(count($due->eligibility['missing'])); ?> yêu cầu</button>
+                                <?php else: ?>
+                                    Đủ điều kiện đánh giá.
+                                    <button type="button" onclick="document.querySelector('select[name=user_id]').value='<?php echo e($due->id); ?>'; document.querySelector('select[name=user_id]').focus();" class="font-semibold text-slate-800 underline underline-offset-2">Xếp lịch</button>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <?php $__currentLoopData = $reminderSummary; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group => [$label, $count]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if($count === 0): ?>
+                            <tr x-show="filter === '<?php echo e($group); ?>'" x-cloak><td colspan="6" class="<?php echo e($td); ?> py-5 text-center text-slate-500">Không có nhân viên ở mục "<?php echo e($label); ?>".</td></tr>
+                        <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </tbody>
+            </table>
         </div>
+
         <?php $__currentLoopData = $dueStaffs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $due): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <?php
-                $dueDialog = 'due-'.$due->id;
-            ?>
-            <div class="<?php echo e($reminderGrid); ?> grid grid-cols-2 gap-x-3 gap-y-1 border-t border-slate-100 px-5 py-3 text-sm hover:bg-slate-50/70">
-                <span class="text-slate-500"><?php echo e($loop->iteration); ?></span>
-                <span class="min-w-0"><span class="block truncate font-semibold text-slate-800"><?php echo e($due->name); ?></span><span class="text-xs text-slate-400"><?php echo e($due->ChucVu); ?></span></span>
-                <span class="text-xs text-slate-600"><?php echo e($due->due_at->format('d/m/Y')); ?></span>
-                <span><span class="inline-block rounded-full border px-2.5 py-0.5 text-xs font-semibold <?php echo e($dueTones[$due->due_status] ?? 'border-slate-300 text-slate-600'); ?>"><?php echo e($due->due_status); ?></span></span>
-                <span class="text-xs">
-                    <?php if($due->scheduled_assessment): ?>
-                        <span class="font-medium text-blue-700"><i class="fa-regular fa-calendar mr-1" aria-hidden="true"></i><?php echo e($due->scheduled_assessment->TrangThai === 'ChoDanhGia' ? 'Đã xếp lịch' : 'Đang xử lý kết quả'); ?> · #<?php echo e($due->scheduled_assessment->id); ?></span>
-                    <?php elseif(! $due->eligibility['ready']): ?>
-                        <span class="font-medium text-slate-600">Chưa đủ điều kiện đánh giá</span> <span class="text-slate-400">· thiếu <?php echo e(count($due->eligibility['missing'])); ?> yêu cầu</span>
-                    <?php else: ?>
-                        <span class="font-medium text-emerald-700"><i class="fa-solid fa-check mr-1" aria-hidden="true"></i>Đủ điều kiện đánh giá</span>
-                    <?php endif; ?>
-                </span>
-                <span class="md:text-right">
-                    <?php if(! $due->scheduled_assessment && ! $due->eligibility['ready']): ?>
-                        <button type="button" onclick="document.getElementById('<?php echo e($dueDialog); ?>').showModal()" aria-haspopup="dialog" class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">Xem yêu cầu</button>
-                    <?php elseif(! $due->scheduled_assessment): ?>
-                        <button type="button" onclick="document.querySelector('select[name=user_id]').value='<?php echo e($due->id); ?>'; document.querySelector('select[name=user_id]').focus();" class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800 hover:bg-amber-100">Xếp lịch <i class="fa-solid fa-arrow-right ml-1" aria-hidden="true"></i></button>
-                    <?php else: ?>
-                        <span class="text-xs text-slate-400">—</span>
-                    <?php endif; ?>
-                </span>
-            </div>
             <?php if(! $due->scheduled_assessment && ! $due->eligibility['ready']): ?>
-                <dialog id="<?php echo e($dueDialog); ?>" aria-labelledby="<?php echo e($dueDialog); ?>-title" class="w-[min(640px,calc(100vw-2rem))] max-h-[85vh] rounded-2xl p-0 shadow-2xl backdrop:bg-slate-900/40">
+                <dialog id="due-<?php echo e($due->id); ?>" aria-labelledby="due-<?php echo e($due->id); ?>-title" class="w-[min(640px,calc(100vw-2rem))] max-h-[85vh] rounded-2xl p-0 shadow-2xl backdrop:bg-slate-900/40">
                     <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-                        <h2 id="<?php echo e($dueDialog); ?>-title" class="text-lg font-bold text-slate-800"><?php echo e($due->name); ?> – yêu cầu cần hoàn thành</h2>
+                        <h2 id="due-<?php echo e($due->id); ?>-title" class="text-lg font-bold text-slate-800"><?php echo e($due->name); ?> – yêu cầu cần hoàn thành</h2>
                         <form method="dialog"><button aria-label="Đóng" class="rounded-lg px-2 py-1 text-slate-400 hover:bg-slate-50 hover:text-slate-700"><i class="fa-solid fa-xmark"></i></button></form>
                     </div>
                     <div class="space-y-3 px-6 py-5 text-sm">
-                        <dl class="overflow-hidden rounded-xl border border-slate-200">
-                            <div class="grid grid-cols-[9rem_1fr] gap-3 bg-slate-50 px-4 py-2.5"><dt class="font-semibold text-slate-700">Hạn đánh giá</dt><dd><?php echo e($due->due_at->format('d/m/Y')); ?> · <?php echo e($due->due_status); ?></dd></div>
-                            <div class="grid grid-cols-[9rem_1fr] gap-3 px-4 py-2.5"><dt class="font-semibold text-slate-700">Tình trạng</dt><dd>Chưa đủ điều kiện đánh giá — cần hoàn thành <?php echo e(count($due->eligibility['missing'])); ?> yêu cầu học tập và kiểm tra trước khi xếp lịch.</dd></div>
-                        </dl>
-                        <ul class="space-y-2 text-slate-700">
-                            <?php $__currentLoopData = $due->eligibility['missing']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $missing): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <li class="flex items-start gap-2"><i class="fa-regular fa-circle mt-1.5 shrink-0 text-[8px] text-slate-400" aria-hidden="true"></i><span><?php echo e($missing); ?></span></li>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <table class="w-full border-collapse">
+                            <tr><th class="<?php echo e($th); ?> w-36">Hạn đánh giá</th><td class="<?php echo e($td); ?>"><?php echo e($due->due_at->format('d/m/Y')); ?> · <?php echo e($due->due_status); ?></td></tr>
+                            <tr><th class="<?php echo e($th); ?>">Tình trạng</th><td class="<?php echo e($td); ?>">Chưa đủ điều kiện đánh giá — cần hoàn thành <?php echo e(count($due->eligibility['missing'])); ?> yêu cầu học tập và kiểm tra trước khi xếp lịch.</td></tr>
+                        </table>
+                        <ul class="list-disc space-y-1 pl-5 text-slate-700">
+                            <?php $__currentLoopData = $due->eligibility['missing']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $missing): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><li><?php echo e($missing); ?></li><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ul>
                     </div>
                 </dialog>
@@ -116,15 +138,16 @@
     </section>
     <?php endif; ?>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 gap-6">
+        <?php if($page === 'schedule'): ?>
         <!-- Block 1: Phát thông báo lịch đánh giá định kỳ -->
-        <div class="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 h-fit">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 h-fit">
             <div class="flex items-center gap-2 mb-4">
-                <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold">1</div>
+                <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center"><i class="fa-regular fa-calendar-plus" aria-hidden="true"></i></div>
                 <h2 class="text-base font-bold text-slate-800">Phát Thông Báo Lịch Đánh Giá</h2>
             </div>
 
-            <form action="<?php echo e(route('leader.createSchedule')); ?>" method="POST" class="space-y-4">
+            <form action="<?php echo e(route('leader.createSchedule')); ?>" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                 <?php echo csrf_field(); ?>
                 <div>
     <label class="block text-xs font-semibold text-slate-600 mb-1">Chọn Nhân Viên <span class="text-rose-500">*</span></label>
@@ -163,22 +186,25 @@
                     </label>
                     
                     <textarea name="note" 
-                              rows="4" 
+                              rows="2"
                               placeholder="Nhập nội dung dặn dò cho nhân viên (ví dụ: Ôn tập quy trình POS, mang đồng phục chuẩn)..." 
                               class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl p-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-600 focus:border-transparent focus:bg-white transition resize-y shadow-sm"></textarea>
                 </div>
 
-                <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium text-sm rounded-xl transition shadow-sm">
-                    Tạo lịch & gửi thông báo
-                </button>
+                <div class="md:col-span-2 flex justify-end border-t border-slate-100 pt-4">
+                    <button type="submit" class="w-full md:w-auto px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium text-sm rounded-xl transition shadow-sm">
+                        Tạo lịch & gửi thông báo
+                    </button>
+                </div>
             </form>
         </div>
+        <?php else: ?>
 
         <!-- Block 2: Danh sách lịch sát hạch cần chấm điểm -->
-        <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold">2</div>
+                    <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i></div>
                     <h2 class="text-base font-bold text-slate-800">Lịch Sát Hạch Cần Chấm Điểm</h2>
                 </div>
                 <!-- Ô Lọc tìm kiếm nhanh -->
@@ -193,7 +219,6 @@
                     <thead class="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-100">
                         <tr>
                             <th scope="col" class="py-3 px-4">Nhân viên</th>
-                            <th scope="col" class="py-3 px-4">Tiêu chuẩn</th>
                             <th scope="col" class="py-3 px-4">Ngày đánh giá</th>
                             <th scope="col" class="py-3 px-4">Trạng thái</th>
                             <th scope="col" class="py-3 px-4 text-right">Thao tác</th>
@@ -203,13 +228,9 @@
                         <?php if(isset($schedules) && count($schedules) > 0): ?>
                             <?php $__currentLoopData = $schedules; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr class="hover:bg-slate-50/50 transition schedule-row">
-                                    <td class="py-3 px-4 font-semibold text-slate-700 staff-name-col">
-                                        <?php echo e($item->staff_name); ?>
-
-                                    </td>
-                                    <td class="py-3 px-4 text-slate-600">
-                                        <?php echo e($item->tiêu_chuẩn ?? $item->TieuChuan ?? 'Tiêu chuẩn năng lực'); ?>
-
+                                    <td class="py-3 px-4">
+                                        <span class="block font-semibold text-slate-700 staff-name-col"><?php echo e($item->staff_name); ?></span>
+                                        <span class="text-xs text-slate-500"><?php echo e(\Illuminate\Support\Str::after($item->tiêu_chuẩn ?? $item->TieuChuan ?? 'Tiêu chuẩn năng lực', 'Tiêu chuẩn năng lực ')); ?></span>
                                         <?php if($item->ChiTietDeXuat): ?>
                                             <?php echo $__env->make('components.assessment-improvement-summary', ['savedProposal' => json_decode($item->ChiTietDeXuat, true)], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                                         <?php endif; ?>
@@ -220,44 +241,43 @@
                                     </td>
                                     
                                     <!-- Cột Trạng thái -->
+                                    <?php
+                                        [$statusLabel, $statusTone, $statusDot] = match ($item->TrangThai) {
+                                            'DaDuyet', 'HoanThanh' => ['Đã duyệt', 'border-emerald-200 bg-emerald-50 text-emerald-700', 'bg-emerald-500'],
+                                            'ChoPheDuyet' => ['Chờ duyệt', 'border-violet-200 bg-violet-50 text-violet-700', 'bg-violet-500'],
+                                            'TraLai' => ['Cần bổ sung', 'border-amber-300 bg-amber-50 text-amber-800', 'bg-amber-500'],
+                                            default => ['Chờ đánh giá', 'border-blue-200 bg-blue-50 text-blue-700', 'bg-blue-500'],
+                                        };
+                                    ?>
                                     <td class="py-3 px-4">
-                                        <?php if($item->TrangThai === 'ChoPheDuyet'): ?>
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
-                                                Chờ phê duyệt
-                                            </span>
-                                        <?php elseif($item->TrangThai === 'DaDuyet' || $item->TrangThai === 'HoanThanh'): ?>
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
-                                                ✅ Đã duyệt
-                                            </span>
-                                        <?php elseif($item->TrangThai === 'TraLai'): ?>
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800">Cần bổ sung</span>
-                                            <p class="text-xs text-rose-700 mt-1"><?php echo e($item->ly_do_tra_lai ?? ''); ?></p>
-                                        <?php else: ?>
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
-                                                Chờ đánh giá
-                                            </span>
+                                        <span class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-xs font-semibold <?php echo e($statusTone); ?>">
+                                            <span class="h-1.5 w-1.5 rounded-full <?php echo e($statusDot); ?>" aria-hidden="true"></span><?php echo e($statusLabel); ?>
+
+                                        </span>
+                                        <?php if($item->TrangThai === 'TraLai' && ($item->ly_do_tra_lai ?? null)): ?>
+                                            <p class="mt-1 max-w-48 text-xs text-amber-800"><?php echo e($item->ly_do_tra_lai); ?></p>
                                         <?php endif; ?>
                                     </td>
 
                                     <!-- Cột Thao tác -->
-                                    <td class="py-3 px-4 text-right">
+                                    <td class="py-3 px-4 text-right whitespace-nowrap">
                                         <?php if(in_array($item->TrangThai, ['ChoDanhGia', 'TraLai'])): ?>
-                                            <button type="button" 
-                                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium rounded-lg transition shadow-sm"
+                                            <button type="button"
+                                                    class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700"
                                                     onclick="openScoringModal('<?php echo e($item->id); ?>', '<?php echo e(e($item->staff_name)); ?>', '<?php echo e(e($item->tiêu_chuẩn ?? $item->TieuChuan ?? '')); ?>')">
-                                                Chấm Điểm
+                                                <i class="fa-solid fa-pen-to-square text-[10px]" aria-hidden="true"></i><?php echo e($item->TrangThai === 'TraLai' ? 'Chấm lại' : 'Chấm điểm'); ?>
+
                                             </button>
                                         <?php else: ?>
-                                            <span class="text-xs text-slate-400 font-medium italic">
-                                                Đã gửi (<?php echo e($item->Diem ?? 0); ?>đ)
-                                            </span>
+                                            <span class="text-sm font-bold text-slate-800"><?php echo e(number_format((float) $item->Diem, 1, ',', '')); ?></span>
+                                            <span class="text-xs text-slate-500">điểm</span>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="5" class="py-6 text-center text-slate-400 text-sm">
+                                <td colspan="4" class="py-6 text-center text-slate-400 text-sm">
                                     Hiện chưa có lịch sát hạch nào cần chấm điểm.
                                 </td>
                             </tr>
@@ -266,6 +286,7 @@
                 </table>
             </div>
         </div>
+        <?php endif; ?>
     </div>
 
     <!-- MODAL CHẤM ĐIỂM & XỬ LÝ NĂNG LỰC -->

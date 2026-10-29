@@ -34,10 +34,10 @@ class RemindAssessments extends Command
                 }
             }
             foreach (DB::table('danh_gia_nang_luc')->whereIn('user_id', $staff->pluck('id'))->where('TrangThai', 'ChoPheDuyet')->get() as $assessment) {
-                $this->remind($manager->id, 'Đánh giá chờ phê duyệt', ($staff->firstWhere('id', $assessment->user_id)?->name ?? 'Nhân viên').' — đánh giá #'.$assessment->id.'. Xem kết quả và nội dung tại mục Duyệt đánh giá.', 'pending-review-'.$manager->id.'-'.$assessment->id.'-'.$assessment->updated_at);
+                $this->remind($manager->id, 'Đánh giá chờ phê duyệt', ($staff->firstWhere('id', $assessment->user_id)?->name ?? 'Nhân viên').' — đánh giá năng lực đang chờ phê duyệt. Xem kết quả và nội dung tại mục Duyệt đánh giá.', 'pending-review-'.$manager->id.'-'.$assessment->id.'-'.$assessment->updated_at);
             }
             foreach (DB::table('yeu_cau_dao_tao_lai')->whereIn('user_id', $staff->pluck('id'))->where('trang_thai', 'DaDuyet')->where('tien_trinh', 'DangThucHien')->whereNotNull('han_hoan_thanh')->whereDate('han_hoan_thanh', '<=', today()->addDays(3))->get() as $plan) {
-                $this->remind($manager->id, 'Nhắc hạn đào tạo lại', ($staff->firstWhere('id', $plan->user_id)?->name ?? 'Nhân viên').' — kế hoạch #'.$plan->id.', hạn '.$plan->han_hoan_thanh.'.', 'training-deadline-'.$manager->id.'-'.$plan->id.'-'.$plan->han_hoan_thanh.'-'.(Carbon::parse($plan->han_hoan_thanh)->lt(today()) ? 'overdue' : 'soon'));
+                $this->remind($manager->id, 'Nhắc hạn đào tạo lại', ($staff->firstWhere('id', $plan->user_id)?->name ?? 'Nhân viên').' — kế hoạch đào tạo lại, hạn '.$plan->han_hoan_thanh.'.', 'training-deadline-'.$manager->id.'-'.$plan->id.'-'.$plan->han_hoan_thanh.'-'.(Carbon::parse($plan->han_hoan_thanh)->lt(today()) ? 'overdue' : 'soon'));
             }
         }
 

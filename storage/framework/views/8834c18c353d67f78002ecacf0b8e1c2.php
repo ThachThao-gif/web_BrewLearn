@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', $test->TenBaiKiemTra ?? 'Bài kiểm tra sát hạch'); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -68,7 +66,7 @@
                 <div id="question_box_<?php echo e($index); ?>" class="question-box space-y-4 <?php echo e($index !== 0 ? 'hidden' : ''); ?>">
                     <div class="flex justify-between items-center border-b pb-3">
                         <span class="bg-amber-100 text-amber-900 text-xs font-bold px-3 py-1 rounded-xl">
-                            <i class="fa-solid fa-lightbulb text-amber-600 mr-1"></i> Tình huống thực tế #<?php echo e(sprintf('%02d', $index + 1)); ?>
+                            <i class="fa-solid fa-lightbulb text-amber-600 mr-1"></i> Tình huống thực tế <?php echo e(sprintf('%02d', $index + 1)); ?>
 
                         </span>
                         <span class="text-xs font-bold text-slate-400">Trọng số: 1 điểm</span>

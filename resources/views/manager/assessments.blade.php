@@ -52,48 +52,48 @@
                 $row = 'grid grid-cols-[9rem_1fr] gap-3 px-4 py-2.5';
             @endphp
             <div class="{{ $grid }} grid grid-cols-2 gap-x-3 gap-y-1 border-t border-coffee-100 px-5 py-3 text-sm hover:bg-coffee-50/70">
-                <span class="min-w-0"><span class="block truncate font-bold text-coffee-900">{{ $employee->name }}</span><span class="text-xs text-slate-400">#{{ $assessment->id }} · {{ $employee->shift_name }}</span></span>
+                <span class="min-w-0"><span class="block truncate font-bold text-coffee-900">{{ $employee->name }}</span><span class="text-xs text-slate-400">{{ $employee->shift_name }}</span></span>
                 <span class="truncate text-slate-600" title="{{ $assessment->TieuChuan }}">{{ $assessment->TieuChuan }}</span>
                 <span class="truncate text-slate-600">{{ $leaderName }}</span>
                 <span class="text-xs text-slate-500">{{ $gradedAt }}</span>
                 <span class="font-bold text-coffee-900 md:text-right">{{ $assessment->Diem ?? '—' }}</span>
                 <span class="text-xs font-bold {{ $resultClass }}">{{ $resultLabel }}</span>
                 <span><button type="button" onclick="document.getElementById('{{ $dialogId }}').showModal()" aria-haspopup="dialog" title="Xem chi tiết và xử lý" class="inline-block rounded-full border px-2.5 py-0.5 text-xs font-semibold hover:shadow-sm {{ $statusClass }}">{{ $statusLabel }}</button></span>
-                <button type="button" onclick="document.getElementById('{{ $dialogId }}').showModal()" aria-label="Xem chi tiết đánh giá #{{ $assessment->id }}" class="text-slate-400 hover:text-coffee-700"><i class="fa-regular fa-eye"></i></button>
+                <button type="button" onclick="document.getElementById('{{ $dialogId }}').showModal()" aria-label="Xem chi tiết đánh giá {{ $assessment->id }}" class="text-slate-400 hover:text-coffee-700"><i class="fa-regular fa-eye"></i></button>
             </div>
 
-            <dialog id="{{ $dialogId }}" aria-labelledby="{{ $dialogId }}-title" class="w-[min(760px,calc(100vw-2rem))] max-h-[90vh] rounded-2xl p-0 shadow-2xl backdrop:bg-coffee-900/40">
-                <div class="flex items-center justify-between border-b border-coffee-100 px-6 py-4">
-                    <h2 id="{{ $dialogId }}-title" class="text-lg font-bold text-coffee-900">#{{ $assessment->id }} – {{ $employee->name }}</h2>
-                    <form method="dialog"><button aria-label="Đóng" class="rounded-lg px-2 py-1 text-slate-400 hover:bg-coffee-50 hover:text-coffee-800"><i class="fa-solid fa-xmark"></i></button></form>
+            <dialog id="{{ $dialogId }}" aria-labelledby="{{ $dialogId }}-title" class="w-[min(760px,calc(100vw-2rem))] max-h-[90vh] rounded-2xl border border-slate-200 p-0 shadow-xl backdrop:bg-slate-900/40">
+                <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+                    <h2 id="{{ $dialogId }}-title" class="text-lg font-semibold text-slate-900">{{ $employee->name }}</h2>
+                    <form method="dialog"><button aria-label="Đóng" class="rounded-lg px-2 py-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"><i class="fa-solid fa-xmark"></i></button></form>
                 </div>
                 <div class="space-y-4 px-6 py-5">
-                    <section class="overflow-hidden rounded-xl border border-coffee-200">
-                        <h3 class="bg-coffee-100 px-4 py-2.5 text-sm font-semibold text-coffee-800">Thông tin đánh giá</h3>
-                        <dl class="divide-y divide-coffee-100 text-sm">
+                    <section class="overflow-hidden rounded-xl border border-slate-200">
+                        <h3 class="border-b border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-700">Thông tin đánh giá</h3>
+                        <dl class="divide-y divide-slate-100 text-sm">
                             @foreach([
                                 'Nhân viên' => $employee->name.' · '.$employee->ChucVu.' · '.$employee->shift_name,
                                 'Tiêu chuẩn' => $assessment->TieuChuan,
                                 'Người chấm' => $leaderName,
                                 'Ngày chấm' => $gradedAt,
                             ] as $label => $value)
-                                <div class="{{ $row }} {{ $loop->odd ? 'bg-coffee-50/60' : '' }}"><dt class="font-semibold text-coffee-800">{{ $label }}</dt><dd class="text-coffee-900">{{ $value }}</dd></div>
+                                <div class="{{ $row }}"><dt class="text-slate-500">{{ $label }}</dt><dd class="text-slate-900">{{ $value }}</dd></div>
                             @endforeach
-                            <div class="{{ $row }} bg-coffee-50/60"><dt class="font-semibold text-coffee-800">Trạng thái</dt><dd><span class="inline-block rounded-full border px-2.5 py-0.5 text-xs font-semibold {{ $statusClass }}">{{ $statusLabel }}</span></dd></div>
-                            <div class="{{ $row }}"><dt class="font-semibold text-coffee-800">Kết quả</dt><dd><span class="font-bold text-coffee-900">{{ $assessment->Diem ?? '—' }}/100</span> <span class="ml-1 font-bold {{ $resultClass }}">{{ $resultLabel }}</span> <span class="ml-1 text-xs text-slate-400">(đạt khi tổng ≥ 80 và mọi tiêu chí ≥ 70)</span></dd></div>
-                            <div class="{{ $row }} bg-coffee-50/60"><dt class="font-semibold text-coffee-800">Điểm tiêu chí</dt><dd class="flex flex-wrap gap-2">
+                            <div class="{{ $row }}"><dt class="text-slate-500">Trạng thái</dt><dd><span class="inline-block rounded-full border px-2.5 py-0.5 text-xs font-medium {{ $statusClass }}">{{ $statusLabel }}</span></dd></div>
+                            <div class="{{ $row }}"><dt class="text-slate-500">Kết quả</dt><dd><span class="font-semibold text-slate-900">{{ $assessment->Diem ?? '—' }}/100</span> <span class="ml-1 font-semibold {{ $resultClass }}">{{ $resultLabel }}</span> <span class="ml-1 text-xs text-slate-400">(đạt khi tổng ≥ 80 và mọi tiêu chí ≥ 70)</span></dd></div>
+                            <div class="{{ $row }}"><dt class="text-slate-500">Điểm tiêu chí</dt><dd class="flex flex-wrap gap-2">
                                 @foreach($criteria as $column => [$label, $weight])
                                     @php
                                         $score = $assessment->$column;
                                     @endphp
-                                    <span class="rounded-lg border border-coffee-200 bg-white px-2.5 py-1 text-xs">{{ $label }} <span class="text-slate-400">{{ $weight }}</span> <strong class="{{ $hasScores && $score !== null && $score < 70 ? 'text-rose-600' : 'text-coffee-900' }}">{{ $hasScores ? ($score ?? '—') : '—' }}</strong></span>
+                                    <span class="rounded-md border border-slate-200 px-2.5 py-1 text-xs text-slate-600">{{ $label }} <span class="text-slate-400">{{ $weight }}</span> <strong class="{{ $hasScores && $score !== null && $score < 70 ? 'text-rose-600' : 'text-slate-900' }}">{{ $hasScores ? ($score ?? '—') : '—' }}</strong></span>
                                 @endforeach
                             </dd></div>
                             @if(trim($assessment->NhanXet ?? '') !== '')
-                                <div class="{{ $row }}"><dt class="font-semibold text-coffee-800">Nhận xét</dt><dd class="whitespace-pre-line text-coffee-900">{{ $assessment->NhanXet }}</dd></div>
+                                <div class="{{ $row }}"><dt class="text-slate-500">Nhận xét</dt><dd class="whitespace-pre-line text-slate-900">{{ $assessment->NhanXet }}</dd></div>
                             @endif
                             @if($assessment->ChiTietDeXuat || $assessment->DeXuatXuLy)
-                                <div class="{{ $row }}"><dt class="font-semibold text-coffee-800">Đề xuất cải thiện</dt><dd>
+                                <div class="{{ $row }}"><dt class="text-slate-500">Đề xuất cải thiện</dt><dd>
                                     @if($assessment->ChiTietDeXuat)
                                         @include('components.assessment-improvement-summary', ['savedProposal' => json_decode($assessment->ChiTietDeXuat, true)])
                                     @else
@@ -102,28 +102,28 @@
                                 </dd></div>
                             @endif
                             @if($assessment->ly_do_tra_lai)
-                                <div class="{{ $row }}"><dt class="font-semibold text-coffee-800">Lý do trả lại</dt><dd class="text-rose-700">{{ $assessment->ly_do_tra_lai }}</dd></div>
+                                <div class="{{ $row }}"><dt class="text-slate-500">Lý do trả lại</dt><dd class="text-rose-700">{{ $assessment->ly_do_tra_lai }}</dd></div>
                             @endif
-                            <div class="{{ $row }}"><dt class="font-semibold text-coffee-800">Cảnh báo học tập</dt><dd>
+                            <div class="{{ $row }}"><dt class="text-slate-500">Cảnh báo học tập</dt><dd>
                                 @include('manager.risk', ['risk' => $employee->risk])
                                 <details class="mt-1 text-xs"><summary class="cursor-pointer text-slate-500">Xem lý do</summary><div class="mt-1">@include('manager.risk-details', ['person' => $employee, 'showBadge' => false])<p class="mt-2 text-[11px] text-slate-500">Chỉ để tham khảo, không cộng vào điểm và không chặn việc phê duyệt.</p></div></details>
                             </dd></div>
                         </dl>
                     </section>
                     @if($assessment->IsPassed === null)
-                        <p class="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">Thiếu điểm 5 tiêu chí. Hãy trả lại để trưởng ca bổ sung.</p>
+                        <p class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">Thiếu điểm 5 tiêu chí. Hãy trả lại để trưởng ca bổ sung.</p>
                     @endif
                 </div>
                 @if($assessment->TrangThai === 'ChoPheDuyet')
-                    <div class="flex flex-col gap-3 border-t border-coffee-100 bg-coffee-50/50 px-6 py-4 md:flex-row md:items-center">
+                    <div class="flex flex-col gap-3 border-t border-slate-200 px-6 py-4 md:flex-row md:items-center">
                         <form method="POST" action="{{ route('manager.review', $assessment->id) }}" class="flex flex-1 gap-2">
                             @csrf<input type="hidden" name="action" value="return">
-                            <input required name="reason" maxlength="2000" aria-label="Lý do trả lại đánh giá" placeholder="Lý do trả lại..." class="min-w-0 flex-1 rounded-xl border border-coffee-300 bg-white px-3 py-2.5 text-sm">
-                            <button class="rounded-xl border border-rose-300 bg-white px-4 py-2.5 text-sm font-bold text-rose-700 hover:bg-rose-50">Trả lại</button>
+                            <input required name="reason" maxlength="2000" aria-label="Lý do trả lại đánh giá" placeholder="Lý do trả lại..." class="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200">
+                            <button class="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-rose-700 hover:bg-slate-50">Trả lại</button>
                         </form>
                         <form method="POST" action="{{ route('manager.review', $assessment->id) }}">
                             @csrf<input type="hidden" name="action" value="approve">
-                            <button class="w-full rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-40 md:w-auto" @disabled($assessment->IsPassed === null || (! $assessment->IsPassed && ! $assessment->ChiTietDeXuat))>Phê duyệt{{ $assessment->IsPassed === 0 ? ' & đề xuất' : '' }}</button>
+                            <button class="w-full rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40 md:w-auto" @disabled($assessment->IsPassed === null || (! $assessment->IsPassed && ! $assessment->ChiTietDeXuat))>Phê duyệt{{ $assessment->IsPassed === 0 ? ' & đề xuất' : '' }}</button>
                         </form>
                     </div>
                 @endif

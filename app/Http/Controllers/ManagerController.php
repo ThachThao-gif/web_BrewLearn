@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\AssessmentEligibility;
 use App\Models\AssessmentReminder;
 use App\Models\CourseProgress;
+use App\Models\StaffProfile;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -18,6 +20,8 @@ use Illuminate\Validation\ValidationException;
 class ManagerController extends Controller
 {
     public const MAX_RETRAINING_ROUNDS = 3;
+
+    private const STAFF_PER_PAGE = 10;
 
     private function storeId(): int
     {
@@ -47,7 +51,7 @@ class ManagerController extends Controller
             ->where('phien_ban_mo_hinh', config('brewlearn.risk_rules_version'))
             ->where(fn ($q) => $q->where('cua_hang_id', $this->storeId())->orWhereNull('cua_hang_id'))
             ->orderByDesc('ngay_du_doan')->orderByDesc('id')->get()->unique('user_id')->keyBy('user_id');
-        $evaluations = DB::table('danh_gia_nang_luc')->whereIn('user_id', $staff->modelKeys())->whereIn('TrangThai', ['ChoPheDuyet', 'DaDuyet', 'HoanThanh', 'TraLai'])->whereNotNull('Diem')->orderByDesc('NgayDanhGia')->orderByDesc('id')->get();
+        $evaluations = DB::table('danh_gia_nang_luc')->whereIn('user_id', $staff->modelKeys())->whereIn('TrangThai', ['DaDuyet', 'HoanThanh'])->whereNotNull('Diem')->orderByDesc('NgayDanhGia')->orderByDesc('id')->get();
         $progress = app(CourseProgress::class)->summarize($staff);
         app(AssessmentReminder::class)->decorate($staff);
         foreach ($staff as $person) {
@@ -64,6 +68,21 @@ class ManagerController extends Controller
         $store = DB::table('cua_hang')->find($this->storeId());
 
         return compact('staff', 'shifts', 'store');
+    }
+
+    /**
+     * Liệt kê điểm từng tiêu chí kèm trọng số để nhân viên biết tiêu chí nào chưa đạt mức tối thiểu.
+     */
+    private function criteriaBreakdown(object $assessment): string
+    {
+        $lines = "\n\nĐiểm từng tiêu chí (đạt khi điểm tổng ≥ 80 và mọi tiêu chí ≥ 70):";
+        foreach (['Diem_NghiepVu' => ['Nghiệp vụ', '20%'], 'Diem_KyNang' => ['Kỹ năng', '30%'], 'Diem_QuyTrinh' => ['Quy trình', '20%'],
+            'Diem_PhucVu' => ['Phục vụ', '15%'], 'Diem_TacPhong' => ['Tác phong', '15%']] as $column => [$label, $weight]) {
+            $score = $assessment->$column;
+            $lines .= "\n- {$label} ({$weight}): ".($score ?? '—').'/100'.($score !== null && $score < 70 ? ' — dưới mức tối thiểu 70' : '');
+        }
+
+        return $lines;
     }
 
     private function proposalData(): array
@@ -84,10 +103,17 @@ class ManagerController extends Controller
         $data['pendingCount'] = DB::table('danh_gia_nang_luc')->whereIn('user_id', $ids)->where('TrangThai', 'ChoPheDuyet')->count();
         $data['trainingCount'] = DB::table('yeu_cau_dao_tao_lai')->whereIn('user_id', $ids)->where('trang_thai', 'DaDuyet')->count();
         $active = $this->members()->assessmentEligible()->working()->whereIn('id', $ids)->pluck('id');
-        $months = collect(range(5, 0))->map(fn ($offset) => now()->startOfMonth()->subMonths($offset));
-        $approved = DB::table('danh_gia_nang_luc')->whereIn('user_id', $active)
-            ->whereIn('TrangThai', ['DaDuyet', 'HoanThanh'])->whereNotNull('IsPassed')
-            ->whereBetween('NgayDanhGia', [$months->first(), now()])
+        $data['activeCount'] = $active->count();
+        $approvedScope = DB::table('danh_gia_nang_luc')->whereIn('user_id', $active)
+            ->whereIn('TrangThai', ['DaDuyet', 'HoanThanh'])->whereNotNull('IsPassed')->whereNotNull('NgayDanhGia');
+        $data['trendYears'] = (clone $approvedScope)->pluck('NgayDanhGia')
+            ->map(fn ($date) => (int) substr((string) $date, 0, 4))->push(now()->year)->unique()->sortDesc()->values();
+        $data['trendYear'] = $data['trendYears']->contains((int) $request->query('year')) ? (int) $request->query('year') : null;
+        $months = $data['trendYear']
+            ? collect(range(1, $data['trendYear'] === now()->year ? now()->month : 12))->map(fn ($month) => now()->setDate($data['trendYear'], $month, 1)->startOfDay())
+            : collect(range(5, 0))->map(fn ($offset) => now()->startOfMonth()->subMonths($offset));
+        $approved = (clone $approvedScope)
+            ->whereBetween('NgayDanhGia', [$months->first(), $months->last()->copy()->endOfMonth()->min(now())])
             ->orderByDesc('NgayDanhGia')->orderByDesc('id')->get()
             ->groupBy(fn ($row) => substr($row->NgayDanhGia, 0, 7));
         $data['assessmentTrend'] = $months->map(function ($month) use ($approved) {
@@ -95,7 +121,7 @@ class ManagerController extends Controller
             $total = $rows->count();
             $passed = $rows->filter(fn ($row) => (bool) $row->IsPassed)->count();
 
-            return ['label' => $month->format('m/Y'), 'total' => $total, 'passed' => $passed,
+            return ['label' => $month->format('m/Y'), 'short' => 'T'.$month->month, 'total' => $total, 'passed' => $passed,
                 'failed' => $total - $passed, 'passRate' => $total ? round($passed / $total * 100, 1) : null,
                 'failRate' => $total ? round(($total - $passed) / $total * 100, 1) : null];
         });
@@ -107,7 +133,12 @@ class ManagerController extends Controller
 
     public function staff(Request $request): View
     {
-        return view('manager.staff', $this->context($request));
+        $data = $this->context($request);
+        $page = LengthAwarePaginator::resolveCurrentPage();
+        $data['staffPage'] = new LengthAwarePaginator($data['staff']->forPage($page, self::STAFF_PER_PAGE)->values(),
+            $data['staff']->count(), self::STAFF_PER_PAGE, $page, ['path' => $request->url(), 'query' => $request->query()]);
+
+        return view('manager.staff', $data);
     }
 
     public function profile(Request $request, int $id): View
@@ -115,23 +146,10 @@ class ManagerController extends Controller
         $person = $this->members()->assessmentEligible()->findOrFail($id);
         $data = $this->context(new Request);
         $person = $data['staff']->firstWhere('id', $id) ?? $person;
-        $progress = app(CourseProgress::class);
-        $courses = $progress->assignedCourses($person->ChucVu ?? '')->map(function ($course) use ($person, $progress) {
-            $course->progress = $progress->sync($person->id, $course->MaCTDT);
-            $lessons = DB::table('bai_hoc')->where('FK_MaCTDT', $course->MaCTDT)->pluck('MaBaiHoc');
-            $records = DB::table('user_lesson_progresses')->where('user_id', $person->id)->whereIn('lesson_id', $lessons)->get();
-            $course->total = $lessons->count();
-            $course->completed = $records->filter(fn ($p) => $p->is_completed || $p->progress_percent >= 95)->count();
-            $course->hasDetails = $records->isNotEmpty();
-
-            return $course;
-        });
-        $quizzes = DB::table('ket_qua_kiem_tra as k')->leftJoin('bai_kiem_tra as b', 'k.MaBaiKiemTra', '=', 'b.MaBaiKiemTra')->where('k.user_id', $id)->select('k.*', 'b.TenBaiKiemTra', 'b.DiemChuan')->orderByDesc('k.id')->get();
-        $assessments = DB::table('danh_gia_nang_luc')->where('user_id', $id)->orderByDesc('id')->get();
         $training = DB::table('yeu_cau_dao_tao_lai')->where('user_id', $id)->orderByDesc('id')->get();
         $this->attachRounds($training);
 
-        return view('manager.profile', array_merge($data, $this->proposalData(), compact('person', 'courses', 'quizzes', 'assessments', 'training')));
+        return view('manager.profile', array_merge($data, $this->proposalData(), app(StaffProfile::class)->build($person), compact('person', 'training')));
     }
 
     public function createShift(Request $request): RedirectResponse
@@ -199,24 +217,22 @@ class ManagerController extends Controller
                     'ghi_chu_thuc_hien' => null, 'han_hoan_thanh' => null, 'ngay_danh_gia_lai' => null];
                 DB::table('yeu_cau_dao_tao_lai')->where('id', $priorPlan->id)->update($next + ['trang_thai' => $assessment->IsPassed ? 'HoanThanh' : 'DaDuyet', 'tien_trinh' => $assessment->IsPassed ? 'HoanTat' : ($limitReached ? 'DungDaoTao' : 'ChoGiao'), 'ket_qua_sau_dao_tao_lai' => $assessment->IsPassed ? 'Dat' : 'ChuaDat', 'ke_hoach' => ($assessment->IsPassed || $limitReached) ? $priorPlan->ke_hoach : $assessment->ChiTietDeXuat, 'updated_at' => now()]);
                 if ($limitReached) {
-                    $this->notify(auth()->id(), 'Đào tạo lại đã đạt giới hạn', 'Nhân viên #'.$assessment->user_id.' vẫn chưa đạt sau 3 vòng đào tạo lại của yêu cầu #'.$priorPlan->id.'. Đã dừng đào tạo lại; quản lý cần xem xét hướng xử lý.', 'training-limit-'.$priorPlan->id);
+                    $this->notify(auth()->id(), 'Đào tạo lại đã đạt giới hạn', 'Nhân viên '.(User::find($assessment->user_id)?->name ?? '').' vẫn chưa đạt sau 3 vòng đào tạo lại. Đã dừng đào tạo lại; quản lý cần xem xét hướng xử lý.', 'training-limit-'.$priorPlan->id);
                 }
             } elseif ($approve && ! $assessment->IsPassed && $assessment->ChiTietDeXuat) {
-                DB::table('yeu_cau_dao_tao_lai')->insert(['user_id' => $assessment->user_id, 'assessment_id' => $id, 'nguoi_de_xuat_id' => $assessment->NguoiDanhGia_id, 'nguoi_duyet_id' => auth()->id(), 'nguon_de_xuat' => 'Trưởng ca đề xuất', 'ly_do' => 'Đánh giá chưa đạt: '.($assessment->NhanXet ?? ''), 'ke_hoach' => $assessment->ChiTietDeXuat, 'trang_thai' => 'DaDuyet', 'tien_trinh' => 'ChoGiao', 'ket_qua_sau_dao_tao_lai' => 'ChuaCoKetQua', 'ngay_de_xuat' => now(), 'ngay_duyet' => now(), 'created_at' => now(), 'updated_at' => now()]);
+                DB::table('yeu_cau_dao_tao_lai')->insert(['user_id' => $assessment->user_id, 'assessment_id' => $id, 'nguoi_de_xuat_id' => $assessment->NguoiDanhGia_id, 'nguoi_duyet_id' => auth()->id(), 'nguon_de_xuat' => 'Trưởng ca đề xuất', 'ly_do' => $this->retrainingReason($assessment), 'ke_hoach' => $assessment->ChiTietDeXuat, 'trang_thai' => 'DaDuyet', 'tien_trinh' => 'ChoGiao', 'ket_qua_sau_dao_tao_lai' => 'ChuaCoKetQua', 'ngay_de_xuat' => now(), 'ngay_duyet' => now(), 'created_at' => now(), 'updated_at' => now()]);
             }
             $employeeName = User::find($assessment->user_id)?->name ?? 'Nhân viên';
             if ($approve) {
                 $status = $assessment->IsPassed ? 'ĐẠT' : 'CHƯA ĐẠT';
-                $message = 'Kết quả đánh giá #'.$id.' đã được quản lý phê duyệt.'
+                $message = 'Kết quả đánh giá năng lực của bạn đã được quản lý phê duyệt.'
                     ."\nĐiểm tổng: {$assessment->Diem}/100 — {$status}";
                 if ($reviewRound) {
                     $message .= "\nĐào tạo lại lần {$reviewRound->round_number}: ".($assessment->IsPassed
                         ? 'Đạt. Yêu cầu đào tạo lại đã hoàn thành.'
                         : ($limitReached ? 'Chưa đạt sau 3 vòng. Đã dừng đào tạo lại; quản lý sẽ xem xét hướng xử lý.' : 'Chưa đạt. Yêu cầu tiếp tục được xử lý; quản lý sẽ điều chỉnh và giao vòng tiếp theo.'));
                 }
-                foreach (['Diem_NghiepVu' => 'Nghiệp vụ', 'Diem_KyNang' => 'Kỹ năng', 'Diem_QuyTrinh' => 'Quy trình', 'Diem_PhucVu' => 'Phục vụ', 'Diem_TacPhong' => 'Tác phong'] as $column => $label) {
-                    $message .= "\n{$label}: ".($assessment->$column ?? '—').'/100';
-                }
+                $message .= $this->criteriaBreakdown($assessment);
                 if (trim($assessment->NhanXet ?? '') !== '') {
                     $message .= "\nNhận xét của trưởng ca: ".$assessment->NhanXet;
                 }
@@ -231,8 +247,8 @@ class ManagerController extends Controller
             }
             if ($assessment->NguoiDanhGia_id) {
                 $message = $approve
-                    ? 'Quản lý đã duyệt đánh giá #'.$id.' bạn gửi cho nhân viên '.$employeeName.'. Kết quả và nội dung đã duyệt đã được gửi tới nhân viên.'
-                    : 'Quản lý trả lại đánh giá #'.$id.' của nhân viên '.$employeeName.'. Vui lòng bổ sung: '.$data['reason'];
+                    ? 'Quản lý đã duyệt đánh giá bạn gửi cho nhân viên '.$employeeName.'. Kết quả và nội dung đã duyệt đã được gửi tới nhân viên.'
+                    : 'Quản lý trả lại đánh giá của nhân viên '.$employeeName.'. Vui lòng bổ sung: '.$data['reason'];
                 $this->notify($assessment->NguoiDanhGia_id, $approve ? 'Đánh giá bạn gửi đã được duyệt' : 'Đánh giá cần bổ sung', $message, 'assessment-review-'.$id.'-'.$data['action'].'-leader');
             }
         });
@@ -265,16 +281,6 @@ class ManagerController extends Controller
                 $round->eligibility = app(AssessmentEligibility::class)->round($round, $plan->user_id);
             }
         }
-    }
-
-    public function reviewTraining(Request $request, int $id): RedirectResponse
-    {
-        $plan = $this->plan($id);
-        $data = $request->validate(['action' => ['required', Rule::in(['approve', 'reject'])], 'reason' => ['required_if:action,reject', 'nullable', 'string', 'max:2000']]);
-        abort_unless($plan->trang_thai === 'ChoDuyet', 409);
-        DB::table('yeu_cau_dao_tao_lai')->where('id', $id)->where('trang_thai', 'ChoDuyet')->update(['trang_thai' => $data['action'] === 'approve' ? 'DaDuyet' : 'TuChoi', 'nguoi_duyet_id' => auth()->id(), 'ngay_duyet' => now(), 'ghi_chu_thuc_hien' => $data['reason'] ?? null, 'updated_at' => now()]);
-
-        return back()->with('success', 'Đã xử lý đề xuất đào tạo lại.');
     }
 
     public function assignTraining(Request $request, int $id): RedirectResponse
@@ -312,8 +318,14 @@ class ManagerController extends Controller
                 DB::table('retraining_rounds')->where('id', $round->id)->update(['confirmed_by' => null, 'confirmed_at' => null, 'confirmation_note' => null]);
             }
             DB::table('yeu_cau_dao_tao_lai')->where('id', $id)->update($data + ['tien_trinh' => 'DangThucHien', 'updated_at' => now()]);
+            $names = DB::table('users')->whereIn('id', [$plan->user_id, $data['nguoi_phu_trach_id']])->pluck('name', 'id');
+            $details = 'Người phụ trách: '.$names[$data['nguoi_phu_trach_id']]."\nHạn hoàn thành: ".$data['han_hoan_thanh']
+                ."\nNgày đánh giá lại dự kiến: ".$data['ngay_danh_gia_lai']."\nNội dung: ".$data['ghi_chu_thuc_hien'];
             foreach (array_unique([$plan->user_id, (int) $data['nguoi_phu_trach_id']]) as $userId) {
-                $this->notify($userId, 'Đào tạo lại lần '.$number, 'Hạn hoàn thành: '.$data['han_hoan_thanh'].'. Nội dung: '.$data['ghi_chu_thuc_hien'], 'training-assigned-'.$id.'-round-'.$number.'-'.$userId.'-'.now()->timestamp);
+                [$title, $message] = $userId === (int) $plan->user_id
+                    ? ['Kế hoạch đào tạo lại', $details]
+                    : ['Phân công phụ trách đào tạo lại', 'Nhân viên: '.$names[$plan->user_id]."\n".$details];
+                $this->notify($userId, $title, $message, 'training-assigned-'.$id.'-round-'.$number.'-'.$userId.'-'.now()->timestamp);
             }
         });
 
@@ -334,7 +346,7 @@ class ManagerController extends Controller
             if (! $eligibility['ready']) {
                 throw ValidationException::withMessages(['training' => 'Chưa đủ điều kiện đánh giá lại: '.implode(' ', $eligibility['missing'])]);
             }
-            $assessmentId = DB::table('danh_gia_nang_luc')->insertGetId(['user_id' => $plan->user_id, 'NguoiDanhGia_id' => $data['assessor_id'], 'TieuChuan' => 'Đánh giá lại lần '.$round->round_number.' sau đào tạo #'.$id.': '.$data['criteria'], 'NgayHen' => $data['assessment_date'].' '.$data['assessment_time'].':00', 'TrangThai' => 'ChoDanhGia', 'created_at' => now(), 'updated_at' => now()]);
+            $assessmentId = DB::table('danh_gia_nang_luc')->insertGetId(['user_id' => $plan->user_id, 'NguoiDanhGia_id' => $data['assessor_id'], 'TieuChuan' => 'Đánh giá lại lần '.$round->round_number.': '.$data['criteria'], 'NgayHen' => $data['assessment_date'].' '.$data['assessment_time'].':00', 'NgayDanhGia' => null, 'Diem' => null, 'TrangThai' => 'ChoDanhGia', 'created_at' => now(), 'updated_at' => now()]);
             DB::table('retraining_rounds')->where('id', $round->id)->update(['assessment_id' => $assessmentId, 'assessment_date' => $data['assessment_date'], 'status' => 'ChoDanhGiaLai', 'updated_at' => now()]);
             DB::table('yeu_cau_dao_tao_lai')->where('id', $id)->update(['danh_gia_lai_id' => $assessmentId, 'ngay_danh_gia_lai' => $data['assessment_date'], 'tien_trinh' => 'ChoDanhGiaLai', 'updated_at' => now()]);
             foreach ([$plan->user_id, (int) $data['assessor_id']] as $userId) {
@@ -352,6 +364,20 @@ class ManagerController extends Controller
         $data['managerNotifications'] = DB::table('notifications')->where('user_id', auth()->id())->whereNotIn('type', ['risk', 'prediction'])->orderByDesc('id')->paginate(20);
 
         return view('manager.notifications', $data);
+    }
+
+    /**
+     * Lý do đào tạo lại: điểm tổng, các tiêu chí dưới 70 và nhận xét của trưởng ca (nếu có).
+     */
+    private function retrainingReason(object $assessment): string
+    {
+        $weak = collect(['Diem_NghiepVu' => 'Nghiệp vụ', 'Diem_KyNang' => 'Kỹ năng', 'Diem_QuyTrinh' => 'Quy trình', 'Diem_PhucVu' => 'Phục vụ', 'Diem_TacPhong' => 'Tác phong'])
+            ->filter(fn (string $label, string $column) => is_numeric($assessment->$column) && $assessment->$column < 70)
+            ->map(fn (string $label, string $column) => $label.' '.(float) $assessment->$column)->implode(', ');
+        $reason = 'Đánh giá chưa đạt (điểm tổng '.(float) $assessment->Diem.($weak !== '' ? '; dưới 70: '.$weak : '').')';
+        $comment = trim((string) ($assessment->NhanXet ?? ''));
+
+        return $comment !== '' ? $reason.'. '.$comment : $reason.'.';
     }
 
     private function notify(int $userId, string $title, string $message, string $key): void

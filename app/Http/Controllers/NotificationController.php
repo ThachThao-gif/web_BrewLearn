@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NotificationDetails;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,70 +33,6 @@ class NotificationController extends Controller
             'notifications',
             'currentUser'
         ));
-    }
-
-    /**
-     * =========================================================
-     * 2. GỬI THÔNG BÁO / NHẮC NHỞ CHO NHÂN VIÊN
-     * =========================================================
-     */
-    public function store(Request $request)
-    {
-        if (! auth()->check()) {
-            return redirect()->route('login');
-        }
-
-        // Validate linh hoạt dữ liệu gửi từ cả Modal 1 (Thông báo chung) và Modal 2 (Sự cố)
-        $validated = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'title' => 'nullable|string|max:255',
-            'message' => 'nullable|string|max:2000',
-            'loai_loi' => 'nullable|string|max:255',
-            'muc_do' => 'nullable|string|max:50',
-            'thoi_diem' => 'nullable|date',
-            'mo_ta' => 'nullable|string|max:2000',
-        ]);
-
-        try {
-            // Trường hợp 1: Form Gửi thông báo chung (có title & message)
-            if ($request->filled('title') && $request->filled('message')) {
-                $title = $validated['title'];
-                $message = $validated['message'];
-                $type = 'general';
-            }
-            // Trường hợp 2: Form Ghi nhận sự cố & nhắc nhở (có loai_loi & mo_ta)
-            else {
-                $title = 'Nhắc nhở sự cố: '.($validated['loai_loi'] ?? 'Vận hành');
-                $message = $validated['mo_ta'] ?? '';
-                $type = 'incident';
-            }
-
-            DB::table('notifications')->insert([
-                'user_id' => $validated['user_id'],
-                'title' => $title,
-                'message' => $message,
-                'type' => $type,
-                'is_read' => 0,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            return redirect()
-                ->back()
-                ->with(
-                    'success',
-                    'Đã gửi thông báo cho nhân viên thành công!'
-                );
-
-        } catch (\Throwable $e) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Lỗi khi gửi thông báo: '.$e->getMessage()
-                );
-        }
     }
 
     /**
@@ -149,6 +86,7 @@ class NotificationController extends Controller
             'id' => $notification->id,
             'title' => $title,
             'message' => $message,
+            'details' => app(NotificationDetails::class)->parse($message),
             'type' => $type,
             'is_read' => 1,
             'created_at' => $notification->created_at

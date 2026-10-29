@@ -1,6 +1,6 @@
 # Cảnh báo theo luật BrewLearn
 
-Phương án vận hành mặc định là `rules-v2`, thống nhất với
+Phương án vận hành mặc định là `rules-v3`, thống nhất với
 `config/brewlearn.php`. Điểm 0–1 là điểm luật chuẩn hóa, không phải xác suất.
 
 ## Chạy thủ công
@@ -15,7 +15,7 @@ Chương trình dùng cấu hình MySQL trong `.env`, chỉ xử lý Barista, Th
 cửa hàng; loại trưởng ca, quản lý và HR. Mỗi nhân viên được đọc trong một
 transaction có snapshot nhất quán. Thời điểm lấy từ UTC_TIMESTAMP() của MySQL, cùng quy ước UTC của Laravel, được dùng
 cả để lọc quiz và lưu `ngay_du_doan`. Mỗi lần thành công thêm bản ghi mới;
-không xóa cảnh báo ML cũ hoặc sửa dữ liệu học tập, đánh giá, đào tạo lại.
+không ghi đè cảnh báo trước đó và không sửa dữ liệu học tập, đánh giá, đào tạo lại.
 
 ## Dữ liệu và luật
 
@@ -29,13 +29,15 @@ không xóa cảnh báo ML cũ hoặc sửa dữ liệu học tập, đánh giá
 - Điểm quiz trung bình <60: 3; từ 60 đến <80: 2; còn lại: 0.
 - Tỷ lệ bài chưa đạt >=0,5: 3; >0 đến <0,5: 1; bằng 0: 0.
 - Tiến độ <50: 2; từ 50 đến <80: 1; còn lại: 0.
-- Tổng 0–2: Thấp; 3–4: Trung bình; 5–8: Cao. Điểm chuẩn hóa = tổng/8.
-- So ngưỡng trước khi làm tròn. Dữ liệu thiếu lưu NULL với phiên bản rules-v2;
+- Kết quả đánh giá năng lực gần nhất đã duyệt là Chưa đạt: 3; Đạt hoặc chưa có: 0.
+- Lỗi nghiệp vụ trong 30 ngày: >=2 lỗi hoặc có lỗi nghiêm trọng: 2; 1 lỗi: 1; không có: 0.
+- Tổng 0–2: Thấp; 3–4: Trung bình; 5–13: Cao. Điểm chuẩn hóa = tổng/13.
+- So ngưỡng trước khi làm tròn. Dữ liệu thiếu lưu NULL với phiên bản rules-v3;
   dữ liệu không hợp lệ hoặc lỗi truy vấn được ghi lỗi, rollback riêng nhân viên.
 
 JSON lưu đầu vào, số bài đã làm/tổng bài áp dụng, mã các kết quả quiz được
 chọn, tổng và điểm thành phần, lý do, thời điểm tính. Giao diện mặc định chỉ
-đọc rules-v2; chưa có kết quả và chưa đủ dữ liệu là hai nhóm khác nhau.
+đọc rules-v3; chưa có kết quả và chưa đủ dữ liệu là hai nhóm khác nhau.
 
 ## Kiểm thử
 
@@ -46,11 +48,5 @@ php vendor/phpunit/phpunit/phpunit --do-not-cache-result --filter ManagerWorkflo
 
 Các kiểm thử Python dùng SQLite bộ nhớ để kiểm tra các truy vấn tổng hợp,
 ngoài kiểm thử biên của luật. Chạy thủ công trên MySQL để xác nhận tích hợp
-trước khi dùng. Không có lịch chạy tự động; luôn đối chiếu thời điểm trên UI.
-
-## Phần ML thực nghiệm
-
-`train_model.py`, dữ liệu CSV và các tệp mô hình `.pkl` vẫn được giữ riêng.
-Không cần scikit-learn hoặc mô hình `.pkl` để chạy luật. Script
-`tinh_diem_rui_ro.py` là thử nghiệm cũ, không phải bộ luật vận hành này.
-Kết quả thử nghiệm chưa xác nhận khả năng dự đoán năng lực thực tế.
+trước khi dùng. Lệnh `brewlearn:calculate-risk` được lập lịch chạy lúc 01:00
+hằng ngày (`routes/console.php`); luôn đối chiếu thời điểm tính trên UI.

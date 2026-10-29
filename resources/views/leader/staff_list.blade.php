@@ -92,23 +92,15 @@
 
                 // 2. TÍNH TOÁN QUIZ
                 $quizScore        = $staff->theory_score;
-                $quizAttempts     = $staff->quiz_attempts_count ?? 1;
-                $quizFailed       = $staff->quiz_failed_count ?? 0;
 
                 // 3. THÔNG TIN CƠ BẢN
                 $staffCode        = 'NV-' . str_pad($staff->id ?? 0, 3, '0', STR_PAD_LEFT);
                 $staffName        = $staff->name ?? 'N/A';
                 $staffChucVu      = $staff->ChucVu ?? $staff->chuc_vu ?? 'Thu ngân';
-                $staffPhone       = $staff->phone ?? $staff->SoDienThoai ?? 'Chưa cập nhật';
-                $staffEmail       = $staff->email ?? 'N/A';
                 $staffTram        = $staff->tram_lam_viec ?? $staff->Tram ?? 'Quầy Bar';
                 $assessmentScore  = $staff->assessment_score;
                 $assessmentStatus = $staff->assessment_status;
 
-                // 4. LOGIC SÁT HẠCH
-                $startDate        = $staff->joined_at ?? $staff->created_at ?? null;
-                $daysWorked       = $startDate ? \Carbon\Carbon::parse($startDate)->diffInDays(now()) : 0;
-                $isAssessmentDue  = ($daysWorked >= 80 && $daysWorked <= 105);
                 $inShift          = $staff->in_shift ?? true;
             @endphp
             
@@ -173,44 +165,11 @@
                         </div>
                     </div>
 
-                    <!-- Trạng thái & Nút Mở Modal -->
-                    <div class="lg:col-span-2 flex flex-col justify-center items-end space-y-1.5">
-                        @if($isAssessmentDue)
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">
-                                <i class="fa-solid fa-clock-rotate-left mr-1.5"></i> Đến kỳ sát hạch
-                            </span>
-                        @else
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
-                                <i class="fa-solid fa-circle-check mr-1.5 text-slate-400"></i> Chưa đến kỳ
-                            </span>
-                        @endif
-
-                        <button type="button" 
-                                onclick="showStaffDetail({
-                                    id: '{{ $staff->id }}',
-                                    code: '{{ $staffCode }}',
-                                    name: '{{ addslashes($staffName) }}',
-                                    chucVu: '{{ addslashes($staffChucVu) }}',
-                                    phone: '{{ $staffPhone }}',
-                                    email: '{{ $staffEmail }}',
-                                    tram: '{{ addslashes($staffTram) }}',
-                                    
-                                    // Dữ liệu khóa học thực tế
-                                    lessonsTotal: {{ $coursesTotal }},
-                                    lessonsCompleted: {{ $coursesCompleted }},
-                                    progress: '{{ $progress }}',
-                                    
-                                    // Dữ liệu Quiz
-                                    quiz: '{{ $quizScore }}',
-                                    quizLatest: '{{ $quizScore }}',
-                                    quizAttempts: {{ $quizAttempts }},
-                                    quizFailed: {{ $quizFailed }},
-
-                                    capDo: '{{ $staff->CapDo ?? $staff->cap_do ?? 1 }}',
-                                })" 
-                                class="font-bold text-amber-800 hover:text-coffee-900 transition flex items-center text-xs mt-1 cursor-pointer">
-                            <i class="fa-solid fa-address-card mr-1.5"></i>Xem Hồ sơ <i class="fa-solid fa-angle-right text-[10px] ml-1"></i>
-                        </button>
+                    <!-- Xem hồ sơ -->
+                    <div class="lg:col-span-2 flex items-center lg:justify-end">
+                        <a href="{{ route('leader.staffProfile', $staff->id) }}" class="font-bold text-amber-800 hover:text-coffee-900 transition flex items-center text-xs">
+                            <i class="fa-solid fa-address-card mr-1.5" aria-hidden="true"></i>Xem hồ sơ <i class="fa-solid fa-angle-right text-[10px] ml-1" aria-hidden="true"></i>
+                        </a>
                     </div>
 
                 </div>
@@ -224,149 +183,4 @@
 
 </div>
 
-<!-- POPUP CHI TIẾT HỒ SƠ NHÂN VIÊN -->
-<div id="staffDetailModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onclick="if(event.target === this) closeStaffDetail()">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto border border-[#E8DFC8] space-y-4">
-        
-        <!-- Header Popup -->
-        <div class="flex justify-between items-start border-b border-slate-100 pb-3">
-            <div class="flex items-center gap-3">
-                <div id="modalAvatar" class="w-11 h-11 rounded-2xl bg-coffee-900 text-amber-300 font-extrabold flex items-center justify-center text-sm shadow">
-                    NV
-                </div>
-                <div>
-                    <h3 id="modalName" class="font-bold text-coffee-900 text-base leading-tight">Nguyễn Văn A</h3>
-                    <div class="flex items-center gap-2 mt-1">
-                        <span id="modalCode" class="text-[10px] font-extrabold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-md">NV-000</span>
-                        <span id="modalChucVu" class="text-xs font-medium text-slate-500">Chức vụ</span>
-                    </div>
-                </div>
-            </div>
-            <button type="button" onclick="closeStaffDetail()" class="text-slate-400 hover:text-slate-700 p-1.5 rounded-xl hover:bg-slate-100 transition cursor-pointer">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-        </div>
-
-        <!-- Thông tin hành chính -->
-        <div class="grid grid-cols-2 gap-3 text-xs">
-            <div class="p-3 bg-[#FAF7F2] rounded-2xl border border-[#E8DFC8]/60 space-y-1">
-                <span class="text-slate-400 block font-semibold text-[10px] uppercase">Số điện thoại</span>
-                <span id="modalPhone" class="font-bold text-coffee-900 block">-</span>
-            </div>
-            <div class="p-3 bg-[#FAF7F2] rounded-2xl border border-[#E8DFC8]/60 space-y-1">
-                <span class="text-slate-400 block font-semibold text-[10px] uppercase">Trạm phân công</span>
-                <span id="modalTram" class="font-bold text-coffee-900 truncate block">-</span>
-            </div>
-        </div>
-
-        <!-- KHUNG THÔNG TIN TIẾN ĐỘ KHÓA HỌC -->
-        <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-100 space-y-3">
-            <div class="flex justify-between items-center">
-                <h4 class="font-bold text-amber-900 text-xs uppercase tracking-wide flex items-center gap-1.5">
-                    <i class="fa-solid fa-book-open text-amber-600"></i> Tiến Độ Học Tập Khóa Học
-                </h4>
-                <div class="text-right">
-                    <span class="text-[10px] text-slate-400 font-bold mr-1">Tiến độ tổng:</span>
-                    <span id="modalProgress" class="font-extrabold text-amber-800 text-sm">0%</span>
-                </div>
-            </div>
-            
-            <!-- Progress bar -->
-            <div class="w-full bg-amber-100 h-2 rounded-full overflow-hidden">
-                <div id="modalProgressBar" class="bg-amber-600 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
-            </div>
-
-            <!-- 2 Ô chi tiết khóa học -->
-            <div class="grid grid-cols-2 gap-2 text-center text-xs pt-1">
-                <div class="bg-white p-2.5 rounded-xl border border-amber-100 shadow-sm">
-                    <span class="text-[10px] text-slate-400 block font-semibold">Tổng khóa phân công</span>
-                    <span id="modalLessonsTotal" class="font-extrabold text-slate-800 text-sm">0</span>
-                </div>
-                <div class="bg-white p-2.5 rounded-xl border border-emerald-100 shadow-sm">
-                    <span class="text-[10px] text-emerald-600 block font-semibold">Đã hoàn thành 100%</span>
-                    <span id="modalLessonsCompleted" class="font-extrabold text-emerald-700 text-sm">0</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- KHUNG THÔNG TIN KẾT QUẢ THI QUIZ -->
-        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3">
-            <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wide flex items-center gap-1.5">
-                <i class="fa-solid fa-graduation-cap text-amber-700"></i> Kết Quả Thi Quiz
-            </h4>
-            <div class="grid grid-cols-3 gap-2 text-center text-xs">
-                <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                    <span class="text-[10px] text-slate-400 block font-semibold mb-0.5">Điểm Quiz gần nhất</span>
-                    <span id="modalQuizLatest" class="font-extrabold text-amber-800 text-base">0/100</span>
-                </div>
-                <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm">
-                    <span class="text-[10px] text-slate-400 block font-semibold mb-0.5">Tổng lượt thi</span>
-                    <span id="modalQuizAttempts" class="font-extrabold text-slate-700 text-base">0</span>
-                </div>
-                <div class="bg-white p-2.5 rounded-xl border border-rose-100 shadow-sm">
-                    <span class="text-[10px] text-rose-500 block font-semibold mb-0.5">Số lần không đạt</span>
-                    <span id="modalQuizFailed" class="font-extrabold text-rose-600 text-base">0</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Nút hành động -->
-        <div class="flex gap-3 pt-2 border-t border-slate-100">
-            <button type="button" onclick="closeStaffDetail()" class="flex-1 py-2.5 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-200 transition cursor-pointer">
-                Đóng cửa sổ
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- JAVASCRIPT ĐỒNG BỘ HIỂN THỊ DỮ LIỆU -->
-<script>
-function showStaffDetail(data) {
-    if (!data) return;
-
-    // 1. Thông tin cá nhân
-    document.getElementById('modalName').innerText = data.name || 'N/A';
-    document.getElementById('modalCode').innerText = data.code || 'NV-000';
-    document.getElementById('modalChucVu').innerText = data.chucVu || '';
-    document.getElementById('modalPhone').innerText = data.phone || 'N/A';
-    document.getElementById('modalTram').innerText = data.tram || 'N/A';
-
-    // Avatar
-    const elAvatar = document.getElementById('modalAvatar');
-    if (elAvatar) {
-        if (data.name) {
-            const words = data.name.trim().split(' ');
-            const initials = words.length > 1 ? (words[0][0] + words[words.length - 1][0]) : data.name.substring(0, 2);
-            elAvatar.innerText = initials.toUpperCase();
-        } else {
-            elAvatar.innerText = 'NV';
-        }
-    }
-
-    // 2. Dữ liệu khóa học
-    document.getElementById('modalLessonsTotal').innerText = data.lessonsTotal ?? 0;
-    document.getElementById('modalLessonsCompleted').innerText = data.lessonsCompleted ?? 0;
-    
-    const progressVal = data.progress ?? 0;
-    document.getElementById('modalProgress').innerText = progressVal + '%';
-    document.getElementById('modalProgressBar').style.width = progressVal + '%';
-
-    // 3. Dữ liệu Quiz
-    const latestScore = data.quizLatest ?? data.quiz ?? 0;
-    document.getElementById('modalQuizLatest').innerText = latestScore + '/100';
-    document.getElementById('modalQuizAttempts').innerText = data.quizAttempts ?? 0;
-    document.getElementById('modalQuizFailed').innerText = data.quizFailed ?? 0;
-
-    // Link chỉnh sửa
-
-    // Hiển thị Popup
-    const modal = document.getElementById('staffDetailModal');
-    if (modal) modal.classList.remove('hidden');
-}
-
-function closeStaffDetail() {
-    const modal = document.getElementById('staffDetailModal');
-    if (modal) modal.classList.add('hidden');
-}
-</script>
 @endsection

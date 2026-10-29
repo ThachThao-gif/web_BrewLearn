@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('content'); ?>
 <div class="min-h-screen bg-[#FAF8F5] py-8 px-4 md:px-8 font-sans text-slate-800">
     <div class="max-w-6xl mx-auto space-y-6">
@@ -77,7 +75,7 @@
                     <span class="w-2 h-5 bg-amber-800 rounded-full"></span> Khung Tiêu Chuẩn Năng Lực Bắt Buộc
                 </h2>
                 <span class="text-xs text-amber-900 font-semibold bg-amber-50 px-3 py-1 rounded-full border border-amber-200/50">
-                    Ngưỡng đạt: ≥ 80% mỗi tiêu chuẩn
+                    Đạt khi điểm tổng ≥ 80 và mỗi tiêu chí ≥ 70
                 </span>
             </div>
 
@@ -86,7 +84,7 @@
                     <thead>
                         <tr class="bg-slate-50/80 border-b border-slate-100 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                             <th class="py-4 px-6 w-1/4">Năng Lực</th>
-                            <th class="py-4 px-4 text-center w-1/6">Tiêu Chuẩn Cần Đạt</th>
+                            <th class="py-4 px-4 text-center w-1/6">Trọng Số / Tối Thiểu</th>
                             <th class="py-4 px-6 w-7/12">Ý Nghĩa & Yêu Cầu Chi Tiết</th>
                         </tr>
                     </thead>
@@ -97,11 +95,11 @@
                                 <span class="w-8 h-8 rounded-xl bg-amber-100/70 text-amber-900 flex items-center justify-center text-xs shrink-0">
                                     <i class="fa-solid fa-book"></i>
                                 </span>
-                                Kiến thức nghiệp vụ
+                                Nghiệp vụ
                             </td>
                             <td class="py-4 px-4 text-center">
                                 <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs inline-block">
-                                    ≥ 80%
+                                    20% · ≥ 70
                                 </span>
                             </td>
                             <td class="py-4 px-6 text-slate-600 leading-relaxed">
@@ -115,15 +113,15 @@
                                 <span class="w-8 h-8 rounded-xl bg-amber-100/70 text-amber-900 flex items-center justify-center text-xs shrink-0">
                                     <i class="fa-solid fa-mug-hot"></i>
                                 </span>
-                                Kỹ năng pha chế
+                                Kỹ năng
                             </td>
                             <td class="py-4 px-4 text-center">
                                 <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs inline-block">
-                                    ≥ 80%
+                                    30% · ≥ 70
                                 </span>
                             </td>
                             <td class="py-4 px-6 text-slate-600 leading-relaxed">
-                                Thực hiện chuẩn xác định lượng, công thức chuẩn của từng món và thao tác chuẩn hóa kỹ thuật pha chế trên trang thiết bị.
+                                Thực hiện chuẩn xác thao tác của vị trí (định lượng và công thức pha chế với Barista, thanh toán với Thu ngân, phục vụ bàn với Phục vụ) và xử lý tình huống công việc.
                             </td>
                         </tr>
 
@@ -133,11 +131,11 @@
                                 <span class="w-8 h-8 rounded-xl bg-amber-100/70 text-amber-900 flex items-center justify-center text-xs shrink-0">
                                     <i class="fa-solid fa-rotate"></i>
                                 </span>
-                                Quy trình vận hành
+                                Quy trình
                             </td>
                             <td class="py-4 px-4 text-center">
                                 <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs inline-block">
-                                    ≥ 80%
+                                    20% · ≥ 70
                                 </span>
                             </td>
                             <td class="py-4 px-6 text-slate-600 leading-relaxed">
@@ -151,11 +149,11 @@
                                 <span class="w-8 h-8 rounded-xl bg-amber-100/70 text-amber-900 flex items-center justify-center text-xs shrink-0">
                                     <i class="fa-solid fa-heart-pulse"></i>
                                 </span>
-                                Phục vụ khách hàng
+                                Phục vụ
                             </td>
                             <td class="py-4 px-4 text-center">
                                 <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs inline-block">
-                                    ≥ 80%
+                                    15% · ≥ 70
                                 </span>
                             </td>
                             <td class="py-4 px-6 text-slate-600 leading-relaxed">
@@ -169,11 +167,11 @@
                                 <span class="w-8 h-8 rounded-xl bg-amber-100/70 text-amber-900 flex items-center justify-center text-xs shrink-0">
                                     <i class="fa-solid fa-shield-halved"></i>
                                 </span>
-                                Tuân thủ quy định
+                                Tác phong
                             </td>
                             <td class="py-4 px-4 text-center">
                                 <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs inline-block">
-                                    ≥ 80%
+                                    15% · ≥ 70
                                 </span>
                             </td>
                             <td class="py-4 px-6 text-slate-600 leading-relaxed">

@@ -60,19 +60,19 @@
                 <span class="text-xs text-stone-500"><?php echo e($date($plan->han_hoan_thanh)); ?></span>
                 <span class="text-xs text-stone-500"><?php echo e($date($plan->ngay_danh_gia_lai)); ?></span>
                 <span><button type="button" onclick="<?php echo e($open); ?>" aria-haspopup="dialog" title="Xem chi tiết và xử lý" class="inline-block rounded-full border bg-white px-2.5 py-0.5 text-xs font-semibold hover:shadow-sm <?php echo e($stateClass); ?>"><?php echo e($stateLabel); ?></button></span>
-                <button type="button" onclick="<?php echo e($open); ?>" aria-label="Xem chi tiết yêu cầu #<?php echo e($plan->id); ?>" class="text-stone-400 hover:text-coffee-700"><i class="fa-regular fa-eye"></i></button>
+                <button type="button" onclick="<?php echo e($open); ?>" aria-label="Xem chi tiết yêu cầu <?php echo e($plan->id); ?>" class="text-stone-400 hover:text-coffee-700"><i class="fa-regular fa-eye"></i></button>
             </div>
 
             <dialog id="<?php echo e($dialogId); ?>" aria-labelledby="<?php echo e($dialogId); ?>-title" class="w-[min(820px,calc(100vw-2rem))] max-h-[90vh] rounded-2xl p-0 shadow-2xl backdrop:bg-coffee-900/40">
                 <div class="flex items-center justify-between border-b border-coffee-100 px-6 py-4">
-                    <h2 id="<?php echo e($dialogId); ?>-title" class="text-lg font-bold text-coffee-900">#<?php echo e($plan->id); ?> – Đào tạo lại <?php echo e($employee->name); ?></h2>
+                    <h2 id="<?php echo e($dialogId); ?>-title" class="text-lg font-bold text-coffee-900">Đào tạo lại <?php echo e($employee->name); ?></h2>
                     <form method="dialog"><button aria-label="Đóng" class="rounded-lg px-2 py-1 text-stone-400 hover:bg-coffee-50 hover:text-coffee-800"><i class="fa-solid fa-xmark"></i></button></form>
                 </div>
                 <div class="space-y-4 px-6 py-5">
                     <?php if($stopped): ?>
                         <p role="alert" class="rounded-xl bg-terra-50 px-4 py-3 text-sm font-bold text-terra-800">Đã đạt giới hạn 3 vòng đào tạo lại và vẫn chưa đạt. Không giao thêm vòng; quản lý xem xét hướng xử lý.</p>
                     <?php elseif($plan->tien_trinh === 'ChoDanhGiaLai'): ?>
-                        <p class="rounded-xl bg-caramel-50 px-4 py-3 text-sm text-caramel-900">Chờ đánh giá #<?php echo e($plan->danh_gia_lai_id); ?> ngày <?php echo e($date($plan->ngay_danh_gia_lai)); ?>. Duyệt kết quả tại <a href="<?php echo e(route('manager.assessments')); ?>" class="font-bold underline">Duyệt đánh giá</a>.</p>
+                        <p class="rounded-xl bg-caramel-50 px-4 py-3 text-sm text-caramel-900">Chờ đánh giá lại ngày <?php echo e($date($plan->ngay_danh_gia_lai)); ?>. Duyệt kết quả tại <a href="<?php echo e(route('manager.assessments')); ?>" class="font-bold underline">Duyệt đánh giá</a>.</p>
                     <?php elseif($currentRound): ?>
                         <div class="rounded-xl px-4 py-3 text-sm <?php echo e($currentRound->eligibility['ready'] ? 'bg-olive-50 text-olive-800' : 'bg-honey-50 text-honey-900'); ?>">
                             <p class="font-bold"><?php echo e($currentRound->eligibility['ready'] ? 'Đủ điều kiện tạo lịch đánh giá lại' : 'Chưa đủ điều kiện đánh giá lại'); ?></p>
@@ -140,12 +140,6 @@
                         </details>
                     <?php endif; ?>
                 </div>
-                <?php if($plan->trang_thai === 'ChoDuyet'): ?>
-                    <div class="flex flex-col gap-3 border-t border-coffee-100 bg-coffee-50/50 px-6 py-4 md:flex-row md:items-center">
-                        <form method="POST" action="<?php echo e(route('manager.training.review', $plan->id)); ?>" class="flex flex-1 gap-2"><?php echo csrf_field(); ?><input type="hidden" name="action" value="reject"><input required name="reason" aria-label="Lý do từ chối" placeholder="Lý do từ chối..." class="min-w-0 flex-1 rounded-xl border border-coffee-200 bg-white px-3 py-2.5 text-sm"><button class="rounded-xl border border-terra-200 bg-white px-4 py-2.5 text-sm font-bold text-terra-700">Từ chối</button></form>
-                        <form method="POST" action="<?php echo e(route('manager.training.review', $plan->id)); ?>"><?php echo csrf_field(); ?><input type="hidden" name="action" value="approve"><button class="w-full rounded-xl bg-amber_brand px-5 py-2.5 text-sm font-bold text-white md:w-auto">Duyệt đề xuất</button></form>
-                    </div>
-                <?php endif; ?>
             </dialog>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
             <p class="border-t border-coffee-100 p-10 text-center text-stone-500"><?php echo e($training->isEmpty() ? 'Chưa có yêu cầu đào tạo lại. Yêu cầu xuất hiện khi đánh giá chưa đạt được duyệt.' : 'Không có yêu cầu ở tiến trình này.'); ?></p>

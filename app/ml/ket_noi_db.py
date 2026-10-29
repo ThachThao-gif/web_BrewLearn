@@ -5,12 +5,19 @@ Training scripts and ML artifacts remain separate from the default rules.
 import json
 import logging
 import os
+from datetime import datetime, timedelta
 from pathlib import Path
 
-from predict import MODEL_NAME, bounded_number, predict_risk
+from predict import RULES_VERSION, bounded_number, predict_risk
 
 logger = logging.getLogger(__name__)
 ELIGIBLE_POSITIONS = ("barista", "thu ngân", "phục vụ")
+ERROR_WINDOW_DAYS = 30
+
+
+def error_window_start(calculated_at):
+    moment = calculated_at if isinstance(calculated_at, datetime) else datetime.fromisoformat(str(calculated_at))
+    return (moment - timedelta(days=ERROR_WINDOW_DAYS)).strftime("%Y-%m-%d %H:%M:%S")
 
 
 def summarize_quizzes(tests, results):
@@ -102,6 +109,21 @@ def lay_du_lieu_du_doan(conn, user_id, calculated_at):
                 WHERE p.user_id = %s AND l.FK_MaCTDT IN ({slots})
             """, (user_id, *course_ids))
             visits = int(cur.fetchone()["visits"] or 0)
+        cur.execute("""
+            SELECT id, IsPassed, ngay_duyet FROM danh_gia_nang_luc
+            WHERE user_id = %s AND TrangThai = 'DaDuyet' AND ngay_duyet <= %s
+            ORDER BY ngay_duyet DESC, id DESC LIMIT 1
+        """, (user_id, calculated_at))
+        assessment = cur.fetchone()
+        if assessment and assessment["IsPassed"] is None:
+            raise ValueError("Approved assessment has no IsPassed")
+        cur.execute("""
+            SELECT COUNT(*) AS errors, COALESCE(SUM(muc_do = 'NghiemTrong'), 0) AS serious FROM loi_nghiep_vu
+            WHERE user_id = %s AND thoi_diem_xay_ra <= %s AND thoi_diem_xay_ra > %s
+        """, (user_id, calculated_at, error_window_start(calculated_at)))
+        error_row = cur.fetchone()
+        recent_errors = int(error_row["errors"] or 0)
+        recent_serious_errors = int(error_row["serious"] or 0)
     quiz = summarize_quizzes(tests, results)
     missing = []
     if not courses:
@@ -112,6 +134,10 @@ def lay_du_lieu_du_doan(conn, user_id, calculated_at):
         "progress_percent": sum(progresses) / len(progresses) if progresses else 0,
         **quiz,
         "learning_visits": visits,
+        "latest_assessment_id": assessment["id"] if assessment else None,
+        "latest_assessment_failed": bool(assessment) and not bool(assessment["IsPassed"]),
+        "recent_error_count": recent_errors,
+        "recent_serious_error_count": recent_serious_errors,
         "applicable_course_count": len(courses),
         "co_du_lieu_quiz": quiz["completed_quiz_count"] > 0,
         "du_dieu_kien_du_doan": not missing,
@@ -123,14 +149,15 @@ def lay_du_lieu_du_doan(conn, user_id, calculated_at):
 def du_doan_nhan_vien(du_lieu):
     if not du_lieu["du_dieu_kien_du_doan"]:
         return {"diem_rui_ro": None, "muc_canh_bao": "ChuaDuDuLieu",
-                "chi_tiet_yeu_to": du_lieu, "phien_ban_mo_hinh": MODEL_NAME}
+                "chi_tiet_yeu_to": du_lieu, "phien_ban_mo_hinh": RULES_VERSION}
     result = predict_risk(**{key: du_lieu[key] for key in (
-        "progress_percent", "avg_quiz_score", "quiz_attempts", "failed_rate", "learning_visits")})
+        "progress_percent", "avg_quiz_score", "quiz_attempts", "failed_rate", "learning_visits",
+        "latest_assessment_failed", "recent_error_count", "recent_serious_error_count")})
     return {
-        "diem_rui_ro": result["probability"],
+        "diem_rui_ro": result["normalized_score"],
         "muc_canh_bao": {"Thấp": "Thap", "Trung bình": "TrungBinh", "Cao": "Cao"}[result["risk_level"]],
         "chi_tiet_yeu_to": {**du_lieu, "details": result["details"]},
-        "phien_ban_mo_hinh": MODEL_NAME,
+        "phien_ban_mo_hinh": RULES_VERSION,
     }
 
 
@@ -149,7 +176,8 @@ def chay_du_doan_cho_tat_ca_nhan_vien():
     # Database packages are not required to import/test pure rules.
     import pymysql
     from dotenv import load_dotenv
-    load_dotenv(Path(__file__).resolve().parents[2] / ".env", override=True)
+    # Variables already set (e.g. the Selenium test database) take precedence over .env.
+    load_dotenv(Path(__file__).resolve().parents[2] / ".env")
     conn = pymysql.connect(host=os.getenv("DB_HOST", "127.0.0.1"),
         port=int(os.getenv("DB_PORT", 3306)), user=os.getenv("DB_USERNAME", "root"),
         password=os.getenv("DB_PASSWORD", ""), database=os.getenv("DB_DATABASE", "brewlearn"),
@@ -180,7 +208,7 @@ def chay_du_doan_cho_tat_ca_nhan_vien():
                 key = "insufficient" if result["diem_rui_ro"] is None else "calculated"
                 counts[key] += 1
                 score = "—" if result["diem_rui_ro"] is None else f"{result['diem_rui_ro'] * 100:.1f}/100"
-                print(f"User {employee['id']}: {result['muc_canh_bao']} · Điểm {score} · {MODEL_NAME}")
+                print(f"User {employee['id']}: {result['muc_canh_bao']} · Điểm {score} · {RULES_VERSION}")
             except Exception:
                 conn.rollback()
                 counts["errors"] += 1

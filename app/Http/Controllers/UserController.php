@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CourseProgress;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -129,91 +128,5 @@ class UserController extends Controller
         $user->update($validated);
 
         return redirect()->back()->with('success', 'Đã cập nhật thông tin hồ sơ & gửi duyệt thành công!');
-    }
-
-    /**
-     * Lấy chi tiết thông tin nhân viên & tiến độ học tập (Trả về JSON cho AJAX Modal)
-     */
-    public function getStaffDetail($id)
-    {
-        $staff = User::findOrFail($id);
-
-        // ====================================================
-        // 1. TÍNH KẾT QUẢ QUIZ (Bảng ket_qua_kiem_tra)
-        // ====================================================
-        // Tổng số lượt thi thực tế
-        $quizAttempts = DB::table('ket_qua_kiem_tra')
-            ->where('user_id', $id)
-            ->count();
-
-        // Lọc số lần không đạt
-        $quizFailed = DB::table('ket_qua_kiem_tra')
-            ->where('user_id', $id)
-            ->whereIn('TrangThai', ['ChuaDat', 'Không đạt', 'chuadat', 'khongdat', 'KhongDat'])
-            ->count();
-
-        // Lấy điểm thi gần nhất (Cột 'Diem' mới nhất theo created_at)
-        $latestQuiz = DB::table('ket_qua_kiem_tra')
-            ->where('user_id', $id)
-            ->latest('created_at')
-            ->orderByDesc('id')
-            ->first();
-
-        $quizScore = $latestQuiz ? round($latestQuiz->Diem, 1) : 0;
-
-        // ====================================================
-        // 2. TÍNH TIẾN ĐỘ BÀI HỌC (Bảng user_lesson_progresses & bai_hoc)
-        // ====================================================
-        // Tổng số bài học hiện có trên hệ thống
-        $courses = app(CourseProgress::class)->assignedCourses($staff->ChucVu ?? 'Barista');
-        $courseProgresses = $courses->map(fn ($course) => app(CourseProgress::class)->sync((int) $id, (int) $course->MaCTDT));
-        $lessonIds = DB::table('bai_hoc')->whereIn('FK_MaCTDT', $courses->pluck('MaCTDT'))->pluck('MaBaiHoc');
-        $totalLessons = $lessonIds->count();
-
-        // Lấy dữ liệu tiến độ bài học của nhân viên
-        $userLessons = DB::table('user_lesson_progresses')
-            ->where('user_id', $id)
-            ->whereIn('lesson_id', $lessonIds)
-            ->get();
-
-        // Bài học đã hoàn thành (is_completed = 1)
-        $completedLessons = $userLessons->where('is_completed', 1)->count();
-
-        // Bài học đang học (chưa xong nhưng tiến độ > 0%)
-        $inProgressLessons = $userLessons->where('is_completed', 0)
-            ->where('progress_percent', '>', 0)
-            ->count();
-
-        // Bài học chưa bắt đầu
-        $notStartedLessons = max(0, $totalLessons - ($completedLessons + $inProgressLessons));
-
-        // Phần trăm tiến độ tổng thể bài học
-        $progressPercent = round($courseProgresses->avg() ?? 0, 1);
-
-        // Trả về JSON chuẩn cho Popup
-        return response()->json([
-            'status' => 'success',
-            'data' => [
-                'id' => $staff->id,
-                'code' => 'NV-'.str_pad($staff->id, 3, '0', STR_PAD_LEFT),
-                'name' => $staff->name,
-                'chucVu' => $staff->ChucVu ?? $staff->chuc_vu ?? 'Thu ngân',
-                'phone' => $staff->phone ?? $staff->SoDienThoai ?? 'N/A',
-                'tram' => $staff->tram_lam_viec ?? $staff->Tram ?? 'Quầy Bar Phụ',
-
-                // Tiến độ học tập
-                'lessonsTotal' => $totalLessons,
-                'lessonsCompleted' => $completedLessons,
-                'lessonsInProgress' => $inProgressLessons,
-                'lessonsNotStarted' => $notStartedLessons,
-                'progress' => $progressPercent,
-
-                // Kết quả Quiz từ CSDL
-                'quizLatest' => $quizScore,
-                'quizAttempts' => $quizAttempts,
-                'quizFailed' => $quizFailed,
-
-            ],
-        ]);
     }
 }

@@ -31,7 +31,7 @@
         <div class="flex items-center gap-3">
             <div class="relative">
                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                <input type="text" id="searchInput" onkeyup="filterCourses()" placeholder="Tìm khóa học..." class="pl-8 pr-3 py-2 bg-white border border-coffee-200/60 rounded-xl text-xs w-48 md:w-60 focus:outline-none focus:border-amber_brand">
+                <input type="text" id="searchInput" oninput="filterCourses()" placeholder="Tìm khóa học..." class="pl-8 pr-3 py-2 bg-white border border-coffee-200/60 rounded-xl text-xs w-48 md:w-60 focus:outline-none focus:border-amber_brand">
             </div>
           
         </div>
@@ -39,19 +39,29 @@
 
     <!-- TABS LỌC KHÓA HỌC -->
     <div class="flex items-center space-x-6 border-b border-coffee-200/40 pb-3 text-xs font-bold text-slate-500">
-        <button id="tab-all" onclick="switchTab('all')" class="tab-btn text-coffee-900 border-b-2 border-amber_brand pb-3 -mb-3 flex items-center gap-2">
+        <button id="tab-all" onclick="switchTab('all')" class="tab-btn focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-sm text-coffee-900 border-b-2 border-amber_brand pb-3 -mb-3 flex items-center gap-2">
             <i class="fa-solid fa-cubes text-amber_brand"></i>
             <span>Tất cả khóa học ({{ $totalCount }})</span>
         </button>
-        <button id="tab-learning" onclick="switchTab('learning')" class="tab-btn hover:text-coffee-900 transition flex items-center gap-2">
+        <button id="tab-learning" onclick="switchTab('learning')" class="tab-btn focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-sm hover:text-coffee-900 transition flex items-center gap-2">
             <i class="fa-regular fa-clock"></i>
             <span>Đang theo học ({{ $learningCount }})</span>
         </button>
-        <button id="tab-completed" onclick="switchTab('completed')" class="tab-btn hover:text-coffee-900 transition flex items-center gap-2">
+        <button id="tab-completed" onclick="switchTab('completed')" class="tab-btn focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-sm hover:text-coffee-900 transition flex items-center gap-2">
             <i class="fa-regular fa-circle-check"></i>
             <span>Đã hoàn thành ({{ $completedCount }})</span>
         </button>
+        @if(! empty($retrainingCourseIds))
+            <button id="tab-retraining" onclick="switchTab('retraining')" class="tab-btn focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-sm hover:text-coffee-900 transition flex items-center gap-2">
+                <i class="fa-solid fa-arrows-rotate text-amber-600"></i>
+                <span>Học lại ({{ count($retrainingCourseIds) }})</span>
+            </button>
+        @endif
     </div>
+
+    @if($retraining ?? null)
+        <x-my-retraining :retraining="$retraining" />
+    @endif
 
     <!-- DANH SÁCH KHÓA HỌC -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="courseGrid">
@@ -64,7 +74,10 @@
                     $level =$course->CapDo ?? 'CẤP ĐỘ 1';
                     $tenCourse =$course->TenCTDT ?? 'Chưa có tên khóa học';
                     $moTa =$course->MoTa ?? '';
-                    $hinhAnh = !empty($course->HinhAnh) ?$course->HinhAnh : 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=600';
+                    $hasCover = ! empty($course->HinhAnh);
+                    $hinhAnh = $hasCover
+                        ? (\Illuminate\Support\Str::startsWith($course->HinhAnh, ['http://', 'https://']) ? $course->HinhAnh : asset(ltrim($course->HinhAnh, '/')))
+                        : 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=600';
                     $chucVu =$course->ChucVuApDung ?? 'THỰC HÀNH CA BARISTA';
                     $thoiLuong =$course->ThoiLuong ?? '1.5 giờ';
                     
@@ -82,12 +95,14 @@
                 <div class="course-card bg-white rounded-3xl border border-[#E2D4C1] shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition {{ $isLocked ? 'opacity-80' : '' }}"
                      data-title="{{ strtolower($tenCourse) }}"
                      data-progress="{{ $progress }}"
+                     data-retraining="{{ in_array((int) $courseId, $retrainingCourseIds ?? [], true) ? '1' : '0' }}"
                      data-level="{{ $level }}">
                     
                     <div>
                         <!-- BANNER ẢNH KHÓA HỌC -->
                         <div class="relative h-44 bg-gradient-to-br from-coffee-900 to-coffee-800 p-4 flex flex-col justify-between overflow-hidden">
-                            <img src="{{ $hinhAnh }}" class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay" alt="Course Banner">
+                            <img src="{{ $hinhAnh }}" class="absolute inset-0 w-full h-full object-cover {{ $hasCover ? '' : 'opacity-40 mix-blend-overlay' }}" alt="Ảnh bìa khóa {{ $tenCourse }}">
+                            @if($hasCover)<div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" aria-hidden="true"></div>@endif
                             
                             <div class="flex justify-between items-center z-10">
                                 <span class="bg-amber-500/90 backdrop-blur-sm text-white text-[10px] font-extrabold px-2.5 py-1 rounded-lg uppercase tracking-wider">
@@ -178,30 +193,34 @@
         if(activeBtn) {
             activeBtn.classList.add('text-coffee-900', 'border-b-2', 'border-amber_brand');
         }
+        document.getElementById('retraining-progress')?.classList.toggle('hidden', tab !== 'retraining');
         filterCourses();
     }
 
+    if (location.hash === '#retraining-progress' && document.getElementById('tab-retraining')) {
+        switchTab('retraining');
+    }
+
     function filterCourses() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        const selectedLevel = document.getElementById('levelSelect').value;
+        const query = document.getElementById('searchInput').value.trim().toLocaleLowerCase('vi');
         const cards = document.querySelectorAll('.course-card');
 
         cards.forEach(card => {
-            const title = card.getAttribute('data-title');
-            const progress = parseInt(card.getAttribute('data-progress'));
-            const level = card.getAttribute('data-level');
+            const title = card.getAttribute('data-title').toLocaleLowerCase('vi');
+            const progress = parseFloat(card.getAttribute('data-progress')) || 0;
 
             let matchesSearch = title.includes(query);
-            let matchesLevel = !selectedLevel || level.includes(selectedLevel);
             let matchesTab = true;
 
             if (currentTab === 'learning') {
                 matchesTab = progress > 0 && progress < 100;
             } else if (currentTab === 'completed') {
                 matchesTab = progress >= 100;
+            } else if (currentTab === 'retraining') {
+                matchesTab = card.getAttribute('data-retraining') === '1';
             }
 
-            if (matchesSearch && matchesLevel && matchesTab) {
+            if (matchesSearch && matchesTab) {
                 card.style.display = 'flex';
             } else {
                 card.style.display = 'none';

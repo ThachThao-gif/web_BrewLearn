@@ -6,10 +6,11 @@
     <title>Đăng nhập - BrewLearn LMS</title>
     <!-- Nhúng Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #f8f6f0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
         }
         .login-card {
             border: none;
@@ -62,12 +63,12 @@
             <?php echo csrf_field(); ?>
             
             <div class="mb-3">
-                <label class="form-label text-secondary small fw-bold">Email đăng nhập</label>
+                <label class="form-label text-secondary small fw-semibold">Email đăng nhập</label>
                 <input type="email" name="email" class="form-control form-control-lg fs-6" placeholder="nhanvien@brewlearn.com" required value="<?php echo e(old('email')); ?>">
             </div>
             
             <div class="mb-4">
-                <label class="form-label text-secondary small fw-bold">Mật khẩu</label>
+                <label class="form-label text-secondary small fw-semibold">Mật khẩu</label>
                 <input type="password" name="password" class="form-control form-control-lg fs-6" placeholder="••••••••" required>
             </div>
 

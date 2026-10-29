@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AssessmentEligibility;
 use App\Models\AssessmentReminder;
 use App\Models\CourseProgress;
+use App\Models\StaffProfile;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -20,16 +21,17 @@ class LeaderEvaluationController extends Controller
 {
     private function staffQuery(): Builder
     {
-        $query = User::working()->assessmentEligible()->where('id', '!=', Auth::id());
-        if (auth()->user()?->cua_hang_id && Schema::hasColumn('users', 'cua_hang_id')) {
-            $query->where('cua_hang_id', auth()->user()->cua_hang_id)
-                ->whereRaw("LOWER(TRIM(COALESCE(ChucVu, ''))) NOT IN (?, ?, ?, ?)", ['quản lý cửa hàng', 'quản lý vùng', 'hr', 'hr đào tạo']);
-            if (auth()->user()->ca_lam_viec_id && Schema::hasColumn('users', 'ca_lam_viec_id')) {
-                $query->where('ca_lam_viec_id', auth()->user()->ca_lam_viec_id);
-            }
-        }
+        $this->authorizeLeader();
 
-        return $query;
+        return User::query()->ledBy(Auth::user());
+    }
+
+    /**
+     * Chỉ trưởng ca mới được dùng các chức năng sát hạch, nhắc việc và ghi nhận lỗi.
+     */
+    private function authorizeLeader(): void
+    {
+        abort_unless(Auth::user()?->isLeader(), 403, 'Chức năng chỉ dành cho trưởng ca.');
     }
 
     /**
@@ -49,6 +51,7 @@ class LeaderEvaluationController extends Controller
      */
     public function index(): View
     {
+        $this->authorizeLeader();
         $currentUserId = Auth::id();
 
         // 1. Tất cả danh sách nhân viên
@@ -109,7 +112,9 @@ class LeaderEvaluationController extends Controller
         $proposalCourses = DB::table('chuong_trinh_dao_tao')->orderBy('MaCTDT')->get(['MaCTDT', 'TenCTDT']);
         $proposalLessons = DB::table('bai_hoc')->orderBy('FK_MaCTDT')->orderBy('ThuTu')->get(['MaBaiHoc', 'FK_MaCTDT', 'TenBaiHoc']);
 
-        return view('leader.dashboard', compact('staffs', 'standards', 'schedules', 'dueStaffs', 'proposalOwners', 'proposalCourses', 'proposalLessons'));
+        $page = request()->routeIs('leader.scoring') ? 'scoring' : 'schedule';
+
+        return view('leader.dashboard', compact('page', 'staffs', 'standards', 'schedules', 'dueStaffs', 'proposalOwners', 'proposalCourses', 'proposalLessons'));
     }
 
     /**
@@ -118,6 +123,7 @@ class LeaderEvaluationController extends Controller
      */
     public function createSchedule(Request $request): RedirectResponse
     {
+        $this->authorizeLeader();
         $request->validate([
             'user_id' => 'required|integer|exists:users,id',
             'MaCTDT' => 'required',
@@ -175,6 +181,8 @@ class LeaderEvaluationController extends Controller
                 'MaCTDT' => $maCTDT_Value,
                 'TieuChuan' => $tieuChuanTen,
                 'NgayHen' => $request->NgayDanhGia,
+                'NgayDanhGia' => null,
+                'Diem' => null,
                 'TrangThai' => 'ChoDanhGia',
                 'created_at' => $now,
                 'updated_at' => $now,
@@ -202,129 +210,64 @@ class LeaderEvaluationController extends Controller
     }
 
     /**
-     * Xử lý gửi thông báo trực tiếp cho nhân viên (Thông báo chung -> type = general)
-     * Hỗ trợ gửi cho 1 cá nhân HOẶC gửi hàng loạt (user_id = 'all')
+     * Gửi thông báo nhắc việc (UC-TC08) cho một nhân viên hoặc toàn bộ nhân viên trong phạm vi phụ trách.
      */
     public function sendNotification(Request $request): RedirectResponse
     {
-        $request->validate([
-            'user_id' => 'required',
+        $this->authorizeLeader();
+        $scopeIds = $this->staffQuery()->pluck('id')->all();
+        $data = $request->validate([
+            'user_id' => ['required', Rule::in(array_merge(['all'], array_map('strval', $scopeIds)))],
+            'title' => ['required', 'string', 'max:255'],
+            'message' => ['required', 'string', 'max:2000'],
         ], [
             'user_id.required' => 'Vui lòng chọn người nhận thông báo.',
+            'user_id.in' => 'Chỉ gửi thông báo cho nhân viên thuộc phạm vi phụ trách.',
         ]);
 
-        // Kiểm tra nếu chọn 1 người cụ thể thì phải tồn tại trong bảng users
-        if ($request->user_id !== 'all') {
-            $userExists = DB::table('users')->where('id', $request->user_id)->exists();
-            if (! $userExists) {
-                return redirect()->back()->with('error', 'Nhân viên được chọn không tồn tại.');
-            }
-        }
+        $targetUserIds = $data['user_id'] === 'all' ? $scopeIds : [(int) $data['user_id']];
+        $now = now();
+        DB::table('notifications')->insert(array_map(fn (int $userId) => [
+            'user_id' => $userId, 'title' => trim($data['title']), 'message' => trim($data['message']),
+            'type' => 'general', 'is_read' => 0, 'created_at' => $now, 'updated_at' => $now,
+        ], $targetUserIds));
 
-        // 1. Nhận linh hoạt mọi dạng biến Tiêu đề gửi lên
-        $title = $request->input('title')
-              ?? $request->input('tieu_de')
-              ?? 'Thông báo từ Trưởng ca';
-
-        // 2. Nhận linh hoạt mọi dạng biến Nội dung từ Form Modal
-        $message = $request->input('message')
-                ?? $request->input('content')
-                ?? $request->input('noi_dung')
-                ?? $request->input('note')
-                ?? $request->input('description')
-                ?? $request->input('comment')
-                ?? 'Thông báo mới từ Trưởng ca.';
-
-        DB::beginTransaction();
-        try {
-            // Lấy danh sách ID nhận thông báo (Tất cả hoặc 1 người)
-            if ($request->user_id === 'all') {
-                $targetUserIds = DB::table('users')->where('id', '!=', Auth::id())->pluck('id')->toArray();
-            } else {
-                $targetUserIds = [$request->user_id];
-            }
-
-            $notificationsToInsert = [];
-            $now = now();
-
-            foreach ($targetUserIds as $userId) {
-                $notificationsToInsert[] = [
-                    'user_id' => $userId,
-                    'title' => trim($title),
-                    'message' => trim($message),
-                    'type' => 'general', // Phân loại thông báo chung (Màu xanh)
-                    'is_read' => 0,
-                    'created_at' => $now,
-                    'updated_at' => $now,
-                ];
-            }
-
-            DB::table('notifications')->insert($notificationsToInsert);
-
-            DB::commit();
-
-            $successMsg = ($request->user_id === 'all')
-                ? 'Đã phát thông báo tới TẤT CẢ nhân viên thành công!'
-                : 'Đã gửi thông báo cho nhân viên thành công!';
-
-            return redirect()->back()->with('success', $successMsg);
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return redirect()->back()->with('error', 'Lỗi khi gửi thông báo: '.$e->getMessage());
-        }
+        return back()->with('success', $data['user_id'] === 'all'
+            ? 'Đã gửi thông báo tới '.count($targetUserIds).' nhân viên trong phạm vi phụ trách.'
+            : 'Đã gửi thông báo cho nhân viên thành công!');
     }
 
     /**
-     * Ghi nhận sự cố / vi phạm của 1 nhân viên (Nhắc nhở / Sự cố -> type = warning)
-     * Bắt buộc chọn đúng 1 nhân viên cụ thể (Không gửi hàng loạt)
+     * Ghi nhận lỗi nghiệp vụ (UC-TC09): lưu vào loi_nghiep_vu và gửi nhắc nhở cho nhân viên.
      */
     public function recordIncident(Request $request): RedirectResponse
     {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
+        $this->authorizeLeader();
+        $data = $request->validate([
+            'user_id' => ['required', Rule::in($this->staffQuery()->pluck('id')->all())],
+            'loai_loi' => ['required', 'string', 'max:100'],
+            'muc_do' => ['required', Rule::in(['Nhanh', 'TrungBinh', 'NghiemTrong'])],
+            'thoi_diem' => ['nullable', 'date', 'before_or_equal:now'],
+            'mo_ta' => ['required', 'string', 'max:2000'],
         ], [
-            'user_id.required' => 'Vui lòng chọn nhân viên vi phạm.',
-            'user_id.exists' => 'Nhân viên được chọn không hợp lệ.',
+            'user_id.required' => 'Vui lòng chọn nhân viên.',
+            'user_id.in' => 'Chỉ ghi nhận lỗi cho nhân viên thuộc phạm vi phụ trách.',
         ]);
 
-        // Đón nhận linh hoạt mọi biến nội dung ghi nhận từ Modal
-        $noiDung = $request->input('description')
-                ?? $request->input('incident_description')
-                ?? $request->input('reason')
-                ?? $request->input('content')
-                ?? $request->input('message')
-                ?? $request->input('noi_dung')
-                ?? $request->input('note')
-                ?? $request->input('comment')
-                ?? 'Nhắc nhở vi phạm quy trình ca làm việc.';
-
-        $loaiLoi = $request->input('loai_loi')
-                ?? $request->input('incident_type')
-                ?? $request->input('type')
-                ?? 'Vận hành quầy bar';
-
-        DB::beginTransaction();
-        try {
-            // Thêm bản ghi vào bảng notifications với type = 'warning'
-            DB::table('notifications')->insert([
-                'user_id' => $request->user_id,
-                'title' => 'Nhắc nhở sự cố: '.$loaiLoi,
-                'message' => trim($noiDung),
-                'type' => 'warning',
-                'is_read' => 0,
-                'created_at' => now(),
-                'updated_at' => now(),
+        DB::transaction(function () use ($data): void {
+            DB::table('loi_nghiep_vu')->insert([
+                'user_id' => $data['user_id'], 'nguoi_ghi_nhan_id' => Auth::id(), 'loai_loi' => $data['loai_loi'],
+                'muc_do' => $data['muc_do'], 'diem_tru_risk' => ['Nhanh' => 5, 'TrungBinh' => 10, 'NghiemTrong' => 20][$data['muc_do']],
+                'mo_ta' => trim($data['mo_ta']), 'thoi_diem_xay_ra' => $data['thoi_diem'] ?? now(),
+                'chi_nhanh_id' => Auth::user()->cua_hang_id, 'created_at' => now(), 'updated_at' => now(),
             ]);
+            DB::table('notifications')->insert([
+                'user_id' => $data['user_id'], 'title' => 'Nhắc nhở: '.$data['loai_loi'], 'message' => trim($data['mo_ta']),
+                'type' => 'warning', 'is_read' => 0, 'created_at' => now(), 'updated_at' => now(),
+            ]);
+        });
 
-            DB::commit();
-
-            return redirect()->back()->with('success', 'Đã ghi nhận sự cố và gửi nhắc nhở cho nhân viên thành công!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return redirect()->back()->with('error', 'Có lỗi xảy ra: '.$e->getMessage());
-        }
+        return back()->with('success', 'Đã ghi nhận lỗi nghiệp vụ và gửi nhắc nhở cho nhân viên.');
     }
 
     /**
@@ -332,6 +275,7 @@ class LeaderEvaluationController extends Controller
      */
     public function saveScore(Request $request): RedirectResponse
     {
+        $this->authorizeLeader();
         $request->validate([
             'assessment_id' => 'required|integer|exists:danh_gia_nang_luc,id',
             'diem_nghiep_vu' => 'required|numeric|min:0|max:100',
@@ -491,7 +435,7 @@ class LeaderEvaluationController extends Controller
                 $storeId = DB::table('users')->where('id', $assessment->user_id)->value('cua_hang_id');
                 if ($storeId) {
                     foreach (DB::table('users')->where('cua_hang_id', $storeId)->whereRaw('LOWER(TRIM(ChucVu)) IN (?, ?)', ['quản lý cửa hàng', 'quan ly cua hang'])->pluck('id') as $managerId) {
-                        $notification = ['user_id' => $managerId, 'title' => 'Đánh giá chờ phê duyệt', 'message' => 'Trưởng ca đã gửi đánh giá #'.$assessment->id.'. Vui lòng xem tại mục Duyệt đánh giá.', 'type' => 'training', 'is_read' => 0, 'created_at' => now(), 'updated_at' => now()];
+                        $notification = ['user_id' => $managerId, 'title' => 'Đánh giá chờ phê duyệt', 'message' => 'Trưởng ca đã gửi đánh giá năng lực của nhân viên '.(DB::table('users')->where('id', $assessment->user_id)->value('name') ?? '').'. Vui lòng xem tại mục Duyệt đánh giá.', 'type' => 'training', 'is_read' => 0, 'created_at' => now(), 'updated_at' => now()];
                         if (Schema::hasColumn('notifications', 'event_key')) {
                             $notification['event_key'] = 'pending-review-'.$managerId.'-'.$assessment->id.'-'.$updateData['updated_at']->toDateTimeString();
                         }
@@ -518,6 +462,7 @@ class LeaderEvaluationController extends Controller
      */
     public function staffList(): View
     {
+        $this->authorizeLeader();
         $truongCa = Auth::user();
         $currentUserId = Auth::id();
 
@@ -600,18 +545,13 @@ class LeaderEvaluationController extends Controller
     }
 
     /**
-     * Nộp kết quả đánh giá năng lực theo mã DGNL
+     * Hồ sơ chi tiết của một nhân viên thuộc ca trưởng ca phụ trách.
      */
-    public function submitEvaluation(Request $request, $MaDGNL): RedirectResponse
+    public function staffProfile(int $id): View
     {
-        DB::table('danh_gia_nang_luc')
-            ->where('id', $MaDGNL)
-            ->orWhere('MaDGNL', $MaDGNL)
-            ->update([
-                'TrangThai' => 'ChoPheDuyet',
-                'updated_at' => now(),
-            ]);
+        $this->authorizeLeader();
+        $staff = $this->staffQuery()->findOrFail($id);
 
-        return redirect()->back()->with('success', 'Đã nộp kết quả đánh giá thành công!');
+        return view('leader.staff_profile', ['staff' => $staff] + app(StaffProfile::class)->build($staff));
     }
 }

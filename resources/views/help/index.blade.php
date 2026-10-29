@@ -54,8 +54,8 @@
             </div>
             <div class="bg-white p-5 rounded-2xl border border-[#E8DFC8] shadow-sm space-y-2">
                 <span class="text-[10px] font-bold text-red-800 bg-red-50 px-2.5 py-1 rounded-md border border-red-200 uppercase">1.4 Cảnh báo nguy cơ</span>
-                <h4 class="font-bold text-slate-800 text-sm">Chỉ số Risk Score bị tăng cao?</h4>
-                <p class="text-xs text-slate-600 leading-relaxed">Do ghi nhận lỗi vi phạm quy trình/thao tác. Thi đạt bài sát hạch để giảm điểm nguy cơ.</p>
+                <h4 class="font-bold text-slate-800 text-sm">Điểm cảnh báo nguy cơ bị tăng cao?</h4>
+                <p class="text-xs text-slate-600 leading-relaxed">Điểm tăng khi điểm kiểm tra trung bình dưới 80, có bài kiểm tra chưa đạt, tiến độ đào tạo dưới 80%, kết quả đánh giá năng lực gần nhất được duyệt là Chưa đạt, hoặc có lỗi nghiệp vụ trong 30 ngày gần nhất. Để giảm điểm: hoàn thành bài học, làm lại bài chưa đạt, đạt lần đánh giá năng lực tiếp theo và hạn chế lỗi nghiệp vụ. Điểm được tính lại tự động lúc 01:00 hằng ngày và chỉ dùng để tham khảo, không thay thế kết quả đánh giá năng lực.</p>
             </div>
         </div>
     </div>
@@ -142,7 +142,7 @@
                     <tbody class="divide-y divide-slate-100">
                         @forelse($myTickets ?? [] as $ticket)
                         <tr>
-                            <td class="p-2.5 font-bold text-[#6F4E37]">#TK-{{ $ticket->id }}</td>
+                            <td class="p-2.5 font-bold text-[#6F4E37]">TK-{{ $ticket->id }}</td>
                             <td class="p-2.5 font-bold text-slate-800">{{ $ticket->chu_de }}</td>
                             <td class="p-2.5 font-bold">{{ $ticket->muc_do_uu_tien }}</td>
                             <td class="p-2.5 font-bold text-blue-600">{{ $ticket->trang_thai }}</td>

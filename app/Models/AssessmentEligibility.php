@@ -32,6 +32,22 @@ class AssessmentEligibility
 
     public function round(object $round, int $userId, bool $requireConfirmation = true): array
     {
+        $checklist = $this->roundChecklist($round, $userId);
+        $missing = $this->messages($checklist, true);
+        if ($requireConfirmation && ! $round->confirmed_at) {
+            $missing[] = 'Người phụ trách chưa xác nhận hoàn thành thực hành / theo dõi của vòng này.';
+        }
+
+        return ['ready' => empty($missing), 'missing' => $missing, 'required' => count($checklist)];
+    }
+
+    /**
+     * Từng bài học và bài kiểm tra bắt buộc của vòng đào tạo lại, kèm trạng thái đã đáp ứng hay chưa.
+     *
+     * @return list<array{type: string, id: int, name: string, done: bool}>
+     */
+    public function roundChecklist(object $round, int $userId): array
+    {
         $proposal = json_decode($round->proposal ?? '{}', true) ?? [];
         $lessons = $round->required_lessons === null
             ? ($proposal['details']['hoclaibaihoc']['lesson_ids'] ?? []) : (json_decode($round->required_lessons, true) ?? []);
@@ -39,17 +55,32 @@ class AssessmentEligibility
             ? DB::table('bai_kiem_tra')->whereIn('MaBaiHoc', $lessons)->pluck('MaBaiKiemTra')->all()
             : (json_decode($round->required_quizzes, true) ?? []);
         $baseline = json_decode($round->learning_baseline ?? '{}', true) ?? [];
-        $missing = $this->missing($userId, $lessons, $quizzes, $round->created_at, $baseline['quiz_max_id'] ?? null);
-        if ($requireConfirmation && ! $round->confirmed_at) {
-            $missing[] = 'Người phụ trách chưa xác nhận hoàn thành thực hành / theo dõi của vòng này.';
-        }
 
-        return ['ready' => empty($missing), 'missing' => $missing];
+        return $this->checklist($userId, $lessons, $quizzes, $round->created_at, $baseline['quiz_max_id'] ?? null);
     }
 
-    private function missing(int $userId, array $lessonIds, array $testIds, ?string $since = null, ?int $quizMaxId = null): array
+    private function missing(int $userId, array $lessonIds, array $testIds): array
     {
-        $missing = [];
+        return $this->messages($this->checklist($userId, $lessonIds, $testIds), false);
+    }
+
+    /**
+     * @param  list<array{type: string, id: int, name: string, done: bool}>  $checklist
+     * @return list<string>
+     */
+    private function messages(array $checklist, bool $inRound): array
+    {
+        return collect($checklist)->reject(fn (array $item) => $item['done'])->map(fn (array $item) => $item['type'] === 'lesson'
+            ? 'Chưa hoàn thành bài học: '.$item['name']
+            : 'Chưa đạt quiz: '.$item['name'].($inRound ? ' (cần lượt thi trong vòng hiện tại)' : ''))->values()->all();
+    }
+
+    /**
+     * @return list<array{type: string, id: int, name: string, done: bool}>
+     */
+    private function checklist(int $userId, array $lessonIds, array $testIds, ?string $since = null, ?int $quizMaxId = null): array
+    {
+        $items = [];
         $progresses = DB::table('user_lesson_progresses')->where('user_id', $userId)->whereIn('lesson_id', $lessonIds)->get()->keyBy('lesson_id');
         $names = DB::table('bai_hoc')->whereIn('MaBaiHoc', $lessonIds)->pluck('TenBaiHoc', 'MaBaiHoc');
         $tests = DB::table('bai_kiem_tra')->whereIn('MaBaiKiemTra', $testIds)->get()->keyBy('MaBaiKiemTra');
@@ -63,19 +94,16 @@ class AssessmentEligibility
         $scores = $results->get()->groupBy('MaBaiKiemTra')->map(fn ($rows) => $rows->max('Diem'));
         foreach ($lessonIds as $id) {
             $progress = $progresses->get($id);
-            if (! $progress || (! $progress->is_completed && $progress->progress_percent < 95)
-                || ($since && $progress->updated_at < $since)) {
-                $name = $names->get($id) ?? '#'.$id;
-                $missing[] = 'Chưa hoàn thành bài học: '.$name;
-            }
+            $done = $progress && ($progress->is_completed || $progress->progress_percent >= 95)
+                && ! ($since && $progress->updated_at < $since);
+            $items[] = ['type' => 'lesson', 'id' => (int) $id, 'name' => $names->get($id) ?? 'Bài học '.$id, 'done' => (bool) $done];
         }
         foreach ($testIds as $id) {
             $test = $tests->get($id);
-            if (! $test || ! $scores->has($id) || $scores->get($id) < ($test->DiemChuan ?? 80)) {
-                $missing[] = 'Chưa đạt quiz: '.($test->TenBaiKiemTra ?? '#'.$id).($since ? ' (cần lượt thi trong vòng hiện tại)' : '');
-            }
+            $done = $test && $scores->has($id) && $scores->get($id) >= ($test->DiemChuan ?? 80);
+            $items[] = ['type' => 'quiz', 'id' => (int) $id, 'name' => $test->TenBaiKiemTra ?? 'Bài kiểm tra '.$id, 'done' => (bool) $done];
         }
 
-        return $missing;
+        return $items;
     }
 }

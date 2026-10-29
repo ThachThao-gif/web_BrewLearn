@@ -51,48 +51,48 @@
                 $row = 'grid grid-cols-[9rem_1fr] gap-3 px-4 py-2.5';
             ?>
             <div class="<?php echo e($grid); ?> grid grid-cols-2 gap-x-3 gap-y-1 border-t border-coffee-100 px-5 py-3 text-sm hover:bg-coffee-50/70">
-                <span class="min-w-0"><span class="block truncate font-bold text-coffee-900"><?php echo e($employee->name); ?></span><span class="text-xs text-slate-400">#<?php echo e($assessment->id); ?> · <?php echo e($employee->shift_name); ?></span></span>
+                <span class="min-w-0"><span class="block truncate font-bold text-coffee-900"><?php echo e($employee->name); ?></span><span class="text-xs text-slate-400"><?php echo e($employee->shift_name); ?></span></span>
                 <span class="truncate text-slate-600" title="<?php echo e($assessment->TieuChuan); ?>"><?php echo e($assessment->TieuChuan); ?></span>
                 <span class="truncate text-slate-600"><?php echo e($leaderName); ?></span>
                 <span class="text-xs text-slate-500"><?php echo e($gradedAt); ?></span>
                 <span class="font-bold text-coffee-900 md:text-right"><?php echo e($assessment->Diem ?? '—'); ?></span>
                 <span class="text-xs font-bold <?php echo e($resultClass); ?>"><?php echo e($resultLabel); ?></span>
                 <span><button type="button" onclick="document.getElementById('<?php echo e($dialogId); ?>').showModal()" aria-haspopup="dialog" title="Xem chi tiết và xử lý" class="inline-block rounded-full border px-2.5 py-0.5 text-xs font-semibold hover:shadow-sm <?php echo e($statusClass); ?>"><?php echo e($statusLabel); ?></button></span>
-                <button type="button" onclick="document.getElementById('<?php echo e($dialogId); ?>').showModal()" aria-label="Xem chi tiết đánh giá #<?php echo e($assessment->id); ?>" class="text-slate-400 hover:text-coffee-700"><i class="fa-regular fa-eye"></i></button>
+                <button type="button" onclick="document.getElementById('<?php echo e($dialogId); ?>').showModal()" aria-label="Xem chi tiết đánh giá <?php echo e($assessment->id); ?>" class="text-slate-400 hover:text-coffee-700"><i class="fa-regular fa-eye"></i></button>
             </div>
 
-            <dialog id="<?php echo e($dialogId); ?>" aria-labelledby="<?php echo e($dialogId); ?>-title" class="w-[min(760px,calc(100vw-2rem))] max-h-[90vh] rounded-2xl p-0 shadow-2xl backdrop:bg-coffee-900/40">
-                <div class="flex items-center justify-between border-b border-coffee-100 px-6 py-4">
-                    <h2 id="<?php echo e($dialogId); ?>-title" class="text-lg font-bold text-coffee-900">#<?php echo e($assessment->id); ?> – <?php echo e($employee->name); ?></h2>
-                    <form method="dialog"><button aria-label="Đóng" class="rounded-lg px-2 py-1 text-slate-400 hover:bg-coffee-50 hover:text-coffee-800"><i class="fa-solid fa-xmark"></i></button></form>
+            <dialog id="<?php echo e($dialogId); ?>" aria-labelledby="<?php echo e($dialogId); ?>-title" class="w-[min(760px,calc(100vw-2rem))] max-h-[90vh] rounded-2xl border border-slate-200 p-0 shadow-xl backdrop:bg-slate-900/40">
+                <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+                    <h2 id="<?php echo e($dialogId); ?>-title" class="text-lg font-semibold text-slate-900"><?php echo e($employee->name); ?></h2>
+                    <form method="dialog"><button aria-label="Đóng" class="rounded-lg px-2 py-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"><i class="fa-solid fa-xmark"></i></button></form>
                 </div>
                 <div class="space-y-4 px-6 py-5">
-                    <section class="overflow-hidden rounded-xl border border-coffee-200">
-                        <h3 class="bg-coffee-100 px-4 py-2.5 text-sm font-semibold text-coffee-800">Thông tin đánh giá</h3>
-                        <dl class="divide-y divide-coffee-100 text-sm">
+                    <section class="overflow-hidden rounded-xl border border-slate-200">
+                        <h3 class="border-b border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-700">Thông tin đánh giá</h3>
+                        <dl class="divide-y divide-slate-100 text-sm">
                             <?php $__currentLoopData = [
                                 'Nhân viên' => $employee->name.' · '.$employee->ChucVu.' · '.$employee->shift_name,
                                 'Tiêu chuẩn' => $assessment->TieuChuan,
                                 'Người chấm' => $leaderName,
                                 'Ngày chấm' => $gradedAt,
                             ]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $label => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <div class="<?php echo e($row); ?> <?php echo e($loop->odd ? 'bg-coffee-50/60' : ''); ?>"><dt class="font-semibold text-coffee-800"><?php echo e($label); ?></dt><dd class="text-coffee-900"><?php echo e($value); ?></dd></div>
+                                <div class="<?php echo e($row); ?>"><dt class="text-slate-500"><?php echo e($label); ?></dt><dd class="text-slate-900"><?php echo e($value); ?></dd></div>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            <div class="<?php echo e($row); ?> bg-coffee-50/60"><dt class="font-semibold text-coffee-800">Trạng thái</dt><dd><span class="inline-block rounded-full border px-2.5 py-0.5 text-xs font-semibold <?php echo e($statusClass); ?>"><?php echo e($statusLabel); ?></span></dd></div>
-                            <div class="<?php echo e($row); ?>"><dt class="font-semibold text-coffee-800">Kết quả</dt><dd><span class="font-bold text-coffee-900"><?php echo e($assessment->Diem ?? '—'); ?>/100</span> <span class="ml-1 font-bold <?php echo e($resultClass); ?>"><?php echo e($resultLabel); ?></span> <span class="ml-1 text-xs text-slate-400">(đạt khi tổng ≥ 80 và mọi tiêu chí ≥ 70)</span></dd></div>
-                            <div class="<?php echo e($row); ?> bg-coffee-50/60"><dt class="font-semibold text-coffee-800">Điểm tiêu chí</dt><dd class="flex flex-wrap gap-2">
+                            <div class="<?php echo e($row); ?>"><dt class="text-slate-500">Trạng thái</dt><dd><span class="inline-block rounded-full border px-2.5 py-0.5 text-xs font-medium <?php echo e($statusClass); ?>"><?php echo e($statusLabel); ?></span></dd></div>
+                            <div class="<?php echo e($row); ?>"><dt class="text-slate-500">Kết quả</dt><dd><span class="font-semibold text-slate-900"><?php echo e($assessment->Diem ?? '—'); ?>/100</span> <span class="ml-1 font-semibold <?php echo e($resultClass); ?>"><?php echo e($resultLabel); ?></span> <span class="ml-1 text-xs text-slate-400">(đạt khi tổng ≥ 80 và mọi tiêu chí ≥ 70)</span></dd></div>
+                            <div class="<?php echo e($row); ?>"><dt class="text-slate-500">Điểm tiêu chí</dt><dd class="flex flex-wrap gap-2">
                                 <?php $__currentLoopData = $criteria; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $column => [$label, $weight]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <?php
                                         $score = $assessment->$column;
                                     ?>
-                                    <span class="rounded-lg border border-coffee-200 bg-white px-2.5 py-1 text-xs"><?php echo e($label); ?> <span class="text-slate-400"><?php echo e($weight); ?></span> <strong class="<?php echo e($hasScores && $score !== null && $score < 70 ? 'text-rose-600' : 'text-coffee-900'); ?>"><?php echo e($hasScores ? ($score ?? '—') : '—'); ?></strong></span>
+                                    <span class="rounded-md border border-slate-200 px-2.5 py-1 text-xs text-slate-600"><?php echo e($label); ?> <span class="text-slate-400"><?php echo e($weight); ?></span> <strong class="<?php echo e($hasScores && $score !== null && $score < 70 ? 'text-rose-600' : 'text-slate-900'); ?>"><?php echo e($hasScores ? ($score ?? '—') : '—'); ?></strong></span>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </dd></div>
                             <?php if(trim($assessment->NhanXet ?? '') !== ''): ?>
-                                <div class="<?php echo e($row); ?>"><dt class="font-semibold text-coffee-800">Nhận xét</dt><dd class="whitespace-pre-line text-coffee-900"><?php echo e($assessment->NhanXet); ?></dd></div>
+                                <div class="<?php echo e($row); ?>"><dt class="text-slate-500">Nhận xét</dt><dd class="whitespace-pre-line text-slate-900"><?php echo e($assessment->NhanXet); ?></dd></div>
                             <?php endif; ?>
                             <?php if($assessment->ChiTietDeXuat || $assessment->DeXuatXuLy): ?>
-                                <div class="<?php echo e($row); ?>"><dt class="font-semibold text-coffee-800">Đề xuất cải thiện</dt><dd>
+                                <div class="<?php echo e($row); ?>"><dt class="text-slate-500">Đề xuất cải thiện</dt><dd>
                                     <?php if($assessment->ChiTietDeXuat): ?>
                                         <?php echo $__env->make('components.assessment-improvement-summary', ['savedProposal' => json_decode($assessment->ChiTietDeXuat, true)], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                                     <?php else: ?>
@@ -101,28 +101,28 @@
                                 </dd></div>
                             <?php endif; ?>
                             <?php if($assessment->ly_do_tra_lai): ?>
-                                <div class="<?php echo e($row); ?>"><dt class="font-semibold text-coffee-800">Lý do trả lại</dt><dd class="text-rose-700"><?php echo e($assessment->ly_do_tra_lai); ?></dd></div>
+                                <div class="<?php echo e($row); ?>"><dt class="text-slate-500">Lý do trả lại</dt><dd class="text-rose-700"><?php echo e($assessment->ly_do_tra_lai); ?></dd></div>
                             <?php endif; ?>
-                            <div class="<?php echo e($row); ?>"><dt class="font-semibold text-coffee-800">Cảnh báo học tập</dt><dd>
+                            <div class="<?php echo e($row); ?>"><dt class="text-slate-500">Cảnh báo học tập</dt><dd>
                                 <?php echo $__env->make('manager.risk', ['risk' => $employee->risk], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                                 <details class="mt-1 text-xs"><summary class="cursor-pointer text-slate-500">Xem lý do</summary><div class="mt-1"><?php echo $__env->make('manager.risk-details', ['person' => $employee, 'showBadge' => false], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><p class="mt-2 text-[11px] text-slate-500">Chỉ để tham khảo, không cộng vào điểm và không chặn việc phê duyệt.</p></div></details>
                             </dd></div>
                         </dl>
                     </section>
                     <?php if($assessment->IsPassed === null): ?>
-                        <p class="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">Thiếu điểm 5 tiêu chí. Hãy trả lại để trưởng ca bổ sung.</p>
+                        <p class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">Thiếu điểm 5 tiêu chí. Hãy trả lại để trưởng ca bổ sung.</p>
                     <?php endif; ?>
                 </div>
                 <?php if($assessment->TrangThai === 'ChoPheDuyet'): ?>
-                    <div class="flex flex-col gap-3 border-t border-coffee-100 bg-coffee-50/50 px-6 py-4 md:flex-row md:items-center">
+                    <div class="flex flex-col gap-3 border-t border-slate-200 px-6 py-4 md:flex-row md:items-center">
                         <form method="POST" action="<?php echo e(route('manager.review', $assessment->id)); ?>" class="flex flex-1 gap-2">
                             <?php echo csrf_field(); ?><input type="hidden" name="action" value="return">
-                            <input required name="reason" maxlength="2000" aria-label="Lý do trả lại đánh giá" placeholder="Lý do trả lại..." class="min-w-0 flex-1 rounded-xl border border-coffee-300 bg-white px-3 py-2.5 text-sm">
-                            <button class="rounded-xl border border-rose-300 bg-white px-4 py-2.5 text-sm font-bold text-rose-700 hover:bg-rose-50">Trả lại</button>
+                            <input required name="reason" maxlength="2000" aria-label="Lý do trả lại đánh giá" placeholder="Lý do trả lại..." class="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200">
+                            <button class="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-rose-700 hover:bg-slate-50">Trả lại</button>
                         </form>
                         <form method="POST" action="<?php echo e(route('manager.review', $assessment->id)); ?>">
                             <?php echo csrf_field(); ?><input type="hidden" name="action" value="approve">
-                            <button class="w-full rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-40 md:w-auto" <?php if($assessment->IsPassed === null || (! $assessment->IsPassed && ! $assessment->ChiTietDeXuat)): echo 'disabled'; endif; ?>>Phê duyệt<?php echo e($assessment->IsPassed === 0 ? ' & đề xuất' : ''); ?></button>
+                            <button class="w-full rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40 md:w-auto" <?php if($assessment->IsPassed === null || (! $assessment->IsPassed && ! $assessment->ChiTietDeXuat)): echo 'disabled'; endif; ?>>Phê duyệt<?php echo e($assessment->IsPassed === 0 ? ' & đề xuất' : ''); ?></button>
                         </form>
                     </div>
                 <?php endif; ?>

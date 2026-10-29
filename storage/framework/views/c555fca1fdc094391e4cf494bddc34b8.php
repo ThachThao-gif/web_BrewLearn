@@ -7,7 +7,7 @@
         <li>
             <p class="flex flex-wrap items-baseline gap-2"><strong class="text-coffee-900">Đào tạo lại lần <?php echo e($round->round_number); ?></strong><span class="text-xs font-bold <?php echo e($roundClass); ?>"><?php echo e($roundLabel); ?><?php if($round->score !== null): ?> · <?php echo e($round->score); ?>/100 <?php endif; ?></span></p>
             <p class="mt-1 whitespace-pre-line text-slate-700"><?php echo e($round->instructions); ?></p>
-            <p class="mt-1 text-xs text-slate-400">Phụ trách <?php echo e($proposalOwners->firstWhere('id', $round->owner_id)?->name ?? 'chưa xác định'); ?> · Hạn <?php echo e($round->deadline ? \Carbon\Carbon::parse($round->deadline)->format('d/m/Y') : '—'); ?><?php if($round->assessment_id): ?> · Đánh giá #<?php echo e($round->assessment_id); ?><?php endif; ?></p>
+            <p class="mt-1 text-xs text-slate-400">Phụ trách <?php echo e($proposalOwners->firstWhere('id', $round->owner_id)?->name ?? 'chưa xác định'); ?> · Hạn <?php echo e($round->deadline ? \Carbon\Carbon::parse($round->deadline)->format('d/m/Y') : '—'); ?></p>
             <?php if($round->confirmed_at): ?><p class="text-xs <?php echo e(($muted ?? false) ? 'text-olive-700' : 'text-emerald-700'); ?>">Đã xác nhận hoàn thành<?php echo e($round->confirmation_note ? ': '.$round->confirmation_note : ''); ?></p><?php endif; ?>
             <?php if($round->proposal): ?><?php echo $__env->make('components.assessment-improvement-summary', ['savedProposal' => json_decode($round->proposal, true), 'muted' => $muted ?? false], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php endif; ?>
         </li>

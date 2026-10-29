@@ -26,6 +26,7 @@
                 $messageText   =$item->message ?? $item->noi_dung ?? $item->content ?? '';
                 $typeText      =$item->type ?? 'general'; 
                 $formattedTime = \Carbon\Carbon::parse($item->created_at)->format('H:i:s d/m/Y');
+                $details       = app(\App\Models\NotificationDetails::class)->parse($messageText);
             @endphp
 
             <!-- Card thông báo -->
@@ -89,6 +90,7 @@
                                     id: {{ $item->id }},
                                     title: @json($titleText),
                                     message: @json($messageText),
+                                    details: @json($details),
                                     type: @json($typeText),
                                     created_at: @json($formattedTime),
                                     is_read: {{ $item->is_read }}
@@ -110,7 +112,7 @@
 
 <!-- Modal xem Chi tiết Thông báo -->
 <div id="notificationModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4" onclick="if(event.target === this) closeNotificationDetail()">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl relative border border-[#E2D4C1] max-h-[90vh] flex flex-col">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-xl relative border border-[#E2D4C1] max-h-[90vh] flex flex-col">
         <!-- Header Modal -->
         <div class="flex items-start justify-between pb-3 border-b border-slate-100">
             <div>
@@ -126,10 +128,15 @@
         <!-- Body Modal -->
         <div class="py-4 overflow-y-auto flex-1">
             <div id="modalMessage" class="text-sm text-slate-700 leading-relaxed whitespace-pre-line break-words bg-slate-50 p-4 rounded-xl border border-slate-100"></div>
+            <p id="modalSummary" class="hidden text-sm font-semibold text-slate-700 mb-3 whitespace-pre-line break-words"></p>
+            <table id="modalDetailTable" class="hidden w-full text-sm border-separate border-spacing-0 border border-slate-200 rounded-xl overflow-hidden">
+                <tbody id="modalDetailRows"></tbody>
+            </table>
         </div>
 
         <!-- Footer Modal -->
-        <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+            <a id="modalActionLink" href="#" class="hidden px-4 py-2 border border-amber-800 text-amber-800 rounded-xl text-xs font-bold hover:bg-amber-50 transition"></a>
             <button type="button" onclick="closeNotificationDetail()" class="px-4 py-2 bg-amber-800 text-white rounded-xl text-xs font-bold hover:bg-amber-900 transition cursor-pointer">
                 Đóng
             </button>
@@ -144,8 +151,9 @@
 
         // 1. Tiêu đề & Nội dung
         document.getElementById('modalTitle').innerText = item.title || 'Thông báo hệ thống';
-        document.getElementById('modalMessage').innerText = item.message || 'Không có nội dung.';
-        
+        renderNotificationBody(item);
+        renderNotificationAction(item);
+
         // 2. Thời gian
         document.getElementById('modalTime').innerText = item.created_at || '';
 
@@ -196,6 +204,53 @@
 
         // 5. Hiển thị Modal
         document.getElementById('notificationModal').classList.remove('hidden');
+    }
+
+    function renderNotificationBody(item) {
+        const message = document.getElementById('modalMessage');
+        const summary = document.getElementById('modalSummary');
+        const table = document.getElementById('modalDetailTable');
+        const rows = document.getElementById('modalDetailRows');
+        const details = item.details || { summary: [], rows: [] };
+        const useTable = details.rows.length >= 2;
+
+        message.classList.toggle('hidden', useTable);
+        summary.classList.toggle('hidden', !useTable || details.summary.length === 0);
+        table.classList.toggle('hidden', !useTable);
+        rows.replaceChildren();
+
+        if (!useTable) {
+            message.innerText = item.message || 'Không có nội dung.';
+            return;
+        }
+
+        summary.innerText = details.summary.join('\n');
+        details.rows.forEach(({ label, value }, index) => {
+            const row = document.createElement('tr');
+            const head = document.createElement('th');
+            const cell = document.createElement('td');
+            const divider = index > 0 ? ' border-t border-slate-200' : '';
+            head.className = 'w-52 bg-slate-50 px-4 py-3 text-left align-middle font-semibold text-slate-600 sm:whitespace-nowrap border-r border-slate-200' + divider;
+            cell.className = 'px-4 py-3 align-middle text-slate-800 whitespace-pre-line break-words' + divider;
+            head.textContent = label;
+            cell.textContent = value;
+            row.append(head, cell);
+            rows.append(row);
+        });
+    }
+
+    const notificationActions = {
+        'Kế hoạch đào tạo lại': ['Xem tiến độ học lại', @json(route('courses.index').'#retraining-progress')],
+        'Phân công phụ trách đào tạo lại': ['Xem đào tạo lại phụ trách', @json(route('training.assignments'))],
+    };
+
+    function renderNotificationAction(item) {
+        const link = document.getElementById('modalActionLink');
+        const action = notificationActions[item.title];
+        link.classList.toggle('hidden', !action);
+        if (action) {
+            [link.textContent, link.href] = action;
+        }
     }
 
     function closeNotificationDetail() {

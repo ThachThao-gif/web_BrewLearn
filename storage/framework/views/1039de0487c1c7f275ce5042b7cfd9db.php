@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('content'); ?>
 <div class="max-w-7xl mx-auto px-4 py-6">
     <!-- Header trang -->
@@ -81,7 +79,7 @@
             <div id="section-1" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Quy chuẩn diện mạo</span>
-                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">Điều 1 - 8</span>
+                    <span class="text-xs bg-amber-100/60 text-amber-900 px-2.5 py-1 rounded-full font-medium">Điều 1 - 8</span>
                 </div>
                 <h2 class="text-xl font-bold text-slate-800 mb-2">01. Chuẩn Mực Tác Phong Barista (Grooming & Uniform)</h2>
                 <p class="text-sm text-slate-600 mb-6">Hình ảnh của mỗi Barista là đại diện trực tiếp cho chất lượng tách cà phê và tiêu chuẩn vệ sinh khắt khe của BrewLearn.</p>
@@ -148,7 +146,7 @@
             <div id="section-2" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Kỷ luật thời gian</span>
-                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">Điều 9 - 18</span>
+                    <span class="text-xs bg-amber-100/60 text-amber-900 px-2.5 py-1 rounded-full font-medium">Điều 9 - 18</span>
                 </div>
                 <h2 class="text-xl font-bold text-slate-800 mb-2">02. Quy Định Giờ Giấc, Chấm Công & Hoán Đổi Ca</h2>
                 <p class="text-sm text-slate-600 mb-4">Đảm bảo vận hành quầy Bar diễn ra trơn tru và công bằng giữa các thành viên.</p>
@@ -160,150 +158,160 @@
 
             <!-- Các section 03, 04, 05, 06 bổ sung tương tự -->
             <div id="section-3" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Văn hóa phục vụ</span>
+                    <span class="text-xs bg-amber-100/60 text-amber-900 px-2.5 py-1 rounded-full font-medium">Điều 19 - 28</span>
+                </div>
                 <h2 class="text-xl font-bold text-slate-800 mb-2">03. Giao tiếp & Văn hóa Phục vụ</h2>
-                <p class="text-sm text-slate-600">Luôn giữ thái độ thân thiện và tôn trọng khách hàng cũng như đồng nghiệp.</p>
+                <p class="text-sm text-slate-600 mb-4">Luôn giữ thái độ thân thiện và tôn trọng khách hàng cũng như đồng nghiệp.</p>
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-600 space-y-2">
+                    <p>• Chào khách trong vòng 5 giây khi khách bước vào quầy; nhắc lại order trước khi thanh toán.</p>
+                    <p>• Khách chưa hài lòng: xử lý theo quy tắc LAST – Lắng nghe, Xin lỗi, Giải quyết, Cảm ơn.</p>
+                    <p>• Không tranh luận với đồng nghiệp trước mặt khách; bất đồng trao đổi riêng hoặc báo trưởng ca.</p>
+                    <p>• Bàn giao ca đầy đủ: đơn đang chờ, nguyên liệu sắp hết, thiết bị lỗi và phản hồi của khách.</p>
+                </div>
             </div>
 
-        </div>
-    </div>
-</div>
-<!-- MỤC 04: VỆ SINH ATTP, HACCP & PCCC QUẦY BAR -->
-<div id="section-4" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6 mt-8">
-    <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-bold uppercase tracking-wider text-amber-700">AN TOÀN SỨC KHỎE</span>
-        <span class="text-xs bg-amber-100/60 text-amber-900 px-2.5 py-1 rounded-full font-medium">Điều 29 - 36</span>
-    </div>
-    <h2 class="text-xl font-bold text-slate-800 mb-2">04. Vệ Sinh ATTP, Tiêu Chuẩn HACCP & PCCC Quẩy Bar</h2>
-    <p class="text-sm text-slate-600 mb-6">Chất lượng một ly thức uống không chỉ đo bằng hương vị specialty mà quan trọng hơn cả là sự an toàn tuyệt đối cho sức khỏe thực khách.</p>
+            <!-- MỤC 04: VỆ SINH ATTP, HACCP & PCCC QUẦY BAR -->
+            <div id="section-4" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-700">AN TOÀN SỨC KHỎE</span>
+                    <span class="text-xs bg-amber-100/60 text-amber-900 px-2.5 py-1 rounded-full font-medium">Điều 29 - 36</span>
+                </div>
+                <h2 class="text-xl font-bold text-slate-800 mb-2">04. Vệ Sinh ATTP, Tiêu Chuẩn HACCP & PCCC Quẩy Bar</h2>
+                <p class="text-sm text-slate-600 mb-6">Chất lượng một ly thức uống không chỉ đo bằng hương vị specialty mà quan trọng hơn cả là sự an toàn tuyệt đối cho sức khỏe thực khách.</p>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <!-- Quy trình rửa tay -->
-        <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
-            <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-hands-bubbles text-amber-700"></i> Quy Trình Rửa Tay 6 Bước
-            </p>
-            <p class="text-[11px] text-slate-600 mb-2">Rửa tay tối thiểu 30 giây bằng xà phòng sát khuẩn tại bồn rửa chuyên dụng Handwash Station:</p>
-            <ol class="text-[11px] text-slate-600 space-y-1.5 list-decimal list-inside">
-                <li>Ngay khi bắt đầu bước vào khu vực pha chế.</li>
-                <li>Sau mỗi lần tiếp xúc với tiền mặt hoặc thẻ khách hàng.</li>
-                <li>Sau khi xử lý thùng rác hoặc chạm vào khăn lau dơ.</li>
-                <li>Sau khi ho, hắt hơi hoặc chạm tay lên mặt/tóc.</li>
-            </ol>
-        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <!-- Quy trình rửa tay -->
+                    <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
+                        <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-hands-bubbles text-amber-700"></i> Quy Trình Rửa Tay 6 Bước
+                        </p>
+                        <p class="text-[11px] text-slate-600 mb-2">Rửa tay tối thiểu 30 giây bằng xà phòng sát khuẩn tại bồn rửa chuyên dụng Handwash Station:</p>
+                        <ol class="text-[11px] text-slate-600 space-y-1.5 list-decimal list-inside">
+                            <li>Ngay khi bắt đầu bước vào khu vực pha chế.</li>
+                            <li>Sau mỗi lần tiếp xúc với tiền mặt hoặc thẻ khách hàng.</li>
+                            <li>Sau khi xử lý thùng rác hoặc chạm vào khăn lau dơ.</li>
+                            <li>Sau khi ho, hắt hơi hoặc chạm tay lên mặt/tóc.</li>
+                        </ol>
+                    </div>
 
-        <!-- Nguyên tắc FIFO -->
-        <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
-            <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-box-archive text-amber-700"></i> Nguyên Tắc FIFO & Tem Nhãn (Day-Dot)
-            </p>
-            <p class="text-[11px] text-slate-600 mb-2">Áp dụng <strong>First In - First Out</strong> (Vào trước - Ra trước) cho 100% nguyên vật liệu:</p>
-            <ul class="text-[11px] text-slate-600 space-y-1.5 list-disc list-inside">
-                <li>Sữa tươi thanh trùng: Sử dụng tối đa 48h sau mở nắp, bảo quản 2°C - 4°C.</li>
-                <li>Syrup hoa quả/Puree mở nắp: Dán tem nhãn Day-Dot ghi rõ Ngày mở & Giờ hết hạn.</li>
-                <li>Hạt cà phê: Hạt sau mở van xả khí tối ưu sử dụng trong vòng 14 ngày.</li>
-                <li><strong>Tuyệt đối cấm sử dụng bất kỳ nguyên liệu nào quá hạn (dù chỉ 01 giờ).</strong></li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Cảnh báo vùng cấm -->
-    <div class="p-4 bg-rose-50/70 rounded-xl border border-rose-100 flex items-start gap-3">
-        <i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg shrink-0 mt-0.5"></i>
-        <div>
-            <p class="text-xs font-bold text-rose-900 mb-0.5">Vùng Cấm Nghiêm Ngặt Tại Quẩy Pha Chế Mở (Front Bar)</p>
-            <p class="text-xs text-rose-800">Cấm ăn uống thức ăn cá nhân, hút thuốc (kể cả thuốc lá điện tử), nhai kẹo cao su trong toàn bộ không gian quẩy pha chế và kho nguyên liệu. Nước uống của nhân viên phải được đựng trong bình giữ nhiệt có nắp đậy kín và cất tại kệ đáy Back-bar.</p>
-        </div>
-    </div>
-</div>
-
-<!-- MỤC 05: QUẢN LÝ THẤT THOÁT, HƯ HỎNG & SỬ DỤNG THIẾT BỊ QUÁN -->
-<div id="section-5" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6 mt-8">
-    <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-bold uppercase tracking-wider text-amber-700">TÀI SẢN & THIẾT BỊ</span>
-        <span class="text-xs bg-amber-100/60 text-amber-900 px-2.5 py-1 rounded-full font-medium">Điều 37 - 42</span>
-    </div>
-    <h2 class="text-xl font-bold text-slate-800 mb-4">05. Quản Lý Thất Thoát, Hư Hỏng & Sử Dụng Thiết Bị Quán</h2>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
-            <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-1.5">
-                <i class="fa-solid fa-mug-hot text-amber-700"></i> Máy Espresso La Marzocco
-            </p>
-            <p class="text-[11px] text-slate-600">Backflush bột Cafiza cuối mỗi ngày. Tuyệt đối không dùng vật nhọn cạo lưới shower screen gây xước gioăng cao su.</p>
-        </div>
-
-        <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
-            <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-1.5">
-                <i class="fa-solid fa-gear text-amber-700"></i> Máy Xay Mahlkönig EK43
-            </p>
-            <p class="text-[11px] text-slate-600">Khởi động motor trước khi thả hạt để chống kẹt đĩa xay. Vệ sinh họng xả bằng chổi lông mềm mỗi 2 giờ phục vụ.</p>
-        </div>
-
-        <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
-            <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-1.5">
-                <i class="fa-solid fa-wine-glass text-amber-700"></i> Khấu Trừ Vỡ Hỏng (Breakage)
-            </p>
-            <p class="text-[11px] text-slate-600">Định mức hao hụt ly gốm/thủy tinh cho phép: 0.2% doanh số. Vỡ do sơ xuất không báo cáo sẽ khấu trừ 50% giá vốn vào quỹ ca.</p>
-        </div>
-    </div>
-</div>
-
-<!-- MỤC 06: CHẾ ĐỘ PHÚC LỢI, THƯỞNG CA & XỬ LÝ VI PHẠM -->
-<div id="section-6" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6 mt-8">
-    <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-bold uppercase tracking-wider text-amber-700">CHẾ ĐỘ & KỶ LUẬT</span>
-        <span class="text-xs bg-amber-100/60 text-amber-900 px-2.5 py-1 rounded-full font-medium">Điều 43 - 49</span>
-    </div>
-    <h2 class="text-xl font-bold text-slate-800 mb-4">06. Chế Độ Phúc Lợi, Thưởng Ca & Xử Lý Vi Phạm</h2>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Cơ chế khen thưởng -->
-        <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
-            <p class="text-xs font-bold text-amber-900 mb-3 flex items-center gap-2">
-                <i class="fa-solid fa-star text-amber-600"></i> Cơ Chế Khen Thưởng & Vinh Danh
-            </p>
-            <div class="space-y-3">
-                <div class="flex items-start gap-2.5">
-                    <i class="fa-solid fa-award text-amber-700 text-sm mt-0.5"></i>
-                    <div>
-                        <p class="text-xs font-bold text-slate-800">Ngôi sao Barista của tháng</p>
-                        <p class="text-[11px] text-slate-600">Thưởng nóng 1.500.000đ + Huy hiệu vàng danh dự trên tạp dề.</p>
+                    <!-- Nguyên tắc FIFO -->
+                    <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
+                        <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-box-archive text-amber-700"></i> Nguyên Tắc FIFO & Tem Nhãn (Day-Dot)
+                        </p>
+                        <p class="text-[11px] text-slate-600 mb-2">Áp dụng <strong>First In - First Out</strong> (Vào trước - Ra trước) cho 100% nguyên vật liệu:</p>
+                        <ul class="text-[11px] text-slate-600 space-y-1.5 list-disc list-inside">
+                            <li>Sữa tươi thanh trùng: Sử dụng tối đa 48h sau mở nắp, bảo quản 2°C - 4°C.</li>
+                            <li>Syrup hoa quả/Puree mở nắp: Dán tem nhãn Day-Dot ghi rõ Ngày mở & Giờ hết hạn.</li>
+                            <li>Hạt cà phê: Hạt sau mở van xả khí tối ưu sử dụng trong vòng 14 ngày.</li>
+                            <li><strong>Tuyệt đối cấm sử dụng bất kỳ nguyên liệu nào quá hạn (dù chỉ 01 giờ).</strong></li>
+                        </ul>
                     </div>
                 </div>
-                <div class="flex items-start gap-2.5">
-                    <i class="fa-solid fa-trophy text-amber-700 text-sm mt-0.5"></i>
+
+                <!-- Cảnh báo vùng cấm -->
+                <div class="p-4 bg-rose-50/70 rounded-xl border border-rose-100 flex items-start gap-3">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg shrink-0 mt-0.5"></i>
                     <div>
-                        <p class="text-xs font-bold text-slate-800">Thưởng điểm CSAT xuất sắc</p>
-                        <p class="text-[11px] text-slate-600">Tặng 500.000đ khi đạt 100% đánh giá 5 sao từ khách hàng trong tháng.</p>
-                    </div>
-                </div>
-                <div class="flex items-start gap-2.5">
-                    <i class="fa-solid fa-lightbulb text-amber-700 text-sm mt-0.5"></i>
-                    <div>
-                        <p class="text-xs font-bold text-slate-800">Sáng kiến SOP & Công thức mới</p>
-                        <p class="text-[11px] text-slate-600">Thưởng lên tới 3.000.000đ cho công thức thức uống mùa vụ được chuỗi đưa vào menu.</p>
+                        <p class="text-xs font-bold text-rose-900 mb-0.5">Vùng Cấm Nghiêm Ngặt Tại Quẩy Pha Chế Mở (Front Bar)</p>
+                        <p class="text-xs text-rose-800">Cấm ăn uống thức ăn cá nhân, hút thuốc (kể cả thuốc lá điện tử), nhai kẹo cao su trong toàn bộ không gian quẩy pha chế và kho nguyên liệu. Nước uống của nhân viên phải được đựng trong bình giữ nhiệt có nắp đậy kín và cất tại kệ đáy Back-bar.</p>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 3 Cấp độ chế tài -->
-        <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
-            <p class="text-xs font-bold text-amber-900 mb-3 flex items-center gap-2">
-                <i class="fa-solid fa-gavel text-amber-700"></i> 3 Cấp Độ Chế Tài Kỷ Luật
-            </p>
-            <div class="space-y-2.5">
-                <div class="p-2.5 bg-white rounded-lg border border-amber-200/60">
-                    <p class="text-xs font-bold text-amber-900">Mức 1: Nhắc nhở bằng miệng & Huấn luyện lại</p>
-                    <p class="text-[11px] text-slate-600 mt-0.5">Áp dụng cho: Đi trễ dưới 10 phút lần đầu, quên ghim bảng tên, chưa vuốt nếp tạp dề.</p>
+            <!-- MỤC 05: QUẢN LÝ THẤT THOÁT, HƯ HỎNG & SỬ DỤNG THIẾT BỊ QUÁN -->
+            <div id="section-5" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-700">TÀI SẢN & THIẾT BỊ</span>
+                    <span class="text-xs bg-amber-100/60 text-amber-900 px-2.5 py-1 rounded-full font-medium">Điều 37 - 42</span>
                 </div>
-                <div class="p-2.5 bg-white rounded-lg border border-amber-200/60">
-                    <p class="text-xs font-bold text-amber-900">Mức 2: Biên bản cảnh cáo (Warning Letter)</p>
-                    <p class="text-[11px] text-slate-600 mt-0.5">Áp dụng cho: Vi phạm vệ sinh, gian lận quẹt thẻ, tự ý đổi ca không báo trước.</p>
+                <h2 class="text-xl font-bold text-slate-800 mb-4">05. Quản Lý Thất Thoát, Hư Hỏng & Sử Dụng Thiết Bị Quán</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
+                        <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-mug-hot text-amber-700"></i> Máy Espresso La Marzocco
+                        </p>
+                        <p class="text-[11px] text-slate-600">Backflush bột Cafiza cuối mỗi ngày. Tuyệt đối không dùng vật nhọn cạo lưới shower screen gây xước gioăng cao su.</p>
+                    </div>
+
+                    <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
+                        <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-gear text-amber-700"></i> Máy Xay Mahlkönig EK43
+                        </p>
+                        <p class="text-[11px] text-slate-600">Khởi động motor trước khi thả hạt để chống kẹt đĩa xay. Vệ sinh họng xả bằng chổi lông mềm mỗi 2 giờ phục vụ.</p>
+                    </div>
+
+                    <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
+                        <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-wine-glass text-amber-700"></i> Khấu Trừ Vỡ Hỏng (Breakage)
+                        </p>
+                        <p class="text-[11px] text-slate-600">Định mức hao hụt ly gốm/thủy tinh cho phép: 0.2% doanh số. Vỡ do sơ xuất không báo cáo sẽ khấu trừ 50% giá vốn vào quỹ ca.</p>
+                    </div>
                 </div>
-                <div class="p-2.5 bg-rose-50 rounded-lg border border-rose-200">
-                    <p class="text-xs font-bold text-rose-800">Mức 3: Đình chỉ ca làm việc / Đơn phương chấm dứt HĐLĐ</p>
-                    <p class="text-[11px] text-rose-700 mt-0.5">Áp dụng cho: Gian lận tài chính, cố tình gây gổ, sử dụng nguyên liệu quá hạn nghiêm trọng.</p>
+            </div>
+
+            <!-- MỤC 06: CHẾ ĐỘ PHÚC LỢI, THƯỞNG CA & XỬ LÝ VI PHẠM -->
+            <div id="section-6" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-700">CHẾ ĐỘ & KỶ LUẬT</span>
+                    <span class="text-xs bg-amber-100/60 text-amber-900 px-2.5 py-1 rounded-full font-medium">Điều 43 - 49</span>
+                </div>
+                <h2 class="text-xl font-bold text-slate-800 mb-4">06. Chế Độ Phúc Lợi, Thưởng Ca & Xử Lý Vi Phạm</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Cơ chế khen thưởng -->
+                    <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
+                        <p class="text-xs font-bold text-amber-900 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-star text-amber-600"></i> Cơ Chế Khen Thưởng & Vinh Danh
+                        </p>
+                        <div class="space-y-3">
+                            <div class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-award text-amber-700 text-sm mt-0.5"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-800">Ngôi sao Barista của tháng</p>
+                                    <p class="text-[11px] text-slate-600">Thưởng nóng 1.500.000đ + Huy hiệu vàng danh dự trên tạp dề.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-trophy text-amber-700 text-sm mt-0.5"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-800">Thưởng điểm CSAT xuất sắc</p>
+                                    <p class="text-[11px] text-slate-600">Tặng 500.000đ khi đạt 100% đánh giá 5 sao từ khách hàng trong tháng.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-lightbulb text-amber-700 text-sm mt-0.5"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-800">Sáng kiến SOP & Công thức mới</p>
+                                    <p class="text-[11px] text-slate-600">Thưởng lên tới 3.000.000đ cho công thức thức uống mùa vụ được chuỗi đưa vào menu.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3 Cấp độ chế tài -->
+                    <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
+                        <p class="text-xs font-bold text-amber-900 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-gavel text-amber-700"></i> 3 Cấp Độ Chế Tài Kỷ Luật
+                        </p>
+                        <div class="space-y-2.5">
+                            <div class="p-2.5 bg-white rounded-lg border border-amber-200/60">
+                                <p class="text-xs font-bold text-amber-900">Mức 1: Nhắc nhở bằng miệng & Huấn luyện lại</p>
+                                <p class="text-[11px] text-slate-600 mt-0.5">Áp dụng cho: Đi trễ dưới 10 phút lần đầu, quên ghim bảng tên, chưa vuốt nếp tạp dề.</p>
+                            </div>
+                            <div class="p-2.5 bg-white rounded-lg border border-amber-200/60">
+                                <p class="text-xs font-bold text-amber-900">Mức 2: Biên bản cảnh cáo (Warning Letter)</p>
+                                <p class="text-[11px] text-slate-600 mt-0.5">Áp dụng cho: Vi phạm vệ sinh, gian lận quẹt thẻ, tự ý đổi ca không báo trước.</p>
+                            </div>
+                            <div class="p-2.5 bg-rose-50 rounded-lg border border-rose-200">
+                                <p class="text-xs font-bold text-rose-800">Mức 3: Đình chỉ ca làm việc / Đơn phương chấm dứt HĐLĐ</p>
+                                <p class="text-[11px] text-rose-700 mt-0.5">Áp dụng cho: Gian lận tài chính, cố tình gây gổ, sử dụng nguyên liệu quá hạn nghiêm trọng.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

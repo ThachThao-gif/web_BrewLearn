@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use Tests\TestCase;
 
@@ -18,6 +19,7 @@ class AssessmentImprovementTest extends TestCase
         (require database_path('migrations/0001_01_01_000000_create_users_table.php'))->up();
         Schema::table('users', function (Blueprint $table): void {
             $table->date('joined_at')->nullable();
+            $table->string('ChucVu')->nullable();
         });
         Schema::create('chuong_trinh_dao_tao', function (Blueprint $table): void {
             $table->id('MaCTDT');
@@ -58,7 +60,7 @@ class AssessmentImprovementTest extends TestCase
 
     private function prepareAssessment(): array
     {
-        $leader = User::factory()->create();
+        $leader = User::factory()->create(['ChucVu' => 'Trưởng ca']);
         $staff = User::factory()->create();
         $course = DB::table('chuong_trinh_dao_tao')->insertGetId(['TenCTDT' => 'Quy trình bàn giao ca'], 'MaCTDT');
         $lesson = DB::table('bai_hoc')->insertGetId(['FK_MaCTDT' => $course, 'TenBaiHoc' => 'Checklist bàn giao'], 'MaBaiHoc');
@@ -108,7 +110,7 @@ class AssessmentImprovementTest extends TestCase
         $this->assertSame(67.0, (float) $record->Diem_TacPhong);
         $this->assertFalse((bool) $record->IsPassed);
         $this->assertDatabaseMissing('notifications', ['user_id' => $staff->id]);
-        $this->get(route('leader.dashboard'))->assertOk()->assertSee('Xem nội dung đề xuất đã gửi');
+        $this->get(route('leader.scoring'))->assertOk()->assertSee('Xem nội dung đề xuất đã gửi');
     }
 
     public function test_failed_assessment_requires_a_proposal_and_selected_details_without_saving(): void
@@ -119,7 +121,7 @@ class AssessmentImprovementTest extends TestCase
             ->assertSessionHasErrors(['proposal_details.daotaobosung.skill', 'proposal_details.daotaobosung.instructions', 'proposal_details.daotaobosung.owner_id']);
         $this->assertDatabaseHas('danh_gia_nang_luc', ['id' => $assessment, 'TrangThai' => 'ChoDanhGia', 'Diem' => null]);
         $this->assertDatabaseCount('notifications', 0);
-        $this->from(route('leader.dashboard'))->followingRedirects()->post(route('leader.saveScore'), $this->scores($assessment) + ['proposals' => ['daotaobosung'], 'proposal_details' => ['daotaobosung' => []]])
+        $this->from(route('leader.scoring'))->followingRedirects()->post(route('leader.saveScore'), $this->scores($assessment) + ['proposals' => ['daotaobosung'], 'proposal_details' => ['daotaobosung' => []]])
             ->assertOk()->assertSee('Chưa gửi được đánh giá')->assertSee('restoreScoringInput', false);
     }
 
@@ -151,6 +153,28 @@ class AssessmentImprovementTest extends TestCase
         $this->post(route('leader.saveScore'), $payload + ['proposals' => ['daotaobosung'], 'proposal_details' => ['daotaobosung' => ['skill' => 'Không còn cần']]])
             ->assertSessionHas('success');
         $this->assertDatabaseHas('danh_gia_nang_luc', ['id' => $assessment, 'IsPassed' => 1, 'DeXuatXuLy' => null, 'ChiTietDeXuat' => null]);
+    }
+
+    #[DataProvider('weightedScores')]
+    public function test_weighted_total_and_minimum_criterion_decide_the_result(array $scores, float $total, bool $passed): void
+    {
+        [, , , , $assessment] = $this->prepareAssessment();
+        $payload = array_combine(['diem_nghiep_vu', 'diem_ky_nang', 'diem_quy_trinh', 'diem_phuc_vu', 'diem_tac_phong'], $scores)
+            + ['assessment_id' => $assessment, 'comment' => 'Nhận xét', 'proposals' => ['theodoica'],
+                'proposal_details' => ['theodoica' => ['behavior' => 'Theo dõi thao tác', 'shift_count' => 3]]];
+        $this->post(route('leader.saveScore'), $payload)->assertSessionHas('success');
+        $this->assertDatabaseHas('danh_gia_nang_luc', ['id' => $assessment, 'Diem' => $total, 'IsPassed' => $passed, 'TrangThai' => 'ChoPheDuyet']);
+    }
+
+    public static function weightedScores(): array
+    {
+        return [
+            'tổng 81 nhưng kỹ năng 60' => [[90, 60, 90, 90, 90], 81.0, false],
+            'tổng 80,4 nhưng tác phong 67' => [[80, 80, 90, 82, 67], 80.4, false],
+            'mọi tiêu chí 70, tổng dưới 80' => [[70, 70, 70, 70, 70], 70.0, false],
+            'đúng ngưỡng 80 và 70' => [[80, 80, 80, 80, 80], 80.0, true],
+            'tiêu chí thấp nhất đúng 70' => [[100, 70, 100, 100, 100], 91.0, true],
+        ];
     }
 
     public function test_reassessment_rejects_a_past_date_or_unknown_criterion(): void

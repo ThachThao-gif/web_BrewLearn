@@ -37,7 +37,13 @@
                         amber_light: '#FFF5ED',
                     },
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                        sans: ['Montserrat', '"Segoe UI"', 'Arial', 'sans-serif'],
+                    },
+                    fontWeight: {
+                        semibold: '600',
+                        bold: '600',
+                        extrabold: '700',
+                        black: '700',
                     }
                 }
             }
@@ -48,9 +54,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
+        [x-cloak] { display: none !important; }
         .page-back-button { position: fixed; bottom: 20px; left: 16px; z-index: 30; transition: left .25s ease; }
         @media (min-width: 768px) {
             .page-back-button { left: calc(var(--sidebar-width, 288px) + 24px); }
@@ -61,10 +68,11 @@
             background: #70512b !important;
             color: #fff !important;
             border: 1px solid #70512b !important;
-            font-weight: 700;
+            font-weight: 500;
             box-shadow: 0 3px 8px #49321520;
         }
         #sidebar nav a[aria-current="page"] i, #sidebar nav a[data-modal-active="true"] i { color: #fff !important; }
+        #sidebar nav a, #sidebar h3 { font-weight: 500; }
         #sidebar nav a:focus-visible { outline: 2px solid #b78540; outline-offset: 3px; }
         #sidebar:has(a[data-modal-active="true"]) nav a[aria-current="page"] {
             background: transparent !important; color: #70512b !important; border-color: transparent !important; box-shadow: none;
@@ -78,8 +86,8 @@
             padding: 24px 28px !important;
             box-shadow: 0 3px 6px #49321518 !important;
         }
-        .page-banner h1, .page-banner h1 i { color: #fff !important; }
-        .page-banner h1 { font-size: 24px; line-height: 1.35; font-weight: 800; }
+        .page-banner h1, .page-banner h1 i, .page-banner h2:first-of-type { color: #fff !important; text-transform: uppercase; letter-spacing: .02em; }
+        .page-banner h1 { font-size: 24px; line-height: 1.35; font-weight: 600; }
         .page-banner > p, .page-banner > div > p,
         .page-banner > div > div > p { color: #fef3c7 !important; }
         @media (max-width: 640px) {
@@ -185,7 +193,13 @@
             <a aria-current="{{ request()->routeIs('leader.dashboard') ? 'page' : 'false' }}" href="{{ route('leader.dashboard') }}" 
                class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1] transition">
                 <i class="fa-solid fa-clipboard-check w-5 text-center text-slate-500"></i>
-                <span>Sát Hạch & Chấm Điểm</span>
+                <span>Xếp Lịch Đánh Giá</span>
+            </a>
+
+            <a aria-current="{{ request()->routeIs('leader.scoring') ? 'page' : 'false' }}" href="{{ route('leader.scoring') }}"
+               class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1] transition">
+                <i class="fa-solid fa-pen-to-square w-5 text-center text-slate-500"></i>
+                <span>Chấm Điểm Năng Lực</span>
             </a>
 
             <!-- 🔥 KHÔI PHỤC MỤC GỬI THÔNG BÁO CHO TRƯỞNG CA -->
@@ -377,14 +391,15 @@
                 </form>
             </div> <!-- ĐÃ BỔ SUNG THẺ ĐÓNG DIV KHỐI BÊN TRÁI -->
 
-           <!-- BÊN PHẢI: Nút Test nhanh & Quả chuông Thông báo -->
+           <!-- BÊN PHẢI: Tài khoản đang đăng nhập & Quả chuông Thông báo -->
 <div class="flex items-center space-x-2 md:space-x-3 shrink-0">
-    <!-- ẨN NÚT THI NHANH NẾU LÀ TRƯỞNG CA -->
-    @if(!($isLeader ?? false) && !$isManager)
-        <a href="{{ route('tests.show', ['id' => 1]) }}" class="bg-amber_brand hover:bg-[#C25A1A] text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center space-x-1.5 shadow-sm">
-            <i class="fa-solid fa-stopwatch text-[11px]"></i>
-            <span class="hidden sm:inline">Làm bài test nhanh</span>
-            <span class="sm:hidden">Test nhanh</span>
+    @if($currentUser)
+        <a href="{{ route('users.edit', ['id' => $currentUser->id]) }}" title="Cài đặt tài khoản" class="flex items-center gap-2.5 rounded-xl border border-[#E2D4C1] bg-white py-1.5 pl-1.5 pr-3 shadow-sm transition hover:bg-[#FAF7F2]">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-coffee-800 text-xs font-bold text-amber-100" aria-hidden="true">{{ mb_strtoupper(mb_substr(collect(explode(' ', trim($currentUser->name)))->last(), 0, 1)) }}</span>
+            <span class="hidden min-w-0 text-left sm:block">
+                <span class="block max-w-40 truncate text-xs font-bold text-coffee-900">{{ $currentUser->name }}</span>
+                <span class="block max-w-40 truncate text-[10px] text-slate-500">{{ $currentUser->ChucVu ?? 'Nhân viên' }}</span>
+            </span>
         </a>
     @endif
 
@@ -426,6 +441,7 @@
                         <div onclick='handleBellClick({{ $noti->id }}, {
                                 title: @json($titleText),
                                 message: @json($messageText),
+                                details: @json(app(\App\Models\NotificationDetails::class)->parse($messageText)),
                                 type: @json($typeText),
                                 created_at: @json($fullTime)
                             })' 
@@ -697,7 +713,7 @@
                     </button>
                     <div id="manager-1" class="hidden p-3 bg-white text-slate-600 space-y-1.5 border-t border-slate-100">
                         <p>• Quan sát tác phong và việc tuân thủ SOP của các vị trí trong ca làm việc.</p>
-                        <p>• Nếu phát hiện sai sót, thực hiện <strong>Ghi nhận sự cố & gửi Nhắc nhở nhẹ nhàng</strong> trên hệ thống để tích lũy dữ liệu dự đoán Risk Score.</p>
+                        <p>• Nếu phát hiện sai sót, thực hiện <strong>Ghi nhận sự cố & gửi Nhắc nhở nhẹ nhàng</strong> trên hệ thống để làm dữ liệu cho cảnh báo nguy cơ.</p>
                     </div>
                 </div>
             </div>
@@ -914,7 +930,7 @@
             </button>
         </div>
 
-        <form action="{{ route('notifications.store') }}" method="POST" class="space-y-3 text-xs">
+        <form action="{{ route('leader.sendNotification') }}" method="POST" class="space-y-3 text-xs">
             @csrf
             
            <!-- Chọn nhân viên nhận thông báo -->
@@ -922,18 +938,15 @@
     <label class="font-bold text-coffee-800 block mb-1">Gửi đến nhân viên (Mã NV / User ID):</label>
     <select name="user_id" required class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-coffee-600 font-bold">
         <option value="">-- Chọn nhân viên nhận thông báo --</option>
-        <option value="all" class="font-bold text-blue-600">📢 Tất cả nhân viên trong ca (Gửi hàng loạt)</option>
+        <option value="all" class="font-bold text-blue-600">📢 Tất cả nhân viên tôi phụ trách</option>
         
         @php
-            $staffsList = $staffs ?? \App\Models\User::working()->assessmentEligible()->where('id', '!=', auth()->id())
-                ->when($currentUser->cua_hang_id, fn($query) => $query->where('cua_hang_id', $currentUser->cua_hang_id))
-                ->when($currentUser->ca_lam_viec_id, fn($query) => $query->where('ca_lam_viec_id', $currentUser->ca_lam_viec_id))
-                ->get();
+            $staffsList = \App\Models\User::query()->ledBy($currentUser)->orderBy('name')->get();
         @endphp
 
         @foreach($staffsList as $staff)
             <option value="{{ $staff->id }}">
-                {{ $staff->ma_nv ?? 'NV-' . str_pad($staff->id, 3, '0', STR_PAD_LEFT) }}: {{ $staff->name }} (ID: {{ $staff->id }})
+                {{ $staff->ma_nv ?? 'NV-' . str_pad($staff->id, 3, '0', STR_PAD_LEFT) }}: {{ $staff->name }}
             </option>
         @endforeach
     </select>
@@ -968,80 +981,84 @@
 
 <!-- MODAL POPUP: GHI NHẬN LỖI & PHÁT NHẮC NHỞ IN-SHIFT -->
 <div id="incidentModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative border border-amber-100">
-        
+    <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-amber-100 flex flex-col max-h-[90vh]">
+
         <!-- Header Modal -->
-        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-            <div class="flex items-center space-x-2.5">
-                <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-base font-bold">
-                    <i class="fa-solid fa-bell font-bold"></i>
+        <div class="flex items-start justify-between gap-4 px-7 py-5 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-clipboard-list"></i>
                 </div>
                 <div>
-                    <h3 class="text-sm font-bold text-coffee-900">Ghi Nhận & Gửi Nhắc Nhở Nhân Viên</h3>
-                    <p class="text-[11px] text-slate-500">Tích lũy dữ liệu dự đoán Risk Score & nhắc nhở trong ca</p>
+                    <h3 class="text-lg font-bold text-coffee-900">Ghi nhận lỗi nghiệp vụ</h3>
+                    <p class="text-sm text-slate-500">Lưu lỗi phát sinh trong ca và gửi nhắc nhở cho nhân viên</p>
                 </div>
             </div>
-            <button type="button" onclick="closeIncidentModal()" class="text-slate-400 hover:text-slate-800 p-1">
-                <i class="fa-solid fa-xmark text-lg"></i>
+            <button type="button" onclick="closeIncidentModal()" class="text-slate-400 hover:text-slate-800 p-1" aria-label="Đóng">
+                <i class="fa-solid fa-xmark text-xl"></i>
             </button>
         </div>
 
-        <form action="{{ route('notifications.store') }}" method="POST">
+        <form id="incidentForm" action="{{ route('leader.recordIncident') }}" method="POST" class="flex flex-col min-h-0">
             @csrf
-            <!-- Chọn nhân viên nhận thông báo -->
-            <div>
-                <label class="font-bold text-coffee-800 block mb-1">Gửi đến nhân viên (Mã NV / User ID):</label>
-                <select name="user_id" required class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-coffee-600 font-bold">
-                    <option value="">-- Chọn nhân viên nhận thông báo --</option>
-                    @foreach($staffsList as $staff)
-                        <option value="{{ $staff->id }}">
-                            NV-{{ str_pad($staff->id, 3, '0', STR_PAD_LEFT) }}: {{ $staff->name }} (ID: {{ $staff->id }})
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- Loại Lỗi & Mức Độ -->
-            <div class="grid grid-cols-2 gap-3 mt-3">
+            <div class="px-7 py-6 flex flex-col gap-5 overflow-y-auto text-sm">
+                <!-- Nhân viên -->
                 <div>
-                    <label class="font-bold text-coffee-900 block mb-1">2. Loại lỗi phát hiện <span class="text-red-500">*</span></label>
-                    <select name="loai_loi" required class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl p-2.5 font-semibold text-slate-800 focus:outline-none focus:ring-1 focus:ring-coffee-600">
-                        <option value="Vệ sinh quầy bar">Vệ sinh quầy bar / Khu vực</option>
-                        <option value="Quy trình pha chế (SOP)">Sai quy trình pha chế (SOP)</option>
-                        <option value="Thái độ phục vụ">Thái độ phục vụ khách hàng</option>
-                        <option value="An toàn lao động">Vi phạm an toàn lao động</option>
-                        <option value="Đồng phục & Tác phong">Sai đồng phục & Tác phong</option>
+                    <label for="incident_user_id" class="font-semibold text-coffee-900 block mb-1.5">1. Nhân viên <span class="text-red-500">*</span></label>
+                    <select id="incident_user_id" name="user_id" required class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl px-3.5 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-coffee-600/40">
+                        <option value="" selected disabled>-- Chọn nhân viên --</option>
+                        @foreach($staffsList as $staff)
+                            <option value="{{ $staff->id }}">
+                                NV-{{ str_pad($staff->id, 3, '0', STR_PAD_LEFT) }}: {{ $staff->name }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
 
-                <div>
-                    <label class="font-bold text-coffee-900 block mb-1">3. Mức độ sự cố <span class="text-red-500">*</span></label>
-                    <select name="muc_do" required class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl p-2.5 font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-coffee-600">
-                        <option value="Nhanh" class="text-amber-600">Nhẹ (-5 điểm Risk)</option>
-                        <option value="TrungBinh" class="text-orange-600">Trung bình (-10 điểm Risk)</option>
-                        <option value="NghiemTrong" class="text-red-600">Nghiêm trọng (-20 điểm Risk)</option>
-                    </select>
+                <!-- Loại lỗi & Mức độ -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                        <label for="incident_loai_loi" class="font-semibold text-coffee-900 block mb-1.5">2. Loại lỗi <span class="text-red-500">*</span></label>
+                        <select id="incident_loai_loi" name="loai_loi" required class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl px-3.5 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-coffee-600/40">
+                            <option value="" selected disabled>-- Chọn loại lỗi --</option>
+                            <option value="Vệ sinh quầy bar">Vệ sinh quầy bar / Khu vực</option>
+                            <option value="Quy trình pha chế (SOP)">Sai quy trình pha chế (SOP)</option>
+                            <option value="Thái độ phục vụ">Thái độ phục vụ khách hàng</option>
+                            <option value="An toàn lao động">Vi phạm an toàn lao động</option>
+                            <option value="Đồng phục & Tác phong">Sai đồng phục & Tác phong</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="incident_muc_do" class="font-semibold text-coffee-900 block mb-1.5">3. Mức độ <span class="text-red-500">*</span></label>
+                        <select id="incident_muc_do" name="muc_do" required class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl px-3.5 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-coffee-600/40">
+                            <option value="" selected disabled>-- Chọn mức độ --</option>
+                            <option value="Nhanh">Nhẹ</option>
+                            <option value="TrungBinh">Trung bình</option>
+                            <option value="NghiemTrong">Nghiêm trọng</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Thời điểm -->
-            <div class="mt-3">
-                <label class="font-bold text-coffee-900 block mb-1">4. Thời điểm xảy ra</label>
-                <input type="datetime-local" name="thoi_diem" value="{{ now()->format('Y-m-d\TH:i') }}" class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl p-2.5 font-semibold text-slate-800 focus:outline-none focus:ring-1 focus:ring-coffee-600">
-            </div>
+                <!-- Thời điểm -->
+                <div>
+                    <label for="incident_thoi_diem" class="font-semibold text-coffee-900 block mb-1.5">4. Thời điểm xảy ra</label>
+                    <input id="incident_thoi_diem" type="datetime-local" name="thoi_diem" class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl px-3.5 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-coffee-600/40">
+                    <p class="text-xs text-slate-500 mt-1.5">Để trống nếu lỗi xảy ra ngay lúc ghi nhận.</p>
+                </div>
 
-            <!-- Nội dung nhắc nhở -->
-            <div class="mt-3">
-                <label class="font-bold text-coffee-900 block mb-1">5. Nội dung ghi nhận & Nhắc nhở <span class="text-red-500">*</span></label>
-                <textarea name="mo_ta" rows="3" required placeholder="VD: Quên không xả vòi steam sau khi đánh sữa, lần sau nhớ lưu ý..." class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-coffee-600"></textarea>
+                <!-- Nội dung -->
+                <div>
+                    <label for="incident_mo_ta" class="font-semibold text-coffee-900 block mb-1.5">5. Nội dung ghi nhận và nhắc nhở <span class="text-red-500">*</span></label>
+                    <textarea id="incident_mo_ta" name="mo_ta" rows="4" required maxlength="2000" placeholder="Mô tả lỗi và nội dung nhắc nhở gửi đến nhân viên" class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl px-3.5 py-3 text-slate-800 resize-y focus:outline-none focus:ring-2 focus:ring-coffee-600/40"></textarea>
+                </div>
             </div>
 
             <!-- Buttons -->
-            <div class="pt-2 mt-4 flex items-center justify-end space-x-2 border-t border-slate-100">
-                <button type="button" onclick="closeIncidentModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold">Hủy</button>
-                <button type="submit" class="px-5 py-2 bg-coffee-900 hover:bg-coffee-800 text-white rounded-xl font-bold transition flex items-center space-x-1.5 shadow-md">
+            <div class="px-7 py-4 flex items-center justify-end gap-3 border-t border-slate-100 bg-slate-50/60 rounded-b-2xl">
+                <button type="button" onclick="closeIncidentModal()" class="px-5 py-2.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 rounded-xl font-semibold text-sm">Hủy</button>
+                <button type="submit" class="px-6 py-2.5 bg-coffee-900 hover:bg-coffee-800 text-white rounded-xl font-semibold text-sm transition flex items-center gap-2 shadow-md">
                     <i class="fa-solid fa-paper-plane text-amber-300"></i>
-                    <span>Lưu & Gửi Nhắc Nhở</span>
+                    <span>Lưu và gửi nhắc nhở</span>
                 </button>
             </div>
         </form>
@@ -1050,6 +1067,11 @@
 
 <script>
     function openIncidentModal() {
+        const form = document.getElementById('incidentForm');
+        form.reset();
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById('incident_thoi_diem').max = now.toISOString().slice(0, 16);
         document.getElementById('incidentModal').classList.remove('hidden');
     }
     function closeIncidentModal() {

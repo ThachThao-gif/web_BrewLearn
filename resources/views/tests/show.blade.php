@@ -67,7 +67,7 @@
                 <div id="question_box_{{ $index }}" class="question-box space-y-4 {{ $index !== 0 ? 'hidden' : '' }}">
                     <div class="flex justify-between items-center border-b pb-3">
                         <span class="bg-amber-100 text-amber-900 text-xs font-bold px-3 py-1 rounded-xl">
-                            <i class="fa-solid fa-lightbulb text-amber-600 mr-1"></i> Tình huống thực tế #{{ sprintf('%02d', $index + 1) }}
+                            <i class="fa-solid fa-lightbulb text-amber-600 mr-1"></i> Tình huống thực tế {{ sprintf('%02d', $index + 1) }}
                         </span>
                         <span class="text-xs font-bold text-slate-400">Trọng số: 1 điểm</span>
                     </div>

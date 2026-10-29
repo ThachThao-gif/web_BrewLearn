@@ -16,6 +16,7 @@ class StaffAssessmentSummaryTest extends TestCase
         parent::setUp();
         $this->assertSame(':memory:', config('database.connections.sqlite.database'));
         (require database_path('migrations/0001_01_01_000000_create_users_table.php'))->up();
+        Schema::table('users', fn (Blueprint $table) => $table->string('ChucVu')->nullable());
 
         Schema::create('chuong_trinh_dao_tao', function (Blueprint $table): void {
             $table->id('MaCTDT');
@@ -46,7 +47,7 @@ class StaffAssessmentSummaryTest extends TestCase
 
     public function test_staff_without_results_are_not_shown_as_zero_scores(): void
     {
-        $leader = User::factory()->create();
+        $leader = User::factory()->create(['ChucVu' => 'Trưởng ca']);
         User::factory()->create();
 
         $this->actingAs($leader)->get(route('leader.staffList'))
@@ -67,7 +68,7 @@ class StaffAssessmentSummaryTest extends TestCase
     public function test_latest_scores_and_assessment_status_are_displayed(
         string $status, ?bool $passed, ?string $criteria, string $expectedLabel
     ): void {
-        $leader = User::factory()->create();
+        $leader = User::factory()->create(['ChucVu' => 'Trưởng ca']);
         $staff = User::factory()->create();
 
         DB::table('ket_qua_kiem_tra')->insert([

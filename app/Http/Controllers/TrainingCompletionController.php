@@ -19,7 +19,7 @@ class TrainingCompletionController extends Controller
                 $query->selectRaw('1')->from('retraining_rounds as newer')
                     ->whereColumn('newer.request_id', 'r.request_id')->whereColumn('newer.round_number', '>', 'r.round_number');
             })
-            ->select('r.*', 'y.user_id', 'u.name as employee_name')->orderByDesc('r.id')->get();
+            ->select('r.*', 'y.user_id', 'y.ly_do', 'u.name as employee_name', 'u.ChucVu as employee_position')->orderByDesc('r.id')->get();
         foreach ($rounds as $round) {
             $round->eligibility = app(AssessmentEligibility::class)->round($round, $round->user_id, false);
         }

@@ -129,7 +129,7 @@ class EnrichDemoData extends Command
         $at = $this->today->copy()->subDay()->setTime(15, 0);
         $id = $this->assessment($person, $this->leaderOf($person), 'Tiêu chuẩn năng lực '.$person->ChucVu, $at, [88, 85, 90, 86, 92],
             'Thao tác POS nhanh, đối chiếu ghi chú đơn chính xác; giao tiếp lịch sự trong giờ cao điểm.', 'ChoPheDuyet');
-        $this->notify($this->managerId, 'Đánh giá chờ phê duyệt', 'Trưởng ca đã gửi đánh giá #'.$id.'. Vui lòng xem tại mục Duyệt đánh giá.', 'training', 'demo-pending-'.$id);
+        $this->notify($this->managerId, 'Đánh giá chờ phê duyệt', 'Trưởng ca đã gửi đánh giá năng lực của nhân viên '.$person->name.'. Vui lòng xem tại mục Duyệt đánh giá.', 'training', 'demo-pending-'.$id);
     }
 
     private function returnedAssessment(string $email): void
@@ -140,7 +140,7 @@ class EnrichDemoData extends Command
         $id = $this->assessment($person, $leader, 'Tiêu chuẩn năng lực '.$person->ChucVu, $at, [80, 65, 75, 80, 85],
             'Thao tác đánh sữa chưa ổn định trong giờ cao điểm.', 'TraLai',
             'Nhận xét chưa nêu cụ thể lỗi khi đánh sữa; bổ sung số ca theo dõi và mức nhiệt sữa cần đạt.');
-        $this->notify($leader, 'Đánh giá cần bổ sung', 'Quản lý trả lại đánh giá #'.$id.' của nhân viên '.$person->name.
+        $this->notify($leader, 'Đánh giá cần bổ sung', 'Quản lý trả lại đánh giá của nhân viên '.$person->name.
             '. Vui lòng bổ sung: Nhận xét chưa nêu cụ thể lỗi khi đánh sữa; bổ sung số ca theo dõi và mức nhiệt sữa cần đạt.', 'training', 'demo-return-'.$id);
     }
 
@@ -155,7 +155,7 @@ class EnrichDemoData extends Command
         $leader = $round->owner_id ?: $this->leaderOf($person);
         $at = $this->today->copy()->addDay()->setTime(9, 30);
         $assessmentId = DB::table('danh_gia_nang_luc')->insertGetId(['user_id' => $person->id, 'NguoiDanhGia_id' => $leader,
-            'TieuChuan' => 'Đánh giá lại lần '.$round->round_number.' sau đào tạo #'.$plan->id.': quy trình bus table và phối hợp bàn giao ca',
+            'TieuChuan' => 'Đánh giá lại lần '.$round->round_number.': quy trình bus table và phối hợp bàn giao ca',
             'NgayHen' => $at, 'TrangThai' => 'ChoDanhGia', 'created_at' => now(), 'updated_at' => now()]);
         DB::table('retraining_rounds')->where('id', $round->id)->update(['confirmed_by' => $leader, 'confirmed_at' => now()->subDay(),
             'confirmation_note' => 'Đã theo dõi đủ 5 ca, nhân viên thực hiện đúng quy trình dọn bàn trong 60 giây.',
@@ -186,7 +186,7 @@ class EnrichDemoData extends Command
         $plan = null;
         foreach ($timeline as $round => [$date, $scores, $comment]) {
             $at = Carbon::parse($date);
-            $criteria = $round === 0 ? 'Tiêu chuẩn năng lực Barista' : 'Đánh giá lại lần '.$round.' sau đào tạo #'.$plan.': kỹ thuật espresso và microfoam';
+            $criteria = $round === 0 ? 'Tiêu chuẩn năng lực Barista' : 'Đánh giá lại lần '.$round.': kỹ thuật espresso và microfoam';
             $assessment = $this->assessment($person, $leader, $criteria, $at, $scores, $comment, 'DaDuyet', null, $proposal);
             if ($round === 0) {
                 $plan = DB::table('yeu_cau_dao_tao_lai')->insertGetId(['user_id' => $person->id, 'assessment_id' => $assessment,
@@ -209,7 +209,7 @@ class EnrichDemoData extends Command
         DB::table('yeu_cau_dao_tao_lai')->where('id', $plan)->update(['tien_trinh' => 'DungDaoTao', 'ket_qua_sau_dao_tao_lai' => 'ChuaDat',
             'danh_gia_lai_id' => DB::table('retraining_rounds')->where('request_id', $plan)->where('round_number', 3)->value('assessment_id'),
             'nguoi_phu_trach_id' => $leader, 'updated_at' => $last->copy()->addHour()]);
-        $this->notify($manager->id, 'Đào tạo lại đã đạt giới hạn', 'Nhân viên '.$person->name.' vẫn chưa đạt sau 3 vòng đào tạo lại của yêu cầu #'.$plan.
+        $this->notify($manager->id, 'Đào tạo lại đã đạt giới hạn', 'Nhân viên '.$person->name.' vẫn chưa đạt sau 3 vòng đào tạo lại'.
             '. Đã dừng đào tạo lại; quản lý cần xem xét hướng xử lý.', 'training', 'training-limit-'.$plan, $last->copy()->addHour());
     }
 

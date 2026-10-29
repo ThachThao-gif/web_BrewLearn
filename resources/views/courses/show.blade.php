@@ -94,7 +94,7 @@
                                         @if($isDone)
                                             <i class="fa-solid fa-check text-xs"></i>
                                         @else
-                                            #{{ sprintf('%02d', $item->ThuTu ?? ($index + 1)) }}
+                                            {{ sprintf('%02d', $item->ThuTu ?? ($index + 1)) }}
                                         @endif
                                     </div>
                                     <div>
@@ -134,34 +134,31 @@
             </div>
 
             <!-- TÓM TẮT NỘI DUNG -->
-            @if(!empty($course->MoTa))
-                <div class="text-xs text-slate-700 leading-relaxed px-2 space-y-2">
-                    {!! nl2br(e($course->MoTa)) !!}
-                </div>
-            @else
-                <ul class="space-y-3 text-xs text-slate-700 leading-relaxed px-2">
-                    <li class="flex items-start gap-2">
-                        <i class="fa-solid fa-circle text-[6px] text-coffee-900 mt-1.5 shrink-0"></i>
-                        <span><strong>Mối nguy (hazards)</strong> là gì, vì sao xuất hiện và cách nhận biết nhanh trong mọi môi trường.</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <i class="fa-solid fa-circle text-[6px] text-coffee-900 mt-1.5 shrink-0"></i>
-                        <span>Cách <strong>đánh giá rủi ro & giảm thiểu rủi ro</strong> trước khi sự cố xảy ra.</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <i class="fa-solid fa-circle text-[6px] text-coffee-900 mt-1.5 shrink-0"></i>
-                        <span>Cách xếp dỡ hàng hoá, kê kệ, sắp xếp vật dụng đúng chuẩn an toàn.</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <i class="fa-solid fa-circle text-[6px] text-coffee-900 mt-1.5 shrink-0"></i>
-                        <span>Quy tắc di chuyển xe đẩy, xe hàng, xe trolley để tránh tai nạn nghiêm trọng.</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <i class="fa-solid fa-circle text-[6px] text-coffee-900 mt-1.5 shrink-0"></i>
-                        <span>Cách phòng tránh <em>trượt – vấp – ngã</em>, một trong những nguyên nhân gây tai nạn lao động phổ biến nhất.</span>
-                    </li>
-                </ul>
-            @endif
+            @php
+                $learningOutcomes = collect(preg_split('/?
+/', (string) ($course->MucTieuHoc ?? '')))->map(fn ($line) => trim($line))->filter();
+            @endphp
+            <div class="space-y-4 px-2 text-sm leading-relaxed text-slate-700">
+                @if(!empty($course->MoTa))
+                    <p>{{ $course->MoTa }}</p>
+                @endif
+                @if($learningOutcomes->isNotEmpty())
+                    <ul class="space-y-2.5">
+                        @foreach($learningOutcomes as $outcome)
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check mt-1 shrink-0 text-xs text-emerald-600" aria-hidden="true"></i>
+                                <span>{{ $outcome }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                @elseif($lessonList->isNotEmpty())
+                    <ul class="space-y-2.5">
+                        @foreach($lessonList as $item)
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-circle-check mt-1 shrink-0 text-xs text-emerald-600" aria-hidden="true"></i><span>{{ $item->TenBaiHoc }}</span></li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
 
             <!-- NÚT HỌC BÀI -->
             @if($totalLessons > 0)

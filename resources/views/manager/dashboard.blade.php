@@ -7,7 +7,7 @@
 
     <div class="grid grid-cols-2 xl:grid-cols-4 gap-3">
         @foreach([
-            ['Nhân sự', $staff->count(), 'users', 'manager.staff', 'text-coffee-700 bg-coffee-100'],
+            ['Nhân viên đang làm', $activeCount, 'users', 'manager.staff', 'text-coffee-700 bg-coffee-100'],
             ['Đánh giá chờ duyệt', $pendingCount, 'clipboard-check', 'manager.assessments', 'text-amber-700 bg-amber-50'],
             ['Sắp đến hạn / quá hạn', $staff->where('needs_reminder', true)->count(), 'calendar-days', 'manager.staff', 'text-rose-700 bg-rose-50'],
             ['Đào tạo lại đang xử lý', $trainingCount, 'arrows-rotate', 'manager.training', 'text-emerald-700 bg-emerald-50'],

@@ -1,17 +1,49 @@
+<?php $__env->startSection('title', 'Hồ sơ nhân viên'); ?>
+
 <?php $__env->startSection('content'); ?>
-<div class="max-w-7xl mx-auto space-y-6">
 <?php
-    $assessmentLabels = ['ChoDanhGia' => 'Chờ đánh giá', 'ChoPheDuyet' => 'Chờ phê duyệt', 'DaDuyet' => 'Đã duyệt', 'HoanThanh' => 'Hoàn thành', 'TraLai' => 'Cần bổ sung'];
     $requestLabels = ['ChoDuyet' => 'Chờ duyệt', 'DaDuyet' => 'Đã duyệt', 'TuChoi' => 'Đã từ chối', 'HoanThanh' => 'Hoàn thành'];
     $resultLabels = ['ChuaCoKetQua' => 'Chưa có kết quả', 'Dat' => 'Đạt', 'ChuaDat' => 'Chưa đạt'];
 ?>
-<?php echo $__env->make('manager.banner', ['heading' => $person->name, 'description' => $person->ChucVu.' • '.$person->shift_name.' • '.$person->email], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-<a href="<?php echo e(route('manager.staff')); ?>" class="inline-block text-sm text-coffee-700 font-bold">← Danh sách nhân viên</a>
-<div class="grid md:grid-cols-2 gap-4"><div class="bg-white rounded-2xl border border-coffee-200 p-5"><h2 class="font-bold text-coffee-900 mb-3">Cảnh báo theo luật</h2><?php echo $__env->make('manager.risk-details', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><p class="text-xs text-slate-500 mt-1">Chỉ hỗ trợ xem xét hồ sơ; điểm cảnh báo không phải xác suất và không quyết định kết quả đánh giá.</p></div><div class="bg-white rounded-2xl border border-coffee-200 p-5"><h2 class="font-bold text-coffee-900">Lịch sử quiz</h2><div class="flex gap-8 mt-3"><p><strong class="text-2xl"><?php echo e($quizzes->count()); ?></strong><span class="block text-xs text-slate-500">Lượt thi</span></p><p><strong class="text-2xl text-rose-600"><?php echo e($quizzes->filter(fn($q) => $q->Diem < ($q->DiemChuan ?? 80))->count()); ?></strong><span class="block text-xs text-slate-500">Lượt không đạt</span></p></div></div></div>
-<section class="bg-white rounded-2xl border border-coffee-200 p-5"><h2 class="text-lg font-bold text-coffee-900 mb-4">Tiến độ theo khóa học</h2><div class="grid md:grid-cols-2 gap-4"><?php $__empty_1 = true; $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?><div class="border border-coffee-200 rounded-xl p-4"><h3 class="font-bold text-sm"><?php echo e($course->TenCTDT); ?></h3><div class="flex justify-between mt-3 text-xs"><span><?php echo e($course->hasDetails ? $course->completed.' / '.$course->total.' bài hoàn thành' : 'Chưa có dữ liệu từng bài ('.$course->total.' bài)'); ?></span><strong><?php echo e($course->progress); ?>%</strong></div><div class="h-2 bg-coffee-100 rounded-full mt-2"><div class="h-2 bg-amber_brand rounded-full" style="width: <?php echo e($course->progress); ?>%"></div></div><?php if(!$course->hasDetails && $course->progress > 0): ?><p class="mt-2 text-[10px] text-slate-500">Tiến độ giả lập đang lấy từ database; chi tiết sẽ cập nhật khi học trên web.</p><?php endif; ?></div><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?><p class="text-sm text-slate-500">Chưa có khóa áp dụng cho chức vụ này.</p><?php endif; ?></div></section>
-<section class="bg-white rounded-2xl border border-coffee-200 overflow-hidden"><h2 class="p-5 text-lg font-bold text-coffee-900">Từng lượt làm quiz</h2><div class="overflow-x-auto"><table class="w-full text-sm"><thead class="bg-coffee-100 text-xs text-left"><tr><th class="p-3">Bài kiểm tra</th><th class="p-3">Lượt thi của bài</th><th class="p-3">Điểm</th><th class="p-3">Kết quả</th><th class="p-3">Ngày thi</th></tr></thead><tbody><?php $__empty_1 = true; $__currentLoopData = $quizzes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $quiz): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?><tr class="border-t border-coffee-100"><td class="p-3"><?php echo e($quiz->TenBaiKiemTra ?? 'Bài #'.$quiz->MaBaiKiemTra); ?></td><td class="p-3"><?php echo e($quizzes->where('MaBaiKiemTra', $quiz->MaBaiKiemTra)->where('id', '<=', $quiz->id)->count()); ?></td><td class="p-3 font-bold"><?php echo e($quiz->Diem); ?>/100</td><td class="p-3"><?php echo e($quiz->Diem >= ($quiz->DiemChuan ?? 80) ? 'Đạt' : 'Chưa đạt'); ?></td><td class="p-3 text-xs"><?php echo e(\Carbon\Carbon::parse($quiz->NgayLam ?? $quiz->created_at)->format('d/m/Y H:i')); ?></td></tr><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?><tr><td colspan="5" class="p-5 text-slate-500">Chưa có lượt thi.</td></tr><?php endif; ?></tbody></table></div></section>
-<section class="bg-white rounded-2xl border border-coffee-200 p-5"><h2 class="text-lg font-bold text-coffee-900 mb-3">Đánh giá của trưởng ca</h2><?php $__empty_1 = true; $__currentLoopData = $assessments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $assessment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?><div class="py-3 border-t border-coffee-100 text-sm"><div class="flex justify-between gap-3"><p class="font-bold"><?php echo e($assessment->TieuChuan ?? 'Đánh giá năng lực'); ?></p><span><?php echo e($assessment->Diem ?? '—'); ?>/100</span></div><p class="text-xs text-slate-500 mt-1"><?php echo e($proposalOwners->firstWhere('id', $assessment->NguoiDanhGia_id)?->name ?? 'Trưởng ca'); ?> • <?php echo e($assessmentLabels[$assessment->TrangThai] ?? 'Chưa có trạng thái'); ?> • <?php echo e($assessment->IsPassed === null ? 'Chưa có kết quả xác định' : ($assessment->IsPassed ? 'Đạt' : 'Chưa đạt')); ?></p><p class="mt-2 whitespace-pre-line"><?php echo e($assessment->NhanXet); ?></p><?php if($assessment->ChiTietDeXuat): ?><?php echo $__env->make('components.assessment-improvement-summary', ['savedProposal' => json_decode($assessment->ChiTietDeXuat, true)], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php endif; ?></div><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?><p class="text-sm text-slate-500">Chưa có đánh giá.</p><?php endif; ?><a href="<?php echo e(route('manager.assessments', ['q' => $person->name])); ?>" class="inline-block text-amber-700 text-sm font-bold mt-3">Mở màn hình duyệt đánh giá →</a></section>
-<section class="bg-white rounded-2xl border border-coffee-200 p-5"><h2 class="text-lg font-bold text-coffee-900 mb-3">Lịch sử đào tạo lại</h2><?php $__empty_1 = true; $__currentLoopData = $training; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $plan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?><p class="border-t border-coffee-100 py-3 text-sm">#<?php echo e($plan->id); ?> • <?php echo e($plan->nguon_de_xuat ?? ($plan->du_doan_id ? 'Model đề xuất' : 'Trưởng ca đề xuất')); ?> • <?php echo e($requestLabels[$plan->trang_thai] ?? 'Chưa có trạng thái'); ?> • <?php echo e($resultLabels[$plan->ket_qua_sau_dao_tao_lai] ?? 'Chưa có kết quả'); ?><span class="block text-xs text-slate-500 mt-1"><?php echo e($plan->ly_do); ?></span></p><?php echo $__env->make('components.retraining-round-history', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?><p class="text-sm text-slate-500">Chưa có yêu cầu đào tạo lại.</p><?php endif; ?><a href="<?php echo e(route('manager.training', ['q' => $person->name])); ?>" class="inline-block text-amber-700 text-sm font-bold mt-3">Xem / giao đào tạo lại →</a></section>
+<div class="max-w-6xl mx-auto space-y-5" x-data="{ tab: 'info' }">
+    <?php echo $__env->make('components.staff-profile', [
+        'staff' => $person,
+        'backUrl' => route('manager.staff'),
+        'backLabel' => 'Danh sách nhân viên',
+        'assessmentLink' => [route('manager.assessments', ['q' => $person->name]), 'Mở màn hình duyệt đánh giá'],
+        'showRisk' => true,
+        'extraTabs' => [
+            'risk' => ['Cảnh báo', 'fa-triangle-exclamation', null],
+            'training' => ['Đào tạo lại', 'fa-rotate', $training->count()],
+        ],
+    ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
+    
+    <section id="panel-risk" role="tabpanel" aria-labelledby="tab-risk" x-show="tab === 'risk'" x-cloak class="rounded-2xl border border-coffee-200 bg-white p-6 shadow-sm">
+        <h2 class="text-base font-bold text-coffee-900">Cảnh báo nguy cơ theo luật</h2>
+        <p class="mt-1 rounded-lg bg-amber-50 p-3 text-xs text-amber-900"><i class="fa-solid fa-circle-info mr-1" aria-hidden="true"></i>Chỉ hỗ trợ xem xét hồ sơ. Điểm cảnh báo không phải xác suất, không cộng vào điểm năng lực và không quyết định kết quả đánh giá.</p>
+        <div class="mt-4"><?php echo $__env->make('manager.risk-details', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?></div>
+    </section>
+
+    
+    <section id="panel-training" role="tabpanel" aria-labelledby="tab-training" x-show="tab === 'training'" x-cloak class="rounded-2xl border border-coffee-200 bg-white p-6 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+            <h2 class="text-base font-bold text-coffee-900">Lịch sử đào tạo lại</h2>
+            <a href="<?php echo e(route('manager.training', ['q' => $person->name])); ?>" class="text-sm font-bold text-amber-700 hover:text-amber-800">Xem / giao đào tạo lại →</a>
+        </div>
+        <?php $__empty_1 = true; $__currentLoopData = $training; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $plan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+            <article class="mt-3 border-t border-coffee-100 pt-4 text-sm">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <p class="font-semibold text-coffee-900">Yêu cầu đào tạo lại · <?php echo e($plan->nguon_de_xuat ?? ($plan->du_doan_id ? 'Model đề xuất' : 'Trưởng ca đề xuất')); ?></p>
+                    <span class="text-xs text-slate-600"><?php echo e($requestLabels[$plan->trang_thai] ?? 'Chưa có trạng thái'); ?> · <span class="font-semibold"><?php echo e($resultLabels[$plan->ket_qua_sau_dao_tao_lai] ?? 'Chưa có kết quả'); ?></span></span>
+                </div>
+                <p class="mt-1 text-xs text-slate-500"><?php echo e($plan->ly_do); ?></p>
+                <div class="mt-2"><?php echo $__env->make('components.retraining-round-history', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?></div>
+            </article>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+            <p class="mt-3 border-t border-coffee-100 pt-4 text-sm text-slate-500">Chưa có yêu cầu đào tạo lại.</p>
+        <?php endif; ?>
+    </section>
 </div>
 <?php $__env->stopSection(); ?>
 

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssessmentEligibility;
 use App\Models\CourseProgress;
 use App\Models\QuizProgress;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class CourseController extends Controller
@@ -38,7 +40,7 @@ class CourseController extends Controller
         $assignedCourses = $this->getAssignedCoursesWithLockStatus($userId, $userChucVu);
 
         $assignedCoursesCount = $assignedCourses->count();
-        $inProgressCoursesCount = $assignedCourses->where('TienDo', '>', 0)->count();
+        $inProgressCoursesCount = $assignedCourses->where('TienDo', '>', 0)->where('TienDo', '<', 100)->count();
         $completedCoursesCount = $assignedCourses->where('TienDo', '>=', 100)->count();
 
         $overallProgress = $assignedCoursesCount > 0
@@ -80,8 +82,10 @@ class CourseController extends Controller
         $userChucVu = $currentUser->ChucVu ?? 'Barista';
 
         $courses = $this->getAssignedCoursesWithLockStatus($userId, $userChucVu);
+        $retraining = $this->currentRetraining((int) $userId);
+        $retrainingCourseIds = $this->retrainingCourseIds($retraining['checklist'] ?? []);
 
-        return view('courses.index', compact('courses', 'currentUser'));
+        return view('courses.index', compact('courses', 'currentUser', 'retraining', 'retrainingCourseIds'));
     }
 
     /**
@@ -411,6 +415,59 @@ class CourseController extends Controller
     /**
      * LẤY DANH SÁCH KHÓA HỌC ĐƯỢC GIAO KÈM TRẠNG THÁI KHÓA/MỞ
      */
+    /**
+     * Yêu cầu đào tạo lại đang xử lý của nhân viên (UC-NV07): vòng hiện tại, việc cần làm và bước tiếp theo.
+     *
+     * @return array<string, mixed>|null
+     */
+    /**
+     * Khóa học chứa các bài học, bài kiểm tra được giao trong vòng đào tạo lại.
+     *
+     * @param  list<array{type: string, id: int, name: string, done: bool}>  $checklist
+     * @return list<int>
+     */
+    private function retrainingCourseIds(array $checklist): array
+    {
+        $items = collect($checklist);
+        $lessonIds = $items->where('type', 'lesson')->pluck('id')
+            ->merge(DB::table('bai_kiem_tra')->whereIn('MaBaiKiemTra', $items->where('type', 'quiz')->pluck('id'))->pluck('MaBaiHoc'));
+
+        return DB::table('bai_hoc')->whereIn('MaBaiHoc', $lessonIds)->distinct()->pluck('FK_MaCTDT')->map(fn ($id) => (int) $id)->all();
+    }
+
+    private function currentRetraining(int $userId): ?array
+    {
+        if (! Schema::hasTable('yeu_cau_dao_tao_lai') || ! Schema::hasTable('retraining_rounds')) {
+            return null;
+        }
+        $plan = DB::table('yeu_cau_dao_tao_lai')->where('user_id', $userId)->where('trang_thai', 'DaDuyet')
+            ->whereIn('tien_trinh', ['ChoGiao', 'DangThucHien', 'ChoDanhGiaLai'])->orderByDesc('id')->first();
+        if (! $plan) {
+            return null;
+        }
+        $round = DB::table('retraining_rounds')->where('request_id', $plan->id)->orderByDesc('round_number')->first();
+        $data = ['plan' => $plan, 'round' => null, 'checklist' => [], 'owner' => null, 'reassessment' => null,
+            'roundNumber' => ($round->round_number ?? 0) + ($plan->tien_trinh === 'ChoGiao' ? 1 : 0), 'state' => 'waiting_assignment'];
+        if ($plan->tien_trinh === 'ChoGiao' || ! $round) {
+            return $data;
+        }
+        $checklist = app(AssessmentEligibility::class)->roundChecklist($round, $userId);
+        $reassessment = $round->assessment_id ? DB::table('danh_gia_nang_luc')->find($round->assessment_id) : null;
+        $learningDone = collect($checklist)->every(fn (array $item) => $item['done']);
+
+        return array_merge($data, [
+            'round' => $round, 'checklist' => $checklist, 'reassessment' => $reassessment,
+            'owner' => DB::table('users')->where('id', $round->owner_id)->value('name'),
+            'state' => match (true) {
+                $reassessment !== null && in_array($reassessment->TrangThai, ['ChoPheDuyet', 'TraLai']) => 'reviewing',
+                $reassessment !== null => 'scheduled',
+                (bool) $round->confirmed_at => 'confirmed',
+                $learningDone => 'waiting_confirmation',
+                default => 'learning',
+            },
+        ]);
+    }
+
     private function getAssignedCoursesWithLockStatus($userId, $userChucVu)
     {
         $courses = app(CourseProgress::class)->assignedCourses($userChucVu);

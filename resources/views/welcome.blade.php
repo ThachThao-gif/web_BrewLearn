@@ -13,7 +13,7 @@
             </div>
             
             <h1 class="text-2xl md:text-3xl font-black text-amber-50 flex items-center gap-2">
-                Chào, {{ $currentUser->name ?? 'Học viên' }}! 
+                Tổng quan lộ trình
             </h1>
             
             <p class="text-xs md:text-sm text-amber-200/80 leading-relaxed">
