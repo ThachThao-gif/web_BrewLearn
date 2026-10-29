@@ -1039,7 +1039,7 @@
                         <label for="incident_muc_do" class="font-semibold text-coffee-900 block mb-1.5">3. Mức độ <span class="text-red-500">*</span></label>
                         <select id="incident_muc_do" name="muc_do" required class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl px-3.5 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-coffee-600/40">
                             <option value="" selected disabled>-- Chọn mức độ --</option>
-                            <option value="Nhanh">Nhẹ</option>
+                            <option value="Nhe">Nhẹ</option>
                             <option value="TrungBinh">Trung bình</option>
                             <option value="NghiemTrong">Nghiêm trọng</option>
                         </select>

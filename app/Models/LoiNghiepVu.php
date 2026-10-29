@@ -16,10 +16,9 @@ class LoiNghiepVu extends Model
         'nguoi_ghi_nhan_id',
         'loai_loi',
         'muc_do',
-        'diem_tru_risk',
         'mo_ta',
         'thoi_diem_xay_ra',
-        'chi_nhanh_id'
+        'chi_nhanh_id',
     ];
 
     // Quan hệ với Nhân viên

@@ -41,12 +41,6 @@ chọn, tổng và điểm thành phần, lý do, thời điểm tính. Giao di�
 
 ## Kiểm thử
 
-```powershell
-python -m unittest discover -s tests/python -v
-php vendor/phpunit/phpunit/phpunit --do-not-cache-result --filter ManagerWorkflowTest
-```
-
-Các kiểm thử Python dùng SQLite bộ nhớ để kiểm tra các truy vấn tổng hợp,
-ngoài kiểm thử biên của luật. Chạy thủ công trên MySQL để xác nhận tích hợp
-trước khi dùng. Lệnh `brewlearn:calculate-risk` được lập lịch chạy lúc 01:00
+Kịch bản KB07 trong `tests/selenium/test_luong_nghiep_vu.py` ghi nhận lỗi,
+chạy tính cảnh báo và đối chiếu kết quả với phép tính tay. Lệnh `brewlearn:calculate-risk` được lập lịch chạy lúc 01:00
 hằng ngày (`routes/console.php`); luôn đối chiếu thời điểm tính trên UI.

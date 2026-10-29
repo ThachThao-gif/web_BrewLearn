@@ -246,7 +246,7 @@ class LeaderEvaluationController extends Controller
         $data = $request->validate([
             'user_id' => ['required', Rule::in($this->staffQuery()->pluck('id')->all())],
             'loai_loi' => ['required', 'string', 'max:100'],
-            'muc_do' => ['required', Rule::in(['Nhanh', 'TrungBinh', 'NghiemTrong'])],
+            'muc_do' => ['required', Rule::in(['Nhe', 'TrungBinh', 'NghiemTrong'])],
             'thoi_diem' => ['nullable', 'date', 'before_or_equal:now'],
             'mo_ta' => ['required', 'string', 'max:2000'],
         ], [
@@ -257,7 +257,7 @@ class LeaderEvaluationController extends Controller
         DB::transaction(function () use ($data): void {
             DB::table('loi_nghiep_vu')->insert([
                 'user_id' => $data['user_id'], 'nguoi_ghi_nhan_id' => Auth::id(), 'loai_loi' => $data['loai_loi'],
-                'muc_do' => $data['muc_do'], 'diem_tru_risk' => ['Nhanh' => 5, 'TrungBinh' => 10, 'NghiemTrong' => 20][$data['muc_do']],
+                'muc_do' => $data['muc_do'],
                 'mo_ta' => trim($data['mo_ta']), 'thoi_diem_xay_ra' => $data['thoi_diem'] ?? now(),
                 'chi_nhanh_id' => Auth::user()->cua_hang_id, 'created_at' => now(), 'updated_at' => now(),
             ]);
