@@ -22,7 +22,7 @@
     <div class="page-banner bg-white border border-coffee-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <h1 class="text-xl md:text-2xl font-extrabold text-coffee-900">Chương Trình Đào Tạo</h1>
-            <p class="text-xs text-slate-500 mt-1">Danh sách các khóa học tiêu chuẩn Barista phân theo cấp độ và chuyên môn.</p>
+            <p class="text-xs text-slate-500 mt-1">Danh sách khóa học áp dụng theo chức danh của bạn, sắp xếp theo thứ tự lộ trình.</p>
         </div>
 
         <!-- SEARCH & FILTER -->

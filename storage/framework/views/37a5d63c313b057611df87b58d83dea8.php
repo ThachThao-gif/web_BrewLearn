@@ -38,7 +38,7 @@
             <div class="bg-white p-5 rounded-2xl border border-[#E8DFC8] shadow-sm space-y-2">
                 <span class="text-[10px] font-bold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200 uppercase">1.1 Tài khoản & Đăng nhập</span>
                 <h4 class="font-bold text-slate-800 text-sm">Quên mật khẩu hoặc tài khoản bị khóa?</h4>
-                <p class="text-xs text-slate-600 leading-relaxed">Liên hệ Trưởng Ca hoặc Quản Lý Vùng để reset mật khẩu nội bộ.</p>
+                <p class="text-xs text-slate-600 leading-relaxed">Liên hệ Quản lý cửa hàng để được cấp lại mật khẩu nội bộ.</p>
             </div>
             <div class="bg-white p-5 rounded-2xl border border-[#E8DFC8] shadow-sm space-y-2">
                 <span class="text-[10px] font-bold text-blue-800 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200 uppercase">1.2 Học tập & Bài kiểm tra</span>
@@ -47,8 +47,8 @@
             </div>
             <div class="bg-white p-5 rounded-2xl border border-[#E8DFC8] shadow-sm space-y-2">
                 <span class="text-[10px] font-bold text-purple-800 bg-purple-50 px-2.5 py-1 rounded-md border border-purple-200 uppercase">1.3 Đánh giá năng lực</span>
-                <h4 class="font-bold text-slate-800 text-sm">Khi nào được đánh giá kỹ năng quầy Bar?</h4>
-                <p class="text-xs text-slate-600 leading-relaxed">Trưởng ca chấm trực tiếp định kỳ vào cuối mỗi tháng.</p>
+                <h4 class="font-bold text-slate-800 text-sm">Khi nào được đánh giá năng lực?</h4>
+                <p class="text-xs text-slate-600 leading-relaxed">Lần đầu sau 3 tháng làm việc, sau đó định kỳ 3 tháng một lần, khi đã hoàn thành bài học và đạt các bài kiểm tra bắt buộc. Trưởng ca cùng ca xếp lịch và chấm trực tiếp.</p>
             </div>
             <div class="bg-white p-5 rounded-2xl border border-[#E8DFC8] shadow-sm space-y-2">
                 <span class="text-[10px] font-bold text-red-800 bg-red-50 px-2.5 py-1 rounded-md border border-red-200 uppercase">1.4 Cảnh báo nguy cơ</span>

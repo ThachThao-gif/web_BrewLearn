@@ -3,7 +3,8 @@
     <p class="text-xs text-slate-500 mt-2">Bộ luật chỉ áp dụng cho Barista, Thu ngân và Phục vụ.</p>
 <?php elseif($person->prediction): ?>
     <?php if($person->prediction->diem_rui_ro !== null): ?>
-        <p class="text-xs font-semibold text-coffee-800 mt-2">Điểm cảnh báo <?php echo e(number_format($person->prediction->diem_rui_ro * 100, 1)); ?>/100</p>
+        <p class="text-xs font-semibold text-coffee-800 mt-2">Điểm cảnh báo <?php echo e((int) round($person->prediction->diem_rui_ro * 10)); ?>/10</p>
+        <p class="text-[11px] text-slate-500 mt-0.5">Thấp 0–2 · Trung bình 3–4 · Cao 5–10</p>
     <?php endif; ?>
     <?php if(isset($person->risk_details['completed_quiz_count'], $person->risk_details['applicable_quiz_count'])): ?>
         <p class="text-xs text-slate-600 mt-1">Đã làm <?php echo e($person->risk_details['completed_quiz_count']); ?>/<?php echo e($person->risk_details['applicable_quiz_count']); ?> bài kiểm tra</p>

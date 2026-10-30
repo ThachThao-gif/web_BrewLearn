@@ -174,8 +174,8 @@ class EnrichDemoData extends Command
         $this->learn($person, 100, Carbon::parse('2026-07-20'));
         $this->takeTests($person, [100, 100, 90, 100, 100, 100], Carbon::parse('2026-08-05 10:00'));
         $leader = $this->leaderOf($person);
-        $proposal = json_encode(['source' => 'Trưởng ca đề xuất', 'details' => ['huongdan' => [
-            'content' => 'Kèm cặp thao tác chiết xuất espresso và đánh sữa microfoam theo định lượng chuẩn.', 'shift_count' => 5,
+        $proposal = json_encode(['source' => 'Trưởng ca đề xuất', 'details' => ['theodoica' => [
+            'behavior' => 'Kèm cặp thao tác chiết xuất espresso và đánh sữa microfoam theo định lượng chuẩn.', 'shift_count' => 5,
         ]]], JSON_UNESCAPED_UNICODE);
         $timeline = [
             ['2026-08-20 10:00', [78, 62, 72, 80, 82], 'Kiến thức lý thuyết tốt nhưng thao tác chiết xuất chưa đạt định lượng, sữa đánh còn bọt lớn.'],
@@ -340,8 +340,8 @@ class EnrichDemoData extends Command
     {
         $total = $this->total($scores);
         $passed = $total >= 80 && min($scores) >= 70;
-        $proposal ??= $passed ? null : json_encode(['source' => 'Trưởng ca đề xuất', 'details' => ['huongdan' => [
-            'content' => 'Kèm cặp thao tác còn yếu trong 5 ca liên tiếp.', 'shift_count' => 5,
+        $proposal ??= $passed ? null : json_encode(['source' => 'Trưởng ca đề xuất', 'details' => ['theodoica' => [
+            'behavior' => 'Kèm cặp thao tác còn yếu trong 5 ca liên tiếp.', 'shift_count' => 5,
         ]]], JSON_UNESCAPED_UNICODE);
         $reviewed = in_array($status, ['DaDuyet', 'TraLai'], true);
 

@@ -103,7 +103,7 @@
                             <?php if($assessment->ly_do_tra_lai): ?>
                                 <div class="<?php echo e($row); ?>"><dt class="text-slate-500">Lý do trả lại</dt><dd class="text-rose-700"><?php echo e($assessment->ly_do_tra_lai); ?></dd></div>
                             <?php endif; ?>
-                            <div class="<?php echo e($row); ?>"><dt class="text-slate-500">Cảnh báo học tập</dt><dd>
+                            <div class="<?php echo e($row); ?>"><dt class="text-slate-500">Cảnh báo nguy cơ</dt><dd>
                                 <?php echo $__env->make('manager.risk', ['risk' => $employee->risk], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                                 <details class="mt-1 text-xs"><summary class="cursor-pointer text-slate-500">Xem lý do</summary><div class="mt-1"><?php echo $__env->make('manager.risk-details', ['person' => $employee, 'showBadge' => false], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><p class="mt-2 text-[11px] text-slate-500">Chỉ để tham khảo, không cộng vào điểm và không chặn việc phê duyệt.</p></div></details>
                             </dd></div>

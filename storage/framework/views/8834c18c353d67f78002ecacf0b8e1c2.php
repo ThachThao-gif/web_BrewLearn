@@ -8,7 +8,7 @@
         <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center gap-2">
                 <span class="bg-amber-100 text-amber-900 text-xs font-extrabold px-3 py-1 rounded-full uppercase">
-                    KHÓA BARISTA CƠ BẢN
+                    Bài kiểm tra kiến thức
                 </span>
                 <span class="text-xs font-bold text-slate-400">• MÃ ĐỀ: BRW-2026-EX<?php echo e(sprintf('%02d', $test->MaBaiKiemTra ?? 1)); ?></span>
             </div>
@@ -18,7 +18,7 @@
         </div>
 
         <h1 class="text-xl md:text-2xl font-black text-coffee-900">
-            <?php echo e($test->TenBaiKiemTra ?? 'Bài Kiểm Tra Sát Hạch Barista'); ?>
+            <?php echo e($test->TenBaiKiemTra ?? 'Bài kiểm tra kiến thức'); ?>
 
         </h1>
 
@@ -49,7 +49,7 @@
                 </div>
                 <div>
                     <div class="text-[10px] font-bold text-slate-400 uppercase">Tiêu chuẩn vượt qua</div>
-                    <div class="text-sm font-black text-coffee-900"><?php echo e($test->DiemChuan ?? 80); ?>% tổng số điểm</div>
+                    <div class="text-sm font-black text-coffee-900">Từ <?php echo e($test->DiemChuan ?? 80); ?>/100 điểm</div>
                 </div>
             </div>
         </div>
