@@ -104,7 +104,7 @@
                             @if($assessment->ly_do_tra_lai)
                                 <div class="{{ $row }}"><dt class="text-slate-500">Lý do trả lại</dt><dd class="text-rose-700">{{ $assessment->ly_do_tra_lai }}</dd></div>
                             @endif
-                            <div class="{{ $row }}"><dt class="text-slate-500">Cảnh báo học tập</dt><dd>
+                            <div class="{{ $row }}"><dt class="text-slate-500">Cảnh báo nguy cơ</dt><dd>
                                 @include('manager.risk', ['risk' => $employee->risk])
                                 <details class="mt-1 text-xs"><summary class="cursor-pointer text-slate-500">Xem lý do</summary><div class="mt-1">@include('manager.risk-details', ['person' => $employee, 'showBadge' => false])<p class="mt-2 text-[11px] text-slate-500">Chỉ để tham khảo, không cộng vào điểm và không chặn việc phê duyệt.</p></div></details>
                             </dd></div>

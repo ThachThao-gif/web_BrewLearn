@@ -117,7 +117,7 @@
             </div>
             @if($showRisk)
                 <div class="px-5 py-4">
-                    <dt class="text-xs text-slate-500">Cảnh báo theo luật</dt>
+                    <dt class="text-xs text-slate-500">Cảnh báo nguy cơ</dt>
                     <dd class="mt-1.5">@include('manager.risk', ['risk' => $staff->risk])</dd>
                     @if($staff->prediction?->diem_rui_ro !== null)
                         <p class="mt-1 text-xs text-slate-500">Điểm {{ (int) round($staff->prediction->diem_rui_ro * 10) }}/10 · chỉ để tham khảo</p>

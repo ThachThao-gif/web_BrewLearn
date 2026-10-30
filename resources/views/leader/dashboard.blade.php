@@ -397,7 +397,7 @@
                     <div>
                         <p class="text-xs text-slate-500 font-medium uppercase">Điểm tổng hợp</p>
                         <div class="flex items-baseline gap-2 mt-0.5">
-                            <span id="totalScore" class="text-2xl font-bold text-amber-700">0%</span>
+                            <span id="totalScore" class="text-2xl font-bold text-amber-700">0/100</span>
                             <span id="passBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">ĐẠT</span>
                         </div>
                     </div>
@@ -480,7 +480,7 @@
         const total = (nv * 0.20) + (kn * 0.30) + (qt * 0.20) + (pv * 0.15) + (tp * 0.15);
         const finalScore = Math.round(total * 10) / 10;
 
-        document.getElementById('totalScore').innerText = finalScore + '%';
+        document.getElementById('totalScore').innerText = finalScore + '/100';
 
         const allCriteriaPassed = (nv >= 70 && kn >= 70 && qt >= 70 && pv >= 70 && tp >= 70);
         const isPassed = (finalScore >= 80) && allCriteriaPassed;
@@ -492,14 +492,14 @@
 
         if (isPassed) {
             badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800';
-            badge.innerText = 'ĐẠT (≥80%)';
+            badge.innerText = 'ĐẠT (≥80)';
             
             improvementSection.classList.add('hidden');
             submitBtn.innerText = 'Gửi kết quả đánh giá';
             submitBtn.className = 'px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium transition shadow-sm';
         } else {
             badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800';
-            badge.innerText = !allCriteriaPassed && finalScore >= 80 ? 'CHƯA ĐẠT (Có tiêu chí < 70)' : 'CHƯA ĐẠT (<80%)';
+            badge.innerText = !allCriteriaPassed && finalScore >= 80 ? 'CHƯA ĐẠT (Có tiêu chí < 70)' : 'CHƯA ĐẠT (<80)';
             
             improvementSection.classList.remove('hidden');
             submitBtn.innerText = 'Gửi đề xuất xử lý';

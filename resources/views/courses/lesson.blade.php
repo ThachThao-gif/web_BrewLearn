@@ -42,26 +42,7 @@
             </video>
         </div>
 
-        <!-- ACTION BUTTONS ROW -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-            <button onclick="markAsCompleted()" class="bg-coffee-900 hover:bg-black text-white px-4 py-2.5 rounded-2xl text-xs font-bold shadow flex items-center justify-center space-x-2 transition cursor-pointer">
-                <i class="fa-regular fa-circle-check text-emerald-400"></i>
-                <span>Đánh dấu hoàn thành</span>
-            </button>
-            <button onclick="alert('Đã lưu bài giảng vào danh sách cá nhân.')" class="bg-[#EFE7DA] hover:bg-[#E2D4C1] text-coffee-900 border border-[#E2D4C1] px-4 py-2.5 rounded-2xl text-xs font-semibold flex items-center justify-center space-x-2 transition">
-                <i class="fa-regular fa-bookmark text-coffee-700"></i>
-                <span>Lưu bài giảng</span>
-            </button>
-            <button onclick="alert('Tải xuống tài liệu thành công!')" class="bg-[#EFE7DA] hover:bg-[#E2D4C1] text-coffee-900 border border-[#E2D4C1] px-4 py-2.5 rounded-2xl text-xs font-semibold flex items-center justify-center space-x-2 transition">
-                <i class="fa-regular fa-file-pdf text-amber_brand"></i>
-                <span>SOP Bài học</span>
-                <i class="fa-solid fa-download text-[10px]"></i>
-            </button>
-            <button onclick="alert('Đang kết nối với Huấn luyện viên...')" class="bg-amber_brand hover:bg-[#C25A1A] text-white px-4 py-2.5 rounded-2xl text-xs font-bold shadow flex items-center justify-center space-x-2 transition">
-                <i class="fa-regular fa-comments"></i>
-                <span>Hỏi Huấn luyện viên</span>
-            </button>
-        </div>
+        <p class="text-xs text-slate-500">Bài học được ghi nhận hoàn thành khi xem từ 95% thời lượng video.</p>
 
         <!-- TAB NAVIGATION & CONTENT -->
         <div class="bg-white border border-[#E2D4C1] rounded-3xl p-5 space-y-5">
@@ -314,15 +295,6 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(err => console.error("Lỗi cập nhật tiến độ:", err));
     }
-
-    // Nút "Đánh dấu hoàn thành"
-    window.markAsCompleted = function() {
-        if (video.duration) {
-            video.currentTime = video.duration;
-        }
-        sendProgress(100);
-        alert('Đã hoàn thành bài học!');
-    };
 });
 </script>
 @endsection

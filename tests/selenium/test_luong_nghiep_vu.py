@@ -249,7 +249,7 @@ class LuongNghiepVuTest(unittest.TestCase):
             o_diem.clear()
             o_diem.send_keys(str(diem))
         self.trinh_duyet.find_element(By.NAME, "comment").send_keys("Tác phong chưa đạt yêu cầu")
-        self.cho(lambda d: d.find_element(By.ID, "totalScore").text == "82.6%")
+        self.cho(lambda d: d.find_element(By.ID, "totalScore").text == "82.6/100")
 
     def test_kb02_cham_diem_tra_lai_va_phe_duyet(self):
         danh_gia = truy_van("""SELECT d.id FROM danh_gia_nang_luc d JOIN users u ON u.id = d.user_id

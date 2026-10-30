@@ -79,7 +79,7 @@
     </section>
 
     <section class="rounded-2xl border border-coffee-200 bg-white p-5" aria-labelledby="risk-heading">
-        <h2 id="risk-heading" class="text-base font-extrabold text-coffee-900">Cảnh báo học tập</h2>
+        <h2 id="risk-heading" class="text-base font-extrabold text-coffee-900">Cảnh báo nguy cơ</h2>
         <div class="mt-4 flex items-center gap-5">
             <div class="relative shrink-0" style="width: 120px; height: 120px; border-radius: 50%; background: {{ $riskTotal ? 'conic-gradient('.implode(', ', $stops).')' : '#e2e8f0' }}" role="img" aria-label="Phân bố cảnh báo: {{ collect($labels)->map(fn ($label, $level) => $label.' '.$riskDistribution[$level])->implode(', ') }}">
                 <div class="absolute flex flex-col items-center justify-center bg-white text-coffee-900" style="inset: 18px; border-radius: 50%"><strong class="text-2xl leading-none">{{ $riskTotal }}</strong><span class="text-[11px] text-slate-500">nhân viên</span></div>
