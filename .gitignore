@@ -25,3 +25,28 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Tài liệu nháp, file tạm và bản sao lưu báo cáo (chỉ giữ trên máy)
+/docs
+/tmp
+/output
+/report/*
+!/report/ĐỒ ÁN_BREWLEARN_ban-cuoi-v4-dong-bo.docx
+/brewlearn.sql
+/push.php
+/export_usecase_*.py
+/DEMO-DATA.md
+/storage/framework/views/*.php
+__pycache__/
+*.pyc
+~$*
+/venv
+
+# Cấu hình trợ lý lập trình
+/CLAUDE.md
+/AGENTS.md
+/.claude
+/.mcp.json
+/boost.json
+/.ai
+/.agents

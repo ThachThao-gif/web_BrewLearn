@@ -1,1 +1,0 @@
-<?php echo "=== AUTOMATION GIT PUSH ===\n\n"; $msg = $argv[1] ?? ("Cap nhat code " . date("Y-m-d H:i:s")); $cmds = ["git add .", "git commit -m \"$msg\"", "git push"]; foreach ($cmds as $c) { echo "Running: $c\n"; exec($c . " 2>&1", $out, $ret); echo implode("\n", $out) . "\n\n"; $out = []; } echo "✅ HOAN THANH UPDATE LEN GITHUB!\n";

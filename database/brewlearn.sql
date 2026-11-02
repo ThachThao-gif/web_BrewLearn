@@ -1,115 +1,126 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
+-- MySQL dump 10.13  Distrib 9.1.0, for Win64 (x86_64)
 --
--- Máy chủ: 127.0.0.1:3306
--- Thời gian đã tạo: Th9 24, 2026 lúc 08:05 AM
--- Phiên bản máy phục vụ: 9.1.0
--- Phiên bản PHP: 8.3.14
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
+-- Host: localhost    Database: brewlearn
+-- ------------------------------------------------------
+-- Server version	9.1.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Cơ sở dữ liệu: `brewlearn`
+-- Table structure for table `bai_hoc`
 --
 
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `bai_hoc`
---
-
+DROP TABLE IF EXISTS `bai_hoc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bai_hoc` (
-  `MaBaiHoc` int NOT NULL,
-  `FK_MaCTDT` varchar(50) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `TenBaiHoc` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `NoiDung` text COLLATE utf8mb3_unicode_ci,
-  `VideoURL` varchar(191) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `ThuTu` int NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `MaBaiHoc` int NOT NULL AUTO_INCREMENT,
+  `FK_MaCTDT` int DEFAULT NULL,
+  `TenBaiHoc` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `NoiDung` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
+  `VideoURL` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `ThuTu` int NOT NULL DEFAULT '1',
+  PRIMARY KEY (`MaBaiHoc`),
+  KEY `fk_bai_hoc_ctdt_new` (`FK_MaCTDT`),
+  CONSTRAINT `fk_bai_hoc_ctdt` FOREIGN KEY (`FK_MaCTDT`) REFERENCES `chuong_trinh_dao_tao` (`MaCTDT`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `fk_bai_hoc_ctdt_new` FOREIGN KEY (`FK_MaCTDT`) REFERENCES `chuong_trinh_dao_tao` (`MaCTDT`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Đang đổ dữ liệu cho bảng `bai_hoc`
+-- Table structure for table `bai_kiem_tra`
 --
 
-INSERT INTO `bai_hoc` (`MaBaiHoc`, `FK_MaCTDT`, `TenBaiHoc`, `NoiDung`, `VideoURL`, `ThuTu`) VALUES
-(1, '1', 'GIỚI THIỆU KỸ NĂNG AN TOÀN', '1. Tổng quan về an toàn lao động trong ngành F&B.\n2. Các nguy cơ tai nạn phổ biến nhất tại quầy Bar barista.\n3. Trách nhiệm của nhân viên đối với bản thân và đồng nghiệp.', 'steaming-sua.mp4', 1),
-(2, '1', 'NHẬN DIỆN CÁC MỐI NGUY & ĐÁNH GIÁ RỦI RO', '1. Cách phát hiện sự cố điện, rò rỉ nước hoặc khu vực trơn trượt.\n2. Quy trình báo cáo sự cố khẩn cấp cho Quản lý ca.\n3. Phương pháp gắn biển cảnh báo và khắc phục tạm thời.', 'steaming-sua.mp4', 2),
-(3, '1', 'QUY TẮC PHÒNG TRÁNH TRƯỢT - VẤP - NGÃ', '1. Quy định về trang phục và giày bảo hộ chống trượt.\n2. Kỹ năng di chuyển an toàn khi bê đồ nặng hoặc mang chất lỏng nóng.\n3. Hướng dẫn sử dụng thang và kê xếp hàng hóa đúng độ cao.', 'steaming-sua.mp4', 3),
-(4, '2', 'TỐI ƯU HÓA CHIẾT XUẤT ESPRESSO', '1. Tìm hiểu các yếu tố ảnh hưởng: Nhiệt độ nước, áp suất máy, độ mịn cà phê.\n2. Hướng dẫn Cân - Nén (Tamping) chuẩn lực 15kg.\n3. Đọc thông số đo Brew Ratio (Tỷ lệ chiết xuất).', 'steaming-sua.mp4', 1),
-(5, '2', 'KỸ THUẬT TẠO BỌT SỮA MICROFOAM', '1. Cách đặt vòi hơi (Steam wand) đúng góc độ và độ sâu trong ca sữa.\n2. Hai giai đoạn đánh sữa: Cấp khí (Streching) và Xoáy sữa (Rolling).\n3. Nhận biết nhiệt độ sữa chuẩn qua cảm nhận tay và nhiệt kế.', 'steaming-sua.mp4', 2),
-(6, '2', 'THỰC HÀNH LATTE ART NÂNG CAO', '1. Kỹ thuật ép sữa, gõ ca và lắc ca sữa tạo dòng chảy đều.\n2. Chi tiết từng bước vẽ hình Heart (Trái tim) cơ bản.\n3. Chi tiết từng bước ngắt dòng vẽ hình Rosetta (Lá mầm).', 'steaming-sua.mp4', 3),
-(7, '3', 'CHECKLIST QUY TRÌNH MỞ CA (OPENING)', '1. Kiểm tra vệ sinh tổng thể quầy Bar và máy móc thiết bị.\n2. Bật máy pha cà phê, máy xay và chạy xả nước vệ sinh đầu ca.\n3. Kiểm tra danh mục nguyên liệu chuẩn bị (Prep list) trước khi đón khách.', 'steaming-sua.mp4', 1),
-(8, '3', 'XỬ LÝ PHÀN NÀN & CHĂM SÓC KHÁCH HÀNG', '1. Nguyên tắc LAST trong dịch vụ (Listen - Apologize - Solve - Thank).\n2. Hướng dẫn đổi trả đồ uống hoặc pha lại khi khách chưa hài lòng.\n3. Xử lý các tình huống khách hàng đông hoặc chờ lâu.', 'steaming-sua.mp4', 2),
-(9, '3', 'QUY TRÌNH ĐÓNG CA VÀ VỆ SINH TỔNG THỂ (CLOSING)', '1. Quy trình vệ sinh Backflush máy pha cà phê bằng thuốc rửa chuyên dụng.\n2. Vệ sinh lưỡi dao máy xay và bảo quản hạt cà phê dư.\n3. Bàn giao tiền mặt, tồn kho nguyên liệu và bàn giao sổ ca.', 'steaming-sua.mp4', 3);
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `bai_kiem_tra`
---
-
+DROP TABLE IF EXISTS `bai_kiem_tra`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bai_kiem_tra` (
-  `MaBaiKiemTra` int NOT NULL,
-  `TenBaiKiemTra` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `MaBaiKiemTra` int NOT NULL AUTO_INCREMENT,
+  `TenBaiKiemTra` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `ThoiGianLamBai` int DEFAULT NULL COMMENT 'Thời gian tính bằng phút',
   `DiemChuan` int NOT NULL DEFAULT '80' COMMENT 'Điểm đạt (%)',
-  `MaBaiHoc` bigint UNSIGNED DEFAULT NULL,
+  `MaBaiHoc` int DEFAULT NULL,
+  `ChucVu` varchar(50) COLLATE utf8mb3_unicode_ci DEFAULT 'Barista',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`MaBaiKiemTra`),
+  KEY `fk_bai_kiem_tra_bai_hoc_new` (`MaBaiHoc`),
+  CONSTRAINT `fk_bai_kiem_tra_bai_hoc` FOREIGN KEY (`MaBaiHoc`) REFERENCES `bai_hoc` (`MaBaiHoc`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `fk_bai_kiem_tra_bai_hoc_new` FOREIGN KEY (`MaBaiHoc`) REFERENCES `bai_hoc` (`MaBaiHoc`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Đang đổ dữ liệu cho bảng `bai_kiem_tra`
+-- Table structure for table `ca_lam_viec`
 --
 
-INSERT INTO `bai_kiem_tra` (`MaBaiKiemTra`, `TenBaiKiemTra`, `ThoiGianLamBai`, `DiemChuan`, `MaBaiHoc`, `created_at`, `updated_at`) VALUES
-(1, 'Bài Kiểm Tra Sát Hạch: Giao Tiếp & Nghiệp Vụ Xử Lý Tình Huống Giờ Cao Điểm', 20, 80, 1, '2026-09-23 07:39:40', '2026-09-23 07:39:40'),
-(2, 'Sát Hạch Thực Hành: Chiết Xuất Espresso & Steaming Sữa Microfoam', 15, 85, 2, '2026-09-23 07:39:40', '2026-09-23 07:39:40'),
-(3, 'Sát Hạch Vệ Sinh An Toàn Thực Phẩm & Đóng Ca Barista', 15, 90, 3, '2026-09-23 07:39:40', '2026-09-23 07:39:40'),
-(4, 'Sát Hạch Quy Trình Mở Ca (Opening Checklist) & An Toàn Lao Động', 15, 80, 7, '2026-09-23 08:20:12', '2026-09-23 08:20:12'),
-(5, 'Sát Hạch Kỹ Năng Quản Lý Nguyên Vật Liệu & Giảm Thất Thoát (Waste)', 20, 85, 8, '2026-09-23 08:20:12', '2026-09-23 08:20:12');
-
--- --------------------------------------------------------
+DROP TABLE IF EXISTS `ca_lam_viec`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ca_lam_viec` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `cua_hang_id` bigint unsigned NOT NULL,
+  `ten_ca` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `bat_dau` time DEFAULT NULL,
+  `ket_thuc` time DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ca_lam_viec_cua_hang_id_ten_ca_unique` (`cua_hang_id`,`ten_ca`),
+  KEY `ca_lam_viec_cua_hang_id_index` (`cua_hang_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Cấu trúc bảng cho bảng `cache`
+-- Table structure for table `cache`
 --
 
+DROP TABLE IF EXISTS `cache`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cache` (
-  `key` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `value` mediumtext COLLATE utf8mb3_unicode_ci NOT NULL,
-  `expiration` bigint NOT NULL
+  `key` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `value` mediumtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `expiration` bigint NOT NULL,
+  PRIMARY KEY (`key`),
+  KEY `cache_expiration_index` (`expiration`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
--- --------------------------------------------------------
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Cấu trúc bảng cho bảng `cache_locks`
+-- Table structure for table `cache_locks`
 --
 
+DROP TABLE IF EXISTS `cache_locks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cache_locks` (
-  `key` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `owner` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `expiration` bigint NOT NULL
+  `key` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `owner` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `expiration` bigint NOT NULL,
+  PRIMARY KEY (`key`),
+  KEY `cache_locks_expiration_index` (`expiration`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
--- --------------------------------------------------------
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Cấu trúc bảng cho bảng `cau_hoi_kiem_tra`
+-- Table structure for table `cau_hoi_kiem_tra`
 --
 
+DROP TABLE IF EXISTS `cau_hoi_kiem_tra`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cau_hoi_kiem_tra` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `MaBaiKiemTra` int NOT NULL,
   `CauHoi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `PhuongAnA` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -117,423 +128,761 @@ CREATE TABLE `cau_hoi_kiem_tra` (
   `PhuongAnC` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `PhuongAnD` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `DapAnDung` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'A, B, C hoặc D',
-  `GiaiThich` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `GiaiThich` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  PRIMARY KEY (`id`),
+  KEY `fk_cau_hoi_bai_kiem_tra_new` (`MaBaiKiemTra`),
+  CONSTRAINT `fk_cau_hoi_bai_kiem_tra` FOREIGN KEY (`MaBaiKiemTra`) REFERENCES `bai_kiem_tra` (`MaBaiKiemTra`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_cau_hoi_bai_kiem_tra_new` FOREIGN KEY (`MaBaiKiemTra`) REFERENCES `bai_kiem_tra` (`MaBaiKiemTra`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Đang đổ dữ liệu cho bảng `cau_hoi_kiem_tra`
+-- Table structure for table `chuong_trinh_dao_tao`
 --
 
-INSERT INTO `cau_hoi_kiem_tra` (`id`, `MaBaiKiemTra`, `CauHoi`, `PhuongAnA`, `PhuongAnB`, `PhuongAnC`, `PhuongAnD`, `DapAnDung`, `GiaiThich`) VALUES
-(1, 1, 'Theo quy tắc LAST trong xử lý khiếu nại, chữ \"A\" đại diện cho hành động nào?', 'Ask questions (Hỏi thông tin)', 'Apologize (Thành thật xin lỗi)', 'Action (Hành động ngay)', 'Accept (Chấp nhận lỗi)', 'B', 'LAST nghĩa là Listen - Apologize - Solve - Thank.'),
-(2, 1, 'Thời gian tiêu chuẩn để phục vụ 01 đơn hàng gồm 2 ly cà phê vào giờ cao điểm là bao lâu?', 'Dưới 2 phút', 'Dưới 3 phút', 'Dưới 5 phút', 'Dưới 8 phút', 'B', 'Tiêu chuẩn quầy Bar BrewLearn là tối đa 3 phút/đơn 2 ly.'),
-(3, 1, 'Khi khách hàng phản ánh Espresso quá chua và loãng, nguyên nhân kỹ thuật chính là gì?', 'Cà phê bị Over-extraction (chiết xuất quá mức)', 'Nhiệt độ nước quá cao (>96°C)', 'Cà phê bị Under-extraction (xay quá thô/chiết xuất nhanh)', 'Lực nén Tamping quá mạnh', 'C', 'Vị chua loãng xuất hiện khi chảy quá nhanh (Under-extraction).'),
-(4, 1, 'Thao tác đầu tiên Barista cần làm ngay khi nhận phản hồi chưa hài lòng từ khách là gì?', 'Giải thích lý do quầy bar đang đông', 'Lắng nghe chăm chú và không ngắt lời khách', 'Pha lại ly mới ngay lập tức', 'Báo Quản lý ca xử lý', 'B', 'Bước Listen (Lắng nghe) luôn là ưu tiên hàng đầu.'),
-(5, 1, 'Trình tự ưu tiên chuẩn khi xử lý đơn hàng tại quầy trong ca làm việc là gì?', 'Khách đến trước - Đơn Grab/Shopee - Đơn mang đi', 'Theo thứ tự thời gian in trên bill order', 'Làm món lạnh trước món nóng', 'Làm đơn nhiều ly trước', 'B', 'Đảm bảo công bằng và tốc độ theo thời gian in bill.'),
-(6, 2, 'Tỷ lệ chiết xuất Brew Ratio chuẩn cho 1 shot Double Espresso tiêu chuẩn tại quầy là bao nhiêu?', '18g bột lấy 18ml dịch', '18g bột lấy 36ml - 40ml dịch', '18g bột lấy 60ml dịch', '20g bột lấy 80ml dịch', 'B', 'Tỷ lệ chiết xuất chuẩn Barista là 1:2 (18g bột thu 36-40ml).'),
-(7, 2, 'Nhiệt độ đánh sữa Microfoam chuẩn dành cho Cappuccino/Latte là bao nhiêu?', '40°C - 50°C', '60°C - 65°C', '75°C - 80°C', 'Trên 85°C', 'B', 'Trên 70°C sữa sẽ bị cháy đường Lactose và mất độ ngọt tự nhiên.'),
-(8, 2, 'Thời gian chiết xuất tiêu chuẩn cho một shot Double Espresso rơi vào khoảng nào?', '10 - 15 giây', '18 - 22 giây', '25 - 30 giây', '35 - 40 giây', 'C', 'Khung thời gian lý tưởng từ 25 - 30 giây.'),
-(9, 2, 'Kỹ thuật \"Stretching\" trong quá trình đánh sữa có tác dụng chính là gì?', 'Tạo sóng xoáy làm mịn bọt sữa', 'Đưa không khí vào sữa để tạo bọt', 'Làm nóng sữa lên 65°C', 'Trộn đều sữa tươi và cà phê', 'B', 'Stretching là giai đoạn hạ ca lấy hơi tạo lớp bọt ban đầu.'),
-(10, 2, 'Lực nén Tamping tiêu chuẩn khi chuẩn bị tay pha (Portafilter) là bao nhiêu?', '5kg', '10kg', '13kg - 15kg', '25kg', 'C', 'Lực nén tiêu chuẩn phẳng đều từ 13 - 15kg.'),
-(11, 3, 'Tần suất xả nước nóng làm sạch Headgroup (Grouphead) của máy pha cà phê là khi nào?', 'Mỗi tiếng 1 lần', 'Sau mỗi lần chiết xuất Espresso', 'Cuối ca làm việc', 'Mỗi đầu ca sáng', 'B', 'Xả tay pha ngay sau mỗi lần chiết xuất để tránh tồn bã cà phê cũ.'),
-(12, 3, 'Quy trình Backflush vệ sinh máy pha cà phê bằng thuốc rửa chuyên dụng được thực hiện khi nào?', 'Cuối mỗi ca làm việc (Closing)', '1 tuần 1 lần', 'Mỗi khi thay hạt cà phê mới', 'Khi máy báo lỗi áp suất', 'A', 'Backflush là quy trình bắt buộc cuối mỗi ca vận hành.'),
-(13, 3, 'Sau khi sử dụng vòi Steam đánh sữa, Barista cần thực hiện ngay thao tác nào?', 'Tắt máy pha cà phê', 'Lau vòi bằng khăn ẩm sạch và xả hơi (Purge) 1 giây', 'Ngâm vòi vào ca nước lạnh', 'Tháo đầu vòi ra rửa', 'B', 'Lau và xả hơi ngay lập tức để tránh sữa khô đọng cặn trong vòi.'),
-(14, 3, 'Hạt cà phê dư trong phễu máy xay (Hopper) vào cuối ngày cần bảo quản như thế nào?', 'Để nguyên trong phễu qua đêm', 'Cho vào túi xả van kín khí và bảo quản nơi khô ráo', 'Bỏ vào tủ đông lạnh', 'Đổ chung vào thùng cà phê cũ', 'B', 'Tránh ánh sáng và không khí làm mất hương vị hạt.'),
-(15, 3, 'Khăn lau vòi đánh sữa (Steam wand) có thể dùng chung để lau mặt bàn quầy bar không?', 'Có, để tiết kiệm khăn', 'Chỉ dùng chung khi quầy bar sạch', 'Tuyệt đối không, phải dùng khăn riêng tiệt trùng', 'Tùy thuộc vào chỉ đạo Quản lý', 'C', 'Khăn vòi sữa bắt buộc dùng riêng để đảm bảo an toàn vệ sinh thực phẩm.');
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `chuong_trinh_dao_tao`
---
-
+DROP TABLE IF EXISTS `chuong_trinh_dao_tao`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `chuong_trinh_dao_tao` (
-  `MaCTDT` int NOT NULL,
-  `TenCTDT` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `MoTa` text COLLATE utf8mb3_unicode_ci,
-  `ChucVuApDung` varchar(191) COLLATE utf8mb3_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `MaCTDT` int NOT NULL AUTO_INCREMENT,
+  `TenCTDT` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `MoTa` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
+  `MucTieuHoc` text COLLATE utf8mb3_unicode_ci,
+  `HinhAnh` varchar(500) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `ChucVuApDung` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `CapDo` int DEFAULT '1',
+  PRIMARY KEY (`MaCTDT`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Đang đổ dữ liệu cho bảng `chuong_trinh_dao_tao`
+-- Table structure for table `cua_hang`
 --
 
-INSERT INTO `chuong_trinh_dao_tao` (`MaCTDT`, `TenCTDT`, `MoTa`, `ChucVuApDung`) VALUES
-(1, 'Làm Việc An Toàn - Kỹ Năng Tại Nơi Làm Việc', 'Trong khoá học KỸ NĂNG AN TOÀN TẠI NƠI LÀM VIỆC, bạn sẽ học:\n\n• Mối nguy (hazards) là gì, vì sao xuất hiện và cách nhận biết nhanh trong mọi môi trường.\n• Cách đánh giá rủi ro & giảm thiểu rủi ro trước khi sự cố xảy ra.\n• Cách xếp dỡ hàng hoá, kê kệ, sắp xếp vật dụng đúng chuẩn an toàn.\n• Quy tắc di chuyển xe đẩy, xe hàng, xe trolley để tránh tai nạn nghiêm trọng.\n• Cách phòng tránh trượt – vấp – ngã, một trong những nguyên nhân gây tai nạn lao động phổ biến nhất.\n• Hiểu đúng về mệt mỏi – suy giảm thể trạng (fatigue) và vì sao nó làm tăng rủi ro tai nạn.\n• Cách sử dụng dụng cụ, thiết bị, công cụ sắc nhọn và thiết bị chuyên dụng an toàn.\n• Nguyên tắc an toàn khi xử lý tiền mặt, tránh rủi ro về sức khỏe và rủi ro an ninh.', 'THỰC HÀNH CA BARISTA'),
-(2, 'Kỹ Thuật Espresso & Đánh Sữa Nâng Cao', 'Trong khoá học KỸ THUẬT ESPRESSO & ĐÁNH SỮA NÂNG CAO, bạn sẽ học:\n\n• Nguyên lý chiết xuất Espresso chuẩn: Độ mịn grind size, định lượng dosage và thời gian chảy.\n• Nhận biết chiết xuất Under-extraction (Chua/Loãng) và Over-extraction (Đắng/Khét).\n• Kỹ thuật đánh sữa Microfoam mịn màng, căn chỉnh nhiệt độ lý tưởng từ 55°C - 65°C.\n• Phương pháp đổ Latte Art cơ bản: Hình Trái Tim (Heart), Tulips và Rosetta.\n• Quy trình vệ sinh và bảo dưỡng Headgroup máy pha cà phê hàng ngày.', 'BARISTA CHÍNH'),
-(3, 'Quy Trình Phục Vụ & Vận Hành Ca Barista (SOP)', 'Trong khoá học QUY TRÌNH PHỤC VỤ & VẬN HÀNH CA BARISTA, bạn sẽ học:\n\n• Quy trình mở ca (Opening Check) và đóng ca (Closing Check) chuẩn SOP chuỗi cà phê.\n• Tiêu chuẩn vệ sinh an toàn thực phẩm (FSS) tại quầy pha chế.\n• Kỹ năng giao tiếp, xử lý phàn nàn của khách hàng (Service Recovery) chuyên nghiệp.\n• Quản lý nguyên vật liệu, kiểm kê tồn kho và giảm thiểu thất thoát (Waste Management).\n• Điều phối nhân sự và phân công công việc hiệu quả trong ca cao điểm.', 'QUẢN LÝ CA / LEADER');
-
--- --------------------------------------------------------
+DROP TABLE IF EXISTS `cua_hang`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cua_hang` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `vung_id` bigint unsigned NOT NULL,
+  `ma_cua_hang` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ten_cua_hang` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dia_chi` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ma_cua_hang` (`ma_cua_hang`),
+  KEY `fk_cua_hang_vung` (`vung_id`),
+  CONSTRAINT `fk_cua_hang_vung` FOREIGN KEY (`vung_id`) REFERENCES `vung` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Cấu trúc bảng cho bảng `failed_jobs`
+-- Table structure for table `danh_gia_nang_luc`
 --
 
+DROP TABLE IF EXISTS `danh_gia_nang_luc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `danh_gia_nang_luc` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `NguoiDanhGia_id` bigint unsigned DEFAULT NULL,
+  `MaCTDT` int DEFAULT NULL,
+  `TieuChuan` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'Đánh Giá Định Kỳ',
+  `NgayDanhGia` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `NgayHen` datetime DEFAULT NULL,
+  `Diem` decimal(5,1) DEFAULT '0.0',
+  `NhanXet` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `TrangThai` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'ChoDanhGia',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `Diem_NghiepVu` float DEFAULT '0' COMMENT '20%',
+  `Diem_KyNang` float DEFAULT '0' COMMENT '30%',
+  `Diem_QuyTrinh` float DEFAULT '0' COMMENT '20%',
+  `Diem_PhucVu` float DEFAULT '0' COMMENT '15%',
+  `Diem_TacPhong` float DEFAULT '0' COMMENT '15%',
+  `DeXuatXuLy` json DEFAULT NULL,
+  `ChiTietDeXuat` json DEFAULT NULL,
+  `ChiTietDiem` json DEFAULT NULL,
+  `IsPassed` tinyint(1) DEFAULT NULL,
+  `nguoi_duyet_id` bigint unsigned DEFAULT NULL,
+  `ngay_duyet` datetime DEFAULT NULL,
+  `ly_do_tra_lai` text COLLATE utf8mb4_unicode_ci,
+  PRIMARY KEY (`id`),
+  KEY `fk_dgnl_user_new` (`user_id`),
+  KEY `fk_dgnl_nguoi_danh_gia_new` (`NguoiDanhGia_id`),
+  KEY `fk_dgnl_ctdt_new` (`MaCTDT`),
+  CONSTRAINT `fk_dgnl_ctdt_new` FOREIGN KEY (`MaCTDT`) REFERENCES `chuong_trinh_dao_tao` (`MaCTDT`) ON DELETE SET NULL,
+  CONSTRAINT `fk_dgnl_nguoi_danh_gia_new` FOREIGN KEY (`NguoiDanhGia_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_dgnl_user_new` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `du_doan_nguy_co`
+--
+
+DROP TABLE IF EXISTS `du_doan_nguy_co`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `du_doan_nguy_co` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL COMMENT 'Nhân viên được dự đoán',
+  `cua_hang_id` bigint unsigned DEFAULT NULL COMMENT 'Cửa hàng tại thời điểm dự đoán',
+  `diem_rui_ro` float DEFAULT NULL,
+  `muc_canh_bao` enum('ChuaDuDuLieu','Thap','TrungBinh','Cao') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ChuaDuDuLieu',
+  `chi_tiet_yeu_to` json DEFAULT NULL COMMENT 'Lưu breakdown các feature ảnh hưởng (để giải thích kết quả)',
+  `phien_ban_mo_hinh` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Version model đã dùng để dự đoán',
+  `ngay_du_doan` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_ddnc_user` (`user_id`),
+  KEY `idx_ddnc_cua_hang` (`cua_hang_id`),
+  KEY `idx_ddnc_ngay` (`ngay_du_doan`),
+  CONSTRAINT `fk_ddnc_cua_hang` FOREIGN KEY (`cua_hang_id`) REFERENCES `cua_hang` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_ddnc_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=365 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `failed_jobs`
+--
+
+DROP TABLE IF EXISTS `failed_jobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `failed_jobs` (
-  `id` bigint UNSIGNED NOT NULL,
-  `uuid` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `connection` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `queue` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb3_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb3_unicode_ci NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `connection` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `queue` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `exception` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`),
+  KEY `failed_jobs_connection_queue_failed_at_index` (`connection`,`queue`,`failed_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `jobs`
---
-
-CREATE TABLE `jobs` (
-  `id` bigint UNSIGNED NOT NULL,
-  `queue` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb3_unicode_ci NOT NULL,
-  `attempts` smallint UNSIGNED NOT NULL,
-  `reserved_at` int UNSIGNED DEFAULT NULL,
-  `available_at` int UNSIGNED NOT NULL,
-  `created_at` int UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
--- --------------------------------------------------------
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Cấu trúc bảng cho bảng `job_batches`
+-- Table structure for table `job_batches`
 --
 
+DROP TABLE IF EXISTS `job_batches`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `job_batches` (
-  `id` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `name` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `id` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `name` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `total_jobs` int NOT NULL,
   `pending_jobs` int NOT NULL,
   `failed_jobs` int NOT NULL,
-  `failed_job_ids` longtext COLLATE utf8mb3_unicode_ci NOT NULL,
-  `options` mediumtext COLLATE utf8mb3_unicode_ci,
+  `failed_job_ids` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `options` mediumtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `cancelled_at` int DEFAULT NULL,
   `created_at` int NOT NULL,
-  `finished_at` int DEFAULT NULL
+  `finished_at` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
--- --------------------------------------------------------
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Cấu trúc bảng cho bảng `ket_qua_kiem_tra`
+-- Table structure for table `jobs`
 --
 
+DROP TABLE IF EXISTS `jobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `jobs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `queue` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `attempts` smallint unsigned NOT NULL,
+  `reserved_at` int unsigned DEFAULT NULL,
+  `available_at` int unsigned NOT NULL,
+  `created_at` int unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobs_queue_index` (`queue`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ket_qua_kiem_tra`
+--
+
+DROP TABLE IF EXISTS `ket_qua_kiem_tra`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ket_qua_kiem_tra` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
   `MaBaiKiemTra` int NOT NULL,
   `Diem` int NOT NULL,
   `TrangThai` varchar(20) NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Đang đổ dữ liệu cho bảng `ket_qua_kiem_tra`
---
-
-INSERT INTO `ket_qua_kiem_tra` (`id`, `user_id`, `MaBaiKiemTra`, `Diem`, `TrangThai`, `created_at`) VALUES
-(1, 1, 1, 0, 'ChuaDat', '2026-09-23 01:36:06'),
-(2, 1, 1, 40, 'ChuaDat', '2026-09-23 01:36:20'),
-(3, 1, 1, 20, 'ChuaDat', '2026-09-23 02:07:38'),
-(4, 1, 1, 20, 'ChuaDat', '2026-09-23 02:09:12'),
-(5, 1, 1, 0, 'ChuaDat', '2026-09-23 02:09:32'),
-(6, 1, 1, 0, 'ChuaDat', '2026-09-23 02:10:24'),
-(7, 1, 1, 20, 'ChuaDat', '2026-09-23 02:10:47'),
-(8, 1, 1, 60, 'ChuaDat', '2026-09-23 02:11:33'),
-(9, 2, 1, 0, 'ChuaDat', '2026-09-23 09:06:47');
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `migrations`
---
-
-CREATE TABLE `migrations` (
-  `id` int UNSIGNED NOT NULL,
-  `migration` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `batch` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
---
--- Đang đổ dữ liệu cho bảng `migrations`
---
-
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '0001_01_01_000000_create_users_table', 1),
-(2, '0001_01_01_000001_create_cache_table', 1),
-(3, '0001_01_01_000002_create_jobs_table', 1),
-(4, '2026_09_22_142623_create_bai_kiem_tra_table', 2),
-(5, '2026_09_22_162338_create_bai_hoc_table', 3),
-(6, '2026_09_22_163241_create_chuong_trinh_dao_tao_table', 4),
-(7, '2026_09_23_150425_add_employee_fields_to_users_table', 5);
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `nhan_vien_khoa_hoc`
---
-
-CREATE TABLE `nhan_vien_khoa_hoc` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `MaCTDT` int NOT NULL,
-  `TienDo` int DEFAULT '0',
-  `TrangThai` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT 'DangHoc',
+  `SoCauDung` int DEFAULT '0',
+  `TongSoCau` int DEFAULT '0',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `attempt_token` char(36) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ket_qua_kiem_tra_attempt_token_unique` (`attempt_token`),
+  KEY `fk_kqkt_user_new` (`user_id`),
+  KEY `fk_kqkt_bai_kiem_tra_new` (`MaBaiKiemTra`),
+  CONSTRAINT `fk_kqkt_bai_kiem_tra` FOREIGN KEY (`MaBaiKiemTra`) REFERENCES `bai_kiem_tra` (`MaBaiKiemTra`) ON DELETE CASCADE,
+  CONSTRAINT `fk_kqkt_bai_kiem_tra_new` FOREIGN KEY (`MaBaiKiemTra`) REFERENCES `bai_kiem_tra` (`MaBaiKiemTra`) ON DELETE CASCADE,
+  CONSTRAINT `fk_kqkt_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_kqkt_user_new` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Đang đổ dữ liệu cho bảng `nhan_vien_khoa_hoc`
+-- Table structure for table `loi_nghiep_vu`
 --
 
-INSERT INTO `nhan_vien_khoa_hoc` (`id`, `user_id`, `MaCTDT`, `TienDo`, `TrangThai`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 100, 'HoanThanh', '2026-09-23 08:20:12', '2026-09-23 08:20:12'),
-(2, 1, 2, 85, 'DangHoc', '2026-09-23 08:20:12', '2026-09-23 08:20:12'),
-(3, 1, 3, 40, 'DangHoc', '2026-09-23 08:20:12', '2026-09-23 08:20:12'),
-(4, 2, 1, 35, 'DangHoc', '2026-09-23 08:20:12', '2026-09-23 08:20:12'),
-(5, 2, 2, 0, 'ChuaHoc', '2026-09-23 08:20:12', '2026-09-23 08:20:12');
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `password_reset_tokens`
---
-
-CREATE TABLE `password_reset_tokens` (
-  `email` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `token` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `sessions`
---
-
-CREATE TABLE `sessions` (
-  `id` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `user_id` bigint UNSIGNED DEFAULT NULL,
-  `ip_address` varchar(45) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `user_agent` text COLLATE utf8mb3_unicode_ci,
-  `payload` longtext COLLATE utf8mb3_unicode_ci NOT NULL,
-  `last_activity` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+DROP TABLE IF EXISTS `loi_nghiep_vu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `loi_nghiep_vu` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL COMMENT 'ID Nhân viên vi phạm',
+  `nguoi_ghi_nhan_id` bigint unsigned NOT NULL COMMENT 'ID Trưởng ca ghi nhận',
+  `loai_loi` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Loại lỗi: SOP_PhaChe, VeSinh_AnToan, ThaiDo_PhucVu, DongPhuc_TacPhong, Khac',
+  `muc_do` enum('Nhe','TrungBinh','NghiemTrong') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Nhe' COMMENT 'Mức độ lỗi',
+  `mo_ta` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Mô tả chi tiết sự cố/vi phạm',
+  `thoi_diem_xay_ra` datetime NOT NULL COMMENT 'Thời điểm xảy ra lỗi trong ca',
+  `chi_nhanh_id` int DEFAULT NULL COMMENT 'Chi nhánh xảy ra lỗi',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_thoi_diem` (`thoi_diem_xay_ra`),
+  CONSTRAINT `fk_loi_nghiep_vu_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Đang đổ dữ liệu cho bảng `sessions`
+-- Table structure for table `migrations`
 --
 
-INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('1S7j14oQAj5YxYgj9McAcSrYhQG7uwQpjOLwhr7x', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJBajAydlVpOXNRMDVxUUdzOUdtTWZFbmg1SHI1YlFaN2N2Vlh5WGtwIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9hc3Nlc3NtZW50c1wvMy1tb250aHMiLCJyb3V0ZSI6ImFzc2Vzc21lbnRzLnNob3cifSwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119fQ==', 1790236765),
-('chDKIDckrjwPT44rVpsQ7WkiOVysPprWrTDsmYJZ', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJhN1NJeFBoSkRMWEwxazExNW1wVzJSRVdablVSbkJzUnVPTkwzY0t2IiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC8/dXNlcl9pZD0xIiwicm91dGUiOiJkYXNoYm9hcmQifSwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119fQ==', 1790237043);
-
--- --------------------------------------------------------
+DROP TABLE IF EXISTS `migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `migrations` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `batch` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Cấu trúc bảng cho bảng `users`
+-- Table structure for table `nhan_vien_khoa_hoc`
 --
 
-CREATE TABLE `users` (
-  `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `name_tag` varchar(191) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `email` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `phone` varchar(191) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+DROP TABLE IF EXISTS `nhan_vien_khoa_hoc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `nhan_vien_khoa_hoc` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `MaCTDT` int NOT NULL,
+  `TienDo` decimal(5,1) DEFAULT '0.0',
+  `TrangThai` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'DangHoc',
+  `han_hoan_thanh` date DEFAULT NULL COMMENT 'Hạn chót phải hoàn thành khóa học',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `demo_progress_baseline` double DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_nvkh_user` (`user_id`),
+  KEY `fk_nvkh_ctdt` (`MaCTDT`),
+  CONSTRAINT `fk_nvkh_ctdt` FOREIGN KEY (`MaCTDT`) REFERENCES `chuong_trinh_dao_tao` (`MaCTDT`) ON DELETE CASCADE,
+  CONSTRAINT `fk_nvkh_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `notifications`
+--
+
+DROP TABLE IF EXISTS `notifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notifications` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `message` text COLLATE utf8mb4_unicode_ci,
+  `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'schedule',
+  `is_read` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `ChucVu` varchar(100) COLLATE utf8mb3_unicode_ci DEFAULT 'Barista',
-  `ChiNhanh` varchar(100) COLLATE utf8mb3_unicode_ci DEFAULT 'CN Quận 1',
+  `event_key` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `notifications_event_key_unique` (`event_key`),
+  KEY `notifications_user_id_foreign` (`user_id`),
+  CONSTRAINT `notifications_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=1390 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `password_reset_tokens`
+--
+
+DROP TABLE IF EXISTS `password_reset_tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `password_reset_tokens` (
+  `email` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `token` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `retraining_rounds`
+--
+
+DROP TABLE IF EXISTS `retraining_rounds`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `retraining_rounds` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `request_id` bigint unsigned NOT NULL,
+  `round_number` int unsigned NOT NULL,
+  `assigned_by` bigint unsigned NOT NULL,
+  `owner_id` bigint unsigned DEFAULT NULL,
+  `instructions` text COLLATE utf8mb3_unicode_ci,
+  `proposal` json DEFAULT NULL,
+  `deadline` date DEFAULT NULL,
+  `assessment_date` date DEFAULT NULL,
+  `assessment_id` bigint unsigned DEFAULT NULL,
+  `status` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'DangThucHien',
+  `result` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'ChuaCoKetQua',
+  `score` decimal(5,1) DEFAULT NULL,
+  `approved_by` bigint unsigned DEFAULT NULL,
+  `approved_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `required_lessons` json DEFAULT NULL,
+  `required_quizzes` json DEFAULT NULL,
+  `learning_baseline` json DEFAULT NULL,
+  `confirmed_by` bigint unsigned DEFAULT NULL,
+  `confirmed_at` timestamp NULL DEFAULT NULL,
+  `confirmation_note` text COLLATE utf8mb3_unicode_ci,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `retraining_rounds_request_id_round_number_unique` (`request_id`,`round_number`),
+  UNIQUE KEY `retraining_rounds_assessment_id_unique` (`assessment_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sessions`
+--
+
+DROP TABLE IF EXISTS `sessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sessions` (
+  `id` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `ip_address` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `user_agent` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
+  `payload` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `last_activity` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sessions_user_id_index` (`user_id`),
+  KEY `sessions_last_activity_index` (`last_activity`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `user_lesson_progresses`
+--
+
+DROP TABLE IF EXISTS `user_lesson_progresses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_lesson_progresses` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `lesson_id` bigint unsigned NOT NULL,
+  `last_watched_seconds` double NOT NULL DEFAULT '0',
+  `progress_percent` int NOT NULL DEFAULT '0',
+  `is_completed` tinyint(1) NOT NULL DEFAULT '0',
+  `visit_count` int NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_lesson_progresses_user_id_foreign` (`user_id`),
+  CONSTRAINT `user_lesson_progresses_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=356 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `name_tag` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `email` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `joined_at` date DEFAULT NULL,
+  `secondary_email` varchar(191) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `phone` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `ChucVu` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT 'Barista',
+  `ChiNhanh` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT 'CN Quận 1',
+  `cua_hang_id` bigint unsigned DEFAULT NULL COMMENT 'FK tới cua_hang.id',
   `CapDo` int DEFAULT '1',
   `TienDoTong` int DEFAULT '0',
   `dob` date DEFAULT NULL,
-  `id_card` varchar(191) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `tram_lam_viec` varchar(191) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `emergency_contact` varchar(191) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `emergency_phone` varchar(191) COLLATE utf8mb3_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `id_card` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `tram_lam_viec` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `emergency_contact` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `emergency_phone` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `theme` varchar(20) COLLATE utf8mb3_unicode_ci DEFAULT 'light',
+  `language` varchar(10) COLLATE utf8mb3_unicode_ci DEFAULT 'vi',
+  `notification_settings` json DEFAULT NULL,
+  `ca_lam_viec_id` bigint unsigned DEFAULT NULL,
+  `employment_status` varchar(20) COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'DangLam',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`),
+  KEY `fk_users_cua_hang` (`cua_hang_id`),
+  KEY `users_ca_lam_viec_id_foreign` (`ca_lam_viec_id`),
+  CONSTRAINT `fk_users_cua_hang` FOREIGN KEY (`cua_hang_id`) REFERENCES `cua_hang` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `users_ca_lam_viec_id_foreign` FOREIGN KEY (`ca_lam_viec_id`) REFERENCES `ca_lam_viec` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Đang đổ dữ liệu cho bảng `users`
+-- Table structure for table `vung`
 --
 
-INSERT INTO `users` (`id`, `name`, `name_tag`, `email`, `phone`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `ChucVu`, `ChiNhanh`, `CapDo`, `TienDoTong`, `dob`, `id_card`, `tram_lam_viec`, `emergency_contact`, `emergency_phone`) VALUES
-(1, 'Trần Minh Thư', 'Minh Thư', 'minhthu@brewlearn.com', '0982 456 789 555', NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.X2A29iM6i', NULL, '2026-09-23 07:53:25', '2026-09-23 08:35:02', 'Barista Chính', 'Flagship Quận 1 - Hồ Tùng Mậu, TP.HCM', 2, 75, '2001-08-14', '07920108****', 'Quầy Bar Chính (Espresso & Milk Steam)', 'Trần Văn Nam (Bố)', '0903 123 456'),
-(2, 'Nguyễn Văn Nam', NULL, 'vannam@brewlearn.com', NULL, NULL, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.X2A29iM6i', NULL, '2026-09-23 07:53:25', '2026-09-23 07:53:25', 'Thực Tập Sinh Ca Tối', 'CN Quận 3', 1, 35, NULL, NULL, NULL, NULL, NULL);
+DROP TABLE IF EXISTS `vung`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `vung` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `ma_vung` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ten_vung` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nguoi_quan_ly_id` bigint unsigned DEFAULT NULL COMMENT 'ID Quản lý vùng',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ma_vung` (`ma_vung`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Chỉ mục cho các bảng đã đổ
+-- Table structure for table `yeu_cau_dao_tao_lai`
 --
 
---
--- Chỉ mục cho bảng `bai_hoc`
---
-ALTER TABLE `bai_hoc`
-  ADD PRIMARY KEY (`MaBaiHoc`);
+DROP TABLE IF EXISTS `yeu_cau_dao_tao_lai`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `yeu_cau_dao_tao_lai` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL COMMENT 'Nhân viên cần đào tạo lại',
+  `du_doan_id` bigint unsigned DEFAULT NULL COMMENT 'FK tới du_doan_nguy_co làm căn cứ đề xuất',
+  `nguoi_de_xuat_id` bigint unsigned DEFAULT NULL COMMENT 'Trưởng ca/hệ thống đề xuất (NULL nếu hệ thống tự động)',
+  `nguoi_duyet_id` bigint unsigned DEFAULT NULL COMMENT 'QL cửa hàng duyệt',
+  `ly_do` text COLLATE utf8mb4_unicode_ci,
+  `trang_thai` enum('ChoDuyet','DaDuyet','TuChoi','HoanThanh') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ChoDuyet',
+  `ket_qua_sau_dao_tao_lai` enum('ChuaCoKetQua','Dat','ChuaDat') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ChuaCoKetQua' COMMENT 'Dùng làm nhãn lịch sử (label) để huấn luyện lại mô hình',
+  `ngay_de_xuat` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `ngay_duyet` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `assessment_id` bigint unsigned DEFAULT NULL,
+  `nguon_de_xuat` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ke_hoach` json DEFAULT NULL,
+  `nguoi_phu_trach_id` bigint unsigned DEFAULT NULL,
+  `han_hoan_thanh` date DEFAULT NULL,
+  `ngay_danh_gia_lai` date DEFAULT NULL,
+  `tien_trinh` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ChoGiao',
+  `ghi_chu_thuc_hien` text COLLATE utf8mb4_unicode_ci,
+  `danh_gia_lai_id` bigint unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `yeu_cau_dao_tao_lai_assessment_id_unique` (`assessment_id`),
+  KEY `idx_ytdl_user` (`user_id`),
+  KEY `idx_ytdl_du_doan` (`du_doan_id`),
+  KEY `idx_ytdl_nguoi_duyet` (`nguoi_duyet_id`),
+  KEY `fk_ytdl_nguoi_de_xuat` (`nguoi_de_xuat_id`),
+  CONSTRAINT `fk_ytdl_du_doan` FOREIGN KEY (`du_doan_id`) REFERENCES `du_doan_nguy_co` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_ytdl_nguoi_de_xuat` FOREIGN KEY (`nguoi_de_xuat_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_ytdl_nguoi_duyet` FOREIGN KEY (`nguoi_duyet_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_ytdl_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Chỉ mục cho bảng `bai_kiem_tra`
---
-ALTER TABLE `bai_kiem_tra`
-  ADD PRIMARY KEY (`MaBaiKiemTra`);
-
---
--- Chỉ mục cho bảng `cache`
---
-ALTER TABLE `cache`
-  ADD PRIMARY KEY (`key`),
-  ADD KEY `cache_expiration_index` (`expiration`);
-
---
--- Chỉ mục cho bảng `cache_locks`
---
-ALTER TABLE `cache_locks`
-  ADD PRIMARY KEY (`key`),
-  ADD KEY `cache_locks_expiration_index` (`expiration`);
-
---
--- Chỉ mục cho bảng `cau_hoi_kiem_tra`
---
-ALTER TABLE `cau_hoi_kiem_tra`
-  ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `chuong_trinh_dao_tao`
---
-ALTER TABLE `chuong_trinh_dao_tao`
-  ADD PRIMARY KEY (`MaCTDT`);
-
---
--- Chỉ mục cho bảng `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`),
-  ADD KEY `failed_jobs_connection_queue_failed_at_index` (`connection`,`queue`,`failed_at`);
-
---
--- Chỉ mục cho bảng `jobs`
---
-ALTER TABLE `jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `jobs_queue_index` (`queue`);
-
---
--- Chỉ mục cho bảng `job_batches`
---
-ALTER TABLE `job_batches`
-  ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `ket_qua_kiem_tra`
---
-ALTER TABLE `ket_qua_kiem_tra`
-  ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `migrations`
---
-ALTER TABLE `migrations`
-  ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `nhan_vien_khoa_hoc`
---
-ALTER TABLE `nhan_vien_khoa_hoc`
-  ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `password_reset_tokens`
---
-ALTER TABLE `password_reset_tokens`
-  ADD PRIMARY KEY (`email`);
-
---
--- Chỉ mục cho bảng `sessions`
---
-ALTER TABLE `sessions`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `sessions_user_id_index` (`user_id`),
-  ADD KEY `sessions_last_activity_index` (`last_activity`);
-
---
--- Chỉ mục cho bảng `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `users_email_unique` (`email`);
-
---
--- AUTO_INCREMENT cho các bảng đã đổ
+-- Table structure for table `yeu_cau_ho_tro`
 --
 
---
--- AUTO_INCREMENT cho bảng `bai_hoc`
---
-ALTER TABLE `bai_hoc`
-  MODIFY `MaBaiHoc` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+DROP TABLE IF EXISTS `yeu_cau_ho_tro`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `yeu_cau_ho_tro` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `loai_yeu_cau` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'Yêu cầu hỗ trợ',
+  `chu_de` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `noi_dung` text COLLATE utf8mb3_unicode_ci NOT NULL,
+  `muc_do_uu_tien` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'TrungBinh',
+  `trang_thai` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'DaGui',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_yeu_cau_ho_tro_user_new` (`user_id`),
+  CONSTRAINT `fk_yeu_cau_ho_tro_user_new` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
---
--- AUTO_INCREMENT cho bảng `bai_kiem_tra`
---
-ALTER TABLE `bai_kiem_tra`
-  MODIFY `MaBaiKiemTra` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT cho bảng `cau_hoi_kiem_tra`
---
-ALTER TABLE `cau_hoi_kiem_tra`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-
---
--- AUTO_INCREMENT cho bảng `chuong_trinh_dao_tao`
---
-ALTER TABLE `chuong_trinh_dao_tao`
-  MODIFY `MaCTDT` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT cho bảng `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `jobs`
---
-ALTER TABLE `jobs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `ket_qua_kiem_tra`
---
-ALTER TABLE `ket_qua_kiem_tra`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT cho bảng `migrations`
---
-ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT cho bảng `nhan_vien_khoa_hoc`
---
-ALTER TABLE `nhan_vien_khoa_hoc`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT cho bảng `users`
---
-ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-COMMIT;
-
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed
+-- MySQL dump 10.13  Distrib 9.1.0, for Win64 (x86_64)
+--
+-- Host: localhost    Database: brewlearn
+-- ------------------------------------------------------
+-- Server version	9.1.0
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Dumping data for table `bai_hoc`
+--
+
+LOCK TABLES `bai_hoc` WRITE;
+/*!40000 ALTER TABLE `bai_hoc` DISABLE KEYS */;
+INSERT INTO `bai_hoc` VALUES (1,1,'Nội quy phòng cháy & An toàn điện quầy bar','Các nguyên tắc an toàn điện khi vận hành máy pha cà phê, máy xay và quy trình phòng cháy cơ bản tại quầy bar.\n\nNội dung chính:\n• Việc đầu tiên khi mở ca: kiểm tra vệ sinh tổng thể và an toàn điện, nước quanh quầy bar trước khi bật thiết bị.\n• Ổ cắm hoặc dây điện bị ướt: ngắt nguồn, báo trưởng ca và không sử dụng ổ cắm đó cho đến khi được kiểm tra.\n• Không cắm nhiều thiết bị công suất lớn (máy pha, máy xay, máy xay sinh tố) trên cùng một ổ nối.\n• Mang giày có đế cao su chống trượt vì sàn quầy bar thường đọng nước và sữa.\n• Giữ lối thoát hiểm và vị trí bình chữa cháy luôn thông thoáng, không chất thùng hàng.\n\nLưu ý tại cửa hàng: Mọi bất thường về điện phải ghi vào checklist mở ca để trưởng ca xử lý trước khi mở bán.','safety_01.mp4',1),(2,1,'Tiêu chuẩn An toàn vệ sinh thực phẩm (ATVSTP)','Quy định vệ sinh cá nhân, bảo quản nguyên liệu và vệ sinh dụng cụ pha chế theo tiêu chuẩn an toàn thực phẩm.\n\nNội dung chính:\n• Rửa tay đúng cách trước ca, sau khi đi vệ sinh, cầm tiền hoặc dọn rác; đeo găng khi chạm trực tiếp vào thực phẩm.\n• Bảo quản sữa tươi trong tủ mát ở 0–5°C; kiểm tra hạn sử dụng (EXP) và loại bỏ nguyên liệu hết hạn.\n• Xả nước nóng làm sạch đầu group sau mỗi lần chiết xuất espresso.\n• Sau khi đánh sữa: lau vòi hơi bằng khăn ẩm sạch và xả hơi khoảng 1 giây; tuyệt đối không dùng khăn này lau mặt quầy.\n• Cuối ca: backflush máy pha bằng thuốc rửa chuyên dụng; hạt cà phê dư cho vào túi van kín khí, để nơi khô ráo.\n\nLưu ý tại cửa hàng: Khăn lau được phân biệt theo màu cho từng khu vực để tránh nhiễm chéo.','safety_02.mp4',2),(3,2,'Nguyên tắc lắng nghe chủ động','Kỹ thuật lắng nghe yêu cầu của đồng nghiệp và khách hàng mà không ngắt lời.\n\nNội dung chính:\n• Dừng thao tác, nhìn vào người nói và để họ nói hết ý.\n• Ghi nhanh các yêu cầu tùy chỉnh (ít đường, thêm đá, đổi sữa) ngay khi nghe.\n• Nhắc lại yêu cầu để xác nhận trước khi thực hiện, tránh làm sai món.\n• Đặt câu hỏi mở khi chưa rõ, không đoán ý khách.\n\nLưu ý tại cửa hàng: Khi khách chưa hài lòng, việc đầu tiên là lắng nghe chăm chú và không ngắt lời khách.','com_01.mp4',1),(4,2,'Bàn giao ca & Giao tiếp trong ca làm','Phương pháp truyền đạt thông tin giữa các ca và giao tiếp trong ca để không sót việc.\n\nNội dung chính:\n• Bàn giao ca theo mẫu: đơn đang chờ, nguyên liệu sắp hết, thiết bị lỗi, phản hồi của khách và việc còn dang dở.\n• Xử lý đơn tại quầy theo thứ tự thời gian in trên bill; đơn 2 ly giờ cao điểm cần ra món dưới 3 phút.\n• Phản hồi chưa hài lòng xử lý theo quy tắc LAST: Listen (lắng nghe), Apologize (xin lỗi), Solve (giải quyết), Thank (cảm ơn).\n• Espresso bị chua, loãng thường do chiết xuất thiếu (xay quá thô, chảy quá nhanh); báo barista điều chỉnh ngay.\n\nLưu ý tại cửa hàng: Thông tin bàn giao quan trọng phải ghi lại, không chỉ nói miệng.','com_02.mp4',2),(5,3,'Cân chỉnh Espresso chuẩn định lượng (Dial-in)','Đo lường gram vào/ra, căn chỉnh thời gian chiết xuất và độ mịn để có shot espresso đạt chuẩn.\n\nNội dung chính:\n• Công thức shot double chuẩn: 18g bột cho 36–40ml espresso (tỷ lệ 1:2), thời gian 25–30 giây.\n• Máy pha hoạt động ở áp suất bơm 9 bar; lực nén (tamping) đều tay khoảng 13–15kg.\n• Shot chảy nhanh dưới 20 giây (ví dụ 36ml trong 12 giây): cà phê xay quá thô hoặc nén chưa đủ lực, chỉnh máy xay mịn hơn.\n• Vị chua gắt, thân mỏng là chiết xuất thiếu (under-extraction); vị đắng khét, khô là chiết xuất quá.\n• Mỗi lần chỉnh chỉ thay đổi một thông số, pha thử và ghi lại kết quả.\n\nLưu ý tại cửa hàng: Dial-in lại vào đầu ca và khi đổi mẻ hạt mới.','barista_01.mp4',1),(6,3,'Kỹ thuật Đánh sữa Microfoam & Latte Art','Nhiệt độ đánh sữa tiêu chuẩn, tạo bọt microfoam mịn và tạo hình Heart, Rosetta.\n\nNội dung chính:\n• Xả hơi vòi đánh sữa trước khi dùng để loại nước đọng trong vòi.\n• Giai đoạn cấp khí (stretching): đầu vòi sát mặt sữa, tiếng xè xè nhỏ đều, dừng cấp khí khi sữa đạt 30–37°C (ấm tay).\n• Giai đoạn cuộn xoáy: hạ vòi sâu hơn để làm mịn bọt, hoàn tất ở 60–65°C; không để sữa quá nóng.\n• Bọt to, rời rạc là do đưa quá nhiều không khí khi vòi hơi ở quá nông.\n• Rót latte art: rót từ trên cao với dòng nhỏ để sữa chìm dưới lớp crema, sau đó hạ ca sữa sát mặt ly và rót vào tâm cốc để tạo hình.\n\nLưu ý tại cửa hàng: Ly mang đi có nắp vẫn giữ đúng tỷ lệ sữa và bọt theo công thức; latte art là tùy chọn.','barista_02.mp4',2),(7,4,'Thao tác máy POS & Ghi nhận ghi chú món','Thao tác nhập order, ghi chú tùy chỉnh và in hóa đơn trên máy POS.\n\nNội dung chính:\n• Việc đầu tiên khi khách đến quầy là chào hỏi, sau đó mới nhận order.\n• Chọn đúng món, size, rồi chọn tùy chọn trên POS, ví dụ Cà phê sữa với [Ít đường 50%] và [Nhiều đá].\n• Mọi ghi chú phải nhập vào hệ thống; nếu không, barista pha theo công thức chuẩn và món phải làm lại.\n• Đọc lại order và tổng tiền cho khách trước khi thanh toán.\n• Máy in kẹt hoặc hết giấy giờ đông khách: thay giấy nhanh hoặc nhờ đồng nghiệp hỗ trợ, không để khách chờ lâu.\n\nLưu ý tại cửa hàng: Luôn để sẵn cuộn giấy in dự phòng tại quầy thu ngân.','pos_01.mp4',1),(8,4,'Quản lý tiền mặt & Kiểm két cuối ca','Quy trình thu tiền, phân loại mệnh giá, kiểm soát tiền thối và chốt két cuối ca.\n\nNội dung chính:\n• Tiền đầu ca (tiền thối cố định) chỉ dùng làm tiền lẻ thối cho khách trong ca.\n• Xếp tiền theo mệnh giá, đếm tiền khách đưa trước mặt khách và đếm lại tiền thối.\n• Tờ tiền nghi giả: lịch sự đề nghị khách đổi tờ khác và báo trưởng ca.\n• Chốt két: hai người cùng đếm, đối chiếu với báo cáo POS và ký biên bản bàn giao.\n• Chênh lệch so với POS: ghi rõ số tiền vào biên bản, báo trưởng ca kiểm tra giao dịch; không tự bù hoặc giấu.\n\nLưu ý tại cửa hàng: Két tiền luôn khóa khi thu ngân rời quầy.','pos_02.mp4',2),(9,5,'Tiêu chuẩn Bưng bê & Phục vụ tại bàn','Kỹ năng bưng khay an toàn và quy tắc phục vụ đồ uống tại bàn theo thứ tự ưu tiên.\n\nNội dung chính:\n• Thứ tự phục vụ nhóm khách: người lớn tuổi, trẻ em, phụ nữ, nam giới.\n• Bưng khay bằng hai tay ngang tầm ngực hoặc bụng, đi nhẹ nhàng, quan sát lối đi.\n• Mỗi khay tối đa 4–5 ly, ly nặng đặt ở giữa khay để giữ cân bằng.\n• Đặt ly từ phía bên phải khách, quai ly hướng về tay phải khách; giới thiệu tên món khi đặt.\n• Khách báo sai món: xin lỗi, ghi nhận và đổi đúng món ngay.\n\nLưu ý tại cửa hàng: Không bưng đồ uống nóng qua đầu khách hoặc trẻ em.','service_01.mp4',1),(10,5,'Quy trình Dọn dẹp (Bus table) & Vệ sinh sảnh','Các bước dọn bàn trống trong 60 giây và giữ vệ sinh khu vực khách ngồi, nhà vệ sinh.\n\nNội dung chính:\n• Tiêu chuẩn bus table: dọn xong bàn trong 60 giây sau khi khách rời đi.\n• Thứ tự dọn: thu ly, đĩa, rác; lau bàn bằng khăn ẩm đã qua dung dịch khử khuẩn; xếp lại ghế.\n• Khăn lau bàn khách và khăn lau quầy pha chế phân biệt theo màu hoặc khu vực để tránh nhiễm chéo.\n• Kiểm tra nhà vệ sinh theo lịch trong ca và ghi vào bảng theo dõi.\n\nLưu ý tại cửa hàng: Bàn sạch nhanh giúp khách mới có chỗ ngồi ngay trong giờ cao điểm.','service_02.mp4',2),(11,6,'Checklist Mở ca (Opening) & Đóng ca (Closing)','Kiểm tra máy móc, nguyên liệu đầu ca và checklist vệ sinh, niêm phong cuối ca.\n\nNội dung chính:\n• Checklist mở ca: an toàn điện nước, tình trạng máy pha và máy xay, hạn dùng nguyên liệu, tồn kho trước giờ cao điểm.\n• Hạng mục chưa đạt: ghi nhận, phân công xử lý và chỉ mở bán khi đã bảo đảm an toàn.\n• Đóng ca: backflush mỗi đầu group với khoảng 3–5g bột vệ sinh chuyên dụng; vệ sinh gioăng, lưới lọc và thay khi bị chai cứng.\n• Xả hết hạt trong phễu máy xay, vệ sinh phễu và bảo quản hạt kín.\n• Trưởng ca kiểm tra thực tế từng hạng mục, két tiền, niêm phong, khóa cửa và an toàn cháy nổ trước khi ký xác nhận.\n\nLưu ý tại cửa hàng: Checklist đã ký được lưu lại để đối chiếu khi có sự cố.','shift_01.mp4',1),(12,6,'Điều phối nhân sự giờ Peak-hour','Sắp xếp vị trí nhân sự linh hoạt khi quán đông khách để giảm thời gian chờ.\n\nNội dung chính:\n• Phân công vị trí dựa trên năng lực và kết quả đào tạo của từng nhân viên.\n• Khi quầy pha chế ùn tắc, điều động phục vụ hoặc thu ngân có kỹ năng sang hỗ trợ dán tem, đóng nắp, lấy nguyên liệu.\n• Theo dõi thời gian ra món và thông báo thời gian chờ dự kiến cho khách.\n• Sau giờ cao điểm, tổng kết nhanh các điểm nghẽn và nhắc cải thiện ngay trong ca.\n\nLưu ý tại cửa hàng: Không cắt bớt bước an toàn vệ sinh để tăng tốc độ.','shift_02.mp4',2),(13,7,'Kiểm soát chi phí COGS & Thất thoát (Waste)','Cách tính tỷ lệ hao hụt nguyên liệu và tối ưu chi phí giá vốn bán hàng (COGS).\n\nNội dung chính:\n• Tỷ lệ hao hụt = lượng nguyên liệu hủy ÷ lượng nguyên liệu sử dụng trong kỳ.\n• Xuất kho theo FIFO/FEFO: nhập trước hoặc hết hạn trước thì dùng trước.\n• Ghi sổ hủy nguyên liệu (waste log): loại nguyên liệu, số lượng và lý do hủy.\n• Đong sữa theo vạch chia trên ca theo size ly để tránh đánh dư; hạt đã mở bao bảo quản trong hũ hoặc túi van kín khí.\n• Hao hụt tăng đột biến: đối chiếu waste log, tồn kho và thao tác của từng ca trước khi kết luận.\n\nLưu ý tại cửa hàng: Theo dõi tỷ lệ hao hụt hằng tuần để phát hiện sớm bất thường.','manager_01.mp4',1),(14,7,'Đánh giá KPI & Feedback nhân viên 1-1','Phương pháp đánh giá hiệu suất làm việc định kỳ và phản hồi 1-1 với nhân viên.\n\nNội dung chính:\n• Đánh giá dựa trên tiêu chí đã công bố, kết quả quan sát thực tế và dữ liệu đào tạo.\n• Buổi 1-1 nêu hành vi cụ thể, tác động của hành vi và cùng thống nhất hành động cải thiện.\n• Góp ý theo nguyên tắc Sandwich: ghi nhận điểm tốt, chỉ ra điểm cần cải thiện, động viên và nêu kỳ vọng.\n• Mục tiêu cải thiện phải cụ thể, đo được và có thời hạn.\n• Nhân viên mới cần phản hồi định kỳ ngắn, hằng tuần hoặc hai tuần một lần trong giai đoạn đầu.\n\nLưu ý tại cửa hàng: Ghi lại nội dung đã thống nhất để theo dõi ở buổi 1-1 tiếp theo.','manager_02.mp4',2),(15,1,'Quy trình sơ cứu cơ bản & Xử lý sự cố lao động','Hướng dẫn xử lý các tai nạn thường gặp tại quầy bar và quy trình báo cáo sự cố lao động.\n\nNội dung chính:\n• Bỏng hơi nước hoặc nước nóng: xả vết bỏng dưới vòi nước mát sạch 10–20 phút, không bôi kem đánh răng hay đá lạnh trực tiếp.\n• Đứt tay: rửa sạch, ép cầm máu bằng gạc, băng kín và đeo găng trước khi quay lại làm việc.\n• Trượt ngã: không vội nâng người bị ngã; hỏi tình trạng, đánh dấu khu vực trơn trượt và lau khô ngay.\n• Hộp sơ cứu đặt cố định tại quầy, kiểm tra và bổ sung vật tư hằng tuần.\n• Mọi sự cố đều báo trưởng ca và ghi nhận vào mục Lỗi & sự cố để theo dõi.\n\nLưu ý tại cửa hàng: Trường hợp nặng (bỏng diện rộng, chảy máu không cầm được) gọi cấp cứu 115 trước, báo cáo sau.','safety_03.mp4',3),(16,1,'Thao tác sử dụng bình chữa cháy & Báo động PCCC','Kỹ năng sử dụng bình chữa cháy CO2/bột và quy trình di tản khách hàng, nhân viên khi có cháy.\n\nNội dung chính:\n• Thao tác bình chữa cháy theo 4 bước: rút chốt, hướng vòi vào gốc lửa, bóp cò, quét đều qua lại.\n• Bình CO2 phù hợp với đám cháy thiết bị điện; không cầm vào loa phun vì rất lạnh có thể gây bỏng.\n• Khi có báo động: ngắt điện khu vực, hướng dẫn khách ra lối thoát gần nhất, không dùng thang máy.\n• Trưởng ca kiểm đếm nhân viên tại điểm tập kết và báo cáo cho lực lượng chữa cháy.\n\nLưu ý tại cửa hàng: Kiểm tra áp suất bình chữa cháy định kỳ hằng tháng và ghi vào sổ theo dõi PCCC.','safety_04.mp4',4),(17,2,'Kỹ năng quản lý thời gian trong công việc','Phương pháp lập kế hoạch, sắp xếp thứ tự ưu tiên và sử dụng thời gian hiệu quả trong ca.\n\nNội dung chính:\n• Chuẩn bị trước giờ cao điểm: định lượng sẵn nguyên liệu, bổ sung ly, nắp, ống hút.\n• Ưu tiên việc ảnh hưởng trực tiếp đến khách, việc hậu cần làm vào lúc vắng khách.\n• Gom các việc giống nhau để làm một lượt, giảm di chuyển qua lại.\n• Cuối ca tự rà lại danh sách việc để bàn giao đầy đủ.\n\nLưu ý tại cửa hàng: Một ca hiệu quả là ca không để việc dồn sang ca sau.','safety_02.mp4',3),(18,2,'Phát triển kỹ năng thấu cảm để chinh phục khách hàng, đồng nghiệp','Rèn luyện khả năng thấu hiểu cảm xúc, đặt mình vào vị trí người khác để giao tiếp tốt hơn.\n\nNội dung chính:\n• Nhận ra cảm xúc của khách qua giọng nói, nét mặt khi chờ lâu hoặc nhận sai món.\n• Thừa nhận cảm xúc trước khi giải thích: \"Em hiểu anh/chị đã phải chờ lâu\".\n• Hỗ trợ đồng nghiệp đang quá tải thay vì phàn nàn.\n• Giữ thái độ bình tĩnh, giọng nói nhẹ nhàng trong tình huống căng thẳng.\n\nLưu ý tại cửa hàng: Thấu cảm không có nghĩa là đồng ý với mọi yêu cầu; vẫn cần tuân thủ quy định cửa hàng.','com_04.mp4',4),(19,2,'Xây dựng mối quan hệ gắn kết với khách hàng, đồng nghiệp đúng cách','Các nguyên tắc thiết lập và duy trì quan hệ làm việc tin cậy với khách hàng và đồng nghiệp.\n\nNội dung chính:\n• Nhớ tên và món quen của khách thường xuyên để tạo trải nghiệm cá nhân hóa.\n• Giữ lời hứa nhỏ: báo đúng thời gian chờ, mang đúng món đã hẹn.\n• Ghi nhận đóng góp của đồng nghiệp và chia sẻ thông tin hữu ích trong ca.\n• Phản hồi thẳng thắn, tôn trọng; không nói xấu sau lưng.\n\nLưu ý tại cửa hàng: Sự tin cậy được xây dựng qua hành động lặp lại mỗi ca.','com_05.mp4',5),(20,2,'Giải quyết xung đột và các mối quan hệ tại nơi làm việc','Quy trình xử lý bất đồng và tình huống căng thẳng tại nơi làm việc.\n\nNội dung chính:\n• Tách vấn đề khỏi cá nhân; tập trung vào sự việc và ảnh hưởng đến khách.\n• Trao đổi riêng, không tranh luận trước mặt khách hàng.\n• Mỗi bên trình bày, cùng tìm phương án và thống nhất việc cần làm.\n• Nếu không tự giải quyết được, báo trưởng ca làm trung gian.\n\nLưu ý tại cửa hàng: Mục tiêu là ca làm việc trơn tru, không phải phân thắng thua.','com_06.mp4',6),(21,2,'Quy tắc ứng xử khi họp qua video - Những hành vi chuyên nghiệp, lịch sự','Chuẩn mực tác phong và giao tiếp chuyên nghiệp khi tham gia họp trực tuyến.\n\nNội dung chính:\n• Vào phòng họp đúng giờ, kiểm tra trước micro, camera và đường truyền.\n• Chọn nơi yên tĩnh, ánh sáng đủ, trang phục gọn gàng.\n• Tắt micro khi không phát biểu, giơ tay hoặc nhắn tin khi muốn nói.\n• Ghi chú nội dung và việc được giao để thực hiện sau buổi họp.\n\nLưu ý tại cửa hàng: Không vừa họp vừa phục vụ khách; xin phép rời họp nếu quầy cần hỗ trợ.','com_07.mp4',7);
+/*!40000 ALTER TABLE `bai_hoc` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `bai_kiem_tra`
+--
+
+LOCK TABLES `bai_kiem_tra` WRITE;
+/*!40000 ALTER TABLE `bai_kiem_tra` DISABLE KEYS */;
+INSERT INTO `bai_kiem_tra` VALUES (1,'Bài Kiểm Tra Sát Hạch: Giao Tiếp & Nghiệp Vụ Xử Lý Tình Huống Giờ Cao Điểm',20,80,4,'Thu ngân','2026-09-23 07:39:40','2026-09-23 07:39:40'),(2,'Sát Hạch Thực Hành: Chiết Xuất Espresso & Steaming Sữa Microfoam',15,85,5,'Barista','2026-09-23 07:39:40','2026-09-23 07:39:40'),(3,'Sát Hạch Vệ Sinh An Toàn Thực Phẩm & Quy Trình Đóng Ca',15,90,2,'ALL STAFF','2026-09-23 07:39:40','2026-10-15 09:00:59'),(4,'Sát Hạch Quy Trình Mở Ca (Opening Checklist) & An Toàn Lao Động',15,80,1,'ALL STAFF','2026-09-23 08:20:12','2026-09-23 08:20:12'),(5,'Sát Hạch Kỹ Năng Quản Lý Nguyên Vật Liệu & Giảm Thất Thoát (Waste)',20,85,13,'Quản lý cửa hàng','2026-09-23 08:20:12','2026-09-23 08:20:12'),(6,'Kiểm Tra: Tối Ưu Hóa Chiết Xuất Espresso',15,80,5,'Barista','2026-09-24 16:01:23','2026-09-24 16:01:23'),(7,'Kiểm Tra: Kỹ Thuật Tạo Bọt Sữa Microfoam',15,85,6,'Barista','2026-09-24 16:01:23','2026-09-24 16:01:23'),(8,'Kiểm Tra: Thực Hành Latte Art Nâng Cao',20,85,6,'Barista','2026-09-24 16:01:23','2026-09-24 16:01:23'),(9,'Kiểm Tra: Quy Trình Đóng Ca Vệ Sinh Máy Móc (Closing)',15,90,11,'Trưởng ca','2026-09-24 16:01:23','2026-09-24 16:01:23'),(10,'Sát Hạch Nghiệp Vụ POS & Ghi Nhận Ghi Chú Đơn Hàng',15,85,7,'Thu ngân','2026-09-27 15:19:15','2026-09-27 15:19:15'),(11,'Sát Hạch Quản Lý Tiền Mặt & Bàn Giao Két Tiền Cuối Ca',15,90,8,'Thu ngân','2026-09-27 15:19:15','2026-09-27 15:19:15'),(12,'Sát Hạch Quy Trình Phục Vụ Tại Bàn & Tiêu Chuẩn Bưng Bê',15,80,9,'Phục vụ','2026-09-27 15:19:15','2026-09-27 15:19:15'),(13,'Sát Hạch Vệ Sinh Sảnh Khách & Quy Trình Bus Table 60 Giây',15,85,10,'Phục vụ','2026-09-27 15:19:15','2026-09-27 15:19:15'),(14,'Sát Hạch Kiểm Soát Vận Hành & Checklist Mở/Đóng Ca',20,85,11,'Trưởng ca','2026-09-27 15:19:15','2026-09-27 15:19:15'),(15,'Sát Hạch Kỹ Năng Điều Phối Nhân Sự Giờ Cao Điểm',20,85,12,'Trưởng ca','2026-09-27 15:19:15','2026-10-15 09:00:59'),(16,'Sát Hạch Đánh Giá Hiệu Suất Làm Việc & Phản Hồi Nhân Viên 1-1',20,80,14,'Quản lý cửa hàng','2026-09-27 15:19:15','2026-10-15 09:00:59');
+/*!40000 ALTER TABLE `bai_kiem_tra` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `ca_lam_viec`
+--
+
+LOCK TABLES `ca_lam_viec` WRITE;
+/*!40000 ALTER TABLE `ca_lam_viec` DISABLE KEYS */;
+INSERT INTO `ca_lam_viec` VALUES (1,1,'Ca sáng','07:00:00','14:00:00','2026-10-01 09:49:22','2026-10-02 01:55:33'),(2,1,'Ca chiều','14:00:00','22:00:00',NULL,'2026-10-02 01:55:33'),(3,2,'Ca sáng','07:00:00','14:00:00',NULL,'2026-10-15 09:01:00'),(4,2,'Ca chiều','14:00:00','22:00:00',NULL,'2026-10-15 09:01:00');
+/*!40000 ALTER TABLE `ca_lam_viec` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `cau_hoi_kiem_tra`
+--
+
+LOCK TABLES `cau_hoi_kiem_tra` WRITE;
+/*!40000 ALTER TABLE `cau_hoi_kiem_tra` DISABLE KEYS */;
+INSERT INTO `cau_hoi_kiem_tra` VALUES (1,1,'Theo quy tắc LAST trong xử lý khiếu nại, chữ \"A\" đại diện cho hành động nào?','Ask questions (Hỏi thông tin)','Apologize (Thành thật xin lỗi)','Action (Hành động ngay)','Accept (Chấp nhận lỗi)','B','LAST nghĩa là Listen - Apologize - Solve - Thank.'),(2,1,'Thời gian tiêu chuẩn để phục vụ 01 đơn hàng gồm 2 ly cà phê vào giờ cao điểm là bao lâu?','Dưới 2 phút','Dưới 3 phút','Dưới 5 phút','Dưới 8 phút','B','Tiêu chuẩn quầy Bar BrewLearn là tối đa 3 phút/đơn 2 ly.'),(3,1,'Khi khách hàng phản ánh Espresso quá chua và loãng, nguyên nhân kỹ thuật chính là gì?','Cà phê bị Over-extraction (chiết xuất quá mức)','Nhiệt độ nước quá cao (>96°C)','Cà phê bị Under-extraction (xay quá thô/chiết xuất nhanh)','Lực nén Tamping quá mạnh','C','Vị chua loãng xuất hiện khi chảy quá nhanh (Under-extraction).'),(4,1,'Thao tác đầu tiên Barista cần làm ngay khi nhận phản hồi chưa hài lòng từ khách là gì?','Giải thích lý do quầy bar đang đông','Lắng nghe chăm chú và không ngắt lời khách','Pha lại ly mới ngay lập tức','Báo Quản lý ca xử lý','B','Bước Listen (Lắng nghe) luôn là ưu tiên hàng đầu.'),(5,1,'Trình tự ưu tiên chuẩn khi xử lý đơn hàng tại quầy trong ca làm việc là gì?','Khách đến trước - Đơn Grab/Shopee - Đơn mang đi','Theo thứ tự thời gian in trên bill order','Làm món lạnh trước món nóng','Làm đơn nhiều ly trước','B','Đảm bảo công bằng và tốc độ theo thời gian in bill.'),(6,2,'Tỷ lệ chiết xuất Brew Ratio chuẩn cho 1 shot Double Espresso tiêu chuẩn tại quầy là bao nhiêu?','18g bột lấy 18ml dịch','18g bột lấy 36ml - 40ml dịch','18g bột lấy 60ml dịch','20g bột lấy 80ml dịch','B','Tỷ lệ chiết xuất chuẩn Barista là 1:2 (18g bột thu 36-40ml).'),(7,2,'Nhiệt độ đánh sữa Microfoam chuẩn dành cho Cappuccino/Latte là bao nhiêu?','40°C - 50°C','60°C - 65°C','75°C - 80°C','Trên 85°C','B','Trên 70°C sữa sẽ bị cháy đường Lactose và mất độ ngọt tự nhiên.'),(8,2,'Thời gian chiết xuất tiêu chuẩn cho một shot Double Espresso rơi vào khoảng nào?','10 - 15 giây','18 - 22 giây','25 - 30 giây','35 - 40 giây','C','Khung thời gian lý tưởng từ 25 - 30 giây.'),(9,2,'Kỹ thuật \"Stretching\" trong quá trình đánh sữa có tác dụng chính là gì?','Tạo sóng xoáy làm mịn bọt sữa','Đưa không khí vào sữa để tạo bọt','Làm nóng sữa lên 65°C','Trộn đều sữa tươi và cà phê','B','Stretching là giai đoạn hạ ca lấy hơi tạo lớp bọt ban đầu.'),(10,2,'Lực nén Tamping tiêu chuẩn khi chuẩn bị tay pha (Portafilter) là bao nhiêu?','5kg','10kg','13kg - 15kg','25kg','C','Lực nén tiêu chuẩn phẳng đều từ 13 - 15kg.'),(11,3,'Tần suất xả nước nóng làm sạch Headgroup (Grouphead) của máy pha cà phê là khi nào?','Mỗi tiếng 1 lần','Sau mỗi lần chiết xuất Espresso','Cuối ca làm việc','Mỗi đầu ca sáng','B','Xả tay pha ngay sau mỗi lần chiết xuất để tránh tồn bã cà phê cũ.'),(12,3,'Quy trình Backflush vệ sinh máy pha cà phê bằng thuốc rửa chuyên dụng được thực hiện khi nào?','Cuối mỗi ca làm việc (Closing)','1 tuần 1 lần','Mỗi khi thay hạt cà phê mới','Khi máy báo lỗi áp suất','A','Backflush là quy trình bắt buộc cuối mỗi ca vận hành.'),(13,3,'Sau khi sử dụng vòi Steam đánh sữa, Barista cần thực hiện ngay thao tác nào?','Tắt máy pha cà phê','Lau vòi bằng khăn ẩm sạch và xả hơi (Purge) 1 giây','Ngâm vòi vào ca nước lạnh','Tháo đầu vòi ra rửa','B','Lau và xả hơi ngay lập tức để tránh sữa khô đọng cặn trong vòi.'),(14,3,'Hạt cà phê dư trong phễu máy xay (Hopper) vào cuối ngày cần bảo quản như thế nào?','Để nguyên trong phễu qua đêm','Cho vào túi xả van kín khí và bảo quản nơi khô ráo','Bỏ vào tủ đông lạnh','Đổ chung vào thùng cà phê cũ','B','Tránh ánh sáng và không khí làm mất hương vị hạt.'),(15,3,'Khăn lau vòi đánh sữa (Steam wand) có thể dùng chung để lau mặt bàn quầy bar không?','Có, để tiết kiệm khăn','Chỉ dùng chung khi quầy bar sạch','Tuyệt đối không, phải dùng khăn riêng tiệt trùng','Tùy thuộc vào chỉ đạo Quản lý','C','Khăn vòi sữa bắt buộc dùng riêng để đảm bảo an toàn vệ sinh thực phẩm.'),(26,4,'Thao tác đầu tiên khi bắt đầu quy trình Opening ca sáng là gì?','Bật máy pha cà phê ngay lập tức','Kiểm tra vệ sinh tổng thể và an toàn điện/nước quầy bar','Pha thử 1 shot Espresso','Xay sẵn 1kg cà phê','B','Cần đảm bảo an toàn điện nước và vệ sinh trước khi vận hành thiết bị.'),(27,4,'Dụng cụ bảo hộ chống trượt vấp ngã bắt buộc khi làm việc tại quầy bar là gì?','Giày thể thao đế trơn','Dép lê','Giày bảo hộ/giày bếp có đế cao su chống trượt','Đi chân đất','C','Sàn quầy bar thường xuyên có nước/sữa nên cần giày chống trượt chuyên dụng.'),(28,5,'Để giảm thiểu hao hụt nguyên liệu (Waste) khi đánh sữa, Barista nên làm gì?','Đổ sữa tràn ca để đánh cho dễ','Lường chính xác lượng sữa theo size ly bằng vạch chia ca','Dùng lại sữa thừa của ly trước','Đổ bỏ toàn bộ sữa thừa sau mỗi lần pha','B','Lường đúng định lượng giúp kiểm soát chi phí nguyên liệu tối ưu.'),(29,5,'Hạt cà phê sau khi mở bao nếu không dùng hết cuối ngày cần bảo quản ra sao?','Để nguyên trong phễu máy xay','Đổ vào thùng rác','Cho vào hũ/túi van kín khí, bảo quản nơi khô ráo thoáng mát','Bỏ vào ngăn đá tủ lạnh','C','Bảo quản kín khí giúp cà phê không bị mất mùi và oxy hóa.'),(30,6,'Áp suất bơm tiêu chuẩn (Pump Pressure) của máy pha Espresso là bao nhiêu?','5 Bar','9 Bar','15 Bar','20 Bar','B','Áp suất chuẩn chiết xuất Espresso truyền thống là 9 Bar.'),(31,6,'Nếu chiết xuất ra 36ml Espresso chỉ mất 12 giây, Barista cần điều chỉnh gì?','Chỉnh máy xay mịn hơn','Chỉnh máy xay thô hơn','Nén lực nhẹ hơn','Tăng nhiệt độ nước','A','Chảy quá nhanh (Under-extraction) cần xay mịn hơn để tăng lực cản nước.'),(32,7,'Giai đoạn Stretching (Cấp khí) trong đánh sữa kết thúc khi ca sữa đạt khoảng nhiệt độ nào?','30°C - 37°C (Ấm tay)','50°C','65°C','80°C','A','Stretching chỉ thực hiện ở giai đoạn đầu khi sữa còn lạnh đến khoảng 37°C.'),(33,7,'Âm thanh chuẩn khi đưa không khí vào sữa (Stretching) có tiếng như thế nào?','Tiếng gầm ùng ục lớn','Tiếng xè xè nhỏ, đều đặn như tiếng xé giấy','Không có âm thanh nào','Tiếng nổ bọt khí bôm bốp','B','Tiếng xè xè nhỏ nhẹ thể hiện vòi hơi đang lấy bọt mịn microfoam.'),(34,8,'Yếu tố quan trọng nhất quyết định độ nét của hình Latte Art là gì?','Tốc độ đổ thật nhanh','Lớp bọt sữa Microfoam phải mịn, không có bọt khí lớn và độ sánh vừa đủ','Dùng cà phê nguyên chất 100% Robusta','Đổ từ trên cao xuống','B','Chất lượng bọt sữa microfoam quyết định 80% sự thành công của Latte Art.'),(35,9,'Lượng hóa chất/thuốc rửa Backflush chuẩn cho 1 lần vệ sinh Headgroup là bao nhiêu?','1 muỗng cà phê (3-5g) bột vệ sinh chuyên dụng','10g bột giặt','Nửa chai nước rửa bát','Không dùng hóa chất, chỉ rửa nước trống','A','Dùng đúng 3-5g bột rửa chuyên dụng cho máy pha để đảm bảo sạch cặn dầu cà phê.'),(37,10,'Khi khách order ly Cà phê sữa ít ngọt và nhiều đá, Thu ngân ghi nhận trên POS như thế nào?','Ghi chú tay ra giấy note','Chọn món Cà phê sữa -> Chọn option [Ít đường 50%] và [Nhiều đá]','Nói miệng cho Barista','Không cần ghi chú','B','Thao tác đúng hệ thống POS giúp bộ phận pha chế nhận đúng thông tin món.'),(39,11,'Số tiền đầu ca (Tiền thối cố định) trong két Thu ngân dùng để làm gì?','Thanh toán tiền hàng ngoài','Để làm tiền lẻ thối cho khách hàng trong ca','Cho nhân viên tạm ứng','Nộp cho Quản lý ngay','B','Tiền lẻ đầu ca dùng làm quỹ thối tiền cố định cho ca làm.'),(40,11,'Cuối ca làm việc, khi kiểm kê két tiền bị thiếu 100.000đ so với doanh thu POS, Thu ngân cần làm gì?','Tự lấy tiền doanh thu bù vào','Ghi rõ số tiền lệch vào biên bản chốt ca và báo ngay cho Trưởng ca/Quản lý','Bỏ qua nếu số tiền nhỏ','Đổ lỗi cho ca trước','B','Tính minh bạch trong quản lý tài chính yêu cầu phải báo cáo chênh lệch thực tế.'),(41,12,'Thứ tự ưu tiên bưng bê đồ uống ra bàn cho nhóm khách hàng gồm: Người già, Trẻ em, Phụ nữ và Nam giới là gì?','Nam giới -> Phụ nữ -> Trẻ em -> Người già','Người già -> Trẻ em -> Phụ nữ -> Nam giới','Bưng món nào xong trước đưa trước','Để khách tự ra lấy','B','Quy chuẩn phục vụ ưu tiên theo thứ tự lịch sự: Người lớn tuổi -> Trẻ em -> Phụ nữ -> Nam giới.'),(42,12,'Khi bưng bê khay đựng nhiều ly nước, Phục vụ nên đặt tay và di chuyển như thế nào?','Một tay bê khay cao quá đầu','Dùng 2 tay giữ chắc khay ngang tầm ngực/bụng, di chuyển nhẹ nhàng không dậm chân','Chạy thật nhanh để nước không bị nguội','Chỉ cầm từng ly bằng tay','B','Đảm bảo an toàn, không làm đổ nước và tránh va chạm người xung quanh.'),(43,13,'Quy trình Bus Table (dọn bàn) tiêu chuẩn sau khi khách rời đi cần hoàn tất trong bao lâu?','Trong vòng 60 giây','Trong vòng 5 phút','10 phút','Chờ cuối ca dọn một lượt','A','Dọn bàn sạch sẽ trong 60 giây để sẵn sàng đón lượt khách tiếp theo.'),(44,13,'Khi lau dọn bàn ăn/uống của khách, khăn lau bàn tiêu chuẩn phải như thế nào?','Khăn khô lau sơ qua','Khăn ẩm sạch đã giặt qua dung dịch khử khuẩn chuyên dụng','Khăn lau sàn dùng lại','Giấy ăn của khách thừa','B','Sử dụng khăn ẩm khử khuẩn riêng biệt cho khu vực bàn khách ngồi.'),(45,14,'Nhiệm vụ quan trọng nhất của Trưởng ca trong quy trình Closing (Đóng ca) là gì?','Tắt điện thoại cửa hàng','Kiểm tra checklist niêm phong, két tiền, khóa cửa và an toàn cháy nổ','Về sớm trước nhân viên','Không cần kiểm tra máy móc','B','Trưởng ca chịu trách nhiệm bàn giao tài sản và an toàn cửa hàng cuối ca.'),(46,15,'Trong giờ cao điểm (Peak-hour), nếu quầy Barista bị ùn tắc đơn hàng, Trưởng ca nên điều phối thế nào?','Bắt Barista làm nhanh hơn','Ngừng nhận đơn tại POS','Điều động nhân viên Phục vụ/Thu ngân có kỹ năng sang hỗ trợ khâu dán tem/dán nắp/phụ lấy nguyên liệu','Tự vào làm hết thay nhân viên','C','Linh hoạt điều phối nhân sự phụ trợ giúp giải tỏa áp lực cho vị trí nghẽn (bottleneck).'),(47,16,'Nguyên tắc Sandwich khi góp ý/feedback hiệu quả cho nhân viên vi phạm quy trình là gì?','Khen ngợi -> Chỉ ra điểm cần cải thiện -> Động viên & Kỳ vọng tích cực','Chỉ trích ngay lập tức -> Phạt -> Cho về','Bỏ qua lỗi lần đầu','So sánh nhân viên này với nhân viên khác','A','Phương pháp Sandwich giúp nhân viên dễ tiếp thu góp ý mà không bị tiêu cực.'),(49,10,'Trường hợp máy in POS bị kẹt giấy/hết giấy trong giờ đông khách, Thu ngân xử lý ra sao?','Tắt máy POS không bán nữa','Báo khách đợi 15 phút','Xử lý thay giấy nhanh hoặc nhờ hỗ trợ','Đổi sang thu tiền mặt không xuất bill','C','Cần chủ động thay giấy hoặc nhờ hỗ trợ nhanh để tránh nghẽn quầy.'),(51,10,'Nhiệm vụ đầu tiên của Thu ngân khi khách hàng bắt đầu order tại quầy là gì?','In hóa đơn ngay','Chào hỏi khách hàng','Nhập tên món','Báo giá tiền','B','Cần chào hỏi niềm nở trước khi thực hiện thao tác order.'),(53,10,'Khi ghi nhận ghi chú đơn hàng (ví dụ: ít đường, không đá), Thu ngân cần làm gì?','Không cần ghi, chỉ nói miệng','Nhập chính xác vào hệ thống POS','Tự nhớ trong đầu','Ghi ra giấy nháp riêng','B','Phải nhập trực tiếp vào hệ thống POS để bộ phận pha chế nhận đúng thông tin.'),(57,4,'Nhiệt độ bảo quản sữa tươi trong tủ mát quầy bar cần duy trì ở mức nào?','Dưới 0°C','Từ 0 đến 5°C','Từ 8 đến 12°C','Nhiệt độ phòng','B','Sữa tươi cần bảo quản 0–5°C để hạn chế vi khuẩn phát triển.'),(58,4,'Khi mở ca phát hiện ổ cắm thiết bị bị ướt, nhân viên cần làm gì?','Lau khô rồi bật thiết bị ngay','Ngắt nguồn, báo trưởng ca và không sử dụng ổ cắm đó','Chuyển sang ổ cắm gần đó','Tiếp tục cắm và theo dõi','B','An toàn điện được ưu tiên trước khi vận hành thiết bị.'),(59,4,'Hạng mục nào bắt buộc kiểm tra trong checklist mở ca?','Lịch nghỉ của nhân viên','Bảng giá của cửa hàng khác','Hạn sử dụng nguyên liệu trong tủ','Doanh thu của ca trước','C','Nguyên liệu hết hạn phải được loại bỏ trước khi mở bán.'),(60,5,'Nguyên tắc xuất kho nguyên liệu giúp giảm hao hụt là gì?','Nhập trước hoặc hết hạn trước thì xuất trước (FIFO/FEFO)','Xuất ngẫu nhiên','Ưu tiên dùng hàng mới nhập','Nhập sau xuất trước','A','FIFO/FEFO hạn chế nguyên liệu tồn lâu và hết hạn.'),(61,5,'Sổ ghi nhận hủy nguyên liệu (waste log) dùng để làm gì?','Chấm công nhân viên','Ghi phản hồi khách hàng','Ghi số đồ uống bán được','Ghi nguyên liệu bị hủy, lý do và số lượng để phân tích thất thoát','D','Waste log là căn cứ tìm nguyên nhân thất thoát.'),(62,5,'Tỷ lệ hao hụt sữa tăng đột biến trong tuần, bước xử lý đầu tiên là gì?','Đổi nhà cung cấp sữa','Giảm định lượng sữa trong công thức','Đối chiếu waste log, tồn kho và thao tác đánh sữa của từng ca','Ngừng bán đồ uống có sữa','C','Cần xác định nguyên nhân trước khi thay đổi quy trình.'),(63,6,'Shot espresso chảy quá nhanh, dưới 20 giây, thường do nguyên nhân nào?','Nhiệt độ nước quá thấp','Tách đựng quá nóng','Cà phê xay quá mịn','Cà phê xay quá thô hoặc nén chưa đủ lực','D','Bột thô hoặc nén lỏng làm nước chảy qua quá nhanh.'),(64,6,'Tỷ lệ chiết xuất (brew ratio) phổ biến của một shot espresso double là bao nhiêu?','1:10','1:1','1:2','1:5','C','Ví dụ 18g cà phê cho khoảng 36g espresso.'),(65,6,'Espresso có vị chua gắt, thân mỏng thường cho thấy điều gì?','Chiết xuất thiếu (under-extraction)','Chiết xuất quá (over-extraction)','Cà phê rang quá đậm','Sữa bị hỏng','A','Chiết xuất thiếu chưa lấy đủ hợp chất tạo vị ngọt và thân.'),(66,7,'Nhiệt độ sữa phù hợp khi đánh microfoam cho latte là bao nhiêu?','Đun sôi 100°C','30–40°C','55–65°C','80–90°C','C','Quá 65°C sữa mất vị ngọt và bọt kém mịn.'),(67,7,'Trước khi đánh sữa cần làm gì với vòi hơi (steam wand)?','Không cần thao tác gì','Xả hơi để loại nước đọng trong vòi','Ngâm vào nước lạnh','Lau bằng khăn khô rồi dùng ngay','B','Nước đọng làm loãng sữa và ảnh hưởng chất lượng bọt.'),(68,7,'Sữa đánh xong có bọt to, rời rạc là do nguyên nhân nào?','Đưa quá nhiều không khí do vòi hơi ở quá nông','Sữa quá lạnh','Dùng ca đánh sữa bằng inox','Đặt đầu vòi hơi quá sâu','A','Vòi quá nông hút nhiều khí tạo bọt lớn.'),(69,8,'Để tạo hình latte art rõ nét, sữa cần có đặc điểm gì?','Bọt dày và khô','Microfoam mịn, bóng, hòa đều với sữa','Sữa đã nguội','Không có bọt','B','Microfoam mịn mới chảy và tạo hình được.'),(70,8,'Ở giai đoạn rót đầu tiên (hòa sữa vào espresso), ca sữa nên đặt thế nào?','Ở trên cao, rót dòng nhỏ để sữa chìm dưới lớp crema','Nghiêng 90 độ','Rót thật nhanh','Sát mặt cốc','A','Giai đoạn hòa giữ crema làm nền cho hình vẽ.'),(71,8,'Hình trái tim bị lệch, bè sang hai bên thường do lỗi nào?','Sữa quá ít bọt','Cốc quá lớn','Không rót vào tâm cốc, đưa ca sữa không đều tay','Espresso quá đậm','C','Điểm rót và nhịp tay quyết định độ cân đối của hình.'),(72,8,'Khách gọi latte mang đi có nắp đậy, barista nên làm gì?','Dùng sữa nguội','Bỏ qua tỷ lệ bọt và đổ đầy sữa','Vẫn giữ đúng tỷ lệ sữa và bọt theo công thức; latte art là tùy chọn','Tăng gấp đôi lượng bọt','C','Chất lượng đồ uống không phụ thuộc vào việc có vẽ hình.'),(73,9,'Backflush máy espresso khi đóng ca nhằm mục đích gì?','Làm sạch đầu group và đường xả bằng dung dịch chuyên dụng','Tăng áp suất máy','Tiết kiệm điện','Làm nóng máy','A','Dầu cà phê bám lâu ngày làm hỏng vị espresso.'),(74,9,'Gioăng và lưới lọc đầu group cần được xử lý thế nào?','Ngâm vào dầu ăn','Rửa bằng nước sôi mỗi giờ','Vệ sinh, kiểm tra định kỳ và thay khi bị chai cứng','Không bao giờ tháo ra','C','Gioăng chai làm rò nước và áp suất không ổn định.'),(75,9,'Trước khi tắt máy xay cuối ca cần làm gì với phễu hạt?','Không cần thao tác','Để nguyên hạt qua đêm','Xả hết hạt còn lại, vệ sinh phễu và bảo quản hạt kín','Đổ nước vào phễu','C','Hạt để ngoài không khí bị oxy hóa và mất hương.'),(76,9,'Trưởng ca xác nhận checklist đóng ca khi nào?','Khi nhân viên báo miệng là xong','Sau khi kiểm tra thực tế từng hạng mục và ký xác nhận','Khi hết giờ làm','Khi quản lý yêu cầu','B','Xác nhận phải dựa trên kiểm tra thực tế.'),(77,10,'Khách yêu cầu \"ít đường, thêm đá\" nhưng thu ngân không ghi chú vào đơn thì hậu quả là gì?','Hóa đơn bị sai giá','Máy POS báo lỗi','Không ảnh hưởng','Barista pha theo công thức chuẩn, đồ uống sai yêu cầu và phải làm lại','D','Ghi chú đơn là thông tin duy nhất barista nhận được về yêu cầu riêng.'),(78,11,'Nguyên tắc đúng khi bàn giao két tiền cuối ca là gì?','Bàn giao không cần đếm','Một người tự đếm','Hai người cùng đếm, đối chiếu báo cáo POS và ký biên bản','Chỉ đếm tiền lẻ','C','Hai người cùng xác nhận giúp phân định trách nhiệm.'),(79,11,'Phát hiện tiền mặt chênh lệch so với báo cáo POS, thu ngân phải làm gì?','Tự bù tiền và không báo','Ghi nhận số chênh lệch và báo trưởng ca kiểm tra giao dịch','Sửa số liệu trên POS','Bỏ qua nếu dưới 50.000 đồng','B','Mọi chênh lệch đều phải được ghi nhận và kiểm tra.'),(80,11,'Khi nhận một tờ tiền nghi là tiền giả, thu ngân nên làm gì?','Lịch sự đề nghị khách đổi tờ khác và báo trưởng ca','Xé bỏ tờ tiền','Từ chối phục vụ khách','Nhận và cho vào két','A','Xử lý lịch sự, không gây căng thẳng với khách.'),(81,12,'Khi mang đồ uống ra bàn, nhân viên phục vụ đặt ly theo nguyên tắc nào?','Đặt ở vị trí bất kỳ','Đặt từ phía bên phải khách, quai ly hướng về tay phải khách','Đưa tận tay khách','Để khay giữa bàn cho khách tự lấy','B','Giúp khách cầm ly thuận tiện và không làm đổ.'),(82,12,'Theo quy trình cửa hàng, một khay nên bưng tối đa bao nhiêu ly?','Tối đa 4–5 ly, ly nặng đặt ở giữa khay','Khoảng 10 ly','Chỉ 1 ly','Không giới hạn','A','Giữ trọng tâm khay ổn định, tránh đổ vỡ.'),(83,12,'Khách phàn nàn đồ uống bị sai món, nhân viên phục vụ nên làm gì?','Đề nghị khách uống tạm','Bỏ qua phàn nàn','Giải thích đó là lỗi của barista','Xin lỗi, ghi nhận và đổi đúng món ngay','D','Ưu tiên khắc phục trải nghiệm của khách.'),(84,13,'Tiêu chuẩn \"bus table 60 giây\" có nghĩa là gì?','Khách phải rời bàn sau 60 giây','Lau bàn 60 lần mỗi ngày','Kiểm tra sảnh mỗi 60 phút','Dọn xong bàn trong 60 giây sau khi khách rời đi','D','Bàn sạch nhanh giúp đón khách mới và giữ sảnh gọn gàng.'),(85,13,'Thứ tự dọn bàn đúng là gì?','Chỉ xếp lại ghế','Thu rác và để ly lại','Lau bàn trước rồi mới thu ly','Thu ly, đĩa, rác; lau bàn bằng khăn ẩm có dung dịch; xếp lại ghế','D','Thu dọn trước rồi mới vệ sinh bề mặt.'),(86,13,'Khăn lau bàn khách và khăn lau quầy pha chế phải được quản lý thế nào?','Thay mỗi tuần một lần','Dùng chung một loại','Phân biệt riêng theo màu hoặc khu vực để tránh nhiễm chéo','Giặt chung với khăn tay','C','Tách khăn theo khu vực là yêu cầu vệ sinh an toàn thực phẩm.'),(87,14,'Mục đích chính của checklist mở và đóng ca là gì?','Tính lương','Báo cáo doanh thu','Chấm điểm nhân viên','Bảo đảm các bước vận hành, an toàn, vệ sinh được thực hiện đủ và có người chịu trách nhiệm','D','Checklist chuẩn hóa vận hành giữa các ca.'),(88,14,'Một hạng mục checklist chưa đạt khi mở ca, trưởng ca nên làm gì?','Chờ quản lý đến xử lý','Đánh dấu đạt để kịp mở cửa','Ghi nhận, phân công xử lý và chỉ mở bán khi bảo đảm an toàn','Bỏ qua hạng mục đó','C','Không đánh đổi an toàn để mở cửa đúng giờ.'),(89,14,'Checklist đã hoàn thành cần được xử lý thế nào?','Hủy cuối ngày','Lưu lại để đối chiếu khi có sự cố','Cho khách xem','Không cần lưu','B','Checklist là bằng chứng truy vết khi có sự cố.'),(90,14,'Thời điểm phù hợp để kiểm tra tồn kho nguyên liệu chính trong ca là khi nào?','Đầu ca và trước giờ cao điểm','Khi khách phàn nàn','Không cần kiểm tra','Chỉ vào cuối tháng','A','Tránh hết nguyên liệu giữa giờ cao điểm.'),(91,15,'Khi lượng đơn tăng đột biến, ưu tiên điều phối đầu tiên của trưởng ca là gì?','Rút gọn thực đơn ngay','Cho nhân viên nghỉ giải lao','Bố trí thêm người hỗ trợ khâu đang ùn tắc (pha chế hoặc thu ngân)','Tạm đóng cửa','C','Giải phóng điểm nghẽn giúp giảm thời gian chờ.'),(92,15,'Phân công vị trí trong giờ cao điểm nên dựa trên tiêu chí nào?','Ngẫu nhiên','Năng lực và kết quả đào tạo của từng nhân viên','Chỉ thâm niên','Nguyện vọng của nhân viên','B','Người đã đạt chuẩn vị trí nào nên đứng vị trí đó.'),(93,15,'Để giảm thời gian chờ của khách trong giờ cao điểm, trưởng ca có thể làm gì?','Bỏ qua các đơn phức tạp','Tăng giá bán','Ngừng nhận đơn','Theo dõi thời gian ra món và thông báo thời gian chờ dự kiến cho khách','D','Chủ động thông tin giúp khách chấp nhận thời gian chờ.'),(94,15,'Sau giờ cao điểm, trưởng ca nên làm gì?','Phạt toàn bộ nhân viên','Cho nghỉ sớm','Không cần làm gì','Tổng kết nhanh các điểm nghẽn và nhắc cải thiện trong ca','D','Rút kinh nghiệm ngay khi thông tin còn mới.'),(95,16,'Nguyên tắc của một buổi phản hồi 1-1 hiệu quả là gì?','Chỉ nêu các lỗi','Nêu hành vi cụ thể, tác động và thống nhất hành động cải thiện','Nói chung chung để tránh căng thẳng','Phản hồi trước tập thể','B','Phản hồi cụ thể giúp nhân viên biết phải thay đổi điều gì.'),(96,16,'Khi đánh giá nhân viên, quản lý nên dựa vào đâu?','Tiêu chí đã công bố, kết quả quan sát và dữ liệu đào tạo','Chỉ thâm niên','Ý kiến của một khách hàng','Cảm tính','A','Căn cứ rõ ràng giúp đánh giá công bằng.'),(97,16,'Mục tiêu cải thiện sau buổi 1-1 nên được đặt thế nào?','Không cần đặt','Nhân viên tự đặt, không trao đổi','Mơ hồ để linh hoạt','Cụ thể, đo được và có thời hạn','D','Mục tiêu đo được mới theo dõi được.'),(98,16,'Tần suất phản hồi 1-1 phù hợp với nhân viên mới là bao lâu?','Không cần','Mỗi năm một lần','Định kỳ ngắn, hằng tuần hoặc hai tuần, trong giai đoạn đầu','Chỉ khi vi phạm','C','Nhân viên mới cần phản hồi thường xuyên để điều chỉnh sớm.');
+/*!40000 ALTER TABLE `cau_hoi_kiem_tra` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `chuong_trinh_dao_tao`
+--
+
+LOCK TABLES `chuong_trinh_dao_tao` WRITE;
+/*!40000 ALTER TABLE `chuong_trinh_dao_tao` DISABLE KEYS */;
+INSERT INTO `chuong_trinh_dao_tao` VALUES (1,'Làm Việc An Toàn','Quy tắc an toàn lao động, phòng cháy chữa cháy và vệ sinh thực phẩm cơ bản.','Nhận diện nguy cơ điện, nước và nhiệt tại quầy bar; kiểm tra an toàn trước khi bật thiết bị lúc mở ca.\nÁp dụng quy định vệ sinh an toàn thực phẩm: rửa tay, đeo găng, bảo quản sữa ở 0–5°C và loại bỏ nguyên liệu hết hạn.\nGiữ vệ sinh máy pha trong ca: xả đầu group sau mỗi shot, lau và xả hơi vòi đánh sữa, dùng khăn riêng cho từng khu vực.\nSơ cứu bỏng hơi nước, đứt tay, trượt ngã và báo cáo sự cố lao động cho trưởng ca.\nSử dụng bình chữa cháy CO2/bột và hướng dẫn khách, nhân viên di tản khi có báo động cháy.',NULL,'ALL STAFF',1),(2,'Kỹ năng cá nhân','Phương pháp giao tiếp nội bộ hiệu quả và phối hợp giữa các bộ phận trong ca.','Lắng nghe chủ động: không ngắt lời, xác nhận lại yêu cầu của khách và đồng nghiệp.\nXử lý phản hồi chưa hài lòng theo quy tắc LAST: Lắng nghe – Xin lỗi – Giải quyết – Cảm ơn.\nBàn giao ca đầy đủ thông tin, không để sót việc giữa ca sáng và ca chiều.\nSắp xếp thứ tự ưu tiên và quản lý thời gian để phục vụ đúng tốc độ giờ cao điểm.\nThấu cảm và xây dựng quan hệ tin cậy với khách hàng, đồng nghiệp; giải quyết xung đột bình tĩnh, tôn trọng.\nỨng xử chuyên nghiệp khi tham gia họp trực tuyến.',NULL,'ALL STAFF',1),(3,'Kỹ Thuật Espresso & Đánh Sữa Nâng Cao','Tối ưu chiết xuất Espresso, kỹ thuật tạo bọt sữa Microfoam và thực hành Latte Art.','Nắm thông số chuẩn của shot double: 18g bột cho 36–40ml (tỷ lệ 1:2), thời gian 25–30 giây, áp suất 9 bar, lực nén 13–15kg.\nDial-in máy xay: chỉnh mịn hơn khi shot chảy nhanh, nhận biết chiết xuất thiếu (chua, thân mỏng) và chiết xuất quá.\nĐánh sữa microfoam: xả hơi trước khi đánh, cấp khí đến 30–37°C, hoàn tất ở 60–65°C.\nRót latte art Heart và Rosetta rõ nét; giữ đúng tỷ lệ sữa và bọt cả với ly mang đi.\nVệ sinh vòi hơi và đầu group ngay sau khi sử dụng để giữ chất lượng đồ uống.',NULL,'Barista',1),(4,'Nghiệp Vụ Thu Ngân & Quy Trình Order POS','Thao tác máy POS, quản lý két tiền ca, quy trình thanh toán và tư vấn Upsell.','Chào khách, nhập order và ghi chú tùy chỉnh (đường, đá, sữa) chính xác trên máy POS.\nXử lý nhanh sự cố máy in hóa đơn khi quán đông khách.\nQuản lý tiền thối đầu ca, phân loại mệnh giá và xử lý lịch sự khi nhận tiền nghi giả.\nChốt két cuối ca: hai người cùng đếm, đối chiếu báo cáo POS, ghi biên bản chênh lệch và báo trưởng ca.',NULL,'Thu ngân',1),(5,'Nghiệp Vụ Phục Vụ & Chăm Sóc Khách Hàng','Quy chuẩn chào đón, bưng bê đồ uống an toàn, duy trì vệ sinh sảnh và xử lý yêu cầu.','Chào đón khách và phục vụ đồ uống theo thứ tự ưu tiên: người lớn tuổi, trẻ em, phụ nữ, nam giới.\nBưng khay an toàn bằng hai tay, tối đa 4–5 ly, ly nặng đặt giữa khay; đặt ly từ phía bên phải khách.\nDọn bàn trong 60 giây sau khi khách rời đi: thu ly đĩa rác, lau bằng khăn ẩm có dung dịch, xếp lại ghế.\nQuản lý khăn lau riêng theo khu vực, giữ sảnh và nhà vệ sinh sạch trong suốt ca.\nXử lý khi khách báo sai món: xin lỗi, ghi nhận và đổi đúng món ngay.',NULL,'Phục vụ',1),(6,'Quy Trình Phục Vụ & Vận Hành Ca (SOP)','Quy trình Opening/Closing ca, phân công vị trí giờ cao điểm và kiểm soát hao hụt.','Thực hiện checklist mở ca: an toàn điện nước, tình trạng máy móc, hạn dùng và tồn kho nguyên liệu.\nThực hiện checklist đóng ca: backflush máy pha, vệ sinh máy xay, chốt két, niêm phong, khóa cửa và kiểm tra an toàn cháy nổ.\nXử lý hạng mục checklist chưa đạt trước khi mở bán; ký xác nhận và lưu checklist để đối chiếu.\nĐiều phối nhân sự giờ cao điểm theo năng lực, bổ sung người cho khâu ùn tắc và thông báo thời gian chờ cho khách.\nTổng kết điểm nghẽn sau giờ cao điểm để cải thiện ca sau.',NULL,'Trưởng ca',2),(7,'Quản Trị Cửa Hàng & Phát Triển Đội Ngũ','Quản lý chi phí P&L, lập kế hoạch doanh số, đánh giá nhân sự và giải quyết xung đột.','Tính tỷ lệ hao hụt và kiểm soát chi phí giá vốn (COGS) của cửa hàng.\nÁp dụng nguyên tắc FIFO/FEFO và sổ hủy nguyên liệu (waste log) để tìm nguyên nhân thất thoát.\nĐánh giá nhân viên dựa trên tiêu chí đã công bố, kết quả quan sát và dữ liệu đào tạo.\nTổ chức buổi phản hồi 1-1: nêu hành vi cụ thể, tác động và thống nhất mục tiêu cải thiện có thời hạn.',NULL,'Quản lý cửa hàng',3);
+/*!40000 ALTER TABLE `chuong_trinh_dao_tao` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `cua_hang`
+--
+
+LOCK TABLES `cua_hang` WRITE;
+/*!40000 ALTER TABLE `cua_hang` DISABLE KEYS */;
+INSERT INTO `cua_hang` VALUES (1,1,'CH-Q1-01','Flagship Quận 1 - Hồ Tùng Mậu','Số 12 Hồ Tùng Mậu, P. Bến Nghé, Quận 1','2026-09-26 13:48:40','2026-09-26 13:48:40'),(2,1,'CH-Q1-02','BrewLearn Bùi Viện','84 Bùi Viện, P. Phạm Ngũ Lão, Quận 1','2026-09-26 13:48:40','2026-09-26 13:48:40'),(3,1,'CH-Q3-01','BrewLearn Lê Văn Sỹ','220 Lê Văn Sỹ, Phường 14, Quận 3','2026-09-26 13:48:40','2026-09-26 13:48:40'),(4,1,'CH-Q10-01','BrewLearn Sư Vạn Hạnh','756 Sư Vạn Hạnh, Phường 12, Quận 10','2026-09-26 13:48:40','2026-09-26 13:48:40'),(5,2,'CH-Q2-01','BrewLearn Thảo Điền','15 Xuân Thủy, P. Thảo Điền, TP. Thủ Đức','2026-09-26 13:48:40','2026-09-26 13:48:40'),(6,2,'CH-PN-01','BrewLearn Phan Xích Long','192 Phan Xích Long, Phường 2, Phú Nhuận','2026-09-26 13:48:40','2026-09-26 13:48:40'),(7,2,'CH-BT-01','BrewLearn Landmark 81','Tầng Trệt Landmark 81, Bình Thạnh','2026-09-26 13:48:40','2026-09-26 13:48:40'),(8,3,'CH-Q5-01','BrewLearn Nguyễn Trãi','135 Nguyễn Trãi, Phường 2, Quận 5','2026-09-26 13:48:40','2026-09-26 13:48:40'),(9,3,'CH-Q7-01','BrewLearn Crescent Mall','Tầng 4 Crescent Mall, Tôn Dật Tiên, Quận 7','2026-09-26 13:48:40','2026-09-26 13:48:40'),(10,3,'CH-Q10-02','BrewLearn Vạn Hạnh Mall','11 Sư Vạn Hạnh, Phường 12, Quận 10','2026-09-26 13:48:40','2026-09-26 13:48:40');
+/*!40000 ALTER TABLE `cua_hang` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `danh_gia_nang_luc`
+--
+
+LOCK TABLES `danh_gia_nang_luc` WRITE;
+/*!40000 ALTER TABLE `danh_gia_nang_luc` DISABLE KEYS */;
+INSERT INTO `danh_gia_nang_luc` VALUES (43,2,1,NULL,'Tiêu chuẩn năng lực Thu ngân','2026-10-13 02:14:04','2026-10-13 08:30:00',86.3,'Thao tác thu ngân và đối soát cuối ca chính xác; giao tiếp với khách rõ ràng.','DaDuyet','2026-10-10 07:00:00','2026-10-13 02:15:50',84,86,88,85,89,NULL,NULL,'{\"ky_nang\": 86, \"phuc_vu\": 85, \"nghiep_vu\": 84, \"quy_trinh\": 88, \"tac_phong\": 89}',1,6,'2026-10-13 09:15:50',NULL),(44,3,1,NULL,'Tiêu chuẩn năng lực Barista','2026-10-13 02:44:16','2026-10-13 09:00:00',81.1,NULL,'DaDuyet','2026-10-10 07:05:00','2026-10-13 02:47:12',80,80,90,69,85,'[\"hoclaibaihoc\", \"danhgialai\"]','{\"source\": \"Trưởng ca đề xuất\", \"status\": \"ChoPheDuyet\", \"details\": {\"danhgialai\": {\"criteria\": [\"phuc_vu\"], \"assessor_id\": \"1\", \"assessment_date\": \"2026-10-26\"}, \"hoclaibaihoc\": {\"course_id\": \"5\", \"lesson_ids\": [\"9\"]}}, \"proposed_by\": 1}','{\"ky_nang\": 80, \"phuc_vu\": 69, \"nghiep_vu\": 80, \"quy_trinh\": 90, \"tac_phong\": 85}',0,6,'2026-10-13 09:47:12',NULL),(50,14,1,NULL,'Tiêu chuẩn năng lực Barista','2026-07-31 03:30:00','2026-07-31 10:00:00',90.2,'Chiết xuất espresso ổn định, tuân thủ quy trình vệ sinh máy.','DaDuyet','2026-07-28 03:00:00','2026-07-31 08:00:00',90,92,88,90,90,NULL,NULL,'{\"ky_nang\": 92, \"phuc_vu\": 90, \"nghiep_vu\": 90, \"quy_trinh\": 88, \"tac_phong\": 90}',1,6,'2026-07-31 15:00:00',NULL),(51,15,5,NULL,'Tiêu chuẩn năng lực Thu ngân','2026-05-12 03:30:00','2026-05-12 10:00:00',85.1,'Thao tác POS nhanh, cần chú ý kiểm đếm tiền lẻ.','DaDuyet','2026-05-09 03:00:00','2026-05-12 08:00:00',84,86,85,86,84,NULL,NULL,'{\"ky_nang\": 86, \"phuc_vu\": 86, \"nghiep_vu\": 84, \"quy_trinh\": 85, \"tac_phong\": 84}',1,6,'2026-05-12 15:00:00',NULL),(52,15,5,NULL,'Tiêu chuẩn năng lực Thu ngân','2026-08-12 03:30:00','2026-08-12 10:00:00',90.0,'Thực hiện ổn định các tiêu chí công việc.','DaDuyet','2026-08-09 03:00:00','2026-08-12 08:00:00',90,90,90,90,90,NULL,NULL,'{\"ky_nang\": 90, \"phuc_vu\": 90, \"nghiep_vu\": 90, \"quy_trinh\": 90, \"tac_phong\": 90}',1,6,'2026-08-12 15:00:00',NULL),(57,16,1,NULL,'Tiêu chuẩn năng lực Phục vụ','2026-02-23 03:30:00','2026-02-23 10:00:00',84.8,'Phục vụ bàn đúng quy trình, cần duy trì tốc độ giờ cao điểm.','DaDuyet','2026-02-20 03:00:00','2026-02-23 08:00:00',82,84,86,88,85,NULL,NULL,'{\"ky_nang\": 84, \"phuc_vu\": 88, \"nghiep_vu\": 82, \"quy_trinh\": 86, \"tac_phong\": 85}',1,6,'2026-02-23 15:00:00',NULL),(58,16,1,NULL,'Tiêu chuẩn năng lực Phục vụ','2026-05-24 03:30:00','2026-05-24 10:00:00',87.8,'Tiến bộ rõ ở phối hợp bàn giao ca.','DaDuyet','2026-05-21 03:00:00','2026-05-24 08:00:00',86,88,88,90,87,NULL,NULL,'{\"ky_nang\": 88, \"phuc_vu\": 90, \"nghiep_vu\": 86, \"quy_trinh\": 88, \"tac_phong\": 87}',1,6,'2026-05-24 15:00:00',NULL),(59,16,1,NULL,'Tiêu chuẩn năng lực Phục vụ','2026-08-25 03:30:00','2026-08-25 10:00:00',90.1,'Thực hiện ổn định các tiêu chí công việc.','DaDuyet','2026-08-22 03:00:00','2026-08-25 08:00:00',90,90,92,90,88,NULL,NULL,'{\"ky_nang\": 90, \"phuc_vu\": 90, \"nghiep_vu\": 90, \"quy_trinh\": 92, \"tac_phong\": 88}',1,6,'2026-08-25 15:00:00',NULL),(68,17,5,NULL,'Tiêu chuẩn năng lực Barista','2026-07-31 03:30:00','2026-07-31 10:00:00',90.1,'Đánh sữa và tạo hình ổn định.','DaDuyet','2026-07-28 03:00:00','2026-07-31 08:00:00',90,90,92,88,90,NULL,NULL,'{\"ky_nang\": 90, \"phuc_vu\": 88, \"nghiep_vu\": 90, \"quy_trinh\": 92, \"tac_phong\": 90}',1,6,'2026-07-31 15:00:00',NULL),(74,18,1,NULL,'Tiêu chuẩn năng lực Thu ngân','2026-07-29 03:30:00','2026-07-29 10:00:00',89.8,'Đối soát quỹ và xử lý hóa đơn chính xác.','DaDuyet','2026-07-26 03:00:00','2026-07-29 08:00:00',90,88,92,90,90,NULL,NULL,'{\"ky_nang\": 88, \"phuc_vu\": 90, \"nghiep_vu\": 90, \"quy_trinh\": 92, \"tac_phong\": 90}',1,6,'2026-07-29 15:00:00',NULL),(75,19,5,NULL,'Tiêu chuẩn năng lực Phục vụ','2026-08-05 03:30:00','2026-08-05 10:00:00',86.7,'Phối hợp bàn giao ca tốt, phục vụ đúng chuẩn.','DaDuyet','2026-08-02 03:00:00','2026-08-05 08:00:00',86,88,85,88,86,NULL,NULL,'{\"ky_nang\": 88, \"phuc_vu\": 88, \"nghiep_vu\": 86, \"quy_trinh\": 85, \"tac_phong\": 86}',1,6,'2026-08-05 15:00:00',NULL),(81,14,1,NULL,'Tiêu chuẩn năng lực Barista',NULL,'2026-10-28 10:00:00',NULL,NULL,'ChoDanhGia','2026-10-25 09:00:59','2026-10-25 09:00:59',0,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(82,18,1,NULL,'Tiêu chuẩn năng lực Thu ngân','2026-10-25 08:40:00','2026-10-25 15:00:00',87.8,'Thao tác POS nhanh, đối chiếu ghi chú đơn chính xác; giao tiếp lịch sự trong giờ cao điểm.','ChoPheDuyet','2026-10-22 08:00:00','2026-10-25 08:40:00',88,85,90,86,92,NULL,NULL,'{\"ky_nang\": 85, \"phuc_vu\": 86, \"nghiep_vu\": 88, \"quy_trinh\": 90, \"tac_phong\": 92}',1,NULL,NULL,NULL),(83,17,5,NULL,'Tiêu chuẩn năng lực Barista','2026-10-24 03:05:00','2026-10-24 09:30:00',75.3,'Thao tác đánh sữa chưa ổn định trong giờ cao điểm.','TraLai','2026-10-21 02:30:00','2026-10-24 03:30:00',80,65,75,80,85,NULL,'{\"source\": \"Trưởng ca đề xuất\", \"details\": {\"theodoica\": {\"behavior\": \"Kèm cặp thao tác còn yếu trong 5 ca liên tiếp.\", \"shift_count\": 5}}}','{\"ky_nang\": 65, \"phuc_vu\": 80, \"nghiep_vu\": 80, \"quy_trinh\": 75, \"tac_phong\": 85}',0,6,'2026-10-24 10:30:00','Nhận xét chưa nêu cụ thể lỗi khi đánh sữa; bổ sung số ca theo dõi và mức nhiệt sữa cần đạt.'),(84,19,5,NULL,'Tiêu chuẩn năng lực Phục vụ',NULL,'2026-11-02 09:30:00',NULL,NULL,'ChoDanhGia','2026-10-26 02:00:00','2026-10-26 02:00:00',0,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(85,20,1,NULL,'Tiêu chuẩn năng lực Barista','2026-08-23 03:30:00','2026-08-23 10:00:00',77.6,'Kỹ năng đánh sữa microfoam chưa ổn định, latte art chưa đạt chuẩn; cần học lại và thực hành có kèm cặp.','DaDuyet','2026-08-20 03:00:00','2026-08-23 08:00:00',82,66,80,84,85,'[\"hoclaibaihoc\", \"theodoica\", \"danhgialai\"]','{\"source\": \"Trưởng ca đề xuất\", \"status\": \"ChoPheDuyet\", \"details\": {\"theodoica\": {\"behavior\": \"Đánh sữa microfoam và rót latte art trong ca\", \"until_date\": \"2026-09-25\", \"shift_count\": \"4\"}, \"danhgialai\": {\"criteria\": [\"ky_nang\"], \"assessor_id\": \"1\", \"assessment_date\": \"2026-09-29\"}, \"hoclaibaihoc\": {\"course_id\": \"3\", \"lesson_ids\": [\"6\"]}}, \"proposed_by\": 1}','{\"ky_nang\": 66, \"phuc_vu\": 84, \"nghiep_vu\": 82, \"quy_trinh\": 80, \"tac_phong\": 85}',0,6,'2026-08-23 15:00:00',NULL),(89,23,22,NULL,'Tiêu chuẩn năng lực Barista','2026-07-31 03:00:00','2026-07-31 10:00:00',89.2,'Chiết xuất ổn định, đúng định lượng; phối hợp tốt giờ cao điểm.','DaDuyet','2026-07-28 03:00:00','2026-07-31 04:00:00',90,88,92,86,90,NULL,NULL,'{\"ky_nang\": 88, \"phuc_vu\": 86, \"nghiep_vu\": 90, \"quy_trinh\": 92, \"tac_phong\": 90}',1,21,'2026-07-31 11:00:00',NULL),(90,24,22,NULL,'Tiêu chuẩn năng lực Thu ngân','2026-09-05 08:00:00','2026-09-05 15:00:00',85.6,'Thao tác POS chính xác, bàn giao két đúng quy trình.','DaDuyet','2026-09-02 08:00:00','2026-09-05 09:00:00',85,82,88,90,86,NULL,NULL,'{\"ky_nang\": 82, \"phuc_vu\": 90, \"nghiep_vu\": 85, \"quy_trinh\": 88, \"tac_phong\": 86}',1,21,'2026-09-05 16:00:00',NULL),(91,25,22,NULL,'Tiêu chuẩn năng lực Phục vụ',NULL,'2026-10-29 14:30:00',NULL,NULL,'ChoDanhGia','2026-10-26 09:02:49','2026-10-26 09:02:49',0,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(92,7,5,NULL,'Tiêu chuẩn năng lực Barista',NULL,'2026-10-31 14:00:00',NULL,NULL,'ChoDanhGia','2026-10-24 03:00:00','2026-10-24 03:00:00',0,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(93,23,22,NULL,'Tiêu chuẩn năng lực Barista',NULL,'2026-10-30 15:00:00',NULL,NULL,'ChoDanhGia','2026-10-24 02:00:00','2026-10-24 02:00:00',0,0,0,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(95,27,1,NULL,'Tiêu chuẩn năng lực Barista','2026-08-20 03:00:00','2026-08-20 10:00:00',72.9,'Kiến thức lý thuyết tốt nhưng thao tác chiết xuất chưa đạt định lượng, sữa đánh còn bọt lớn.','DaDuyet','2026-08-17 03:00:00','2026-08-20 04:00:00',78,62,72,80,82,NULL,'{\"source\": \"Trưởng ca đề xuất\", \"details\": {\"theodoica\": {\"behavior\": \"Kèm cặp thao tác chiết xuất espresso và đánh sữa microfoam theo định lượng chuẩn.\", \"shift_count\": 5}}}','{\"ky_nang\": 62, \"phuc_vu\": 80, \"nghiep_vu\": 78, \"quy_trinh\": 72, \"tac_phong\": 82}',0,6,'2026-08-20 11:00:00',NULL),(96,27,1,NULL,'Đánh giá lại lần 1: kỹ thuật espresso và microfoam','2026-09-05 03:00:00','2026-09-05 10:00:00',75.5,'Có cải thiện tốc độ, kỹ năng đánh sữa vẫn chưa ổn định.','DaDuyet','2026-09-02 03:00:00','2026-09-05 04:00:00',80,66,74,82,84,NULL,'{\"source\": \"Trưởng ca đề xuất\", \"details\": {\"theodoica\": {\"behavior\": \"Kèm cặp thao tác chiết xuất espresso và đánh sữa microfoam theo định lượng chuẩn.\", \"shift_count\": 5}}}','{\"ky_nang\": 66, \"phuc_vu\": 82, \"nghiep_vu\": 80, \"quy_trinh\": 74, \"tac_phong\": 84}',0,6,'2026-09-05 11:00:00',NULL),(97,27,1,NULL,'Đánh giá lại lần 2: kỹ thuật espresso và microfoam','2026-09-20 03:00:00','2026-09-20 10:00:00',76.4,'Thao tác ổn hơn khi vắng khách, giờ cao điểm vẫn sai định lượng.','DaDuyet','2026-09-17 03:00:00','2026-09-20 04:00:00',80,68,76,80,85,NULL,'{\"source\": \"Trưởng ca đề xuất\", \"details\": {\"theodoica\": {\"behavior\": \"Kèm cặp thao tác chiết xuất espresso và đánh sữa microfoam theo định lượng chuẩn.\", \"shift_count\": 5}}}','{\"ky_nang\": 68, \"phuc_vu\": 80, \"nghiep_vu\": 80, \"quy_trinh\": 76, \"tac_phong\": 85}',0,6,'2026-09-20 11:00:00',NULL),(98,27,1,NULL,'Đánh giá lại lần 3: kỹ thuật espresso và microfoam','2026-10-08 03:00:00','2026-10-08 10:00:00',77.2,'Sau ba vòng đào tạo lại, kỹ năng pha chế vẫn dưới mức yêu cầu.','DaDuyet','2026-10-05 03:00:00','2026-10-08 04:00:00',82,67,78,82,85,NULL,'{\"source\": \"Trưởng ca đề xuất\", \"details\": {\"theodoica\": {\"behavior\": \"Kèm cặp thao tác chiết xuất espresso và đánh sữa microfoam theo định lượng chuẩn.\", \"shift_count\": 5}}}','{\"ky_nang\": 67, \"phuc_vu\": 82, \"nghiep_vu\": 82, \"quy_trinh\": 78, \"tac_phong\": 85}',0,6,'2026-10-08 11:00:00',NULL);
+/*!40000 ALTER TABLE `danh_gia_nang_luc` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `du_doan_nguy_co`
+--
+
+LOCK TABLES `du_doan_nguy_co` WRITE;
+/*!40000 ALTER TABLE `du_doan_nguy_co` DISABLE KEYS */;
+INSERT INTO `du_doan_nguy_co` VALUES (345,2,1,0.2,'Thap','{\"details\": {\"tong_diem\": 2, \"ly_do_canh_bao\": [\"Có 5 lỗi nghiệp vụ trong 30 ngày gần nhất\"], \"diem_thanh_phan\": {\"quiz_tb\": 0, \"tien_do\": 0, \"kiem_tra\": 0, \"loi_nghiep_vu\": 2, \"quiz_chua_dat\": 0, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 0.0, \"calculated_at\": \"2026-10-29 15:35:57\", \"quiz_attempts\": 5, \"avg_quiz_score\": 92.0, \"co_du_lieu_quiz\": true, \"learning_visits\": 73, \"missing_reasons\": [], \"progress_percent\": 100.0, \"selected_results\": [{\"score\": 100.0, \"test_id\": 4, \"result_id\": 46, \"created_at\": \"2026-10-11 12:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 3, \"result_id\": 45, \"created_at\": \"2026-10-10 11:00:00\", \"pass_score\": 90.0}, {\"score\": 80.0, \"test_id\": 1, \"result_id\": 44, \"created_at\": \"2026-10-09 10:00:00\", \"pass_score\": 80.0}, {\"score\": 90.0, \"test_id\": 11, \"result_id\": 128, \"created_at\": \"2026-10-06 17:00:00\", \"pass_score\": 90.0}, {\"score\": 90.0, \"test_id\": 10, \"result_id\": 127, \"created_at\": \"2026-10-06 17:00:00\", \"pass_score\": 85.0}], \"failed_quiz_count\": 0, \"recent_error_count\": 5, \"completed_quiz_count\": 5, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": 43, \"applicable_quiz_count\": 5, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:57','2026-10-29 15:35:57','2026-10-29 15:35:57'),(346,3,1,0.7,'Cao','{\"details\": {\"tong_diem\": 7, \"ly_do_canh_bao\": [\"Có ít nhất 50% số bài đã làm chưa đạt\", \"Tiến độ đào tạo từ 50% đến dưới 80%\", \"Kết quả đánh giá năng lực gần nhất được duyệt là Chưa đạt\"], \"diem_thanh_phan\": {\"quiz_tb\": 2, \"tien_do\": 1, \"kiem_tra\": 3, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 3, \"danh_gia_gan_nhat\": 3}}, \"failed_rate\": 1.0, \"calculated_at\": \"2026-10-29 15:35:57\", \"quiz_attempts\": 3, \"avg_quiz_score\": 73.33333333333333, \"co_du_lieu_quiz\": true, \"learning_visits\": 10, \"missing_reasons\": [], \"progress_percent\": 65.0, \"selected_results\": [{\"score\": 80.0, \"test_id\": 3, \"result_id\": 49, \"created_at\": \"2026-10-11 12:00:00\", \"pass_score\": 90.0}, {\"score\": 80.0, \"test_id\": 2, \"result_id\": 48, \"created_at\": \"2026-10-10 11:00:00\", \"pass_score\": 85.0}, {\"score\": 60.0, \"test_id\": 1, \"result_id\": 47, \"created_at\": \"2026-10-09 10:00:00\", \"pass_score\": 80.0}], \"failed_quiz_count\": 3, \"recent_error_count\": 0, \"completed_quiz_count\": 3, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": 44, \"applicable_quiz_count\": 7, \"applicable_course_count\": 3, \"latest_assessment_failed\": true, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:57','2026-10-29 15:35:57','2026-10-29 15:35:57'),(347,4,1,0.5,'Cao','{\"details\": {\"tong_diem\": 5, \"ly_do_canh_bao\": [\"Điểm quiz trung bình dưới 60\", \"Có ít nhất 50% số bài đã làm chưa đạt\", \"Tiến độ đào tạo dưới 50%\"], \"diem_thanh_phan\": {\"quiz_tb\": 3, \"tien_do\": 2, \"kiem_tra\": 3, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 3, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 1.0, \"calculated_at\": \"2026-10-29 15:35:57\", \"quiz_attempts\": 3, \"avg_quiz_score\": 50.0, \"co_du_lieu_quiz\": true, \"learning_visits\": 7, \"missing_reasons\": [], \"progress_percent\": 45.0, \"selected_results\": [{\"score\": 50.0, \"test_id\": 4, \"result_id\": 52, \"created_at\": \"2026-10-11 12:00:00\", \"pass_score\": 80.0}, {\"score\": 60.0, \"test_id\": 3, \"result_id\": 51, \"created_at\": \"2026-10-10 11:00:00\", \"pass_score\": 90.0}, {\"score\": 40.0, \"test_id\": 1, \"result_id\": 50, \"created_at\": \"2026-10-09 10:00:00\", \"pass_score\": 80.0}], \"failed_quiz_count\": 3, \"recent_error_count\": 0, \"completed_quiz_count\": 3, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": null, \"applicable_quiz_count\": 5, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:57','2026-10-29 15:35:57','2026-10-29 15:35:57'),(348,7,1,0,'Thap','{\"details\": {\"tong_diem\": 0, \"ly_do_canh_bao\": [], \"diem_thanh_phan\": {\"quiz_tb\": 0, \"tien_do\": 0, \"kiem_tra\": 0, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 0, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 0.0, \"calculated_at\": \"2026-10-29 15:35:57\", \"quiz_attempts\": 7, \"avg_quiz_score\": 91.42857142857144, \"co_du_lieu_quiz\": true, \"learning_visits\": 52, \"missing_reasons\": [], \"progress_percent\": 100.0, \"selected_results\": [{\"score\": 90.0, \"test_id\": 8, \"result_id\": 132, \"created_at\": \"2026-10-21 17:00:00\", \"pass_score\": 85.0}, {\"score\": 90.0, \"test_id\": 7, \"result_id\": 131, \"created_at\": \"2026-10-21 17:00:00\", \"pass_score\": 85.0}, {\"score\": 80.0, \"test_id\": 6, \"result_id\": 130, \"created_at\": \"2026-10-21 17:00:00\", \"pass_score\": 80.0}, {\"score\": 80.0, \"test_id\": 4, \"result_id\": 129, \"created_at\": \"2026-10-21 17:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 3, \"result_id\": 61, \"created_at\": \"2026-10-11 12:00:00\", \"pass_score\": 90.0}, {\"score\": 100.0, \"test_id\": 2, \"result_id\": 60, \"created_at\": \"2026-10-10 11:00:00\", \"pass_score\": 85.0}, {\"score\": 100.0, \"test_id\": 1, \"result_id\": 59, \"created_at\": \"2026-10-09 10:00:00\", \"pass_score\": 80.0}], \"failed_quiz_count\": 0, \"recent_error_count\": 0, \"completed_quiz_count\": 7, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": null, \"applicable_quiz_count\": 7, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:57','2026-10-29 15:35:58','2026-10-29 15:35:58'),(349,8,1,NULL,'ChuaDuDuLieu','{\"failed_rate\": null, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 0, \"avg_quiz_score\": null, \"co_du_lieu_quiz\": false, \"learning_visits\": 18, \"missing_reasons\": [\"Cần kết quả của ít nhất hai bài kiểm tra khác nhau\"], \"progress_percent\": 30.0, \"selected_results\": [], \"failed_quiz_count\": 0, \"recent_error_count\": 0, \"completed_quiz_count\": 0, \"du_dieu_kien_du_doan\": false, \"latest_assessment_id\": null, \"applicable_quiz_count\": 5, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(350,9,1,0.2,'Thap','{\"details\": {\"tong_diem\": 2, \"ly_do_canh_bao\": [\"Có bài kiểm tra chưa đạt, chiếm dưới 50% số bài đã làm\", \"Tiến độ đào tạo từ 50% đến dưới 80%\"], \"diem_thanh_phan\": {\"quiz_tb\": 0, \"tien_do\": 1, \"kiem_tra\": 1, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 1, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 0.3333333333333333, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 3, \"avg_quiz_score\": 86.66666666666667, \"co_du_lieu_quiz\": true, \"learning_visits\": 44, \"missing_reasons\": [], \"progress_percent\": 75.0, \"selected_results\": [{\"score\": 100.0, \"test_id\": 4, \"result_id\": 64, \"created_at\": \"2026-10-11 12:00:00\", \"pass_score\": 80.0}, {\"score\": 80.0, \"test_id\": 3, \"result_id\": 63, \"created_at\": \"2026-10-10 11:00:00\", \"pass_score\": 90.0}, {\"score\": 80.0, \"test_id\": 1, \"result_id\": 62, \"created_at\": \"2026-10-09 10:00:00\", \"pass_score\": 80.0}], \"failed_quiz_count\": 1, \"recent_error_count\": 0, \"completed_quiz_count\": 3, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": null, \"applicable_quiz_count\": 5, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(351,10,1,0.4,'TrungBinh','{\"details\": {\"tong_diem\": 4, \"ly_do_canh_bao\": [\"Điểm quiz trung bình dưới 60\", \"Có ít nhất 50% số bài đã làm chưa đạt\", \"Tiến độ đào tạo từ 50% đến dưới 80%\"], \"diem_thanh_phan\": {\"quiz_tb\": 3, \"tien_do\": 1, \"kiem_tra\": 3, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 3, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 1.0, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 3, \"avg_quiz_score\": 40.0, \"co_du_lieu_quiz\": true, \"learning_visits\": 12, \"missing_reasons\": [], \"progress_percent\": 56.666666666666664, \"selected_results\": [{\"score\": 40.0, \"test_id\": 3, \"result_id\": 67, \"created_at\": \"2026-10-11 12:00:00\", \"pass_score\": 90.0}, {\"score\": 40.0, \"test_id\": 2, \"result_id\": 66, \"created_at\": \"2026-10-10 11:00:00\", \"pass_score\": 85.0}, {\"score\": 40.0, \"test_id\": 1, \"result_id\": 65, \"created_at\": \"2026-10-09 10:00:00\", \"pass_score\": 80.0}], \"failed_quiz_count\": 3, \"recent_error_count\": 0, \"completed_quiz_count\": 3, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": null, \"applicable_quiz_count\": 7, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(352,11,1,0.3,'TrungBinh','{\"details\": {\"tong_diem\": 3, \"ly_do_canh_bao\": [\"Điểm quiz trung bình từ 60 đến dưới 80\", \"Tiến độ đào tạo từ 50% đến dưới 80%\"], \"diem_thanh_phan\": {\"quiz_tb\": 2, \"tien_do\": 1, \"kiem_tra\": 2, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 1, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 0.3333333333333333, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 4, \"avg_quiz_score\": 73.33333333333333, \"co_du_lieu_quiz\": true, \"learning_visits\": 40, \"missing_reasons\": [], \"progress_percent\": 70.0, \"selected_results\": [{\"score\": 40.0, \"test_id\": 3, \"result_id\": 114, \"created_at\": \"2026-10-25 16:01:00\", \"pass_score\": 90.0}, {\"score\": 100.0, \"test_id\": 4, \"result_id\": 70, \"created_at\": \"2026-10-11 12:00:00\", \"pass_score\": 80.0}, {\"score\": 80.0, \"test_id\": 1, \"result_id\": 68, \"created_at\": \"2026-10-09 10:00:00\", \"pass_score\": 80.0}], \"failed_quiz_count\": 1, \"recent_error_count\": 0, \"completed_quiz_count\": 3, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": null, \"applicable_quiz_count\": 5, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(353,14,1,0,'Thap','{\"details\": {\"tong_diem\": 0, \"ly_do_canh_bao\": [], \"diem_thanh_phan\": {\"quiz_tb\": 0, \"tien_do\": 0, \"kiem_tra\": 0, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 0, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 0.0, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 6, \"avg_quiz_score\": 100.0, \"co_du_lieu_quiz\": true, \"learning_visits\": 65, \"missing_reasons\": [], \"progress_percent\": 100.0, \"selected_results\": [{\"score\": 100.0, \"test_id\": 8, \"result_id\": 82, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 85.0}, {\"score\": 100.0, \"test_id\": 7, \"result_id\": 81, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 85.0}, {\"score\": 100.0, \"test_id\": 6, \"result_id\": 80, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 4, \"result_id\": 79, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 3, \"result_id\": 78, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 90.0}, {\"score\": 100.0, \"test_id\": 2, \"result_id\": 77, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 85.0}], \"failed_quiz_count\": 0, \"recent_error_count\": 0, \"completed_quiz_count\": 6, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": 50, \"applicable_quiz_count\": 7, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(354,15,1,0,'Thap','{\"details\": {\"tong_diem\": 0, \"ly_do_canh_bao\": [], \"diem_thanh_phan\": {\"quiz_tb\": 0, \"tien_do\": 0, \"kiem_tra\": 0, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 0, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 0.0, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 5, \"avg_quiz_score\": 100.0, \"co_du_lieu_quiz\": true, \"learning_visits\": 65, \"missing_reasons\": [], \"progress_percent\": 100.0, \"selected_results\": [{\"score\": 100.0, \"test_id\": 11, \"result_id\": 87, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 90.0}, {\"score\": 100.0, \"test_id\": 10, \"result_id\": 86, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 85.0}, {\"score\": 100.0, \"test_id\": 4, \"result_id\": 85, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 3, \"result_id\": 84, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 90.0}, {\"score\": 100.0, \"test_id\": 1, \"result_id\": 83, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 80.0}], \"failed_quiz_count\": 0, \"recent_error_count\": 0, \"completed_quiz_count\": 5, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": 52, \"applicable_quiz_count\": 5, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(355,16,1,0,'Thap','{\"details\": {\"tong_diem\": 0, \"ly_do_canh_bao\": [], \"diem_thanh_phan\": {\"quiz_tb\": 0, \"tien_do\": 0, \"kiem_tra\": 0, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 0, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 0.0, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 4, \"avg_quiz_score\": 100.0, \"co_du_lieu_quiz\": true, \"learning_visits\": 65, \"missing_reasons\": [], \"progress_percent\": 100.0, \"selected_results\": [{\"score\": 100.0, \"test_id\": 13, \"result_id\": 91, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 85.0}, {\"score\": 100.0, \"test_id\": 12, \"result_id\": 90, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 4, \"result_id\": 89, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 3, \"result_id\": 88, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 90.0}], \"failed_quiz_count\": 0, \"recent_error_count\": 0, \"completed_quiz_count\": 4, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": 59, \"applicable_quiz_count\": 5, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(356,17,1,0,'Thap','{\"details\": {\"tong_diem\": 0, \"ly_do_canh_bao\": [], \"diem_thanh_phan\": {\"quiz_tb\": 0, \"tien_do\": 0, \"kiem_tra\": 0, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 0, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 0.0, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 6, \"avg_quiz_score\": 100.0, \"co_du_lieu_quiz\": true, \"learning_visits\": 65, \"missing_reasons\": [], \"progress_percent\": 100.0, \"selected_results\": [{\"score\": 100.0, \"test_id\": 8, \"result_id\": 97, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 85.0}, {\"score\": 100.0, \"test_id\": 7, \"result_id\": 96, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 85.0}, {\"score\": 100.0, \"test_id\": 6, \"result_id\": 95, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 4, \"result_id\": 94, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 3, \"result_id\": 93, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 90.0}, {\"score\": 100.0, \"test_id\": 2, \"result_id\": 92, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 85.0}], \"failed_quiz_count\": 0, \"recent_error_count\": 0, \"completed_quiz_count\": 6, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": 68, \"applicable_quiz_count\": 7, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(357,18,1,0,'Thap','{\"details\": {\"tong_diem\": 0, \"ly_do_canh_bao\": [], \"diem_thanh_phan\": {\"quiz_tb\": 0, \"tien_do\": 0, \"kiem_tra\": 0, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 0, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 0.0, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 5, \"avg_quiz_score\": 100.0, \"co_du_lieu_quiz\": true, \"learning_visits\": 65, \"missing_reasons\": [], \"progress_percent\": 100.0, \"selected_results\": [{\"score\": 100.0, \"test_id\": 11, \"result_id\": 102, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 90.0}, {\"score\": 100.0, \"test_id\": 10, \"result_id\": 101, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 85.0}, {\"score\": 100.0, \"test_id\": 4, \"result_id\": 100, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 3, \"result_id\": 99, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 90.0}, {\"score\": 100.0, \"test_id\": 1, \"result_id\": 98, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 80.0}], \"failed_quiz_count\": 0, \"recent_error_count\": 0, \"completed_quiz_count\": 5, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": 74, \"applicable_quiz_count\": 5, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(358,19,1,0,'Thap','{\"details\": {\"tong_diem\": 0, \"ly_do_canh_bao\": [], \"diem_thanh_phan\": {\"quiz_tb\": 0, \"tien_do\": 0, \"kiem_tra\": 0, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 0, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 0.0, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 4, \"avg_quiz_score\": 100.0, \"co_du_lieu_quiz\": true, \"learning_visits\": 65, \"missing_reasons\": [], \"progress_percent\": 100.0, \"selected_results\": [{\"score\": 100.0, \"test_id\": 13, \"result_id\": 106, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 85.0}, {\"score\": 100.0, \"test_id\": 12, \"result_id\": 105, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 4, \"result_id\": 104, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 3, \"result_id\": 103, \"created_at\": \"2026-03-12 00:00:00\", \"pass_score\": 90.0}], \"failed_quiz_count\": 0, \"recent_error_count\": 0, \"completed_quiz_count\": 4, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": 75, \"applicable_quiz_count\": 5, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(359,20,1,0.3,'TrungBinh','{\"details\": {\"tong_diem\": 3, \"ly_do_canh_bao\": [\"Kết quả đánh giá năng lực gần nhất được duyệt là Chưa đạt\"], \"diem_thanh_phan\": {\"quiz_tb\": 0, \"tien_do\": 0, \"kiem_tra\": 0, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 0, \"danh_gia_gan_nhat\": 3}}, \"failed_rate\": 0.0, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 10, \"avg_quiz_score\": 98.33333333333331, \"co_du_lieu_quiz\": true, \"learning_visits\": 40, \"missing_reasons\": [], \"progress_percent\": 100.0, \"selected_results\": [{\"score\": 90.0, \"test_id\": 8, \"result_id\": 144, \"created_at\": \"2026-10-25 14:00:00\", \"pass_score\": 85.0}, {\"score\": 100.0, \"test_id\": 7, \"result_id\": 143, \"created_at\": \"2026-10-24 10:00:00\", \"pass_score\": 85.0}, {\"score\": 100.0, \"test_id\": 6, \"result_id\": 111, \"created_at\": \"2026-08-16 13:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 4, \"result_id\": 110, \"created_at\": \"2026-08-16 12:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 3, \"result_id\": 109, \"created_at\": \"2026-08-16 11:00:00\", \"pass_score\": 90.0}, {\"score\": 100.0, \"test_id\": 2, \"result_id\": 108, \"created_at\": \"2026-08-16 10:00:00\", \"pass_score\": 85.0}], \"failed_quiz_count\": 0, \"recent_error_count\": 0, \"completed_quiz_count\": 6, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": 85, \"applicable_quiz_count\": 7, \"applicable_course_count\": 3, \"latest_assessment_failed\": true, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(360,23,2,0,'Thap','{\"details\": {\"tong_diem\": 0, \"ly_do_canh_bao\": [], \"diem_thanh_phan\": {\"quiz_tb\": 0, \"tien_do\": 0, \"kiem_tra\": 0, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 0, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 0.0, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 6, \"avg_quiz_score\": 93.33333333333331, \"co_du_lieu_quiz\": true, \"learning_visits\": 39, \"missing_reasons\": [], \"progress_percent\": 100.0, \"selected_results\": [{\"score\": 100.0, \"test_id\": 4, \"result_id\": 117, \"created_at\": \"2026-10-20 11:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 3, \"result_id\": 116, \"created_at\": \"2026-10-20 10:00:00\", \"pass_score\": 90.0}, {\"score\": 100.0, \"test_id\": 2, \"result_id\": 115, \"created_at\": \"2026-10-20 09:00:00\", \"pass_score\": 85.0}, {\"score\": 90.0, \"test_id\": 8, \"result_id\": 135, \"created_at\": \"2026-10-16 17:00:00\", \"pass_score\": 85.0}, {\"score\": 90.0, \"test_id\": 7, \"result_id\": 134, \"created_at\": \"2026-10-16 17:00:00\", \"pass_score\": 85.0}, {\"score\": 80.0, \"test_id\": 6, \"result_id\": 133, \"created_at\": \"2026-10-16 17:00:00\", \"pass_score\": 80.0}], \"failed_quiz_count\": 0, \"recent_error_count\": 0, \"completed_quiz_count\": 6, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": 89, \"applicable_quiz_count\": 7, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(361,24,2,0,'Thap','{\"details\": {\"tong_diem\": 0, \"ly_do_canh_bao\": [], \"diem_thanh_phan\": {\"quiz_tb\": 0, \"tien_do\": 0, \"kiem_tra\": 0, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 0, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 0.0, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 5, \"avg_quiz_score\": 88.0, \"co_du_lieu_quiz\": true, \"learning_visits\": 36, \"missing_reasons\": [], \"progress_percent\": 100.0, \"selected_results\": [{\"score\": 80.0, \"test_id\": 4, \"result_id\": 120, \"created_at\": \"2026-10-20 11:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 3, \"result_id\": 119, \"created_at\": \"2026-10-20 10:00:00\", \"pass_score\": 90.0}, {\"score\": 80.0, \"test_id\": 1, \"result_id\": 118, \"created_at\": \"2026-10-20 09:00:00\", \"pass_score\": 80.0}, {\"score\": 90.0, \"test_id\": 11, \"result_id\": 137, \"created_at\": \"2026-08-26 17:00:00\", \"pass_score\": 90.0}, {\"score\": 90.0, \"test_id\": 10, \"result_id\": 136, \"created_at\": \"2026-08-26 17:00:00\", \"pass_score\": 85.0}], \"failed_quiz_count\": 0, \"recent_error_count\": 0, \"completed_quiz_count\": 5, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": 90, \"applicable_quiz_count\": 5, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(362,25,2,0.3,'TrungBinh','{\"details\": {\"tong_diem\": 3, \"ly_do_canh_bao\": [\"Có ít nhất 50% số bài đã làm chưa đạt\"], \"diem_thanh_phan\": {\"quiz_tb\": 2, \"tien_do\": 0, \"kiem_tra\": 3, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 3, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 0.5, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 6, \"avg_quiz_score\": 72.5, \"co_du_lieu_quiz\": true, \"learning_visits\": 27, \"missing_reasons\": [], \"progress_percent\": 100.0, \"selected_results\": [{\"score\": 60.0, \"test_id\": 12, \"result_id\": 123, \"created_at\": \"2026-10-20 11:00:00\", \"pass_score\": 80.0}, {\"score\": 80.0, \"test_id\": 4, \"result_id\": 122, \"created_at\": \"2026-10-20 10:00:00\", \"pass_score\": 80.0}, {\"score\": 60.0, \"test_id\": 3, \"result_id\": 121, \"created_at\": \"2026-10-20 09:00:00\", \"pass_score\": 90.0}, {\"score\": 90.0, \"test_id\": 13, \"result_id\": 140, \"created_at\": \"2026-10-19 17:00:00\", \"pass_score\": 85.0}], \"failed_quiz_count\": 2, \"recent_error_count\": 0, \"completed_quiz_count\": 4, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": null, \"applicable_quiz_count\": 5, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(363,26,2,0.3,'TrungBinh','{\"details\": {\"tong_diem\": 3, \"ly_do_canh_bao\": [\"Có ít nhất 50% số bài đã làm chưa đạt\"], \"diem_thanh_phan\": {\"quiz_tb\": 0, \"tien_do\": 0, \"kiem_tra\": 3, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 3, \"danh_gia_gan_nhat\": 0}}, \"failed_rate\": 0.6666666666666666, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 3, \"avg_quiz_score\": 86.66666666666667, \"co_du_lieu_quiz\": true, \"learning_visits\": 39, \"missing_reasons\": [], \"progress_percent\": 90.0, \"selected_results\": [{\"score\": 100.0, \"test_id\": 4, \"result_id\": 126, \"created_at\": \"2026-10-20 11:00:00\", \"pass_score\": 80.0}, {\"score\": 80.0, \"test_id\": 3, \"result_id\": 125, \"created_at\": \"2026-10-20 10:00:00\", \"pass_score\": 90.0}, {\"score\": 80.0, \"test_id\": 2, \"result_id\": 124, \"created_at\": \"2026-10-20 09:00:00\", \"pass_score\": 85.0}], \"failed_quiz_count\": 2, \"recent_error_count\": 0, \"completed_quiz_count\": 3, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": null, \"applicable_quiz_count\": 7, \"applicable_course_count\": 3, \"latest_assessment_failed\": false, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58'),(364,27,1,0.3,'TrungBinh','{\"details\": {\"tong_diem\": 3, \"ly_do_canh_bao\": [\"Kết quả đánh giá năng lực gần nhất được duyệt là Chưa đạt\"], \"diem_thanh_phan\": {\"quiz_tb\": 0, \"tien_do\": 0, \"kiem_tra\": 0, \"loi_nghiep_vu\": 0, \"quiz_chua_dat\": 0, \"danh_gia_gan_nhat\": 3}}, \"failed_rate\": 0.0, \"calculated_at\": \"2026-10-29 15:35:58\", \"quiz_attempts\": 6, \"avg_quiz_score\": 100.0, \"co_du_lieu_quiz\": true, \"learning_visits\": 39, \"missing_reasons\": [], \"progress_percent\": 100.0, \"selected_results\": [{\"score\": 100.0, \"test_id\": 8, \"result_id\": 150, \"created_at\": \"2026-08-05 15:00:00\", \"pass_score\": 85.0}, {\"score\": 100.0, \"test_id\": 7, \"result_id\": 149, \"created_at\": \"2026-08-05 14:00:00\", \"pass_score\": 85.0}, {\"score\": 100.0, \"test_id\": 6, \"result_id\": 148, \"created_at\": \"2026-08-05 13:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 4, \"result_id\": 147, \"created_at\": \"2026-08-05 12:00:00\", \"pass_score\": 80.0}, {\"score\": 100.0, \"test_id\": 3, \"result_id\": 146, \"created_at\": \"2026-08-05 11:00:00\", \"pass_score\": 90.0}, {\"score\": 100.0, \"test_id\": 2, \"result_id\": 145, \"created_at\": \"2026-08-05 10:00:00\", \"pass_score\": 85.0}], \"failed_quiz_count\": 0, \"recent_error_count\": 0, \"completed_quiz_count\": 6, \"du_dieu_kien_du_doan\": true, \"latest_assessment_id\": 98, \"applicable_quiz_count\": 7, \"applicable_course_count\": 3, \"latest_assessment_failed\": true, \"recent_serious_error_count\": 0}','rules-v4','2026-10-29 08:35:58','2026-10-29 15:35:58','2026-10-29 15:35:58');
+/*!40000 ALTER TABLE `du_doan_nguy_co` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `job_batches`
+--
+
+LOCK TABLES `job_batches` WRITE;
+/*!40000 ALTER TABLE `job_batches` DISABLE KEYS */;
+/*!40000 ALTER TABLE `job_batches` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `ket_qua_kiem_tra`
+--
+
+LOCK TABLES `ket_qua_kiem_tra` WRITE;
+/*!40000 ALTER TABLE `ket_qua_kiem_tra` DISABLE KEYS */;
+INSERT INTO `ket_qua_kiem_tra` VALUES (41,1,1,80,'Dat',4,5,'2026-10-09 03:00:00','2026-10-09 03:00:00','4d6204da-fbb3-4fa3-841d-446abec87beb'),(42,1,3,100,'Dat',5,5,'2026-10-10 04:00:00','2026-10-10 04:00:00','b2c130c0-478b-42a2-812c-b03a5d1a96fa'),(43,1,4,100,'Dat',2,2,'2026-10-11 05:00:00','2026-10-11 05:00:00','412e317b-64f4-4bbe-9b4b-c8bca20fde67'),(44,2,1,80,'Dat',4,5,'2026-10-09 03:00:00','2026-10-09 03:00:00','a64c1f21-5c37-4ea7-8356-e43f58553094'),(45,2,3,100,'Dat',5,5,'2026-10-10 04:00:00','2026-10-10 04:00:00','de08ef72-b722-467c-82b4-9640c145c437'),(46,2,4,100,'Dat',2,2,'2026-10-11 05:00:00','2026-10-11 05:00:00','2847ac92-b39d-47b2-a36f-a0dd16eee13e'),(47,3,1,60,'KhongDat',3,5,'2026-10-09 03:00:00','2026-10-09 03:00:00','ea018e0d-492f-4d52-8e44-92ac63854439'),(48,3,2,80,'KhongDat',4,5,'2026-10-10 04:00:00','2026-10-10 04:00:00','589490f0-da45-46c0-ba65-84472189e7bf'),(49,3,3,80,'KhongDat',4,5,'2026-10-11 05:00:00','2026-10-11 05:00:00','3d21895f-a9e8-4c6b-b8f7-28f37dc674ba'),(50,4,1,40,'KhongDat',2,5,'2026-10-09 03:00:00','2026-10-09 03:00:00','b9b7860f-7a8c-427f-8e8e-000d9502b620'),(51,4,3,60,'KhongDat',3,5,'2026-10-10 04:00:00','2026-10-10 04:00:00','501b5b73-9a35-4465-94cf-7b1f1e7d62f4'),(52,4,4,50,'KhongDat',1,2,'2026-10-11 05:00:00','2026-10-11 05:00:00','2cec806f-97e1-44cb-aa9e-8485e4badddf'),(53,5,1,80,'Dat',4,5,'2026-10-09 03:00:00','2026-10-09 03:00:00','2ad90dc8-1339-4d64-9f6c-fbd1a3a7f31b'),(54,5,3,80,'KhongDat',4,5,'2026-10-10 04:00:00','2026-10-10 04:00:00','bb405dd3-3a21-4072-9fb1-cc9806ac9dca'),(55,5,4,100,'Dat',2,2,'2026-10-11 05:00:00','2026-10-11 05:00:00','409ee46e-bd14-45f7-b3ed-ec807f3ab2ad'),(56,6,1,100,'Dat',5,5,'2026-10-09 03:00:00','2026-10-09 03:00:00','277a666d-d17b-4430-9fcc-8509ccc74238'),(57,6,3,100,'Dat',5,5,'2026-10-10 04:00:00','2026-10-10 04:00:00','35b399bc-4af1-4ca0-8f8d-8f3dcb8d3347'),(58,6,4,100,'Dat',2,2,'2026-10-11 05:00:00','2026-10-11 05:00:00','054d4953-7a3e-4461-b59d-28786f4c3488'),(59,7,1,100,'Dat',5,5,'2026-10-09 03:00:00','2026-10-09 03:00:00','c2b487ff-859e-488e-a1d7-1c16d97226f9'),(60,7,2,100,'Dat',5,5,'2026-10-10 04:00:00','2026-10-10 04:00:00','d4c43673-8bcc-4167-9352-6b84b8b69e5f'),(61,7,3,100,'Dat',5,5,'2026-10-11 05:00:00','2026-10-11 05:00:00','8524edba-d461-41d1-973d-de2bf47ca0c7'),(62,9,1,80,'Dat',4,5,'2026-10-09 03:00:00','2026-10-09 03:00:00','ef294e52-a0be-491f-933e-a43f127eeb46'),(63,9,3,80,'KhongDat',4,5,'2026-10-10 04:00:00','2026-10-10 04:00:00','ec7f5754-f01e-46d5-b13b-b216da0374ff'),(64,9,4,100,'Dat',2,2,'2026-10-11 05:00:00','2026-10-11 05:00:00','3a786014-45cf-43ff-a81b-55d9827489a9'),(65,10,1,40,'KhongDat',2,5,'2026-10-09 03:00:00','2026-10-09 03:00:00','ffb891d6-7d2c-4ed8-aece-361772173151'),(66,10,2,40,'KhongDat',2,5,'2026-10-10 04:00:00','2026-10-10 04:00:00','63dfbc3f-4b14-4506-ba0a-c6b9c9f1f3c3'),(67,10,3,40,'KhongDat',2,5,'2026-10-11 05:00:00','2026-10-11 05:00:00','0fb229b2-bc58-4ec0-92ff-89badc2d5afd'),(68,11,1,80,'Dat',4,5,'2026-10-09 03:00:00','2026-10-09 03:00:00','23961c9f-1a38-406e-9a66-ac1690660bbb'),(69,11,3,80,'KhongDat',4,5,'2026-10-10 04:00:00','2026-10-10 04:00:00','f77f77d7-8805-439d-a043-f6cc851f76ed'),(70,11,4,100,'Dat',2,2,'2026-10-11 05:00:00','2026-10-11 05:00:00','1d69210e-2b4f-45ac-9860-d6aef99b14a1'),(71,12,1,60,'KhongDat',3,5,'2026-10-09 03:00:00','2026-10-09 03:00:00','1928a45e-4138-44ab-8e73-10af61b42b17'),(72,12,3,60,'KhongDat',3,5,'2026-10-10 04:00:00','2026-10-10 04:00:00','f10d1e16-61d5-4b2c-ba8a-4f0b391c70d2'),(73,12,4,50,'KhongDat',1,2,'2026-10-11 05:00:00','2026-10-11 05:00:00','9ce87e73-6085-4db2-a10e-d774e6d9605b'),(74,13,1,60,'KhongDat',3,5,'2026-10-09 03:00:00','2026-10-09 03:00:00','951cf3f7-8210-4ed7-a4c2-6f8bf520d18a'),(75,13,3,60,'KhongDat',3,5,'2026-10-10 04:00:00','2026-10-10 04:00:00','81fb513f-0fdb-42b3-b24c-552b2360b986'),(76,13,4,50,'KhongDat',1,2,'2026-10-11 05:00:00','2026-10-11 05:00:00','766a179c-a171-40fd-8c08-429cdf10ee0a'),(77,14,2,100,'Dat',5,5,'2026-03-11 17:00:00','2026-03-11 17:00:00','079c55fa-c39b-42c6-a8b2-60438929b04e'),(78,14,3,100,'Dat',5,5,'2026-03-11 17:00:00','2026-03-11 17:00:00','a4cba440-19da-43f0-b703-de53d007854d'),(79,14,4,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','ac76589d-2dec-4001-bb23-a3c284d56051'),(80,14,6,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','da8e5f1d-1c3a-4551-b3d9-c183cc589bda'),(81,14,7,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','ccf897eb-3e14-4718-ad14-29fa5fbb7ae0'),(82,14,8,100,'Dat',1,1,'2026-03-11 17:00:00','2026-03-11 17:00:00','c6068eca-15dd-4ab1-9bc8-6fea33764c5e'),(83,15,1,100,'Dat',5,5,'2026-03-11 17:00:00','2026-03-11 17:00:00','36da0c98-1394-40e3-b623-f466dcb5bf4b'),(84,15,3,100,'Dat',5,5,'2026-03-11 17:00:00','2026-03-11 17:00:00','4e536ad6-2915-4758-91c4-ea650e483a5f'),(85,15,4,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','6ae7140f-cfa7-45b3-9c3e-35b92a6551b1'),(86,15,10,100,'Dat',4,4,'2026-03-11 17:00:00','2026-03-11 17:00:00','e8d754d5-6385-4aa3-8786-d80f5fe2e967'),(87,15,11,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','bf890130-782d-49c6-8762-b84d87811fde'),(88,16,3,100,'Dat',5,5,'2026-03-11 17:00:00','2026-03-11 17:00:00','9e5bb3d9-8703-4e17-9a79-2088ce103ee8'),(89,16,4,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','647ca6e7-1a44-46f0-8fb1-445d20413cf0'),(90,16,12,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','be78c740-a664-42f6-af75-94a0dd9fa8c3'),(91,16,13,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','fdf411de-f86d-4832-a2fa-027bfc2f0d11'),(92,17,2,100,'Dat',5,5,'2026-03-11 17:00:00','2026-03-11 17:00:00','57e44bf2-6bc1-44bd-8abc-f58a04de8170'),(93,17,3,100,'Dat',5,5,'2026-03-11 17:00:00','2026-03-11 17:00:00','38583191-298b-4fd9-81c6-fe48fb53d4cd'),(94,17,4,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','1812d798-bd43-43ae-9edb-17ba8bf6a1e8'),(95,17,6,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','73c45f83-e6c2-4c1a-9017-fe6cdd1df67c'),(96,17,7,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','94c2488d-b860-46cb-b288-38732e3a527b'),(97,17,8,100,'Dat',1,1,'2026-03-11 17:00:00','2026-03-11 17:00:00','45487d83-0be4-448f-b9f5-041ea4610343'),(98,18,1,100,'Dat',5,5,'2026-03-11 17:00:00','2026-03-11 17:00:00','ca472099-807b-4a40-8bda-213a4bcba481'),(99,18,3,100,'Dat',5,5,'2026-03-11 17:00:00','2026-03-11 17:00:00','3f2b8c8b-9192-43eb-86b1-3885bdb1418a'),(100,18,4,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','070e3ea8-415a-4736-8bcf-03cc54b4674d'),(101,18,10,100,'Dat',4,4,'2026-03-11 17:00:00','2026-03-11 17:00:00','9166572b-0469-4f54-853c-1af1a0791aa0'),(102,18,11,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','de3b8e01-b026-4519-a0c9-0277bda07e7d'),(103,19,3,100,'Dat',5,5,'2026-03-11 17:00:00','2026-03-11 17:00:00','8cb0a798-2345-4342-9a65-2b93923bfc92'),(104,19,4,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','73156724-c624-486b-9ff0-f0ad5e406ef9'),(105,19,12,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','e74797d4-0fa9-4e18-9060-311e45c5b338'),(106,19,13,100,'Dat',2,2,'2026-03-11 17:00:00','2026-03-11 17:00:00','909576e3-26f3-4b1c-a16b-237a68ddb37e'),(108,20,2,100,'Dat',5,5,'2026-08-16 03:00:00','2026-08-16 03:00:00','245b6c14-0310-44ac-92e6-7786151c7171'),(109,20,3,100,'Dat',5,5,'2026-08-16 04:00:00','2026-08-16 04:00:00','0395f6a3-e727-4751-8fb1-7cb5ed1e6cb0'),(110,20,4,100,'Dat',5,5,'2026-08-16 05:00:00','2026-08-16 05:00:00','b358ee54-52ae-486f-b9e3-e5b5facff714'),(111,20,6,100,'Dat',5,5,'2026-08-16 06:00:00','2026-08-16 06:00:00','bbbc64c7-e035-4fe2-b8af-da4256229586'),(112,20,7,100,'Dat',5,5,'2026-08-16 07:00:00','2026-08-16 07:00:00','a051dcd4-928b-4939-bf37-296c03aa0f7d'),(113,20,8,100,'Dat',5,5,'2026-08-16 08:00:00','2026-08-16 08:00:00','0d176ecc-b9f2-4262-bd5a-6a73f418df06'),(114,11,3,40,'KhongDat',2,5,'2026-10-25 09:01:00','2026-10-26 16:01:38','b6ab15bd-aa5d-4fbf-b421-d49ae375560e'),(115,23,2,100,'Dat',5,5,'2026-10-20 02:00:00','2026-10-20 02:00:00','a90fb6e1-4ab3-46ff-95bf-d3f4f7dda200'),(116,23,3,100,'Dat',5,5,'2026-10-20 03:00:00','2026-10-20 03:00:00','8c5301cd-7e75-49f3-a85c-f2fd5501c07c'),(117,23,4,100,'Dat',5,5,'2026-10-20 04:00:00','2026-10-20 04:00:00','abcfa568-ceac-40bf-b5c2-42bafe2df947'),(118,24,1,80,'Dat',4,5,'2026-10-20 02:00:00','2026-10-20 02:00:00','9120a559-1dfe-494f-9f8c-21e2c21c149a'),(119,24,3,100,'Dat',5,5,'2026-10-20 03:00:00','2026-10-20 03:00:00','01c289ac-061e-48de-92d4-1542696a869d'),(120,24,4,80,'Dat',4,5,'2026-10-20 04:00:00','2026-10-20 04:00:00','db6e8ebd-4208-4ec5-abac-b22196efdda8'),(121,25,3,60,'KhongDat',3,5,'2026-10-20 02:00:00','2026-10-20 02:00:00','7f807649-6a99-45d3-a3c6-90341427a8c2'),(122,25,4,80,'Dat',4,5,'2026-10-20 03:00:00','2026-10-20 03:00:00','19ef3882-d3eb-45b4-9d32-597a252d0d2d'),(123,25,12,60,'KhongDat',3,5,'2026-10-20 04:00:00','2026-10-20 04:00:00','43240c10-8ae6-4bd7-af84-bb36c48f7ca0'),(124,26,2,80,'KhongDat',4,5,'2026-10-20 02:00:00','2026-10-20 02:00:00','b79bd2bd-6e1b-41f1-bcfc-6535881fb092'),(125,26,3,80,'KhongDat',4,5,'2026-10-20 03:00:00','2026-10-20 03:00:00','79bf42da-2d42-419e-a75b-2bf4a45055dd'),(126,26,4,100,'Dat',5,5,'2026-10-20 04:00:00','2026-10-20 04:00:00','9401aadf-3826-45a0-89e4-eae87f3c401b'),(127,2,10,90,'Dat',9,10,'2026-10-06 10:00:00','2026-10-06 10:00:00','50404f27-757d-4b1d-8f13-bf22142419ce'),(128,2,11,90,'Dat',9,10,'2026-10-06 10:00:00','2026-10-06 10:00:00','5d15aad1-898d-4e17-bbce-1f775d3f269f'),(129,7,4,80,'Dat',8,10,'2026-10-21 10:00:00','2026-10-21 10:00:00','0dcc0cb0-079f-4974-82db-5625b9673b9f'),(130,7,6,80,'Dat',8,10,'2026-10-21 10:00:00','2026-10-21 10:00:00','34fe8e15-dc10-459d-8efd-98150dd51ca7'),(131,7,7,90,'Dat',9,10,'2026-10-21 10:00:00','2026-10-21 10:00:00','63dbc4ca-f8eb-412d-97cf-8ea27ceb7cd9'),(132,7,8,90,'Dat',9,10,'2026-10-21 10:00:00','2026-10-21 10:00:00','3f3340a0-7c18-4ca3-ace3-441f145eab25'),(133,23,6,80,'Dat',8,10,'2026-10-16 10:00:00','2026-10-16 10:00:00','f72d087e-c4e3-49e4-813b-2c4a25144024'),(134,23,7,90,'Dat',9,10,'2026-10-16 10:00:00','2026-10-16 10:00:00','7d8c7092-b34a-4552-8c4b-a99707c92434'),(135,23,8,90,'Dat',9,10,'2026-10-16 10:00:00','2026-10-16 10:00:00','81a9886d-ca16-4cc2-a924-da9bc7e5e700'),(136,24,10,90,'Dat',9,10,'2026-08-26 10:00:00','2026-08-26 10:00:00','b244f425-b33f-407f-ae93-73cd20cecb3f'),(137,24,11,90,'Dat',9,10,'2026-08-26 10:00:00','2026-08-26 10:00:00','3f715a50-8f7b-4bcd-9582-cade6768ff83'),(138,25,3,90,'Dat',9,10,'2026-10-19 10:00:00','2026-10-19 10:00:00','0049c028-e2d4-4d81-a0c9-291c42a6a0e3'),(139,25,12,80,'Dat',8,10,'2026-10-19 10:00:00','2026-10-19 10:00:00','977b6b44-a002-4141-b063-c1b8dbda8ba9'),(140,25,13,90,'Dat',9,10,'2026-10-19 10:00:00','2026-10-19 10:00:00','b4b0c167-35ff-45e1-b467-8ce228de1ebd'),(141,20,7,90,'Dat',5,5,'2026-09-19 03:00:00','2026-09-19 03:00:00','bf55f56d-c7bf-4f46-91bd-50799203b331'),(142,20,8,85,'Dat',4,5,'2026-09-20 07:00:00','2026-09-20 07:00:00','7e543762-b0db-44d6-8a67-9c23c9e05706'),(143,20,7,100,'Dat',5,5,'2026-10-24 03:00:00','2026-10-24 03:00:00','981584ce-0daa-4f21-818f-452b7b623595'),(144,20,8,90,'Dat',5,5,'2026-10-25 07:00:00','2026-10-25 07:00:00','a40cce51-7308-4e61-914c-9d08caf5929d'),(145,27,2,100,'Dat',5,5,'2026-08-05 03:00:00','2026-08-05 03:00:00','1c1078c6-9f65-43a8-9d42-b3f2be4455a3'),(146,27,3,100,'Dat',5,5,'2026-08-05 04:00:00','2026-08-05 04:00:00','cff7c516-fda4-44a2-a18b-e8b9a053e7ab'),(147,27,4,100,'Dat',5,5,'2026-08-05 05:00:00','2026-08-05 05:00:00','8295a165-6dfd-46e5-973c-fa45100f101f'),(148,27,6,100,'Dat',5,5,'2026-08-05 06:00:00','2026-08-05 06:00:00','15f2b970-274a-456d-a4c5-febcf106726e'),(149,27,7,100,'Dat',5,5,'2026-08-05 07:00:00','2026-08-05 07:00:00','be424573-8cad-4bd0-b79f-78e528b6f28a'),(150,27,8,100,'Dat',5,5,'2026-08-05 08:00:00','2026-08-05 08:00:00','2655cea9-a861-47fa-b18c-f326fda9dd14');
+/*!40000 ALTER TABLE `ket_qua_kiem_tra` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `loi_nghiep_vu`
+--
+
+LOCK TABLES `loi_nghiep_vu` WRITE;
+/*!40000 ALTER TABLE `loi_nghiep_vu` DISABLE KEYS */;
+INSERT INTO `loi_nghiep_vu` VALUES (1,2,1,'Vệ sinh quầy bar','Nhe','aaaaaaaaaaaa','2026-10-07 12:27:00',NULL,'2026-10-07 05:28:01','2026-10-29 15:07:14'),(2,2,1,'Thái độ phục vụ','Nhe','aaaaaaaaaaaaa','2026-10-07 12:39:00',NULL,'2026-10-07 05:40:03','2026-10-29 15:07:14'),(3,2,1,'Thái độ phục vụ','Nhe','hhhhhhhhhhhhhhhhhh','2026-10-08 17:10:00',NULL,'2026-10-08 10:10:57','2026-10-29 15:07:14'),(4,2,1,'Vệ sinh quầy bar','Nhe','aaaaaaaa','2026-10-09 09:43:00',NULL,'2026-10-09 02:43:43','2026-10-29 15:07:14'),(5,2,1,'Vệ sinh quầy bar','Nhe','hhhhhhhhhhhhhh','2026-10-10 09:28:00',NULL,'2026-10-10 02:29:42','2026-10-29 15:07:14');
+/*!40000 ALTER TABLE `loi_nghiep_vu` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `migrations`
+--
+
+LOCK TABLES `migrations` WRITE;
+/*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
+INSERT INTO `migrations` VALUES (1,'0001_01_01_000000_create_users_table',1),(2,'0001_01_01_000001_create_cache_table',1),(3,'0001_01_01_000002_create_jobs_table',1),(4,'2026_09_22_142623_create_bai_kiem_tra_table',2),(5,'2026_09_22_162338_create_bai_hoc_table',3),(6,'2026_09_22_163241_create_chuong_trinh_dao_tao_table',4),(7,'2026_09_23_150425_add_employee_fields_to_users_table',5),(8,'2026_09_24_150516_create_notifications_table',6),(9,'2026_10_01_140519_add_demo_settings_and_attempt_tokens',7),(10,'2026_10_01_141818_preserve_decimal_course_progress',8),(11,'2026_10_01_151137_store_assessment_improvement_details',9),(12,'2026_10_01_153056_create_manager_training_workflow',10),(13,'2026_10_01_165925_add_employment_status_to_users_table',11),(14,'2026_10_02_100000_create_retraining_rounds_table',12),(15,'2026_10_02_110000_add_retraining_completion_requirements',13),(16,'2026_10_16_140009_add_learning_outcomes_to_chuong_trinh_dao_tao_table',14),(17,'2026_10_16_150000_add_cover_image_to_chuong_trinh_dao_tao_table',15),(18,'2026_10_29_150605_rename_nhe_severity_and_drop_diem_tru_risk_on_loi_nghiep_vu',16);
+/*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `nhan_vien_khoa_hoc`
+--
+
+LOCK TABLES `nhan_vien_khoa_hoc` WRITE;
+/*!40000 ALTER TABLE `nhan_vien_khoa_hoc` DISABLE KEYS */;
+INSERT INTO `nhan_vien_khoa_hoc` VALUES (49,1,1,85.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-29 07:16:33',0),(50,1,2,85.7,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-29 07:16:33',0),(51,1,6,85.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-29 07:16:33',0),(52,2,1,100.0,'HoanThanh','2026-11-02','2026-10-13 01:55:34','2026-10-29 02:24:24',0),(53,2,2,100.0,'HoanThanh','2026-11-02','2026-10-13 01:55:34','2026-10-29 02:24:24',0),(54,2,4,100.0,'HoanThanh','2026-11-02','2026-10-13 01:55:34','2026-10-29 02:24:24',0),(55,3,1,65.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-27 08:29:23',0),(56,3,2,65.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-27 08:29:23',0),(57,3,3,65.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-27 08:29:23',0),(58,4,1,45.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-22 23:21:52',0),(59,4,2,45.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-22 23:21:52',0),(60,4,5,45.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-22 23:21:52',0),(61,5,1,80.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-27 03:05:12',0),(62,5,2,80.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-27 03:05:12',0),(63,5,6,80.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-27 03:05:12',0),(64,6,1,90.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-13 01:55:34',0),(65,6,2,90.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-13 01:55:34',0),(66,6,7,90.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-13 01:55:34',0),(67,7,1,100.0,'HoanThanh','2026-11-02','2026-10-13 01:55:34','2026-10-27 03:02:19',0),(68,7,2,100.0,'HoanThanh','2026-11-02','2026-10-13 01:55:34','2026-10-27 03:02:19',0),(69,7,3,100.0,'HoanThanh','2026-11-02','2026-10-13 01:55:34','2026-10-27 03:02:19',0),(70,8,1,30.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-26 09:00:59',0),(71,8,2,30.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-26 09:00:59',0),(72,9,1,75.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(73,9,2,75.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(74,9,4,75.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(75,10,1,100.0,'HoanThanh','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(76,10,2,35.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(77,10,3,35.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(78,11,1,70.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(79,11,2,70.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(80,11,5,70.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(81,12,1,60.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(82,12,2,60.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(83,12,4,60.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(84,13,1,55.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(85,13,2,55.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(86,13,5,55.0,'DangHoc','2026-11-02','2026-10-13 01:55:34','2026-10-15 00:06:09',0),(87,14,1,100.0,'HoanThanh',NULL,'2026-10-15 06:57:03','2026-10-15 00:06:10',NULL),(88,14,2,100.0,'HoanThanh',NULL,'2026-10-15 06:57:03','2026-10-15 00:06:10',NULL),(89,14,3,100.0,'HoanThanh',NULL,'2026-10-15 06:57:03','2026-10-15 00:06:10',NULL),(90,15,1,100.0,'HoanThanh',NULL,'2026-10-15 06:57:04','2026-10-15 00:06:10',NULL),(91,15,2,100.0,'HoanThanh',NULL,'2026-10-15 06:57:04','2026-10-15 00:06:10',NULL),(92,15,4,100.0,'HoanThanh',NULL,'2026-10-15 06:57:04','2026-10-15 00:06:10',NULL),(93,16,1,100.0,'HoanThanh',NULL,'2026-10-15 06:57:04','2026-10-15 00:06:10',NULL),(94,16,2,100.0,'HoanThanh',NULL,'2026-10-15 06:57:04','2026-10-15 00:06:10',NULL),(95,16,5,100.0,'HoanThanh',NULL,'2026-10-15 06:57:04','2026-10-15 00:06:10',NULL),(96,17,1,100.0,'HoanThanh',NULL,'2026-10-15 06:57:05','2026-10-15 00:06:10',NULL),(97,17,2,100.0,'HoanThanh',NULL,'2026-10-15 06:57:05','2026-10-15 00:06:10',NULL),(98,17,3,100.0,'HoanThanh',NULL,'2026-10-15 06:57:05','2026-10-15 00:06:10',NULL),(99,18,1,100.0,'HoanThanh',NULL,'2026-10-15 06:57:05','2026-10-15 00:06:10',NULL),(100,18,2,100.0,'HoanThanh',NULL,'2026-10-15 06:57:05','2026-10-15 00:06:10',NULL),(101,18,4,100.0,'HoanThanh',NULL,'2026-10-15 06:57:05','2026-10-15 00:06:10',NULL),(102,19,1,100.0,'HoanThanh',NULL,'2026-10-15 06:57:06','2026-10-27 03:02:19',NULL),(103,19,2,100.0,'HoanThanh',NULL,'2026-10-15 06:57:06','2026-10-27 03:02:19',NULL),(104,19,5,100.0,'HoanThanh',NULL,'2026-10-15 06:57:06','2026-10-27 03:02:19',NULL),(105,8,5,30.0,'DangHoc','2026-11-15','2026-10-22 17:00:00','2026-10-26 09:00:59',0),(106,20,1,100.0,'HoanThanh','2026-11-15','2026-07-30 17:00:00','2026-10-27 08:21:31',0),(107,20,2,100.0,'HoanThanh','2026-11-15','2026-07-30 17:00:00','2026-10-27 08:21:31',0),(108,20,3,100.0,'HoanThanh','2026-11-15','2026-07-30 17:00:00','2026-10-27 08:21:31',0),(109,23,1,100.0,'HoanThanh','2026-11-15','2026-10-20 17:00:00','2026-10-27 03:02:19',0),(110,23,2,100.0,'HoanThanh','2026-11-15','2026-10-20 17:00:00','2026-10-27 03:02:19',0),(111,23,3,100.0,'HoanThanh','2026-11-15','2026-10-20 17:00:00','2026-10-27 03:02:19',0),(112,24,1,100.0,'HoanThanh','2026-11-15','2026-10-20 17:00:00','2026-10-27 03:02:19',0),(113,24,2,100.0,'HoanThanh','2026-11-15','2026-10-20 17:00:00','2026-10-27 03:02:19',0),(114,24,4,100.0,'HoanThanh','2026-11-15','2026-10-20 17:00:00','2026-10-27 03:02:19',0),(115,25,1,100.0,'HoanThanh','2026-11-15','2026-10-20 17:00:00','2026-10-27 03:02:19',0),(116,25,2,100.0,'HoanThanh','2026-11-15','2026-10-20 17:00:00','2026-10-27 03:02:19',0),(117,25,5,100.0,'HoanThanh','2026-11-15','2026-10-20 17:00:00','2026-10-27 03:02:19',0),(118,26,1,90.0,'DangHoc','2026-11-15','2026-10-20 17:00:00','2026-10-26 09:01:01',0),(119,26,2,90.0,'DangHoc','2026-11-15','2026-10-20 17:00:00','2026-10-26 09:01:01',0),(120,26,3,90.0,'DangHoc','2026-11-15','2026-10-20 17:00:00','2026-10-26 09:01:01',0),(121,27,1,100.0,'HoanThanh','2026-11-29','2026-07-19 17:00:00','2026-10-29 01:04:14',0),(122,27,2,100.0,'HoanThanh','2026-11-29','2026-07-19 17:00:00','2026-10-29 01:04:14',0),(123,27,3,100.0,'HoanThanh','2026-11-29','2026-07-19 17:00:00','2026-10-29 01:04:14',0);
+/*!40000 ALTER TABLE `nhan_vien_khoa_hoc` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `notifications`
+--
+
+LOCK TABLES `notifications` WRITE;
+/*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
+INSERT INTO `notifications` VALUES (705,6,'Sắp đến hạn đánh giá định kỳ','Nguyễn Văn Nam — hạn đánh giá 16/10/2026.','reminder',1,'2026-10-13 01:55:58','2026-10-22 23:21:21','periodic-6-2-2026-10-05-soon'),(706,6,'Sắp đến hạn đánh giá định kỳ','Lê Hoàng Anh — hạn đánh giá 13/10/2026.','reminder',1,'2026-10-13 01:55:58','2026-10-22 23:21:21','periodic-6-3-2026-10-02-soon'),(710,2,'Lịch sát hạch năng lực mới từ Trưởng ca','Bạn có lịch sát hạch \'Tiêu chuẩn năng lực Thu ngân\' vào lúc 08:30 13/10/2026.','schedule',1,'2026-10-10 07:00:00','2026-10-29 01:40:15',NULL),(724,6,'Đánh giá chờ phê duyệt','Trưởng ca đã gửi đánh giá năng lực. Vui lòng xem tại mục Duyệt đánh giá.','training',1,'2026-10-13 02:14:04','2026-10-13 02:14:39','pending-review-6-43-2026-10-02 09:14:04'),(750,2,'Kết quả đánh giá đã duyệt: ĐẠT','Kết quả đánh giá năng lực của bạn đã được quản lý phê duyệt.\nĐiểm tổng: 86.3/100 — ĐẠT\n\nĐiểm từng tiêu chí (đạt khi điểm tổng ≥ 80 và mọi tiêu chí ≥ 70):\n- Nghiệp vụ (20%): 84/100\n- Kỹ năng (30%): 86/100\n- Quy trình (20%): 88/100\n- Phục vụ (15%): 85/100\n- Tác phong (15%): 89/100','training',1,'2026-10-13 02:15:50','2026-10-29 01:59:23','assessment-review-43-approve-employee'),(751,1,'Đánh giá bạn gửi đã được duyệt','Quản lý đã duyệt đánh giá bạn gửi cho nhân viên Nguyễn Văn Nam. Kết quả đã được gửi tới nhân viên.','training',1,'2026-10-13 02:15:50','2026-10-13 02:42:14','assessment-review-43-approve-leader'),(752,3,'Lịch sát hạch năng lực mới từ Trưởng ca','Bạn có lịch sát hạch \'Tiêu chuẩn năng lực Barista\' vào lúc 09:00 13/10/2026.','schedule',0,'2026-10-10 07:05:00','2026-10-10 07:05:00',NULL),(753,6,'Đánh giá chờ phê duyệt','Trưởng ca đã gửi đánh giá năng lực. Vui lòng xem tại mục Duyệt đánh giá.','training',1,'2026-10-13 02:44:16','2026-10-13 02:47:01','pending-review-6-44-2026-10-02 09:44:16'),(762,3,'Kết quả đánh giá đã duyệt: CHƯA ĐẠT','Kết quả đánh giá năng lực của bạn đã được quản lý phê duyệt.\nĐiểm tổng: 81.1/100 — CHƯA ĐẠT\n\nĐiểm từng tiêu chí (đạt khi điểm tổng ≥ 80 và mọi tiêu chí ≥ 70):\n- Nghiệp vụ (20%): 80/100\n- Kỹ năng (30%): 80/100\n- Quy trình (20%): 90/100\n- Phục vụ (15%): 69/100 — dưới mức tối thiểu 70\n- Tác phong (15%): 85/100\n\nNội dung thực hiện đã duyệt:\nĐánh giá lại\n Ngày dự kiến: 06/11/2026\n Người đánh giá: Trần Minh Thư\n Tiêu chí: Thái độ phục vụ\n Học lại bài học liên quan\n Khóa: Nghiệp Vụ Phục Vụ & Chăm Sóc Khách Hàng\n Tiêu chuẩn Bưng bê & Phục vụ tại bàn\nThực hiện theo kế hoạch; người phụ trách và thời hạn chính thức sẽ được quản lý thông báo khi giao đào tạo lại.','training',0,'2026-10-13 02:47:12','2026-10-13 02:47:12','assessment-review-44-approve-employee'),(763,1,'Đánh giá bạn gửi đã được duyệt','Quản lý đã duyệt đánh giá bạn gửi cho nhân viên Lê Hoàng Anh. Kết quả và nội dung đã duyệt đã được gửi tới nhân viên.','training',0,'2026-10-13 02:47:12','2026-10-13 02:47:12','assessment-review-44-approve-leader'),(796,6,'Cập nhật dữ liệu vận hành','Đã cập nhật lịch sử đánh giá và đào tạo lại của cửa hàng.','system',1,'2026-10-14 23:57:06','2026-10-22 23:21:21','demo-operations-v1-store-1'),(932,14,'Lịch sát hạch năng lực mới từ Trưởng ca','Bạn có lịch sát hạch \'Tiêu chuẩn năng lực Barista\' vào lúc 10:00 28/10/2026.','schedule',0,'2026-10-25 09:00:59','2026-10-25 09:00:59','demo-schedule-14'),(933,6,'Đánh giá chờ phê duyệt','Trưởng ca đã gửi đánh giá năng lực. Vui lòng xem tại mục Duyệt đánh giá.','training',1,'2026-10-25 08:40:00','2026-10-29 07:17:32','demo-pending-82'),(934,5,'Đánh giá cần bổ sung','Quản lý trả lại đánh giá của nhân viên Phạm Minh Châu. Vui lòng bổ sung: Nhận xét chưa nêu cụ thể lỗi khi đánh sữa; bổ sung số ca theo dõi và mức nhiệt sữa cần đạt.','training',0,'2026-10-24 03:30:00','2026-10-24 03:30:00','demo-return-83'),(938,6,'Cập nhật dữ liệu vận hành','Đã bổ sung ngân hàng câu hỏi, các hồ sơ đang xử lý và nhân sự cửa hàng Bùi Viện.','system',1,'2026-10-26 09:01:01','2026-10-26 09:01:01','demo-enrich-v1'),(945,25,'Lịch sát hạch năng lực mới từ Trưởng ca','Bạn có lịch sát hạch \'Tiêu chuẩn năng lực Phục vụ\' vào lúc 14:30 29/10/2026.','schedule',0,'2026-10-26 09:02:49','2026-10-26 09:02:49','demo-schedule-25'),(951,6,'Đánh giá chờ phê duyệt','Võ Thanh Trúc — đánh giá năng lực đang chờ phê duyệt. Xem kết quả và nội dung tại mục Duyệt đánh giá.','reminder',1,'2026-10-26 09:03:07','2026-10-29 07:17:29','pending-review-6-82-2026-10-14 16:00:00'),(1295,6,'Đánh giá chờ phê duyệt','Võ Thanh Trúc — đánh giá năng lực đang chờ phê duyệt. Xem kết quả và nội dung tại mục Duyệt đánh giá.','reminder',1,'2026-10-27 02:45:19','2026-10-29 07:17:26','pending-review-6-82-2026-10-14 15:40:00'),(1306,7,'Lịch sát hạch năng lực mới từ Trưởng ca','Bạn có lịch sát hạch \'Tiêu chuẩn năng lực Barista\' vào lúc 14:00 31/10/2026.','schedule',0,'2026-10-24 03:00:00','2026-10-24 03:00:00','schedule-92'),(1307,23,'Lịch sát hạch năng lực mới từ Trưởng ca','Bạn có lịch sát hạch \'Tiêu chuẩn năng lực Barista\' vào lúc 15:00 30/10/2026.','schedule',0,'2026-10-24 02:00:00','2026-10-24 02:00:00','schedule-93'),(1308,18,'Lịch sát hạch năng lực mới từ Trưởng ca','Bạn có lịch sát hạch \'Tiêu chuẩn năng lực Thu ngân\' vào lúc 15:00 25/10/2026.','schedule',0,'2026-10-22 08:00:00','2026-10-22 08:00:00','schedule-82'),(1309,17,'Lịch sát hạch năng lực mới từ Trưởng ca','Bạn có lịch sát hạch \'Tiêu chuẩn năng lực Barista\' vào lúc 09:30 24/10/2026.','schedule',0,'2026-10-21 02:30:00','2026-10-21 02:30:00','schedule-83'),(1310,19,'Lịch sát hạch năng lực mới từ Trưởng ca','Bạn có lịch sát hạch \'Tiêu chuẩn năng lực Phục vụ\' vào lúc 09:30 02/11/2026.','schedule',0,'2026-10-26 02:00:00','2026-10-26 02:00:00','schedule-84'),(1351,20,'Kết quả đánh giá năng lực','Kết quả đánh giá năng lực của bạn đã được quản lý phê duyệt.\nĐiểm tổng: 77.6/100 — CHƯA ĐẠT\n\nĐiểm từng tiêu chí (đạt khi điểm tổng ≥ 80 và mọi tiêu chí ≥ 70):\n- Nghiệp vụ (20%): 82/100\n- Kỹ năng (30%): 66/100 — dưới mức tối thiểu 70\n- Quy trình (20%): 80/100\n- Phục vụ (15%): 84/100\n- Tác phong (15%): 85/100\nNhận xét: Kỹ năng đánh sữa microfoam chưa ổn định, latte art chưa đạt chuẩn; cần học lại và thực hành có kèm cặp.','training',1,'2026-08-23 08:00:00','2026-08-23 08:00:00','seed-bao-result-85'),(1354,20,'Kế hoạch đào tạo lại','Người phụ trách: Trần Minh Thư\nHạn hoàn thành: 2026-11-02\nNgày đánh giá lại dự kiến: 2026-11-05\nNội dung: Học lại bài học liên quan\nKhóa: Kỹ Thuật Espresso & Đánh Sữa Nâng Cao\nKỹ thuật Đánh sữa Microfoam & Latte Art\nĐào tạo bổ sung: kèm cặp 3 ca cao điểm, kiểm tra độ mịn sữa từng ly','training',1,'2026-10-10 02:00:00','2026-10-27 08:21:06','seed-bao-round-2-20'),(1355,1,'Đào tạo lại lần 1','Hạn hoàn thành: 2026-10-04. Nội dung: Học lại bài học liên quan\nKhóa: Kỹ Thuật Espresso & Đánh Sữa Nâng Cao\nKỹ thuật Đánh sữa Microfoam & Latte Art\nTheo dõi 4 ca: đánh sữa microfoam và rót latte art','training',1,'2026-08-24 02:00:00','2026-08-24 02:00:00','seed-bao-round-1-1'),(1356,1,'Lịch đánh giá lại lần 1','Đánh giá lại ngày 2026-10-08 lúc 10:00. Kỹ năng đánh sữa microfoam & latte art','training',1,'2026-10-05 09:00:00','2026-10-05 09:00:00','seed-bao-reassess-1-1'),(1357,1,'Đào tạo lại lần 2','Hạn hoàn thành: 2026-11-02. Nội dung: Học lại bài học liên quan\nKhóa: Kỹ Thuật Espresso & Đánh Sữa Nâng Cao\nKỹ thuật Đánh sữa Microfoam & Latte Art\nĐào tạo bổ sung: kèm cặp 3 ca cao điểm, kiểm tra độ mịn sữa từng ly','training',1,'2026-10-10 02:00:00','2026-10-10 02:00:00','seed-bao-round-2-1'),(1359,6,'Đánh giá chờ phê duyệt','Võ Thanh Trúc — đánh giá năng lực đang chờ phê duyệt. Xem kết quả và nội dung tại mục Duyệt đánh giá.','reminder',0,'2026-10-27 04:55:46','2026-10-27 04:55:46','pending-review-6-82-2026-10-16 15:40:00'),(1368,6,'Đánh giá chờ phê duyệt','Võ Thanh Trúc — đánh giá năng lực đang chờ phê duyệt. Xem kết quả và nội dung tại mục Duyệt đánh giá.','reminder',1,'2026-10-27 08:46:46','2026-10-29 07:17:23','pending-review-6-82-2026-10-20 15:40:00'),(1370,6,'Đánh giá chờ phê duyệt','Võ Thanh Trúc — đánh giá năng lực đang chờ phê duyệt. Xem kết quả và nội dung tại mục Duyệt đánh giá.','reminder',0,'2026-10-27 08:43:45','2026-10-27 08:43:45','pending-review-6-82-2026-10-22 15:40:00'),(1375,6,'Đánh giá chờ phê duyệt','Võ Thanh Trúc — đánh giá năng lực đang chờ phê duyệt. Xem kết quả và nội dung tại mục Duyệt đánh giá.','reminder',1,'2026-10-29 00:48:22','2026-10-29 07:17:18','pending-review-6-82-2026-10-25 15:40:00'),(1376,6,'Đào tạo lại đã đạt giới hạn','Nhân viên Lê Hoàng Long vẫn chưa đạt sau 3 vòng đào tạo lại. Đã dừng đào tạo lại; quản lý cần xem xét hướng xử lý.','training',1,'2026-10-08 04:00:00','2026-10-29 07:17:14','training-limit-11');
+/*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `retraining_rounds`
+--
+
+LOCK TABLES `retraining_rounds` WRITE;
+/*!40000 ALTER TABLE `retraining_rounds` DISABLE KEYS */;
+INSERT INTO `retraining_rounds` VALUES (23,10,1,6,1,'Học lại bài học liên quan\nKhóa: Kỹ Thuật Espresso & Đánh Sữa Nâng Cao\nKỹ thuật Đánh sữa Microfoam & Latte Art\nĐào tạo bổ sung: kèm cặp 3 ca cao điểm, kiểm tra độ mịn sữa từng ly','{\"source\": \"Trưởng ca đề xuất\", \"status\": \"ChoPheDuyet\", \"details\": {\"danhgialai\": {\"criteria\": [\"ky_nang\"], \"assessor_id\": \"1\", \"assessment_date\": \"2026-10-27\"}, \"daotaobosung\": {\"skill\": \"Đánh sữa microfoam giờ cao điểm\", \"owner_id\": \"1\", \"instructions\": \"Kèm cặp 3 ca cao điểm, kiểm tra độ mịn sữa từng ly\"}, \"hoclaibaihoc\": {\"course_id\": \"3\", \"lesson_ids\": [\"6\"]}}, \"proposed_by\": 1}','2026-11-02','2026-11-05',NULL,'DangThucHien','ChuaCoKetQua',NULL,NULL,NULL,'2026-10-10 02:00:00','2026-10-10 02:00:00','[\"6\"]','[7, 8]','{\"lessons\": [], \"quiz_max_id\": 142}',NULL,NULL,NULL),(24,11,1,6,1,'Kèm 5 ca: chiết xuất espresso 18g/36g trong 25–30 giây, đánh sữa 55–65°C.','{\"source\": \"Trưởng ca đề xuất\", \"details\": {\"theodoica\": {\"behavior\": \"Kèm cặp thao tác chiết xuất espresso và đánh sữa microfoam theo định lượng chuẩn.\", \"shift_count\": 5}}}','2026-09-03','2026-09-05',96,'DaDuyet','ChuaDat',75.5,6,'2026-09-05 04:00:00','2026-08-22 03:00:00','2026-09-05 04:00:00','[]','[]','{}',1,'2026-09-04 03:00:00','Đã kèm đủ 5 ca theo kế hoạch.'),(25,11,2,6,1,'Kèm 5 ca: chiết xuất espresso 18g/36g trong 25–30 giây, đánh sữa 55–65°C.','{\"source\": \"Trưởng ca đề xuất\", \"details\": {\"theodoica\": {\"behavior\": \"Kèm cặp thao tác chiết xuất espresso và đánh sữa microfoam theo định lượng chuẩn.\", \"shift_count\": 5}}}','2026-09-18','2026-09-20',97,'DaDuyet','ChuaDat',76.4,6,'2026-09-20 04:00:00','2026-09-06 03:00:00','2026-09-20 04:00:00','[]','[]','{}',1,'2026-09-19 03:00:00','Đã kèm đủ 5 ca theo kế hoạch.'),(26,11,3,6,1,'Kèm 5 ca: chiết xuất espresso 18g/36g trong 25–30 giây, đánh sữa 55–65°C.','{\"source\": \"Trưởng ca đề xuất\", \"details\": {\"theodoica\": {\"behavior\": \"Kèm cặp thao tác chiết xuất espresso và đánh sữa microfoam theo định lượng chuẩn.\", \"shift_count\": 5}}}','2026-10-06','2026-10-08',98,'DaDuyet','ChuaDat',77.2,6,'2026-10-08 04:00:00','2026-09-24 03:00:00','2026-10-08 04:00:00','[]','[]','{}',1,'2026-10-07 03:00:00','Đã kèm đủ 5 ca theo kế hoạch.');
+/*!40000 ALTER TABLE `retraining_rounds` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `user_lesson_progresses`
+--
+
+LOCK TABLES `user_lesson_progresses` WRITE;
+/*!40000 ALTER TABLE `user_lesson_progresses` DISABLE KEYS */;
+INSERT INTO `user_lesson_progresses` VALUES (31,1,1,0,100,1,6,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(32,1,2,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(33,1,15,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(34,1,16,0,40,0,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(35,1,3,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(36,1,4,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(37,1,17,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(38,1,18,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(39,1,19,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(40,1,20,0,95,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(41,1,21,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(42,1,11,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(43,1,12,0,70,0,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(44,2,1,4.769077,100,1,12,'2026-10-11 01:55:34','2026-10-27 02:03:28'),(45,2,2,0,100,1,6,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(46,2,15,0,100,1,5,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(47,2,16,13.780433,100,1,8,'2026-10-11 01:55:34','2026-10-15 00:22:53'),(48,2,3,0,100,1,5,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(49,2,4,0,100,1,5,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(50,2,17,0,100,1,5,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(51,2,18,0,100,1,5,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(52,2,19,0,100,1,5,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(53,2,20,0,95,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(54,2,21,0,100,1,2,'2026-10-11 01:55:34','2026-10-06 10:00:00'),(55,2,7,0,100,1,6,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(56,2,8,0,100,1,5,'2026-10-11 01:55:34','2026-10-06 10:00:00'),(57,3,1,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(58,3,2,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(59,3,15,0,60,0,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(60,3,16,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(61,3,3,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(62,3,4,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(63,3,17,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(64,3,18,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(65,3,19,0,55,0,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(66,3,20,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(67,3,21,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(68,3,5,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(69,3,6,0,30,0,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(70,4,1,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(71,4,2,0,80,0,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(72,4,15,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(73,4,16,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(74,4,3,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(75,4,4,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(76,4,17,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(77,4,18,0,15,0,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(78,4,19,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(79,4,20,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(80,4,21,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(81,4,9,0,90,0,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(82,4,10,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(83,5,1,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(84,5,2,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(85,5,15,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(86,5,16,0,20,0,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(87,5,3,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(88,5,4,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(89,5,17,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(90,5,18,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(91,5,19,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(92,5,20,0,60,0,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(93,5,21,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(94,5,11,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(95,5,12,0,60,0,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(96,6,1,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(97,6,2,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(98,6,15,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(99,6,16,0,60,0,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(100,6,3,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(101,6,4,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(102,6,17,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(103,6,18,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(104,6,19,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(105,6,20,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(106,6,21,0,30,0,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(107,6,13,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(108,6,14,0,80,0,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(109,7,1,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(110,7,2,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(111,7,15,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(112,7,16,0,100,1,4,'2026-10-11 01:55:34','2026-10-21 10:00:00'),(113,7,3,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(114,7,4,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(115,7,17,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(116,7,18,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(117,7,19,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(118,7,20,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(119,7,21,0,100,1,4,'2026-10-11 01:55:34','2026-10-21 10:00:00'),(120,7,5,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(121,7,6,0,100,1,4,'2026-10-11 01:55:34','2026-10-21 10:00:00'),(122,8,1,0,100,1,3,'2026-10-22 17:00:00','2026-10-22 17:00:00'),(123,8,2,0,20,0,3,'2026-10-22 17:00:00','2026-10-22 17:00:00'),(124,8,15,0,0,0,0,'2026-10-22 17:00:00','2026-10-22 17:00:00'),(125,8,16,0,0,0,0,'2026-10-22 17:00:00','2026-10-22 17:00:00'),(126,8,3,0,100,1,3,'2026-10-22 17:00:00','2026-10-22 17:00:00'),(127,8,4,0,100,1,3,'2026-10-22 17:00:00','2026-10-22 17:00:00'),(128,8,17,0,10,0,3,'2026-10-22 17:00:00','2026-10-22 17:00:00'),(129,8,18,0,0,0,0,'2026-10-22 17:00:00','2026-10-22 17:00:00'),(130,8,19,0,0,0,0,'2026-10-22 17:00:00','2026-10-22 17:00:00'),(131,8,20,0,0,0,0,'2026-10-22 17:00:00','2026-10-22 17:00:00'),(132,8,21,0,0,0,0,'2026-10-22 17:00:00','2026-10-22 17:00:00'),(133,9,1,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(134,9,2,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(135,9,15,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(136,9,16,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(137,9,3,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(138,9,4,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(139,9,17,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(140,9,18,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(141,9,19,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(142,9,20,0,25,0,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(143,9,21,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(144,9,7,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(145,9,8,0,50,0,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(146,10,1,0,100,1,2,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(147,10,2,14.485,100,1,2,'2026-10-11 01:55:34','2026-10-13 07:08:49'),(148,10,15,10.366667,100,1,1,'2026-10-11 01:55:34','2026-10-13 07:09:04'),(149,10,16,13.780433,100,1,2,'2026-10-11 01:55:34','2026-10-13 07:09:20'),(150,10,3,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(151,10,4,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(152,10,17,0,45,0,2,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(153,10,18,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(154,10,19,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(155,10,20,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(156,10,21,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(157,10,5,0,70,0,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(158,10,6,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(159,11,1,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(160,11,2,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(161,11,15,0,80,0,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(162,11,16,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(163,11,3,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(164,11,4,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(165,11,17,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(166,11,18,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(167,11,19,0,90,0,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(168,11,20,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(169,11,21,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(170,11,9,0,100,1,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(171,11,10,0,40,0,4,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(172,12,1,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(173,12,2,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(174,12,15,0,40,0,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(175,12,16,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(176,12,3,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(177,12,4,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(178,12,17,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(179,12,18,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(180,12,19,0,20,0,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(181,12,20,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(182,12,21,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(183,12,7,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(184,12,8,0,20,0,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(185,13,1,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(186,13,2,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(187,13,15,0,20,0,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(188,13,16,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(189,13,3,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(190,13,4,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(191,13,17,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(192,13,18,0,85,0,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(193,13,19,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(194,13,20,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(195,13,21,0,0,0,0,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(196,13,9,0,100,1,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(197,13,10,0,10,0,1,'2026-10-11 01:55:34','2026-10-12 01:55:34'),(198,14,1,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(199,14,2,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(200,14,15,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(201,14,16,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(202,14,3,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(203,14,4,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(204,14,17,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(205,14,18,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(206,14,19,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(207,14,20,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(208,14,21,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(209,14,5,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(210,14,6,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(211,15,1,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(212,15,2,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(213,15,15,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(214,15,16,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(215,15,3,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(216,15,4,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(217,15,17,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(218,15,18,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(219,15,19,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(220,15,20,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(221,15,21,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(222,15,7,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(223,15,8,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(224,16,1,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(225,16,2,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(226,16,15,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(227,16,16,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(228,16,3,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(229,16,4,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(230,16,17,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(231,16,18,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(232,16,19,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(233,16,20,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(234,16,21,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(235,16,9,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(236,16,10,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(237,17,1,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(238,17,2,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(239,17,15,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(240,17,16,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(241,17,3,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(242,17,4,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(243,17,17,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(244,17,18,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(245,17,19,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(246,17,20,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(247,17,21,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(248,17,5,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(249,17,6,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(250,18,1,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(251,18,2,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(252,18,15,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(253,18,16,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(254,18,3,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(255,18,4,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(256,18,17,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(257,18,18,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(258,18,19,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(259,18,20,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(260,18,21,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(261,18,7,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(262,18,8,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(263,19,1,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(264,19,2,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(265,19,15,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(266,19,16,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(267,19,3,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(268,19,4,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(269,19,17,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(270,19,18,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(271,19,19,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(272,19,20,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(273,19,21,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(274,19,9,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(275,19,10,0,100,1,5,'2026-03-11 17:00:00','2026-03-11 17:00:00'),(276,8,9,0,60,0,3,'2026-10-22 17:00:00','2026-10-22 17:00:00'),(277,8,10,0,0,0,0,'2026-10-22 17:00:00','2026-10-22 17:00:00'),(278,20,1,6.980595,100,1,4,'2026-07-30 17:00:00','2026-10-27 07:46:22'),(279,20,2,0,100,1,3,'2026-07-30 17:00:00','2026-07-30 17:00:00'),(280,20,15,0,100,1,3,'2026-07-30 17:00:00','2026-07-30 17:00:00'),(281,20,16,0,100,1,3,'2026-07-30 17:00:00','2026-07-30 17:00:00'),(282,20,3,0,100,1,3,'2026-07-30 17:00:00','2026-07-30 17:00:00'),(283,20,4,0,100,1,3,'2026-07-30 17:00:00','2026-07-30 17:00:00'),(284,20,17,0,100,1,3,'2026-07-30 17:00:00','2026-07-30 17:00:00'),(285,20,18,0,100,1,3,'2026-07-30 17:00:00','2026-07-30 17:00:00'),(286,20,19,0,100,1,3,'2026-07-30 17:00:00','2026-07-30 17:00:00'),(287,20,20,0,100,1,3,'2026-07-30 17:00:00','2026-07-30 17:00:00'),(288,20,21,0,100,1,3,'2026-07-30 17:00:00','2026-07-30 17:00:00'),(289,20,5,0,100,1,3,'2026-07-30 17:00:00','2026-07-30 17:00:00'),(290,20,6,0,100,1,3,'2026-07-30 17:00:00','2026-10-23 08:00:00'),(291,23,1,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(292,23,2,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(293,23,15,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(294,23,16,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(295,23,3,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(296,23,4,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(297,23,17,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(298,23,18,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(299,23,19,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(300,23,20,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(301,23,21,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(302,23,5,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(303,23,6,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(304,24,1,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(305,24,2,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(306,24,15,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(307,24,16,0,100,1,3,'2026-10-20 17:00:00','2026-08-26 10:00:00'),(308,24,3,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(309,24,4,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(310,24,17,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(311,24,18,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(312,24,19,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(313,24,20,0,100,1,3,'2026-10-20 17:00:00','2026-08-26 10:00:00'),(314,24,21,0,100,1,0,'2026-10-20 17:00:00','2026-08-26 10:00:00'),(315,24,7,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(316,24,8,0,100,1,3,'2026-10-20 17:00:00','2026-08-26 10:00:00'),(317,25,1,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(318,25,2,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(319,25,15,0,100,1,3,'2026-10-20 17:00:00','2026-10-19 10:00:00'),(320,25,16,0,100,1,0,'2026-10-20 17:00:00','2026-10-19 10:00:00'),(321,25,3,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(322,25,4,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(323,25,17,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(324,25,18,0,100,1,3,'2026-10-20 17:00:00','2026-10-19 10:00:00'),(325,25,19,0,100,1,0,'2026-10-20 17:00:00','2026-10-19 10:00:00'),(326,25,20,0,100,1,0,'2026-10-20 17:00:00','2026-10-19 10:00:00'),(327,25,21,0,100,1,0,'2026-10-20 17:00:00','2026-10-19 10:00:00'),(328,25,9,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(329,25,10,0,100,1,3,'2026-10-20 17:00:00','2026-10-19 10:00:00'),(330,26,1,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(331,26,2,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(332,26,15,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(333,26,16,0,60,0,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(334,26,3,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(335,26,4,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(336,26,17,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(337,26,18,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(338,26,19,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(339,26,20,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(340,26,21,0,30,0,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(341,26,5,0,100,1,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(342,26,6,0,80,0,3,'2026-10-20 17:00:00','2026-10-20 17:00:00'),(343,27,1,0,100,1,3,'2026-07-19 17:00:00','2026-07-19 17:00:00'),(344,27,2,0,100,1,3,'2026-07-19 17:00:00','2026-07-19 17:00:00'),(345,27,15,0,100,1,3,'2026-07-19 17:00:00','2026-07-19 17:00:00'),(346,27,16,0,100,1,3,'2026-07-19 17:00:00','2026-07-19 17:00:00'),(347,27,3,0,100,1,3,'2026-07-19 17:00:00','2026-07-19 17:00:00'),(348,27,4,0,100,1,3,'2026-07-19 17:00:00','2026-07-19 17:00:00'),(349,27,17,0,100,1,3,'2026-07-19 17:00:00','2026-07-19 17:00:00'),(350,27,18,0,100,1,3,'2026-07-19 17:00:00','2026-07-19 17:00:00'),(351,27,19,0,100,1,3,'2026-07-19 17:00:00','2026-07-19 17:00:00'),(352,27,20,0,100,1,3,'2026-07-19 17:00:00','2026-07-19 17:00:00'),(353,27,21,0,100,1,3,'2026-07-19 17:00:00','2026-07-19 17:00:00'),(354,27,5,0,100,1,3,'2026-07-19 17:00:00','2026-07-19 17:00:00'),(355,27,6,0,100,1,3,'2026-07-19 17:00:00','2026-07-19 17:00:00');
+/*!40000 ALTER TABLE `user_lesson_progresses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'Trần Minh Thư','Minh Thư','minhthu@brewlearn.com','2025-10-13',NULL,'0982 456 789 555',NULL,'$2y$12$t8mV86LguO8yiXlaeqqNnO.HRKL8mMf94L7fe/YkPAtuGtWayZ1Si',NULL,'2026-09-23 07:53:25','2026-10-02 01:55:33','Trưởng ca','Flagship Quận 1, TP.HCM',1,2,75,'2001-08-14','07920108****','Quầy Bar Chính (Espresso & Milk Steam)','Trần Văn Nam (Bố)','0903 123 456','light','vi',NULL,1,'DangLam'),(2,'Nguyễn Văn Nam','vannam','vannam@brewlearn.com','2026-07-16',NULL,'0902 111 222',NULL,'$2y$12$UssrmtSHXX240GK2Ky3e/e/yf6sox4dSEq.sAiB/hGaxR9sNV.N02',NULL,'2026-09-23 07:53:25','2026-10-02 01:55:33','Thu ngân','Flagship Quận 1, TP.HCM',1,1,35,'2002-03-10','07920200****','Quầy Bar Phụ','Nguyễn Văn B (Bố)','0903 888 999','light','vi',NULL,1,'DangLam'),(3,'Lê Hoàng Anh','Hoàng Anh','hoanganh@brewlearn.com','2026-07-13',NULL,'0901 234 567',NULL,'$2y$12$y7ip9Ym7n4LPxWNMYy3IzuZ9HoK0ln4DYV308wQbBjRFGjwaqoQNy',NULL,'2026-09-24 13:51:57','2026-10-02 01:55:33','Barista','Flagship Quận 1, TP.HCM',1,1,65,'2002-05-12','079200000003','Quầy Bar Phụ','Người thân','0900 000 000','light','vi',NULL,1,'DangLam'),(4,'Phạm Thị Mai','Thị Mai','thimai@brewlearn.com','2026-08-31',NULL,'0912 345 678',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.X2A29iM6i',NULL,'2026-09-24 13:51:57','2026-10-02 01:55:33','Phục vụ','Flagship Quận 1, TP.HCM',1,1,90,'2000-11-20','079200000004','Quầy Espresso','Người thân','0900 000 000','light','vi',NULL,2,'DangLam'),(5,'Võ Văn Thành','Văn Thành','vanthanh@brewlearn.com','2025-10-13',NULL,'0923 456 789',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.X2A29iM6i',NULL,'2026-09-24 13:51:57','2026-10-02 01:55:33','Trưởng ca','Flagship Quận 1, TP.HCM',1,2,20,'2003-03-15','079200000005','Quầy Thu Ngân','Người thân','0900 000 000','light','vi',NULL,2,'DangLam'),(6,'Đặng Ngọc Bích','Ngọc Bích','ngocbich@brewlearn.com','2026-07-09',NULL,'0934 567 890',NULL,'$2y$12$xNwA0SMk4/ppy3ngP53PBOzUq.OSu8Ww/Zj2MkEzTfBIYVONfXCZK',NULL,'2026-09-24 13:51:57','2026-10-01 09:11:42','Quản lý cửa hàng','Flagship Quận 1, TP.HCM',1,1,45,'2001-09-08','079200000006','Quầy Bar Chính','Người thân','0900 000 000','light','vi',NULL,NULL,'DangLam'),(7,'Nguyễn Hoàng Long','Hoàng Long','hoanglong@brewlearn.com','2026-07-31',NULL,'0945 678 901',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.X2A29iM6i',NULL,'2026-09-24 13:51:57','2026-10-02 01:55:33','Barista','Flagship Quận 1, TP.HCM',1,1,80,'2002-01-30','079200000007','Quầy Pour-over','Người thân','0900 000 000','light','vi',NULL,2,'DangLam'),(8,'Bùi Thảo Vân','Thảo Vân','thaovan@brewlearn.com','2026-10-05',NULL,'0956 789 012',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.X2A29iM6i',NULL,'2026-09-24 13:51:57','2026-10-15 09:00:59','Phục vụ','Flagship Quận 1, TP.HCM',1,1,10,'2003-07-22','079200000008','Quầy Sơ Chế','Người thân','0900 000 000','light','vi',NULL,2,'DangLam'),(9,'Nguyễn Ngọc Lan',NULL,'lan.demo@brewlearn.com','2026-08-13',NULL,NULL,NULL,'$2y$12$MB/5lfYoLyw2CS9FLa0U9uOf3X6tMRgIgnbEVA1WRisMmUP4eaFPS',NULL,'2026-10-02 01:55:33','2026-10-02 01:55:33','Thu ngân','Flagship Quận 1, TP.HCM',1,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,1,'DangLam'),(10,'Lê Quốc Tuấn',NULL,'tuan.demo@brewlearn.com','2026-09-05',NULL,NULL,NULL,'$2y$12$bxu2YaI9pqQ7DtTLNc7YmOud5/21kbO/eB8C3KLhHVF06M5RlJ1gC',NULL,'2026-10-02 01:55:33','2026-10-02 01:55:33','Barista','Flagship Quận 1, TP.HCM',1,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,1,'DangLam'),(11,'Trần Gia Huy',NULL,'huy.demo@brewlearn.com','2026-08-23',NULL,NULL,NULL,'$2y$12$GxnxycnvAmqPcfBlC3Af3u/hBH0L5HBj0IWcUTFTOzzuCwFEUQ1WG',NULL,'2026-10-02 01:55:33','2026-10-02 01:55:33','Phục vụ','Flagship Quận 1, TP.HCM',1,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,2,'DangLam'),(12,'Phạm Thu Hà',NULL,'ha.demo@brewlearn.com','2026-06-13',NULL,NULL,NULL,'$2y$12$Ta8e8W9glbIonAZ.Ey4ZUufqlc2GWL/Lqf3hL2PPiSdPs1ibAOfde',NULL,'2026-10-02 01:55:34','2026-10-02 01:55:34','Thu ngân','Flagship Quận 1, TP.HCM',1,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,1,'TamNgung'),(13,'Đỗ Anh Dũng',NULL,'dung.demo@brewlearn.com','2026-06-13',NULL,NULL,NULL,'$2y$12$N56MFBvvoEKJPyD.XBIteOr85RF38dhsyiNswcqmnBLz5mFDuY5qK',NULL,'2026-10-02 01:55:34','2026-10-02 01:55:34','Phục vụ','Flagship Quận 1, TP.HCM',1,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,2,'NghiViec'),(14,'Nguyễn Minh Khang',NULL,'operations1.demo@brewlearn.com','2025-04-15',NULL,NULL,NULL,'$2y$12$vYBSkVwCaRoUWQytJoW6ce/z49Ybd6Ll1XPI6bkh9KXNwguuVq4i2',NULL,'2026-10-03 23:57:03','2026-10-03 23:57:03','Barista','Flagship Quận 1, TP.HCM',1,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,1,'DangLam'),(15,'Trần Hải Yến',NULL,'operations2.demo@brewlearn.com','2025-04-15',NULL,NULL,NULL,'$2y$12$NNbb0OJ6QV/8zJU3o.rixucmVeCX1GjKKyF.3pxr8wv4jOHxVQ3TS',NULL,'2026-10-03 23:57:04','2026-10-03 23:57:04','Thu ngân','Flagship Quận 1, TP.HCM',1,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,2,'DangLam'),(16,'Lê Đức Hưng',NULL,'operations3.demo@brewlearn.com','2025-04-15',NULL,NULL,NULL,'$2y$12$Nz9753GEZ8./F0rvKI3Wqe6oMr2B3BhF.PFkBNl4KDNrB4WrCiwTC',NULL,'2026-10-03 23:57:04','2026-10-03 23:57:04','Phục vụ','Flagship Quận 1, TP.HCM',1,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,1,'DangLam'),(17,'Phạm Minh Châu',NULL,'operations4.demo@brewlearn.com','2025-04-15',NULL,NULL,NULL,'$2y$12$ATpaS81/pX5YsnoiyJVnl.9/iIEs.qRCltAQkY755k2cyllRK8gym',NULL,'2026-10-03 23:57:05','2026-10-03 23:57:05','Barista','Flagship Quận 1, TP.HCM',1,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,2,'DangLam'),(18,'Võ Thanh Trúc',NULL,'operations5.demo@brewlearn.com','2025-04-15',NULL,NULL,NULL,'$2y$12$MrxZ9IzDE5gjBMntnWL7b.ZYjBxAxMA0CU.B4kgd/rLqZKiyTGUlW',NULL,'2026-10-03 23:57:05','2026-10-03 23:57:05','Thu ngân','Flagship Quận 1, TP.HCM',1,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,1,'DangLam'),(19,'Đặng Anh Khoa',NULL,'operations6.demo@brewlearn.com','2025-04-15',NULL,NULL,NULL,'$2y$12$Nv1krRO4aOnh/vQMtRomJe4UKhRMCqRSgxwG58sGzcES/GOERWEXG',NULL,'2026-10-03 23:57:06','2026-10-03 23:57:06','Phục vụ','Flagship Quận 1, TP.HCM',1,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,2,'DangLam'),(20,'Đặng Quốc Bảo',NULL,'quocbao.demo@brewlearn.com','2026-05-23',NULL,NULL,NULL,'$2y$12$pBOXhvMVMZi21ixioHJHxOSfkp/.ZZGLocjv0ehb3uOHbpJLraNsC',NULL,'2026-10-15 09:01:00','2026-10-15 09:01:00','Barista','Flagship Quận 1 - Hồ Tùng Mậu',1,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,1,'DangLam'),(21,'Lý Thanh Hằng',NULL,'thanhhang.bv@brewlearn.com','2025-11-14',NULL,NULL,NULL,'$2y$12$ftSnKJkE0zCkoDO.6Yc1R.S6QLzPZpqoCcDbQbe1Z1LinDda6ZJZK',NULL,'2026-10-15 09:01:00','2026-10-15 09:01:00','Quản lý cửa hàng','BrewLearn Bùi Viện',2,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,NULL,'DangLam'),(22,'Phan Minh Đức',NULL,'minhduc.bv@brewlearn.com','2025-12-12',NULL,NULL,NULL,'$2y$12$G1cmokKMHVrd6IOPKp0KR.K61iFpBCd3Tao34pknK8wwHvySihny.',NULL,'2026-10-15 09:01:00','2026-10-15 09:01:00','Trưởng ca','BrewLearn Bùi Viện',2,2,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,3,'DangLam'),(23,'Trịnh Văn Lộc',NULL,'vanloc.bv@brewlearn.com','2026-04-17',NULL,NULL,NULL,'$2y$12$f07Ox6oP2ekUyjbaflq/3e7HlWLsswAWUKKHxubCCX4loR8LD8P2y',NULL,'2026-10-15 09:01:00','2026-10-15 09:01:00','Barista','BrewLearn Bùi Viện',2,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,3,'DangLam'),(24,'Ngô Thị Thu',NULL,'thithu.bv@brewlearn.com','2026-05-29',NULL,NULL,NULL,'$2y$12$NeEN0UA5rNM66C0wxtMAe.grHcUsR/rzFE1hHEnzjlboRBJTZuDFe',NULL,'2026-10-15 09:01:01','2026-10-15 09:01:01','Thu ngân','BrewLearn Bùi Viện',2,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,3,'DangLam'),(25,'Mai Phương Linh',NULL,'phuonglinh.bv@brewlearn.com','2026-08-02',NULL,NULL,NULL,'$2y$12$fDUDCD7OlOVpxl.MzaqVt.OtcVbF924axmVe3KItmoCg8kOgDlRmS',NULL,'2026-10-15 09:01:01','2026-10-15 09:01:01','Phục vụ','BrewLearn Bùi Viện',2,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,3,'DangLam'),(26,'Châu Minh Trí',NULL,'minhtri.bv@brewlearn.com','2026-08-21',NULL,NULL,NULL,'$2y$12$Is3P3w/HDxocaFy2sgzeUu8TOOwnVgNkMNQdRodLK8qmHRurrSXiW',NULL,'2026-10-15 09:01:01','2026-10-15 09:01:01','Barista','BrewLearn Bùi Viện',2,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,3,'DangLam'),(27,'Lê Hoàng Long',NULL,'hoanglong.demo@brewlearn.com','2026-05-12',NULL,NULL,NULL,'$2y$12$ML/taD1h1LdSTZRd2dcDye9MMutvyCNsPLnuj4h2.FKox.qg8Cf9K',NULL,'2026-10-29 01:04:14','2026-10-29 01:04:14','Barista','Flagship Quận 1 - Hồ Tùng Mậu',1,1,0,NULL,NULL,NULL,NULL,NULL,'light','vi',NULL,1,'DangLam');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `vung`
+--
+
+LOCK TABLES `vung` WRITE;
+/*!40000 ALTER TABLE `vung` DISABLE KEYS */;
+INSERT INTO `vung` VALUES (1,'VUNG-01','Vùng TP.HCM - Cụm Trung Tâm',NULL,'2026-09-26 13:48:40','2026-09-26 13:48:40'),(2,'VUNG-02','Vùng TP.HCM - Cụm Đông & Bắc',NULL,'2026-09-26 13:48:40','2026-09-26 13:48:40'),(3,'VUNG-03','VUNG TP.HCM - Cụm Tây & Nam',NULL,'2026-09-26 13:48:40','2026-09-26 13:48:40');
+/*!40000 ALTER TABLE `vung` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `yeu_cau_dao_tao_lai`
+--
+
+LOCK TABLES `yeu_cau_dao_tao_lai` WRITE;
+/*!40000 ALTER TABLE `yeu_cau_dao_tao_lai` DISABLE KEYS */;
+INSERT INTO `yeu_cau_dao_tao_lai` VALUES (3,3,NULL,1,6,'Đánh giá chưa đạt (điểm tổng 81.1; dưới 70: Phục vụ 69).','DaDuyet','ChuaCoKetQua','2026-10-13 02:47:12','2026-10-13 02:47:12','2026-10-13 02:47:12','2026-10-13 02:47:12',44,'Trưởng ca đề xuất','{\"source\": \"Trưởng ca đề xuất\", \"status\": \"ChoPheDuyet\", \"details\": {\"danhgialai\": {\"criteria\": [\"phuc_vu\"], \"assessor_id\": \"1\", \"assessment_date\": \"2026-10-26\"}, \"hoclaibaihoc\": {\"course_id\": \"5\", \"lesson_ids\": [\"9\"]}}, \"proposed_by\": 1}',NULL,NULL,NULL,'ChoGiao',NULL,NULL),(10,20,NULL,1,6,'Đánh giá chưa đạt (điểm tổng 77.6; dưới 70: Kỹ năng 66). Kỹ năng đánh sữa microfoam chưa ổn định, latte art chưa đạt chuẩn; cần học lại và thực hành có kèm cặp.','DaDuyet','ChuaCoKetQua','2026-08-23 08:00:00','2026-08-23 08:00:00','2026-08-23 08:00:00','2026-10-27 14:24:00',85,'Trưởng ca đề xuất','{\"source\": \"Trưởng ca đề xuất\", \"status\": \"ChoPheDuyet\", \"details\": {\"danhgialai\": {\"criteria\": [\"ky_nang\"], \"assessor_id\": \"1\", \"assessment_date\": \"2026-10-27\"}, \"daotaobosung\": {\"skill\": \"Đánh sữa microfoam giờ cao điểm\", \"owner_id\": \"1\", \"instructions\": \"Kèm cặp 3 ca cao điểm, kiểm tra độ mịn sữa từng ly\"}, \"hoclaibaihoc\": {\"course_id\": \"3\", \"lesson_ids\": [\"6\"]}}, \"proposed_by\": 1}',1,'2026-11-02','2026-11-05','DangThucHien','Học lại bài học liên quan\nKhóa: Kỹ Thuật Espresso & Đánh Sữa Nâng Cao\nKỹ thuật Đánh sữa Microfoam & Latte Art\nĐào tạo bổ sung: kèm cặp 3 ca cao điểm, kiểm tra độ mịn sữa từng ly',NULL),(11,27,NULL,1,6,'Đánh giá chưa đạt: Kiến thức lý thuyết tốt nhưng thao tác chiết xuất chưa đạt định lượng, sữa đánh còn bọt lớn.','DaDuyet','ChuaDat','2026-08-20 03:00:00','2026-08-20 04:00:00','2026-08-20 03:00:00','2026-10-30 07:22:37',95,'Trưởng ca đề xuất','{\"source\": \"Trưởng ca đề xuất\", \"details\": {\"theodoica\": {\"behavior\": \"Kèm cặp thao tác chiết xuất espresso và đánh sữa microfoam theo định lượng chuẩn.\", \"shift_count\": 5}}}',1,NULL,NULL,'DungDaoTao',NULL,98);
+/*!40000 ALTER TABLE `yeu_cau_dao_tao_lai` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `yeu_cau_ho_tro`
+--
+
+LOCK TABLES `yeu_cau_ho_tro` WRITE;
+/*!40000 ALTER TABLE `yeu_cau_ho_tro` DISABLE KEYS */;
+INSERT INTO `yeu_cau_ho_tro` VALUES (1,1,'Không đăng nhập được','aaaaaaaa','aaaaaaaaa','TrungBinh','DaGui','2026-09-26 07:11:35','2026-09-26 07:11:35'),(2,1,'Không đăng nhập được','ffffffffff','fffffffffffff','TrungBinh','DaGui','2026-09-27 10:09:42','2026-09-27 10:09:42'),(3,2,'Không đăng nhập được','aaaaaaaa','aaaaaa','TrungBinh','DaGui','2026-09-28 02:42:11','2026-09-28 02:42:11'),(4,2,'Không mở được bài học','ggggg','ggggggg','TrungBinh','DaGui','2026-09-30 10:41:28','2026-09-30 10:41:28'),(5,2,'Không đăng nhập được','hhhhhh','hhhhhhhhhh','TrungBinh','DaGui','2026-09-30 10:41:41','2026-09-30 10:41:41');
+/*!40000 ALTER TABLE `yeu_cau_ho_tro` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed
