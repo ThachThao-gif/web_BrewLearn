@@ -11,7 +11,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 #[Signature('brewlearn:remind-assessments {--store= : Chỉ nhắc một cửa hàng}')]
-#[Description('Nhắc đánh giá định kỳ và hạn đào tạo lại, không gửi cảnh báo model')]
+#[Description('Nhắc đánh giá định kỳ và hạn đào tạo lại, không gửi cảnh báo nguy cơ')]
 class RemindAssessments extends Command
 {
     /**

@@ -1,58 +1,102 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# BrewLearn
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Nguyên mẫu web của đề tài **“Phân tích và thiết kế hệ thống thông tin quản lý đào tạo và cảnh báo sớm nguy cơ nhân viên chưa đạt chuẩn năng lực tại chuỗi cửa hàng cà phê BrewLearn”** – Đồ án chuyên ngành, Khoa Hệ thống thông tin quản lý, Trường Đại học Ngân hàng Thành phố Hồ Chí Minh.
 
-## About Laravel
+- Sinh viên thực hiện: Bùi Thị Thạch Thảo – MSSV 030239230215 – Lớp DH39CDS02
+- Giảng viên hướng dẫn: TS. Phạm Xuân Kiên
+- Báo cáo đồ án: [`report/ĐỒ ÁN_BREWLEARN_ban-cuoi-v4-dong-bo.docx`](report/)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+> Bối cảnh nghiệp vụ và dữ liệu trong nguyên mẫu là dữ liệu giả định, dùng để minh họa thiết kế.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Chức năng chính
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Vai trò | Chức năng |
+|---|---|
+| Nhân viên (Barista, Thu ngân, Phục vụ) | Học bài theo chức danh, làm và làm lại bài kiểm tra, xem lịch và kết quả đánh giá đã duyệt, thực hiện kế hoạch đào tạo lại |
+| Trưởng ca | Theo dõi nhân viên cùng cửa hàng, cùng ca; tạo lịch và chấm điểm năng lực theo năm tiêu chí; đề xuất đào tạo lại; xác nhận hoàn thành vòng đào tạo lại; ghi nhận lỗi nghiệp vụ |
+| Quản lý cửa hàng | Phê duyệt hoặc trả lại kết quả đánh giá, giao vòng đào tạo lại (tối đa ba vòng), tạo lịch đánh giá lại, xem thông tin cảnh báo nguy cơ |
 
-## Learning Laravel
+Cảnh báo nguy cơ được tính theo bộ quy tắc `rules-v4` (mục 4.5 của báo cáo) bằng chương trình Python trong `app/ml/`, kèm lý do cảnh báo.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Công nghệ
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP 8.3, Laravel 13, MySQL (WAMP), Blade, Tailwind CSS 4, Vite
+- Python 3 (`pymysql`, `python-dotenv`) cho chương trình cảnh báo
+- Selenium WebDriver cho kiểm thử chức năng
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Cài đặt
 
-## Agentic Development
+Yêu cầu: PHP 8.3+, Composer, Node.js, MySQL 8+, Python 3, trình duyệt Chrome (để chạy kiểm thử).
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+1. Cài thư viện và tạo tệp cấu hình:
+
+   ```bash
+   composer install
+   npm install
+   copy .env.example .env
+   php artisan key:generate
+   ```
+
+2. Tạo cơ sở dữ liệu `brewlearn` và nạp dữ liệu minh họa (cấu trúc bảng và dữ liệu trong Phụ lục 1 của báo cáo):
+
+   ```bash
+   mysql -uroot -e "CREATE DATABASE brewlearn CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+   mysql -uroot --default-character-set=utf8mb4 brewlearn < database/brewlearn.sql
+   ```
+
+3. Tạo môi trường Python cho chương trình cảnh báo:
+
+   ```bash
+   python -m venv venv
+   venv\Scripts\pip install -r app/ml/requirements.txt
+   ```
+
+4. Biên dịch giao diện và chạy ứng dụng tại http://localhost:8000:
+
+   ```bash
+   npm run build
+   php artisan serve
+   ```
+
+## Tài khoản minh họa
+
+Các tài khoản thuộc cửa hàng Flagship Quận 1 (Bảng PL2.1 của báo cáo):
+
+| Vai trò | Email |
+|---|---|
+| Quản lý cửa hàng | ngocbich@brewlearn.com |
+| Trưởng ca | minhthu@brewlearn.com |
+| Nhân viên (Thu ngân) | vannam@brewlearn.com |
+| Nhân viên (Barista) – đang đào tạo lại | quocbao.demo@brewlearn.com |
+| Nhân viên (Barista) – dừng sau ba vòng | hoanglong.demo@brewlearn.com |
+
+## Lệnh nghiệp vụ
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php artisan brewlearn:calculate-risk       # tính cảnh báo nguy cơ (lịch chạy 01:00 hằng ngày)
+php artisan brewlearn:remind-assessments   # nhắc hạn đánh giá định kỳ và hạn đào tạo lại (08:00 hằng ngày)
+php artisan schedule:work                  # chạy bộ lập lịch khi thử trên máy cá nhân
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Kiểm thử
 
-## Contributing
+Bảy kịch bản Selenium (KB01–KB07, 25 ca kiểm thử – mục 5.5 và Phụ lục 5 của báo cáo) nằm trong `tests/selenium/test_luong_nghiep_vu.py`. Chương trình tự sao chép cơ sở dữ liệu sang `brewlearn_selenium` và chạy máy chủ riêng ở cổng 8001, nên dữ liệu minh họa không bị thay đổi.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+venv\Scripts\python.exe -m unittest tests.selenium.test_luong_nghiep_vu -v
+```
 
-## Code of Conduct
+Đặt biến môi trường `HEADLESS=1` để chạy Chrome ẩn. Nếu MySQL không cài ở `D:\wamp64\bin\mysql\mysql9.1.0\bin`, đặt biến `MYSQL_BIN` trỏ tới thư mục chứa `mysql` và `mysqldump`.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Cấu trúc thư mục chính
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Thư mục | Nội dung |
+|---|---|
+| `app/Http/Controllers`, `app/Models` | Xử lý nghiệp vụ và mô hình dữ liệu Laravel |
+| `app/Console/Commands` | Lệnh tính cảnh báo, nhắc hạn và chuẩn bị dữ liệu minh họa |
+| `app/ml` | Chương trình Python tính cảnh báo theo bộ quy tắc |
+| `resources/views` | Giao diện theo ba vai trò |
+| `database/migrations`, `database/brewlearn.sql` | Cấu trúc cơ sở dữ liệu và dữ liệu minh họa |
+| `public/videos` | Video bài học minh họa |
+| `tests/selenium` | Kịch bản kiểm thử chức năng |
+| `report` | Báo cáo đồ án bản cuối |
