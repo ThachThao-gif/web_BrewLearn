@@ -1,14 +1,19 @@
 @extends('layouts.app')
 @section('content')
 @php
-    $statusLabels = ['ChoPheDuyet' => ['Chờ duyệt', 'border-amber-300 text-amber-800'], 'TraLai' => ['Đã trả lại', 'border-rose-300 text-rose-700'], 'DaDuyet' => ['Đã duyệt', 'border-emerald-300 text-emerald-700'], 'HoanThanh' => ['Đã hoàn thành', 'border-emerald-300 text-emerald-700']];
+    $statusLabels = [
+        'ChoPheDuyet' => ['Chờ duyệt', 'border-violet-200 bg-violet-50 text-violet-700', 'bg-violet-500'],
+        'TraLai' => ['Đã trả lại', 'border-amber-300 bg-amber-50 text-amber-800', 'bg-amber-500'],
+        'DaDuyet' => ['Đã duyệt', 'border-emerald-200 bg-emerald-50 text-emerald-700', 'bg-emerald-500'],
+        'HoanThanh' => ['Đã hoàn thành', 'border-emerald-200 bg-emerald-50 text-emerald-700', 'bg-emerald-500'],
+    ];
     $criteria = ['Diem_NghiepVu' => ['Nghiệp vụ', '20%'], 'Diem_KyNang' => ['Kỹ năng', '30%'], 'Diem_QuyTrinh' => ['Quy trình', '20%'], 'Diem_PhucVu' => ['Phục vụ', '15%'], 'Diem_TacPhong' => ['Tác phong', '15%']];
     $filters = request()->only('shift', 'q');
     $summary = [
-        ['Chờ duyệt', $statusCounts['ChoPheDuyet'] ?? 0, 'text-amber-600', 'pending'],
-        ['Đã trả lại', $statusCounts['TraLai'] ?? 0, 'text-rose-600', 'pending'],
+        ['Chờ duyệt', $statusCounts['ChoPheDuyet'] ?? 0, 'text-violet-600', 'pending'],
+        ['Đã trả lại', $statusCounts['TraLai'] ?? 0, 'text-amber-600', 'pending'],
         ['Đã duyệt', $tabCounts['approved'], 'text-emerald-600', 'approved'],
-        ['Chờ trưởng ca chấm', $statusCounts['ChoDanhGia'] ?? 0, 'text-coffee-500', null],
+        ['Chờ trưởng ca chấm', $statusCounts['ChoDanhGia'] ?? 0, 'text-blue-600', null],
     ];
     $grid = 'md:grid md:grid-cols-[minmax(0,2fr)_minmax(0,2fr)_minmax(0,1.3fr)_7rem_5rem_6rem_7rem_1.5rem] md:items-center md:gap-3';
 @endphp
@@ -42,7 +47,7 @@
         @forelse($assessments as $assessment)
             @php
                 $employee = $staff->firstWhere('id', $assessment->user_id);
-                [$statusLabel, $statusClass] = $statusLabels[$assessment->TrangThai] ?? [$assessment->TrangThai, 'border-slate-300 text-slate-600'];
+                [$statusLabel, $statusClass, $statusDot] = $statusLabels[$assessment->TrangThai] ?? [$assessment->TrangThai, 'border-slate-200 bg-slate-50 text-slate-600', 'bg-slate-400'];
                 $hasScores = ! ($assessment->IsPassed === null && ! $assessment->ChiTietDiem);
                 $leaderName = $proposalOwners->firstWhere('id', $assessment->NguoiDanhGia_id)?->name ?? '—';
                 $gradedAt = \Carbon\Carbon::parse($assessment->NgayDanhGia ?? $assessment->updated_at)->format('d/m/Y H:i');
@@ -58,7 +63,7 @@
                 <span class="text-xs text-slate-500">{{ $gradedAt }}</span>
                 <span class="font-bold text-coffee-900 md:text-right">{{ $assessment->Diem ?? '—' }}</span>
                 <span class="text-xs font-bold {{ $resultClass }}">{{ $resultLabel }}</span>
-                <span><button type="button" onclick="document.getElementById('{{ $dialogId }}').showModal()" aria-haspopup="dialog" title="Xem chi tiết và xử lý" class="inline-block rounded-full border px-2.5 py-0.5 text-xs font-semibold hover:shadow-sm {{ $statusClass }}">{{ $statusLabel }}</button></span>
+                <span><button type="button" onclick="document.getElementById('{{ $dialogId }}').showModal()" aria-haspopup="dialog" title="Xem chi tiết và xử lý" class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-xs font-semibold hover:shadow-sm {{ $statusClass }}"><span class="h-1.5 w-1.5 rounded-full {{ $statusDot }}" aria-hidden="true"></span>{{ $statusLabel }}</button></span>
                 <button type="button" onclick="document.getElementById('{{ $dialogId }}').showModal()" aria-label="Xem chi tiết đánh giá {{ $assessment->id }}" class="text-slate-400 hover:text-coffee-700"><i class="fa-regular fa-eye"></i></button>
             </div>
 
@@ -79,7 +84,7 @@
                             ] as $label => $value)
                                 <div class="{{ $row }}"><dt class="text-slate-500">{{ $label }}</dt><dd class="text-slate-900">{{ $value }}</dd></div>
                             @endforeach
-                            <div class="{{ $row }}"><dt class="text-slate-500">Trạng thái</dt><dd><span class="inline-block rounded-full border px-2.5 py-0.5 text-xs font-medium {{ $statusClass }}">{{ $statusLabel }}</span></dd></div>
+                            <div class="{{ $row }}"><dt class="text-slate-500">Trạng thái</dt><dd><span class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold {{ $statusClass }}"><span class="h-1.5 w-1.5 rounded-full {{ $statusDot }}" aria-hidden="true"></span>{{ $statusLabel }}</span></dd></div>
                             <div class="{{ $row }}"><dt class="text-slate-500">Kết quả</dt><dd><span class="font-semibold text-slate-900">{{ $assessment->Diem ?? '—' }}/100</span> <span class="ml-1 font-semibold {{ $resultClass }}">{{ $resultLabel }}</span> <span class="ml-1 text-xs text-slate-400">(đạt khi tổng ≥ 80 và mọi tiêu chí ≥ 70)</span></dd></div>
                             <div class="{{ $row }}"><dt class="text-slate-500">Điểm tiêu chí</dt><dd class="flex flex-wrap gap-2">
                                 @foreach($criteria as $column => [$label, $weight])
@@ -91,6 +96,8 @@
                             </dd></div>
                             @if(trim($assessment->NhanXet ?? '') !== '')
                                 <div class="{{ $row }}"><dt class="text-slate-500">Nhận xét</dt><dd class="whitespace-pre-line text-slate-900">{{ $assessment->NhanXet }}</dd></div>
+                            @else
+                                <div class="{{ $row }}"><dt class="text-slate-500">Nhận xét</dt><dd class="italic text-slate-400">(Trống – trưởng ca chưa nhập nhận xét)</dd></div>
                             @endif
                             @if($assessment->ChiTietDeXuat || $assessment->DeXuatXuLy)
                                 <div class="{{ $row }}"><dt class="text-slate-500">Đề xuất cải thiện</dt><dd>
@@ -106,7 +113,7 @@
                             @endif
                             <div class="{{ $row }}"><dt class="text-slate-500">Cảnh báo nguy cơ</dt><dd>
                                 @include('manager.risk', ['risk' => $employee->risk])
-                                <details class="mt-1 text-xs"><summary class="cursor-pointer text-slate-500">Xem lý do</summary><div class="mt-1">@include('manager.risk-details', ['person' => $employee, 'showBadge' => false])<p class="mt-2 text-[11px] text-slate-500">Chỉ để tham khảo, không cộng vào điểm và không chặn việc phê duyệt.</p></div></details>
+                                <details class="mt-1 text-xs"><summary class="cursor-pointer text-slate-500">Xem lý do</summary><div class="mt-1">@include('manager.risk-details', ['person' => $employee, 'showBadge' => false, 'referenceOnly' => true])</div></details>
                             </dd></div>
                         </dl>
                     </section>

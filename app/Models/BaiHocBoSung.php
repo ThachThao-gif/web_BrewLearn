@@ -10,6 +10,7 @@ class BaiHocBoSung extends Model
     use HasFactory;
 
     protected $table = 'bai_hoc_bo_sung';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -17,10 +18,11 @@ class BaiHocBoSung extends Model
         'user_id',
         'MaBaiHoc',
         'TrangThai',
-        'NgayGiao'
+        'NgayGiao',
     ];
 
-    public function baiHoc() {
+    public function baiHoc()
+    {
         return $this->belongsTo(BaiHoc::class, 'MaBaiHoc', 'MaBaiHoc');
     }
 }

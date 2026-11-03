@@ -15,13 +15,11 @@ use Illuminate\Support\Str;
 class CourseController extends Controller
 {
     /**
-     * Lấy ID người dùng hiện tại (Ưu tiên Auth, fallback sang Request hoặc mặc định 2)
+     * Lấy ID người dùng đang đăng nhập; không tin tham số user_id gửi từ trình duyệt.
      */
-    private function getCurrentUserId(Request $request)
+    private function getCurrentUserId(Request $request): int
     {
-        return Auth::id()
-            ?? $request->query('user_id')
-            ?? 2; // Mặc định cho môi trường Test
+        return (int) Auth::id();
     }
 
     /**

@@ -10,14 +10,18 @@ class DuDoanNguyCo extends Model
     use HasFactory;
 
     protected $table = 'du_doan_nguy_co';
+
     protected $primaryKey = 'MaDuDoan';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     public $timestamps = false;
 
     protected $fillable = [
-        'MaDuDoan', 'FK_MaNV', 'FK_BatchID', 
-        'NgayDuDoan', 'MucDoNguyCo', 'CacChiSoDauVao'
+        'MaDuDoan', 'FK_MaNV', 'FK_BatchID',
+        'NgayDuDoan', 'MucDoNguyCo', 'CacChiSoDauVao',
     ];
 
     // Cấu hình tự động ép kiểu JSON cho CacChiSoDauVao (9 Features AI)

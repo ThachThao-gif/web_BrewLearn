@@ -10,9 +10,13 @@ class BaiKiemTra extends Model
     use HasFactory;
 
     protected $table = 'bai_kiem_tra';
+
     protected $primaryKey = 'MaBaiKiemTra';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     public $timestamps = false;
 
     protected $fillable = ['MaBaiKiemTra', 'FK_MaCTDT', 'TenBaiKT', 'SoCauHoi', 'DiemDat', 'ThoiGianLamBai'];

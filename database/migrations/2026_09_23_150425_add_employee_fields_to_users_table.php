@@ -9,28 +9,28 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            if (!Schema::hasColumn('users', 'name_tag')) {
+            if (! Schema::hasColumn('users', 'name_tag')) {
                 $table->string('name_tag')->nullable()->after('name');
             }
-            if (!Schema::hasColumn('users', 'phone')) {
+            if (! Schema::hasColumn('users', 'phone')) {
                 $table->string('phone')->nullable()->after('email');
             }
-            if (!Schema::hasColumn('users', 'dob')) {
+            if (! Schema::hasColumn('users', 'dob')) {
                 $table->date('dob')->nullable();
             }
-            if (!Schema::hasColumn('users', 'id_card')) {
+            if (! Schema::hasColumn('users', 'id_card')) {
                 $table->string('id_card')->nullable();
             }
-            if (!Schema::hasColumn('users', 'ChiNhanh')) {
+            if (! Schema::hasColumn('users', 'ChiNhanh')) {
                 $table->string('ChiNhanh')->nullable();
             }
-            if (!Schema::hasColumn('users', 'tram_lam_viec')) {
+            if (! Schema::hasColumn('users', 'tram_lam_viec')) {
                 $table->string('tram_lam_viec')->nullable();
             }
-            if (!Schema::hasColumn('users', 'emergency_contact')) {
+            if (! Schema::hasColumn('users', 'emergency_contact')) {
                 $table->string('emergency_contact')->nullable();
             }
-            if (!Schema::hasColumn('users', 'emergency_phone')) {
+            if (! Schema::hasColumn('users', 'emergency_phone')) {
                 $table->string('emergency_phone')->nullable();
             }
         });

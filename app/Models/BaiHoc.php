@@ -10,17 +10,21 @@ class BaiHoc extends Model
     use HasFactory;
 
     protected $table = 'bai_hoc';
+
     protected $primaryKey = 'MaBaiHoc';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     public $timestamps = false;
 
     protected $fillable = [
-        'MaBaiHoc', 
-        'FK_MaCTDT', 
-        'TenBaiHoc', 
-        'NoiDung', 
-        'ThuTu'
+        'MaBaiHoc',
+        'FK_MaCTDT',
+        'TenBaiHoc',
+        'NoiDung',
+        'ThuTu',
     ];
 
     /**

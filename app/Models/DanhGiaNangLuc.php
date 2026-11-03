@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +10,9 @@ class DanhGiaNangLuc extends Model
     use HasFactory;
 
     protected $table = 'danh_gia_nang_luc';
+
     protected $primaryKey = 'MaDGNL';
+
     public $timestamps = false; // Bảng dùng cột created_at tự động
 
     protected $fillable = [
@@ -19,16 +22,18 @@ class DanhGiaNangLuc extends Model
         'NgayDanhGia',
         'DiemDanhGia',
         'KetQua',
-        'NhanXet'
+        'NhanXet',
     ];
 
     // Quan hệ lấy thông tin Nhân viên
-    public function nhanVien() {
+    public function nhanVien()
+    {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     // Quan hệ lấy bài học bổ sung nếu có
-    public function baiHocBoSung() {
+    public function baiHocBoSung()
+    {
         return $this->hasMany(BaiHocBoSung::class, 'MaDGNL', 'MaDGNL');
     }
 }

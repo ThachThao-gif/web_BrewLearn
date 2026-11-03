@@ -3,10 +3,10 @@
     $savedCriteria = ['nghiep_vu' => 'Kiến thức nghiệp vụ', 'ky_nang' => 'Thao tác công việc', 'quy_trinh' => 'Tuân thủ quy trình', 'phuc_vu' => 'Thái độ phục vụ', 'tac_phong' => 'Tác phong & phối hợp'];
 @endphp
 <details class="mt-2 text-xs font-normal">
-    <summary class="cursor-pointer font-bold {{ ($muted ?? false) ? 'text-honey-700' : 'text-amber-700' }}">Xem nội dung đề xuất đã gửi</summary>
+    <summary class="cursor-pointer font-bold text-amber-700">Xem nội dung đề xuất đã gửi</summary>
     <div class="mt-2 space-y-3 min-w-48 max-w-sm">
         @foreach(($savedProposal['details'] ?? []) as $type => $plan)
-            <div class="{{ ($muted ?? false) ? 'bg-honey-50 border border-honey-100' : 'bg-amber-50 border border-amber-100' }} rounded-lg p-3 space-y-1">
+            <div class="bg-amber-50 border border-amber-100 rounded-lg p-3 space-y-1">
                 <p class="font-bold">{{ $savedLabels[$type] ?? $type }}</p>
                 @if($type === 'daotaobosung')
                     <p>Kỹ năng: {{ $plan['skill'] ?? '' }}</p>

@@ -115,9 +115,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/{id}/submit', [CourseController::class, 'submitTest'])->name('submit');
     });
 
-    // 4. SOP, Hỗ trợ, Chính sách
-    Route::view('/sop', 'sop.index')->name('sop.index');
-    Route::view('/support', 'support.index')->name('support.index');
+    // 4. Chính sách
     Route::view('/policies', 'policies.index')->name('policies.index');
 
     Route::get('/assessments', fn () => redirect()->route('tests.index'))->name('assessments.index');

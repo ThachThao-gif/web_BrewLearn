@@ -50,7 +50,7 @@ class ManagerController extends Controller
         $predictions = DB::table('du_doan_nguy_co')->whereIn('user_id', $staff->modelKeys())
             ->where('phien_ban_mo_hinh', config('brewlearn.risk_rules_version'))
             ->where(fn ($q) => $q->where('cua_hang_id', $this->storeId())->orWhereNull('cua_hang_id'))
-            ->orderByDesc('ngay_du_doan')->orderByDesc('id')->get()->unique('user_id')->keyBy('user_id');
+            ->orderByDesc('id')->get()->unique('user_id')->keyBy('user_id');
         $evaluations = DB::table('danh_gia_nang_luc')->whereIn('user_id', $staff->modelKeys())->whereIn('TrangThai', ['DaDuyet', 'HoanThanh'])->whereNotNull('Diem')->orderByDesc('NgayDanhGia')->orderByDesc('id')->get();
         $progress = app(CourseProgress::class)->summarize($staff);
         app(AssessmentReminder::class)->decorate($staff);
@@ -270,15 +270,27 @@ class ManagerController extends Controller
         return DB::table('yeu_cau_dao_tao_lai')->whereIn('user_id', $this->members()->pluck('id'))->find($id) ?? abort(404);
     }
 
+    /**
+     * Gắn các vòng đào tạo lại, tiến trình hiển thị và các tiêu chí dưới 70 của bài đánh giá lại từng vòng.
+     */
     private function attachRounds($plans): void
     {
-        $rounds = DB::table('retraining_rounds')->whereIn('request_id', $plans->pluck('id'))->orderBy('round_number')->get()->groupBy('request_id');
+        $rounds = DB::table('retraining_rounds')->whereIn('request_id', $plans->pluck('id'))->orderBy('round_number')->get();
+        $assessments = DB::table('danh_gia_nang_luc')->whereIn('id', $rounds->pluck('assessment_id')->filter())->get()->keyBy('id');
+        $criteria = ['Diem_NghiepVu' => 'Nghiệp vụ', 'Diem_KyNang' => 'Kỹ năng', 'Diem_QuyTrinh' => 'Quy trình', 'Diem_PhucVu' => 'Phục vụ', 'Diem_TacPhong' => 'Tác phong'];
+        $rounds = $rounds->groupBy('request_id');
         foreach ($plans as $plan) {
             $plan->rounds = $rounds->get($plan->id, collect());
             $plan->next_round_number = ($plan->rounds->max('round_number') ?? 0) + 1;
             $plan->round_limit_reached = $plan->next_round_number > self::MAX_RETRAINING_ROUNDS;
+            $plan->display_state = $plan->tien_trinh === 'ChoGiao' && $plan->round_limit_reached ? 'DungDaoTao' : $plan->tien_trinh;
             foreach ($plan->rounds as $round) {
                 $round->eligibility = app(AssessmentEligibility::class)->round($round, $plan->user_id);
+                $assessment = $assessments->get($round->assessment_id);
+                $round->weak_criteria = $assessment && $assessment->IsPassed !== null
+                    ? collect($criteria)->filter(fn ($label, $column) => $assessment->$column !== null && $assessment->$column < 70)
+                        ->map(fn ($label, $column) => $label.' '.$assessment->$column)->values()->all()
+                    : [];
             }
         }
     }

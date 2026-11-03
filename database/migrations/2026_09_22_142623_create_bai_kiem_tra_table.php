@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('TenBaiKiemTra');
             $table->integer('ThoiGianLamBai')->nullable()->comment('Thời gian tính bằng phút');
             $table->integer('DiemChuan')->default(80)->comment('Điểm đạt (%)');
-            
+
             // Khóa ngoại liên kết với bài học (hoặc chương trình đào tạo) nếu có
             $table->unsignedBigInteger('MaBaiHoc')->nullable();
-            
+
             $table->timestamps();
 
             // Nếu bạn có bảng bai_hoc, có thể mở comment dòng dưới để tạo khóa ngoại:

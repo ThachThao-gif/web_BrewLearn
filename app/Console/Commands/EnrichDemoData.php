@@ -57,7 +57,7 @@ class EnrichDemoData extends Command
             $this->convertIntern();
             $this->scheduleAssessment('operations1.demo@brewlearn.com');
             $this->pendingApproval('operations5.demo@brewlearn.com');
-            $this->returnedAssessment('operations4.demo@brewlearn.com');
+            $this->pendingWithoutComment('operations4.demo@brewlearn.com');
             $this->awaitingReassessment('operations6.demo@brewlearn.com');
             $this->stoppedRetraining($manager);
             $this->recentFailedAttempt('huy.demo@brewlearn.com');
@@ -132,16 +132,15 @@ class EnrichDemoData extends Command
         $this->notify($this->managerId, 'Đánh giá chờ phê duyệt', 'Trưởng ca đã gửi đánh giá năng lực của nhân viên '.$person->name.'. Vui lòng xem tại mục Duyệt đánh giá.', 'training', 'demo-pending-'.$id);
     }
 
-    private function returnedAssessment(string $email): void
+    /**
+     * Hồ sơ chờ duyệt nhưng trưởng ca bỏ trống nhận xét, để quản lý minh họa thao tác trả lại kèm lý do.
+     */
+    private function pendingWithoutComment(string $email): void
     {
         $person = User::where('email', $email)->firstOrFail();
-        $leader = $this->leaderOf($person);
         $at = $this->today->copy()->subDays(2)->setTime(9, 30);
-        $id = $this->assessment($person, $leader, 'Tiêu chuẩn năng lực '.$person->ChucVu, $at, [80, 65, 75, 80, 85],
-            'Thao tác đánh sữa chưa ổn định trong giờ cao điểm.', 'TraLai',
-            'Nhận xét chưa nêu cụ thể lỗi khi đánh sữa; bổ sung số ca theo dõi và mức nhiệt sữa cần đạt.');
-        $this->notify($leader, 'Đánh giá cần bổ sung', 'Quản lý trả lại đánh giá của nhân viên '.$person->name.
-            '. Vui lòng bổ sung: Nhận xét chưa nêu cụ thể lỗi khi đánh sữa; bổ sung số ca theo dõi và mức nhiệt sữa cần đạt.', 'training', 'demo-return-'.$id);
+        $id = $this->assessment($person, $this->leaderOf($person), 'Tiêu chuẩn năng lực '.$person->ChucVu, $at, [80, 65, 75, 80, 85], '', 'ChoPheDuyet');
+        $this->notify($this->managerId, 'Đánh giá chờ phê duyệt', 'Trưởng ca đã gửi đánh giá năng lực của nhân viên '.$person->name.'. Vui lòng xem tại mục Duyệt đánh giá.', 'training', 'demo-pending-'.$id);
     }
 
     private function awaitingReassessment(string $email): void
@@ -191,7 +190,8 @@ class EnrichDemoData extends Command
             if ($round === 0) {
                 $plan = DB::table('yeu_cau_dao_tao_lai')->insertGetId(['user_id' => $person->id, 'assessment_id' => $assessment,
                     'nguoi_de_xuat_id' => $leader, 'nguoi_duyet_id' => $manager->id, 'nguon_de_xuat' => 'Trưởng ca đề xuất',
-                    'ly_do' => 'Đánh giá chưa đạt: '.$comment, 'ke_hoach' => $proposal, 'trang_thai' => 'DaDuyet', 'tien_trinh' => 'ChoGiao',
+                    'ly_do' => 'Đánh giá chưa đạt (điểm tổng '.$this->total($scores).'; dưới 70: '.collect(['Nghiệp vụ', 'Kỹ năng', 'Quy trình', 'Phục vụ', 'Tác phong'])
+                        ->filter(fn (string $label, int $index) => $scores[$index] < 70)->map(fn (string $label, int $index) => $label.' '.$scores[$index])->implode(', ').'). '.$comment, 'ke_hoach' => $proposal, 'trang_thai' => 'DaDuyet', 'tien_trinh' => 'ChoGiao',
                     'ket_qua_sau_dao_tao_lai' => 'ChuaCoKetQua', 'ngay_de_xuat' => $at, 'ngay_duyet' => $at->copy()->addHour(),
                     'created_at' => $at, 'updated_at' => $at->copy()->addHour()]);
 
@@ -202,13 +202,14 @@ class EnrichDemoData extends Command
                 'proposal' => $proposal, 'deadline' => $at->copy()->subDays(2)->toDateString(), 'assessment_date' => $at->toDateString(),
                 'assessment_id' => $assessment, 'status' => 'DaDuyet', 'result' => 'ChuaDat', 'score' => $this->total($scores),
                 'approved_by' => $manager->id, 'approved_at' => $at->copy()->addHour(), 'required_lessons' => '[]', 'required_quizzes' => '[]',
-                'learning_baseline' => '{}', 'confirmed_by' => $leader, 'confirmed_at' => $at->copy()->subDay(),
+                'learning_baseline' => '{}', 'confirmed_by' => $leader, 'confirmed_at' => $at->copy()->subDays(2)->setTime(17, 0),
                 'confirmation_note' => 'Đã kèm đủ 5 ca theo kế hoạch.', 'created_at' => $at->copy()->subDays(14), 'updated_at' => $at->copy()->addHour()]);
         }
         $last = Carbon::parse($timeline[3][0]);
         DB::table('yeu_cau_dao_tao_lai')->where('id', $plan)->update(['tien_trinh' => 'DungDaoTao', 'ket_qua_sau_dao_tao_lai' => 'ChuaDat',
             'danh_gia_lai_id' => DB::table('retraining_rounds')->where('request_id', $plan)->where('round_number', 3)->value('assessment_id'),
-            'nguoi_phu_trach_id' => $leader, 'updated_at' => $last->copy()->addHour()]);
+            'nguoi_phu_trach_id' => $leader, 'han_hoan_thanh' => $last->copy()->subDays(2)->toDateString(), 'ngay_danh_gia_lai' => $last->toDateString(),
+            'updated_at' => $last->copy()->addHour()]);
         $this->notify($manager->id, 'Đào tạo lại đã đạt giới hạn', 'Nhân viên '.$person->name.' vẫn chưa đạt sau 3 vòng đào tạo lại'.
             '. Đã dừng đào tạo lại; quản lý cần xem xét hướng xử lý.', 'training', 'training-limit-'.$plan, $last->copy()->addHour());
     }

@@ -10,9 +10,13 @@ class ChuongTrinhDaoTao extends Model
     use HasFactory;
 
     protected $table = 'chuong_trinh_dao_tao';
+
     protected $primaryKey = 'MaCTDT';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     public $timestamps = false;
 
     protected $fillable = ['MaCTDT', 'TenCTDT', 'MoTa', 'ThoiLuong', 'NgayTao', 'FK_MaNguoiTao', 'ChucVuApDung'];

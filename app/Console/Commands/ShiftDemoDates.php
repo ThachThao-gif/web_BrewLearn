@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Schema;
 class ShiftDemoDates extends Command
 {
     /**
-     * Ngày dữ liệu demo được thiết kế quanh đó (dùng khi chưa có file mốc).
+     * Ngày mốc của dữ liệu trong database/brewlearn.sql (dùng khi chưa có file mốc).
      */
-    private const DEFAULT_ANCHOR = '2026-10-16';
+    private const DEFAULT_ANCHOR = '2026-10-29';
 
     /**
      * Các cột ngày giờ cần dời theo từng bảng.

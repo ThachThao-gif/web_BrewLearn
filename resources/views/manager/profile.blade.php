@@ -21,10 +21,10 @@
     ])
 
     {{-- Cảnh báo nguy cơ (chỉ quản lý) --}}
-    <section id="panel-risk" role="tabpanel" aria-labelledby="tab-risk" x-show="tab === 'risk'" x-cloak class="rounded-2xl border border-coffee-200 bg-white p-6 shadow-sm">
-        <h2 class="text-base font-bold text-coffee-900">Cảnh báo nguy cơ theo luật</h2>
-        <p class="mt-1 rounded-lg bg-amber-50 p-3 text-xs text-amber-900"><i class="fa-solid fa-circle-info mr-1" aria-hidden="true"></i>Chỉ hỗ trợ xem xét hồ sơ. Điểm cảnh báo không phải xác suất, không cộng vào điểm năng lực và không quyết định kết quả đánh giá.</p>
-        <div class="mt-4">@include('manager.risk-details')</div>
+    <section id="panel-risk" role="tabpanel" aria-labelledby="tab-risk" x-show="tab === 'risk'" x-cloak class="rounded-2xl border border-coffee-200 bg-white p-6 shadow-sm md:p-8">
+        <h2 class="text-xl font-bold text-coffee-900 md:text-2xl">Cảnh báo nguy cơ theo luật</h2>
+        <p class="mt-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900"><i class="fa-solid fa-circle-info mt-0.5 text-amber-700" aria-hidden="true"></i>Chỉ hỗ trợ xem xét hồ sơ. Điểm cảnh báo không phải xác suất, không cộng vào điểm năng lực và không quyết định kết quả đánh giá.</p>
+        <div class="mt-6">@include('manager.risk-details', ['spacious' => true])</div>
     </section>
 
     {{-- Đào tạo lại (chỉ quản lý) --}}
