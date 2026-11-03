@@ -14,11 +14,19 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
 
 class LeaderEvaluationController extends Controller
 {
+    /**
+     * Bộ tiêu chuẩn năng lực theo vị trí công việc, dùng khi trưởng ca xếp lịch đánh giá.
+     */
+    private const STANDARDS = [
+        'STD_BARISTA' => 'Tiêu chuẩn năng lực Barista',
+        'STD_CASHIER' => 'Tiêu chuẩn năng lực Thu ngân',
+        'STD_SERVER' => 'Tiêu chuẩn năng lực Phục vụ',
+    ];
+
     private function staffQuery(): Builder
     {
         $this->authorizeLeader();
@@ -35,26 +43,11 @@ class LeaderEvaluationController extends Controller
     }
 
     /**
-     * Danh sách Bộ tiêu chuẩn năng lực chuẩn hóa theo vị trí công việc
-     */
-    private function getStandardList()
-    {
-        return collect([
-            (object) ['MaCTDT' => 'STD_BARISTA', 'TenCTDT' => 'Tiêu chuẩn năng lực Barista'],
-            (object) ['MaCTDT' => 'STD_CASHIER', 'TenCTDT' => 'Tiêu chuẩn năng lực Thu ngân'],
-            (object) ['MaCTDT' => 'STD_SERVER',  'TenCTDT' => 'Tiêu chuẩn năng lực Phục vụ'],
-        ]);
-    }
-
-    /**
-     * Hiển thị trang Dashboard cho Leader (/leader/dashboard)
+     * Trang xếp lịch và chấm điểm của trưởng ca.
      */
     public function index(): View
     {
         $this->authorizeLeader();
-        $currentUserId = Auth::id();
-
-        // 1. Tất cả danh sách nhân viên
         $staffs = $this->staffQuery()->get();
         foreach ($staffs as $person) {
             $person->eligibility = app(AssessmentEligibility::class)->initial($person);
@@ -63,22 +56,22 @@ class LeaderEvaluationController extends Controller
         // Dùng cùng chu kỳ đánh giá và trạng thái làm việc với quản lý cửa hàng.
         $dueStaffs = app(AssessmentReminder::class)->decorate($staffs)->where('needs_reminder', true);
 
-        // 3. Bộ tiêu chuẩn năng lực vị trí
-        $standards = $this->getStandardList();
+        $standards = collect(self::STANDARDS)->map(fn (string $name, string $code) => (object) ['MaCTDT' => $code, 'TenCTDT' => $name])->values();
 
-        // 4. Danh sách Lịch sát hạch
+        // Mỗi nhân viên: giữ mọi lượt còn cần xử lý, nếu không có thì chỉ giữ lượt gần nhất
         $schedules = DB::table('danh_gia_nang_luc')
             ->join('users', 'danh_gia_nang_luc.user_id', '=', 'users.id')
             ->select(
                 'danh_gia_nang_luc.id',
                 'danh_gia_nang_luc.user_id',
                 'users.name as staff_name',
-                'danh_gia_nang_luc.TieuChuan as tiêu_chuẩn',
+                'danh_gia_nang_luc.TieuChuan',
                 'danh_gia_nang_luc.MaCTDT',
                 'danh_gia_nang_luc.NgayHen',
                 'danh_gia_nang_luc.TrangThai',
                 'danh_gia_nang_luc.Diem',
-                'danh_gia_nang_luc.ChiTietDeXuat'
+                'danh_gia_nang_luc.ChiTietDeXuat',
+                'danh_gia_nang_luc.ly_do_tra_lai'
             )
             ->whereIn('danh_gia_nang_luc.user_id', $staffs->modelKeys())
             ->whereIn('danh_gia_nang_luc.TrangThai', ['ChoDanhGia', 'ChoPheDuyet', 'DaDuyet', 'HoanThanh', 'TraLai'])
@@ -88,27 +81,11 @@ class LeaderEvaluationController extends Controller
         $schedules = $schedules->groupBy('user_id')->flatMap(function ($history) {
             $pending = $history->whereIn('TrangThai', ['ChoDanhGia', 'ChoPheDuyet', 'TraLai']);
 
-            // Keep every actionable schedule; completed history belongs in the staff profile.
             return $pending->isNotEmpty() ? $pending : $history->sortBy([['NgayHen', 'desc'], ['id', 'desc']])->take(1);
         })->sortBy('NgayHen')->values();
 
-        $schedules = $schedules->groupBy('user_id')->flatMap(function ($history) {
-            $pending = $history->whereIn('TrangThai', ['ChoDanhGia', 'ChoPheDuyet', 'TraLai']);
-
-            // Keep every actionable schedule; completed history belongs in the staff profile.
-            return $pending->isNotEmpty() ? $pending : $history->sortByDesc('NgayHen')->sortByDesc('id')->take(1);
-        })->sortBy('NgayHen')->values();
-
-        if (Schema::hasColumn('danh_gia_nang_luc', 'ly_do_tra_lai')) {
-            $reasons = DB::table('danh_gia_nang_luc')->whereIn('id', $schedules->pluck('id'))->pluck('ly_do_tra_lai', 'id');
-            foreach ($schedules as $schedule) {
-                $schedule->ly_do_tra_lai = $reasons->get($schedule->id);
-            }
-        }
-        $proposalOwners = User::orderBy('name')->get(['id', 'name']);
-        if (auth()->user()?->cua_hang_id && Schema::hasColumn('users', 'cua_hang_id')) {
-            $proposalOwners = User::where('cua_hang_id', auth()->user()->cua_hang_id)->orderBy('name')->get(['id', 'name']);
-        }
+        $proposalOwners = User::when(Auth::user()->cua_hang_id, fn ($query, $storeId) => $query->where('cua_hang_id', $storeId))
+            ->orderBy('name')->get(['id', 'name']);
         $proposalCourses = DB::table('chuong_trinh_dao_tao')->orderBy('MaCTDT')->get(['MaCTDT', 'TenCTDT']);
         $proposalLessons = DB::table('bai_hoc')->orderBy('FK_MaCTDT')->orderBy('ThuTu')->get(['MaBaiHoc', 'FK_MaCTDT', 'TenBaiHoc']);
 
@@ -118,16 +95,15 @@ class LeaderEvaluationController extends Controller
     }
 
     /**
-     * Tạo lịch sát hạch mới cho 1 NHÂN VIÊN CỤ THỂ & TỰ ĐỘNG BẮN THÔNG BÁO (type = schedule)
-     * (Bắt buộc chọn 1 nhân viên, không gửi hàng loạt)
+     * Xếp lịch đánh giá năng lực cho một nhân viên đủ điều kiện và gửi thông báo cho nhân viên đó.
      */
     public function createSchedule(Request $request): RedirectResponse
     {
         $this->authorizeLeader();
-        $request->validate([
+        $data = $request->validate([
             'user_id' => 'required|integer|exists:users,id',
-            'MaCTDT' => 'required',
-            'NgayDanhGia' => 'required',
+            'MaCTDT' => ['required', Rule::in(array_keys(self::STANDARDS))],
+            'NgayDanhGia' => 'required|date',
             'note' => 'nullable|string|max:2000',
         ], [
             'user_id.required' => 'Vui lòng chọn nhân viên.',
@@ -136,77 +112,36 @@ class LeaderEvaluationController extends Controller
             'NgayDanhGia.required' => 'Vui lòng chọn thời gian đánh giá.',
         ]);
 
-        $standardMap = [
-            'STD_BARISTA' => 'Tiêu chuẩn năng lực Barista',
-            'STD_CASHIER' => 'Tiêu chuẩn năng lực Thu ngân',
-            'STD_SERVER' => 'Tiêu chuẩn năng lực Phục vụ',
-        ];
-
-        $tieuChuanTen = $standardMap[$request->MaCTDT] ?? ($request->MaCTDT ?: 'Tiêu chuẩn năng lực Barista');
-        $maCTDT_Value = is_numeric($request->MaCTDT) ? $request->MaCTDT : null;
-        $ghiChuText = $request->input('note') ?? $request->input('ghi_chu') ?? $request->input('comment');
-
-        // Tạo nội dung thông báo chuẩn hóa
-        $messageContent = "Bạn có lịch sát hạch '$tieuChuanTen' vào lúc ".Carbon::parse($request->NgayDanhGia)->format('H:i d/m/Y').'.';
-        if (! empty(trim($ghiChuText))) {
-            $messageContent .= "\n\nLời dặn từ Trưởng ca: ".trim($ghiChuText);
+        $standard = self::STANDARDS[$data['MaCTDT']];
+        $message = "Bạn có lịch sát hạch '$standard' vào lúc ".Carbon::parse($data['NgayDanhGia'])->format('H:i d/m/Y').'.';
+        if (trim($data['note'] ?? '') !== '') {
+            $message .= "\n\nLời dặn từ Trưởng ca: ".trim($data['note']);
         }
 
-        DB::beginTransaction();
-        try {
-            $person = $this->staffQuery()->where('id', $request->user_id)->lockForUpdate()->first();
+        return DB::transaction(function () use ($data, $standard, $message): RedirectResponse {
+            $person = $this->staffQuery()->where('id', $data['user_id'])->lockForUpdate()->first();
             if (! $person) {
-                DB::rollBack();
-
                 return back()->withErrors(['user_id' => 'Chỉ xếp lịch cho nhân viên đang làm việc trong phạm vi ca / cửa hàng.'])->withInput();
             }
             if (DB::table('danh_gia_nang_luc')->where('user_id', $person->id)->whereIn('TrangThai', ['ChoDanhGia', 'ChoPheDuyet', 'TraLai'])->exists()) {
-                DB::rollBack();
-
                 return back()->withErrors(['user_id' => 'Nhân viên đã có lịch đánh giá hoặc kết quả đang xử lý. Vui lòng xử lý lượt hiện tại trước.'])->withInput();
             }
-            $now = now();
             $eligibility = app(AssessmentEligibility::class)->initial($person);
             if (! $eligibility['ready']) {
-                DB::rollBack();
-
                 return back()->withErrors(['user_id' => 'Chưa đủ điều kiện đánh giá: '.implode(' ', $eligibility['missing'])])->withInput();
             }
-            $leaderId = auth()->id() ?? 1;
 
-            // 1. Lưu bản ghi lịch sát hạch cho 1 cá nhân
             DB::table('danh_gia_nang_luc')->insert([
-                'user_id' => $request->user_id,
-                'NguoiDanhGia_id' => $leaderId,
-                'MaCTDT' => $maCTDT_Value,
-                'TieuChuan' => $tieuChuanTen,
-                'NgayHen' => $request->NgayDanhGia,
-                'NgayDanhGia' => null,
-                'Diem' => null,
-                'TrangThai' => 'ChoDanhGia',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'user_id' => $person->id, 'NguoiDanhGia_id' => Auth::id(), 'TieuChuan' => $standard,
+                'NgayHen' => $data['NgayDanhGia'], 'TrangThai' => 'ChoDanhGia', 'created_at' => now(), 'updated_at' => now(),
             ]);
-
-            // 2. Bắn thông báo cho nhân viên đó
             DB::table('notifications')->insert([
-                'user_id' => $request->user_id,
-                'title' => 'Lịch sát hạch năng lực mới từ Trưởng ca',
-                'message' => $messageContent,
-                'type' => 'schedule',
-                'is_read' => 0,
-                'created_at' => $now,
-                'updated_at' => $now,
+                'user_id' => $person->id, 'title' => 'Lịch sát hạch năng lực mới từ Trưởng ca', 'message' => $message,
+                'type' => 'schedule', 'is_read' => 0, 'created_at' => now(), 'updated_at' => now(),
             ]);
 
-            DB::commit();
-
-            return redirect()->back()->with('success', 'Đã xếp lịch và phát thông báo tới nhân viên thành công!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return redirect()->back()->with('error', 'Có lỗi xảy ra khi tạo lịch sát hạch: '.$e->getMessage());
-        }
+            return back()->with('success', 'Đã xếp lịch và phát thông báo tới nhân viên thành công!');
+        });
     }
 
     /**
@@ -271,7 +206,7 @@ class LeaderEvaluationController extends Controller
     }
 
     /**
-     * Xử lý lưu, tính kết quả đánh giá năng lực & TỰ ĐỘNG BẮN THÔNG BÁO BÁO KẾT QUẢ
+     * Lưu điểm năm tiêu chí, tính kết quả (đạt khi tổng >= 80 và mọi tiêu chí >= 70) và gửi quản lý phê duyệt.
      */
     public function saveScore(Request $request): RedirectResponse
     {
@@ -294,7 +229,7 @@ class LeaderEvaluationController extends Controller
         $pv = (float) $request->diem_phuc_vu;
         $tp = (float) $request->diem_tac_phong;
 
-        // Công thức tính trọng số: 20% NV + 30% KN + 20% QT + 15% PV + 15% TP
+        // Trọng số: Nghiệp vụ 20%, Kỹ năng 30%, Quy trình 20%, Phục vụ 15%, Tác phong 15%
         $diemTong = round(($nv * 0.20) + ($kn * 0.30) + ($qt * 0.20) + ($pv * 0.15) + ($tp * 0.15), 1);
         $allCriteriaPassed = ($nv >= 70 && $kn >= 70 && $qt >= 70 && $pv >= 70 && $tp >= 70);
         $isPassed = ($diemTong >= 80) && $allCriteriaPassed;
@@ -370,101 +305,63 @@ class LeaderEvaluationController extends Controller
             }
         }
 
-        $assessment = DB::table('danh_gia_nang_luc')->where('id', $request->assessment_id)->first();
+        $assessment = DB::table('danh_gia_nang_luc')->find($request->assessment_id);
+        abort_unless($this->staffQuery()->where('id', $assessment->user_id)->exists(), 403);
 
-        if (! $assessment) {
-            return redirect()->back()->with('error', 'Không tìm thấy hồ sơ đánh giá tương ứng!');
-        }
-        if (auth()->user()?->cua_hang_id && ! $this->staffQuery()->where('id', $assessment->user_id)->exists()) {
-            abort(403);
-        }
-
-        DB::beginTransaction();
-        try {
-            // 1. Chuẩn bị dữ liệu cập nhật
+        return DB::transaction(function () use ($request, $isPassed, $diemTong, $nv, $kn, $qt, $pv, $tp, $proposalDetails): RedirectResponse {
             $assessment = DB::table('danh_gia_nang_luc')->where('id', $request->assessment_id)->lockForUpdate()->first();
             if (! in_array($assessment->TrangThai, ['ChoDanhGia', 'TraLai'])) {
-                DB::rollBack();
-
                 return back()->with('error', 'Đánh giá đang chờ duyệt hoặc đã duyệt. Vui lòng tạo lượt đánh giá mới.');
             }
-            $updateData = [
+            $now = now();
+            DB::table('danh_gia_nang_luc')->where('id', $assessment->id)->update([
                 'Diem' => $diemTong,
-                'NgayDanhGia' => now(),
+                'Diem_NghiepVu' => $nv,
+                'Diem_KyNang' => $kn,
+                'Diem_QuyTrinh' => $qt,
+                'Diem_PhucVu' => $pv,
+                'Diem_TacPhong' => $tp,
+                'ChiTietDiem' => json_encode(['nghiep_vu' => $nv, 'ky_nang' => $kn, 'quy_trinh' => $qt, 'phuc_vu' => $pv, 'tac_phong' => $tp]),
+                'IsPassed' => $isPassed ? 1 : 0,
+                'NgayDanhGia' => $now,
                 'NhanXet' => $request->comment,
                 'TrangThai' => 'ChoPheDuyet',
-                'updated_at' => now(),
-            ];
+                'DeXuatXuLy' => $isPassed ? null : json_encode($request->input('proposals'), JSON_UNESCAPED_UNICODE),
+                'ChiTietDeXuat' => $isPassed ? null : json_encode([
+                    'source' => 'Trưởng ca đề xuất', 'proposed_by' => Auth::id(),
+                    'status' => 'ChoPheDuyet', 'details' => $proposalDetails,
+                ], JSON_UNESCAPED_UNICODE),
+                'nguoi_duyet_id' => null,
+                'ngay_duyet' => null,
+                'ly_do_tra_lai' => null,
+                'updated_at' => $now,
+            ]);
 
-            if (Schema::hasColumn('danh_gia_nang_luc', 'IsPassed')) {
-                $updateData['IsPassed'] = $isPassed ? 1 : 0;
-            }
-
-            if (Schema::hasColumn('danh_gia_nang_luc', 'ChiTietDiem')) {
-                $updateData['ChiTietDiem'] = json_encode([
-                    'nghiep_vu' => $nv,
-                    'ky_nang' => $kn,
-                    'quy_trinh' => $qt,
-                    'phuc_vu' => $pv,
-                    'tac_phong' => $tp,
+            $employee = DB::table('users')->where('id', $assessment->user_id)->first(['name', 'cua_hang_id']);
+            $managerIds = DB::table('users')->where('cua_hang_id', $employee->cua_hang_id)
+                ->whereRaw('LOWER(TRIM(ChucVu)) = ?', [User::MANAGER_POSITION])->pluck('id');
+            foreach ($managerIds as $managerId) {
+                DB::table('notifications')->insertOrIgnore([
+                    'user_id' => $managerId, 'title' => 'Đánh giá chờ phê duyệt',
+                    'message' => 'Trưởng ca đã gửi đánh giá năng lực của nhân viên '.$employee->name.'. Vui lòng xem tại mục Duyệt đánh giá.',
+                    'type' => 'training', 'is_read' => 0, 'created_at' => $now, 'updated_at' => $now,
+                    'event_key' => 'pending-review-'.$managerId.'-'.$assessment->id.'-'.$now->toDateTimeString(),
                 ]);
             }
 
-            foreach (['Diem_NghiepVu' => $nv, 'Diem_KyNang' => $kn, 'Diem_QuyTrinh' => $qt, 'Diem_PhucVu' => $pv, 'Diem_TacPhong' => $tp] as $column => $score) {
-                if (Schema::hasColumn('danh_gia_nang_luc', $column)) {
-                    $updateData[$column] = $score;
-                }
-            }
-            $updateData['DeXuatXuLy'] = $isPassed ? null : json_encode($request->input('proposals'), JSON_UNESCAPED_UNICODE);
-            if (Schema::hasColumn('danh_gia_nang_luc', 'nguoi_duyet_id')) {
-                $updateData['nguoi_duyet_id'] = null;
-                $updateData['ngay_duyet'] = null;
-                $updateData['ly_do_tra_lai'] = null;
-            }
-            $updateData['ChiTietDeXuat'] = $isPassed ? null : json_encode([
-                'source' => 'Trưởng ca đề xuất', 'proposed_by' => Auth::id(),
-                'status' => 'ChoPheDuyet', 'details' => $proposalDetails,
-            ], JSON_UNESCAPED_UNICODE);
-
-            // 2. Cập nhật bảng kết quả
-            DB::table('danh_gia_nang_luc')
-                ->where('id', $request->assessment_id)
-                ->update($updateData);
-
-            if (Schema::hasColumn('users', 'cua_hang_id')) {
-                $storeId = DB::table('users')->where('id', $assessment->user_id)->value('cua_hang_id');
-                if ($storeId) {
-                    foreach (DB::table('users')->where('cua_hang_id', $storeId)->whereRaw('LOWER(TRIM(ChucVu)) IN (?, ?)', ['quản lý cửa hàng', 'quan ly cua hang'])->pluck('id') as $managerId) {
-                        $notification = ['user_id' => $managerId, 'title' => 'Đánh giá chờ phê duyệt', 'message' => 'Trưởng ca đã gửi đánh giá năng lực của nhân viên '.(DB::table('users')->where('id', $assessment->user_id)->value('name') ?? '').'. Vui lòng xem tại mục Duyệt đánh giá.', 'type' => 'training', 'is_read' => 0, 'created_at' => now(), 'updated_at' => now()];
-                        if (Schema::hasColumn('notifications', 'event_key')) {
-                            $notification['event_key'] = 'pending-review-'.$managerId.'-'.$assessment->id.'-'.$updateData['updated_at']->toDateTimeString();
-                        }
-                        DB::table('notifications')->insertOrIgnore($notification);
-                    }
-                }
-            }
-            DB::commit();
-
-            $msg = $isPassed
+            return back()->with('success', $isPassed
                 ? "Đã gửi kết quả đánh giá ĐẠT ({$diemTong}/100 điểm) cho Quản lý cửa hàng phê duyệt. Nhân viên nhận kết quả sau khi được duyệt."
-                : "Đã gửi đề xuất xử lý cho nhân viên CHƯA ĐẠT ({$diemTong}/100 điểm) tới Quản lý cửa hàng!";
-
-            return redirect()->back()->with('success', $msg);
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return redirect()->back()->with('error', 'Có lỗi xảy ra khi lưu kết quả: '.$e->getMessage());
-        }
+                : "Đã gửi đề xuất xử lý cho nhân viên CHƯA ĐẠT ({$diemTong}/100 điểm) tới Quản lý cửa hàng!");
+        });
     }
 
     /**
-     * Hiển thị danh sách nhân sự ca (/leader/staff-list)
+     * Danh sách nhân viên trong ca kèm tiến độ học, điểm kiểm tra và kết quả đánh giá gần nhất.
      */
     public function staffList(): View
     {
         $this->authorizeLeader();
         $truongCa = Auth::user();
-        $currentUserId = Auth::id();
 
         $staffs = $this->staffQuery()->get();
 
@@ -488,9 +385,6 @@ class LeaderEvaluationController extends Controller
 
         $coursePercentages = app(CourseProgress::class)->coursePercentages($staffs);
         foreach ($staffs as $staff) {
-            $userChucVu = $staff->ChucVu ?? $staff->chuc_vu ?? '';
-            $cleanChucVu = mb_strtoupper(trim($userChucVu), 'UTF-8');
-
             $percentages = $coursePercentages->get($staff->id, collect());
             $totalCoursesCount = $percentages->count();
             $completedCoursesCount = $percentages->filter(fn ($value) => $value >= 100)->count();
@@ -504,27 +398,12 @@ class LeaderEvaluationController extends Controller
 
             $assessment = $latestAssessments->get($staff->id);
             $staff->assessment_score = $assessment ? round((float) $assessment->Diem, 1) : null;
-            $staff->assessment_status = null;
-
-            if ($assessment) {
-                if ($assessment->TrangThai === 'ChoPheDuyet') {
-                    $staff->assessment_status = 'Chờ duyệt';
-                } elseif (isset($assessment->IsPassed)) {
-                    $staff->assessment_status = $assessment->IsPassed ? 'Đạt' : 'Chưa đạt';
-                } else {
-                    $criteria = json_decode($assessment->ChiTietDiem ?? '', true);
-                    $criterionKeys = ['nghiep_vu', 'ky_nang', 'quy_trinh', 'phuc_vu', 'tac_phong'];
-                    if (is_array($criteria) && count(array_intersect($criterionKeys, array_keys($criteria))) === 5) {
-                        $isPassed = $assessment->Diem >= 80;
-                        foreach ($criterionKeys as $key) {
-                            $isPassed = $isPassed && is_numeric($criteria[$key]) && $criteria[$key] >= 70;
-                        }
-                        $staff->assessment_status = $isPassed ? 'Đạt' : 'Chưa đạt';
-                    } else {
-                        $staff->assessment_status = 'Đã duyệt';
-                    }
-                }
-            }
+            $staff->assessment_status = match (true) {
+                ! $assessment => null,
+                $assessment->TrangThai === 'ChoPheDuyet' => 'Chờ duyệt',
+                $assessment->IsPassed === null => 'Đã duyệt',
+                default => $assessment->IsPassed ? 'Đạt' : 'Chưa đạt',
+            };
         }
 
         $totalStaffs = $staffs->count();

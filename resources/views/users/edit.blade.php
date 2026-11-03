@@ -5,7 +5,7 @@
 @section('content')
 <div class="space-y-6 pb-20">
 
-    <!-- BREADCRUMB & HEADER -->
+    {{-- BREADCRUMB & HEADER --}}
     <div class="space-y-3">
         <div class="flex items-center space-x-2 text-xs text-slate-400">
             <a href="{{ route('dashboard') }}" class="hover:text-coffee-800 transition">Trang chủ</a>
@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    <!-- FLASH MESSAGES -->
+    {{-- FLASH MESSAGES --}}
     @if(session('success'))
         <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-2xl flex items-center gap-2">
             <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
@@ -46,7 +46,7 @@
         </div>
     @endif
 
-    <!-- DANH SÁCH TAB ĐIỀU HƯỚNG -->
+    {{-- DANH SÁCH TAB ĐIỀU HƯỚNG --}}
     <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[#E8DFC8]">
         <button type="button" onclick="switchTab('contact')" id="btn-tab-contact" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap bg-white border border-[#E2D4C1] text-coffee-900 shadow-sm">
             <i class="fa-regular fa-address-book text-amber_brand"></i> Thông tin cá nhân & Liên hệ
@@ -62,13 +62,13 @@
         </button>
     </div>
 
-    <!-- KHU VỰC NỘI DUNG TỪNG TAB -->
+    {{-- KHU VỰC NỘI DUNG TỪNG TAB --}}
     <div class="w-full min-w-0 space-y-6">
 
-        <!-- TAB 1: THÔNG TIN CÁ NHÂN & LIÊN HỆ -->
+        {{-- TAB 1: THÔNG TIN CÁ NHÂN & LIÊN HỆ --}}
         <div id="tab-contact" class="tab-panel space-y-6">
 
-            <!-- BẢNG 1.1: THÔNG TIN NHÂN SỰ & ĐỊNH DANH (READ-ONLY) -->
+            {{-- BẢNG 1.1: THÔNG TIN NHÂN SỰ & ĐỊNH DANH (READ-ONLY) --}}
             <div class="bg-white rounded-3xl p-6 border border-[#E8DFC8] shadow-sm space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                     <h2 class="text-sm font-extrabold text-coffee-900 flex items-center gap-2">
@@ -80,37 +80,37 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <!-- Họ và Tên -->
+                    {{-- Họ và Tên --}}
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Họ và tên đầy đủ</label>
                         <input type="text" value="{{ $user->name }}" disabled readonly class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2 font-semibold text-slate-700 cursor-not-allowed">
                     </div>
 
-                    <!-- Name Tag / Tên gọi -->
+                    {{-- Name Tag / Tên gọi --}}
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Name Tag / Biển tên</label>
                         <input type="text" value="{{ $user->name_tag ?? $user->name }}" disabled readonly class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2 font-semibold text-slate-700 cursor-not-allowed">
                     </div>
 
-                    <!-- Ngày sinh -->
+                    {{-- Ngày sinh --}}
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Ngày sinh</label>
                         <input type="text" value="{{ $user->dob ? \Carbon\Carbon::parse($user->dob)->format('d/m/Y') : 'Chưa cập nhật' }}" disabled readonly class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2 font-semibold text-slate-700 cursor-not-allowed">
                     </div>
 
-                    <!-- CCCD / CMND -->
+                    {{-- CCCD / CMND --}}
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Số CCCD / CMND</label>
                         <input type="text" value="{{ $user->id_card ?? 'Chưa cập nhật' }}" disabled readonly class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2 font-semibold text-slate-700 cursor-not-allowed">
                     </div>
 
-                    <!-- Chức vụ & Cấp độ -->
+                    {{-- Chức vụ & Cấp độ --}}
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Chức vụ / Cấp độ</label>
                         <input type="text" value="{{ $user->ChucVu ?? 'Nhân viên' }} {{ $user->CapDo ? '(Cấp '.$user->CapDo.')' : '' }}" disabled readonly class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2 font-semibold text-slate-700 cursor-not-allowed">
                     </div>
 
-                    <!-- Chi nhánh & Trạm làm việc -->
+                    {{-- Chi nhánh & Trạm làm việc --}}
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Chi nhánh / Trạm làm việc</label>
                         <input type="text" value="{{ $user->ChiNhanh ?? 'Cửa hàng' }} {{ $user->tram_lam_viec ? '• '.$user->tram_lam_viec : '' }}" disabled readonly class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2 font-semibold text-slate-700 cursor-not-allowed">
@@ -118,7 +118,7 @@
                 </div>
             </div>
 
-            <!-- BẢNG 1.2: CẬP NHẬT THÔNG TIN LIÊN HỆ & NGƯỜI THÂN (SỬA ĐƯỢC) -->
+            {{-- BẢNG 1.2: CẬP NHẬT THÔNG TIN LIÊN HỆ & NGƯỜI THÂN (SỬA ĐƯỢC) --}}
             <div class="bg-white rounded-3xl p-6 border border-[#E8DFC8] shadow-sm space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                     <h2 class="text-sm font-extrabold text-coffee-900 flex items-center gap-2">
@@ -131,7 +131,7 @@
                     @csrf
                     @method('PUT')
 
-                    <!-- Email nội bộ (Read-only) -->
+                    {{-- Email nội bộ (Read-only) --}}
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1.5">
                             Email nội bộ hệ thống <span class="text-slate-400 font-normal">(Chỉ xem)</span>
@@ -145,13 +145,13 @@
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- Email cá nhân (Sửa được) -->
+                        {{-- Email cá nhân (Sửa được) --}}
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1.5">Email cá nhân (Nhận dự phòng)</label>
                             <input type="email" name="secondary_email" value="{{ old('secondary_email', $user->secondary_email) }}" placeholder="example@gmail.com" required class="w-full bg-[#FAF7F2] border border-[#E2D4C1] rounded-xl px-3.5 py-2 text-xs md:text-sm font-semibold text-coffee-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-coffee-700 transition">
                         </div>
 
-                        <!-- Số điện thoại cá nhân -->
+                        {{-- Số điện thoại cá nhân --}}
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1.5">Số điện thoại di động</label>
                             <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" placeholder="0901234567" required class="w-full bg-[#FAF7F2] border border-[#E2D4C1] rounded-xl px-3.5 py-2 text-xs md:text-sm font-semibold text-coffee-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-coffee-700 transition">
@@ -160,20 +160,20 @@
 
                     <hr class="border-slate-100 my-2">
 
-                    <!-- THÔNG TIN NGƯỜI THÂN / LIÊN HỆ KHẨN CẤP -->
+                    {{-- THÔNG TIN NGƯỜI THÂN / LIÊN HỆ KHẨN CẤP --}}
                     <div class="space-y-3">
                         <div class="text-xs font-extrabold text-coffee-900 uppercase tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-heart-pulse text-red-500"></i> Người thân / Liên hệ khẩn cấp
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <!-- Tên người thân -->
+                            {{-- Tên người thân --}}
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1.5">Họ & Tên người thân</label>
                                 <input type="text" name="emergency_contact" value="{{ old('emergency_contact', $user->emergency_contact) }}" placeholder="VD: Nguyễn Văn A (Bố/Mẹ/Vợ)" class="w-full bg-[#FAF7F2] border border-[#E2D4C1] rounded-xl px-3.5 py-2 text-xs md:text-sm font-semibold text-coffee-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-coffee-700 transition">
                             </div>
 
-                            <!-- SĐT người thân -->
+                            {{-- SĐT người thân --}}
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1.5">Số điện thoại người thân</label>
                                 <input type="text" name="emergency_phone" value="{{ old('emergency_phone', $user->emergency_phone) }}" placeholder="0987654321" class="w-full bg-[#FAF7F2] border border-[#E2D4C1] rounded-xl px-3.5 py-2 text-xs md:text-sm font-semibold text-coffee-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-coffee-700 transition">
@@ -190,7 +190,7 @@
             </div>
         </div>
 
-        <!-- TAB 2: BẢO MẬT & ĐĂNG NHẬP -->
+        {{-- TAB 2: BẢO MẬT & ĐĂNG NHẬP --}}
         <div id="tab-security" class="tab-panel hidden space-y-6">
             <div class="bg-white rounded-3xl p-6 border border-[#E8DFC8] shadow-sm space-y-5">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -258,7 +258,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: THÔNG BÁO -->
+        {{-- TAB 3: THÔNG BÁO --}}
         <div id="tab-notifications" class="tab-panel hidden space-y-6">
             <div class="bg-white rounded-3xl p-6 border border-[#E8DFC8] shadow-sm space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -323,7 +323,7 @@
             </div>
         </div>
 
-        <!-- TAB 4: GIAO DIỆN & NGÔN NGỮ -->
+        {{-- TAB 4: GIAO DIỆN & NGÔN NGỮ --}}
         <div id="tab-preferences" class="tab-panel hidden space-y-6">
             <div class="bg-white rounded-3xl p-6 border border-[#E8DFC8] shadow-sm space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -380,7 +380,7 @@
 
 </div>
 
-<!-- JAVASCRIPT CHUYỂN TAB -->
+{{-- JAVASCRIPT CHUYỂN TAB --}}
 <script>
     function switchTab(tabName) {
         // 1. Ẩn tất cả các tab panel

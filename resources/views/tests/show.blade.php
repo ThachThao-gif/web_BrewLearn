@@ -5,7 +5,7 @@
 @section('content')
 <div class="space-y-6 max-w-6xl mx-auto">
 
-    <!-- HEADER BÀI THI -->
+    {{-- HEADER BÀI THI --}}
     <div class="page-banner bg-white rounded-3xl border border-[#E2D4C1] p-6 shadow-sm space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center gap-2">
@@ -56,10 +56,10 @@
         </div>
     </div>
 
-    <!-- KHU VỰC LÀM BÀI & NAVIGATOR -->
+    {{-- KHU VỰC LÀM BÀI & NAVIGATOR --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        <!-- CỘT TRÁI: NỘI DUNG CÂU HỎI HIỆN TẠI -->
+        {{-- CỘT TRÁI: NỘI DUNG CÂU HỎI HIỆN TẠI --}}
         <div class="lg:col-span-2 space-y-4">
             <div class="bg-white rounded-3xl border border-[#E2D4C1] p-6 shadow-sm space-y-6 min-h-[400px] flex flex-col justify-between">
                 
@@ -76,7 +76,7 @@
                         {{ $q->CauHoi }}
                     </h3>
 
-                    <!-- CÁC PHƯƠNG ÁN LỰA CHỌN -->
+                    {{-- CÁC PHƯƠNG ÁN LỰA CHỌN --}}
                     <div class="space-y-2.5 pt-2">
                         @foreach(['A' => $q->PhuongAnA, 'B' =>$q->PhuongAnB, 'C' => $q->PhuongAnC, 'D' =>$q->PhuongAnD] as $key =>$option)
                         <label onclick="selectAnswer({{ $index }}, '{{$key }}')" 
@@ -98,7 +98,7 @@
                 </div>
                 @endforelse
 
-                <!-- NÚT CHUYỂN CÂU -->
+                {{-- NÚT CHUYỂN CÂU --}}
                 <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
                     <button id="btnPrev" onclick="changeQuestion(-1)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-5 py-2.5 rounded-xl transition">
                         <i class="fa-solid fa-arrow-left mr-1"></i> Câu trước
@@ -111,7 +111,7 @@
             </div>
         </div>
 
-        <!-- CỘT PHẢI: NAVIGATOR CÂU HỎI -->
+        {{-- CỘT PHẢI: NAVIGATOR CÂU HỎI --}}
         <div class="space-y-4">
             <div class="bg-white rounded-3xl border border-[#E2D4C1] p-6 shadow-sm space-y-4">
                 <div class="flex justify-between items-center border-b pb-3">
@@ -119,7 +119,7 @@
                     <span class="text-xs font-bold text-slate-400">{{ count($questions) }} câu</span>
                 </div>
 
-                <!-- LƯỚI NÚT SỐ CÂU HỎI -->
+                {{-- LƯỚI NÚT SỐ CÂU HỎI --}}
                 <div class="grid grid-cols-5 gap-2">
                     @foreach($questions as $index =>$q)
                     <button id="nav_btn_{{ $index }}" onclick="jumpToQuestion({{ $index }})" 
@@ -141,12 +141,12 @@
     </div>
 </div>
 
-<!-- JAVASCRIPT LOGIC -->
+{{-- JAVASCRIPT LOGIC --}}
 <script>
     let currentIndex = 0;
     const totalQuestions = {{ count($questions) }};
     const userAnswers = {};
-    const currentTestId = "{{ $test->MaBaiKiemTra ?? $test->id ?? 1 }}";
+    const currentTestId = "{{ $test->MaBaiKiemTra ?? 1 }}";
 
     function showQuestion(index) {
         document.querySelectorAll('.question-box').forEach((box, i) => {

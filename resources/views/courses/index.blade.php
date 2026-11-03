@@ -4,7 +4,6 @@
 
 @section('content')
 @php
-    // 1. CHUẨN HÓA DANH SÁCH KHÓA HỌC
     $items = is_array($courses) ? collect($courses) : ($courses ?? collect());
     $totalCount = count($items);$learningCount = 0;
     $completedCount = 0;
@@ -14,20 +13,17 @@
         } elseif ($p > 0) {$learningCount++;
         }
     }
-    
-    // 2. LẤY ĐÚNG USER_ID ĐANG ĐĂNG NHẬP / THAO TÁC (ĐẢM BẢO MULTI-USER)
-    $currentUserId = auth()->id() ?? request()->query('user_id') ?? ($currentUser->id ?? null);
 @endphp
 
 <div class="space-y-6">
-    <!-- HEADER TRANG -->
+    {{-- HEADER TRANG --}}
     <div class="page-banner bg-white border border-coffee-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <h1 class="text-xl md:text-2xl font-extrabold text-coffee-900">Chương Trình Đào Tạo</h1>
             <p class="text-xs text-slate-500 mt-1">Danh sách khóa học áp dụng theo chức danh của bạn, sắp xếp theo thứ tự lộ trình.</p>
         </div>
 
-        <!-- SEARCH & FILTER -->
+        {{-- SEARCH & FILTER --}}
         <div class="flex items-center gap-3">
             <div class="relative">
                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
@@ -37,7 +33,7 @@
         </div>
     </div>
 
-    <!-- TABS LỌC KHÓA HỌC -->
+    {{-- TABS LỌC KHÓA HỌC --}}
     <div class="flex items-center space-x-6 border-b border-coffee-200/40 pb-3 text-xs font-bold text-slate-500">
         <button id="tab-all" onclick="switchTab('all')" class="tab-btn focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-sm text-coffee-900 border-b-2 border-amber_brand pb-3 -mb-3 flex items-center gap-2">
             <i class="fa-solid fa-cubes text-amber_brand"></i>
@@ -63,12 +59,12 @@
         <x-my-retraining :retraining="$retraining" />
     @endif
 
-    <!-- DANH SÁCH KHÓA HỌC -->
+    {{-- DANH SÁCH KHÓA HỌC --}}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="courseGrid">
         @if ($totalCount > 0)
             @foreach ($items as $index =>$course)
                 @php 
-                    $courseId = $course->MaCTDT ?? $course->id ?? '';
+                    $courseId = $course->MaCTDT ?? '';
                     // Đảm bảo ép kiểu nguyên (int) để tránh lỗi định dạng chuỗi
                     $progress = round($course->TienDo ?? 0, 1);
                     $level =$course->CapDo ?? 'CẤP ĐỘ 1';
@@ -84,12 +80,7 @@
                     // LẤY TRỰC TIẾP TRẠNG THÁI KHÓA ĐÃ TÍNH TỪ CONTROLLER
                     $isLocked =$course->IsLocked ?? false;
 
-                    // TẠO ROUTE GIỮ NGUYÊN USER_ID TRÊN URL ĐỂ BÀI HỌC KHÔNG BỊ TRỞ VỀ USER 1
-                    $routeParams = ['id' =>$courseId];
-                    if ($currentUserId) {
-                        $routeParams['user_id'] =$currentUserId;
-                    }
-                    $courseUrl = route('courses.show',$routeParams);
+                    $courseUrl = route('courses.show', $courseId);
                 @endphp
 
                 <div class="course-card bg-white rounded-3xl border border-[#E2D4C1] shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition {{ $isLocked ? 'opacity-80' : '' }}"
@@ -99,7 +90,7 @@
                      data-level="{{ $level }}">
                     
                     <div>
-                        <!-- BANNER ẢNH KHÓA HỌC -->
+                        {{-- BANNER ẢNH KHÓA HỌC --}}
                         <div class="relative h-44 bg-gradient-to-br from-coffee-900 to-coffee-800 p-4 flex flex-col justify-between overflow-hidden">
                             <img src="{{ $hinhAnh }}" class="absolute inset-0 w-full h-full object-cover {{ $hasCover ? '' : 'opacity-40 mix-blend-overlay' }}" alt="Ảnh bìa khóa {{ $tenCourse }}">
                             @if($hasCover)<div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" aria-hidden="true"></div>@endif
@@ -114,7 +105,7 @@
                             </div>
                         </div>
 
-                        <!-- THÔNG TIN KHÓA HỌC -->
+                        {{-- THÔNG TIN KHÓA HỌC --}}
                         <div class="p-5 space-y-3">
                             <div class="text-[10px] font-bold text-amber_brand uppercase tracking-wider flex items-center gap-1.5">
                                 <i class="fa-solid fa-mug-hot"></i>
@@ -131,7 +122,7 @@
                         </div>
                     </div>
 
-                    <!-- TIẾN ĐỘ & NÚT VÀO HỌC -->
+                    {{-- TIẾN ĐỘ & NÚT VÀO HỌC --}}
                     <div class="p-5 pt-0 space-y-4">
                         <div class="space-y-1.5">
                             <div class="flex justify-between text-[11px] font-bold">
@@ -143,27 +134,27 @@
                             </div>
                         </div>
 
-                        <!-- XỬ LÝ NÚT BẤM DỰA TRÊN TRẠNG THÁI & TIẾN ĐỘ THỰC TẾ -->
+                        {{-- XỬ LÝ NÚT BẤM DỰA TRÊN TRẠNG THÁI & TIẾN ĐỘ THỰC TẾ --}}
                         @if ($isLocked)
-                            <!-- 1. NÚT BỊ KHÓA -->
+                            {{-- 1. NÚT BỊ KHÓA --}}
                             <button disabled class="w-full bg-slate-200 text-slate-400 font-bold py-2.5 rounded-2xl text-xs flex items-center justify-center gap-2 cursor-not-allowed">
                                 <i class="fa-solid fa-lock text-[10px]"></i>
                                 <span>Khóa học đang khóa</span>
                             </button>
                         @elseif ($progress >= 100)
-                            <!-- 2. NÚT ĐÃ HOÀN THÀNH -->
+                            {{-- 2. NÚT ĐÃ HOÀN THÀNH --}}
                             <a href="{{ $courseUrl }}" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-2.5 rounded-2xl text-xs flex items-center justify-center gap-2 transition shadow-sm">
                                 <i class="fa-solid fa-rotate-right text-[10px]"></i>
                                 <span>Xem lại bài học</span>
                             </a>
                         @elseif ($progress > 0)
-                            <!-- 3. NÚT ĐANG HỌC DỞ -->
+                            {{-- 3. NÚT ĐANG HỌC DỞ --}}
                             <a href="{{ $courseUrl }}" class="w-full bg-coffee-900 hover:bg-black text-white font-bold py-2.5 rounded-2xl text-xs flex items-center justify-center gap-2 transition shadow-sm">
                                 <span>Học tiếp ngay</span>
                                 <i class="fa-solid fa-arrow-right text-[10px]"></i>
                             </a>
                         @else
-                            <!-- 4. NÚT CHƯA HỌC -->
+                            {{-- 4. NÚT CHƯA HỌC --}}
                             <a href="{{ $courseUrl }}" class="w-full bg-amber_brand hover:bg-amber-600 text-white font-bold py-2.5 rounded-2xl text-xs flex items-center justify-center gap-2 transition shadow-sm">
                                 <span>Bắt đầu học</span>
                                 <i class="fa-solid fa-play text-[10px]"></i>

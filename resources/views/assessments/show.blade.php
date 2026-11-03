@@ -4,7 +4,7 @@
 <div class="min-h-screen bg-[#FAF8F5] py-8 px-4 md:px-8 font-sans text-slate-800">
     <div class="max-w-6xl mx-auto space-y-6">
 
-        <!-- BREADCRUMB -->
+        {{-- BREADCRUMB --}}
         <div class="flex items-center gap-2 text-xs text-slate-500">
             <a href="#" class="hover:text-amber-800 transition">Trang chủ</a>
             <i class="fa-solid fa-chevron-right text-[9px] text-slate-400"></i>
@@ -13,7 +13,7 @@
             <span class="font-semibold text-slate-800">Tiêu chuẩn đánh giá năng lực</span>
         </div>
 
-        <!-- HEADER TỔNG QUAN -->
+        {{-- HEADER TỔNG QUAN --}}
         <div class="page-banner bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-sm space-y-4">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
                 <div class="space-y-1">
@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <!-- THÔNG TIN CHUNG THỂ HỆN BẰNG CARDS THÔNG TIN -->
+            {{-- THÔNG TIN CHUNG THỂ HỆN BẰNG CARDS THÔNG TIN --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                 <div class="flex items-center gap-3 p-3.5 bg-slate-50/80 rounded-2xl border border-slate-100">
                     <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-900 flex items-center justify-center text-xs shrink-0">
@@ -70,7 +70,7 @@
             </div>
         </div>
 
-        <!-- BẢNG CHI TIẾT TIÊU CHUẨN NĂNG LỰC -->
+        {{-- BẢNG CHI TIẾT TIÊU CHUẨN NĂNG LỰC --}}
         <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
             <div class="p-6 border-b border-slate-100 flex items-center justify-between">
                 <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
@@ -91,7 +91,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 text-xs">
-                        <!-- Hàng 1 -->
+                        {{-- Hàng 1 --}}
                         <tr class="hover:bg-amber-50/30 transition">
                             <td class="py-4 px-6 font-bold text-slate-800 flex items-center gap-3">
                                 <span class="w-8 h-8 rounded-xl bg-amber-100/70 text-amber-900 flex items-center justify-center text-xs shrink-0">
@@ -109,7 +109,7 @@
                             </td>
                         </tr>
 
-                        <!-- Hàng 2 -->
+                        {{-- Hàng 2 --}}
                         <tr class="hover:bg-amber-50/30 transition">
                             <td class="py-4 px-6 font-bold text-slate-800 flex items-center gap-3">
                                 <span class="w-8 h-8 rounded-xl bg-amber-100/70 text-amber-900 flex items-center justify-center text-xs shrink-0">
@@ -127,7 +127,7 @@
                             </td>
                         </tr>
 
-                        <!-- Hàng 3 -->
+                        {{-- Hàng 3 --}}
                         <tr class="hover:bg-amber-50/30 transition">
                             <td class="py-4 px-6 font-bold text-slate-800 flex items-center gap-3">
                                 <span class="w-8 h-8 rounded-xl bg-amber-100/70 text-amber-900 flex items-center justify-center text-xs shrink-0">
@@ -145,7 +145,7 @@
                             </td>
                         </tr>
 
-                        <!-- Hàng 4 -->
+                        {{-- Hàng 4 --}}
                         <tr class="hover:bg-amber-50/30 transition">
                             <td class="py-4 px-6 font-bold text-slate-800 flex items-center gap-3">
                                 <span class="w-8 h-8 rounded-xl bg-amber-100/70 text-amber-900 flex items-center justify-center text-xs shrink-0">
@@ -163,7 +163,7 @@
                             </td>
                         </tr>
 
-                        <!-- Hàng 5 -->
+                        {{-- Hàng 5 --}}
                         <tr class="hover:bg-amber-50/30 transition">
                             <td class="py-4 px-6 font-bold text-slate-800 flex items-center gap-3">
                                 <span class="w-8 h-8 rounded-xl bg-amber-100/70 text-amber-900 flex items-center justify-center text-xs shrink-0">
@@ -184,7 +184,7 @@
                 </table>
             </div>
 
-            <!-- GHI CHÚ BỔ SUNG DÀNH CHO NHÂN VIÊN -->
+            {{-- GHI CHÚ BỔ SUNG DÀNH CHO NHÂN VIÊN --}}
             <div class="p-5 bg-amber-50/50 border-t border-slate-100 flex items-start gap-3 text-xs text-amber-950">
                 <i class="fa-solid fa-circle-info text-amber-700 text-sm mt-0.5 shrink-0"></i>
                 <p class="leading-relaxed">

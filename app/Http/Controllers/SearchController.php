@@ -2,23 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SearchController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * Tìm bài học theo tên.
+     */
+    public function index(Request $request): View
     {
-        $query = trim($request->input('q'));
-        $userId = $request->input('user_id', 1);
-        $currentUser = User::find($userId) ?? User::first();
+        $query = trim((string) $request->input('q'));
+        $lessons = DB::table('bai_hoc')->where('TenBaiHoc', 'LIKE', "%{$query}%")->get();
 
-        // Tìm kiếm trong bảng bài học
-        $lessons = DB::table('bai_hoc')
-            ->where('TenBaiHoc', 'LIKE', "%{$query}%")
-            ->get();
-
-        return view('search.results', compact('query', 'lessons', 'currentUser'));
+        return view('search.results', compact('query', 'lessons'));
     }
 }

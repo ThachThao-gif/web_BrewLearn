@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class CourseProgress
 {
@@ -72,9 +71,6 @@ class CourseProgress
     public function sync(int $userId, int $courseId): float
     {
         $record = DB::table('nhan_vien_khoa_hoc')->where('user_id', $userId)->where('MaCTDT', $courseId)->first();
-        if (! Schema::hasTable('bai_hoc') || ! Schema::hasTable('user_lesson_progresses')) {
-            return (float) ($record->TienDo ?? 0);
-        }
         $lessonIds = DB::table('bai_hoc')->where('FK_MaCTDT', $courseId)->pluck('MaBaiHoc');
         $progresses = DB::table('user_lesson_progresses')->where('user_id', $userId)
             ->whereIn('lesson_id', $lessonIds)->get()->keyBy('lesson_id');

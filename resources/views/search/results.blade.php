@@ -10,7 +10,7 @@
     @if(count($lessons) > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             @foreach($lessons as $item)
-                <a href="{{ route('courses.lesson', ['id' => $item->MaBaiHoc, 'user_id' => $currentUser->id ?? 1]) }}" 
+                <a href="{{ route('courses.lesson', $item->MaBaiHoc) }}" 
                    class="p-4 bg-white border border-[#E2D4C1] rounded-2xl hover:border-amber-500 hover:shadow-sm transition flex justify-between items-center">
                     <div>
                         <span class="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">Bài học</span>

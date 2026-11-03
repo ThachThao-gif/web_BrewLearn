@@ -2,16 +2,16 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 py-6">
-    <!-- Header trang -->
+    {{-- Header trang --}}
     <div class="page-banner mb-8">
         <h1 class="text-2xl font-bold text-slate-800">Sổ Tay Nội Quy & Quy Chuẩn Hoạt Động BrewLearn</h1>
         <p class="text-sm text-slate-500 mt-1">Hướng dẫn đầy đủ về phong cách làm việc, văn hóa ứng xử và quy định làm việc.</p>
     </div>
 
-    <!-- Layout chính: Sidebar Mục lục bên trái & Nội dung bên phải -->
+    {{-- Layout chính: Sidebar Mục lục bên trái & Nội dung bên phải --}}
     <div class="grid grid-cols-12 gap-8 items-start">
         
-        <!-- HÌNH 2: MỤC LỤC SỔ TAY (Cố định bên trái khi cuộn) -->
+        {{-- HÌNH 2: MỤC LỤC SỔ TAY (Cố định bên trái khi cuộn) --}}
         <div class="col-span-12 lg:col-span-4 sticky top-6">
             <div class="bg-white p-5 rounded-2xl border border-amber-100/60 shadow-sm">
                 <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
@@ -21,7 +21,7 @@
                     <span class="text-xs font-semibold px-2.5 py-1 bg-amber-50 text-amber-700 rounded-full">06 Phân hệ</span>
                 </div>
 
-                <!-- Danh sách 6 mục -->
+                {{-- Danh sách 6 mục --}}
                 <div class="space-y-2">
                     <button onclick="scrollToSection('section-1')" class="toc-btn active w-full flex items-center justify-between p-3 rounded-xl border transition text-left text-sm font-medium hover:bg-amber-50/50">
                         <div class="flex items-center gap-3">
@@ -74,10 +74,10 @@
             </div>
         </div>
 
-        <!-- HÌNH 3: NỘI DUNG CHI TIẾT CÁC MỤC -->
+        {{-- HÌNH 3: NỘI DUNG CHI TIẾT CÁC MỤC --}}
         <div class="col-span-12 lg:col-span-8 space-y-8">
             
-            <!-- Mục 01: Diện mạo & Tác phong -->
+            {{-- Mục 01: Diện mạo & Tác phong --}}
             <div id="section-1" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Quy chuẩn diện mạo</span>
@@ -86,7 +86,7 @@
                 <h2 class="text-xl font-bold text-slate-800 mb-2">01. Chuẩn Mực Tác Phong Barista (Grooming & Uniform)</h2>
                 <p class="text-sm text-slate-600 mb-6">Hình ảnh của mỗi Barista là đại diện trực tiếp cho chất lượng tách cà phê và tiêu chuẩn vệ sinh khắt khe của BrewLearn.</p>
 
-                <!-- 2 Ảnh minh họa tác phong -->
+                {{-- 2 Ảnh minh họa tác phong --}}
                 <div class="grid grid-cols-2 gap-4 mb-6">
                     <div class="rounded-xl overflow-hidden bg-slate-50 border border-slate-100 p-2">
                         <img src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=500" class="w-full h-40 object-cover rounded-lg mb-2" alt="Tác phong">
@@ -100,7 +100,7 @@
                     </div>
                 </div>
 
-                <!-- 3 Thẻ Quy định chi tiết -->
+                {{-- 3 Thẻ Quy định chi tiết --}}
                 <div class="grid grid-cols-3 gap-3 mb-6">
                     <div class="bg-amber-50/50 p-3 rounded-xl border border-amber-100/60">
                         <p class="text-xs font-bold text-amber-900 mb-1"><i class="fa-solid fa-user-ninja mr-1"></i> Tóc & Khuôn mặt</p>
@@ -125,7 +125,7 @@
                     </div>
                 </div>
 
-                <!-- Đạt chuẩn vs Không đạt chuẩn -->
+                {{-- Đạt chuẩn vs Không đạt chuẩn --}}
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-emerald-50/60 p-4 rounded-xl border border-emerald-100">
                         <p class="text-xs font-bold text-emerald-800 mb-2 flex items-center gap-1.5"><i class="fa-solid fa-thumbs-up"></i> ĐẠT CHUẨN (DO'S)</p>
@@ -144,7 +144,7 @@
                 </div>
             </div>
 
-            <!-- Mục 02: Kỷ luật Ca làm -->
+            {{-- Mục 02: Kỷ luật Ca làm --}}
             <div id="section-2" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Kỷ luật thời gian</span>
@@ -158,7 +158,7 @@
                 </div>
             </div>
 
-            <!-- Các section 03, 04, 05, 06 bổ sung tương tự -->
+            {{-- Các section 03, 04, 05, 06 bổ sung tương tự --}}
             <div id="section-3" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Văn hóa phục vụ</span>
@@ -174,7 +174,7 @@
                 </div>
             </div>
 
-            <!-- MỤC 04: VỆ SINH ATTP, HACCP & PCCC QUẦY BAR -->
+            {{-- MỤC 04: VỆ SINH ATTP, HACCP & PCCC QUẦY BAR --}}
             <div id="section-4" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs font-bold uppercase tracking-wider text-amber-700">AN TOÀN SỨC KHỎE</span>
@@ -184,7 +184,7 @@
                 <p class="text-sm text-slate-600 mb-6">Chất lượng một ly thức uống không chỉ đo bằng hương vị specialty mà quan trọng hơn cả là sự an toàn tuyệt đối cho sức khỏe thực khách.</p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <!-- Quy trình rửa tay -->
+                    {{-- Quy trình rửa tay --}}
                     <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
                         <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-2">
                             <i class="fa-solid fa-hands-bubbles text-amber-700"></i> Quy Trình Rửa Tay 6 Bước
@@ -198,7 +198,7 @@
                         </ol>
                     </div>
 
-                    <!-- Nguyên tắc FIFO -->
+                    {{-- Nguyên tắc FIFO --}}
                     <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
                         <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-2">
                             <i class="fa-solid fa-box-archive text-amber-700"></i> Nguyên Tắc FIFO & Tem Nhãn (Day-Dot)
@@ -213,7 +213,7 @@
                     </div>
                 </div>
 
-                <!-- Cảnh báo vùng cấm -->
+                {{-- Cảnh báo vùng cấm --}}
                 <div class="p-4 bg-rose-50/70 rounded-xl border border-rose-100 flex items-start gap-3">
                     <i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg shrink-0 mt-0.5"></i>
                     <div>
@@ -223,7 +223,7 @@
                 </div>
             </div>
 
-            <!-- MỤC 05: QUẢN LÝ THẤT THOÁT, HƯ HỎNG & SỬ DỤNG THIẾT BỊ QUÁN -->
+            {{-- MỤC 05: QUẢN LÝ THẤT THOÁT, HƯ HỎNG & SỬ DỤNG THIẾT BỊ QUÁN --}}
             <div id="section-5" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs font-bold uppercase tracking-wider text-amber-700">TÀI SẢN & THIẾT BỊ</span>
@@ -255,7 +255,7 @@
                 </div>
             </div>
 
-            <!-- MỤC 06: CHẾ ĐỘ PHÚC LỢI, THƯỞNG CA & XỬ LÝ VI PHẠM -->
+            {{-- MỤC 06: CHẾ ĐỘ PHÚC LỢI, THƯỞNG CA & XỬ LÝ VI PHẠM --}}
             <div id="section-6" class="policy-section bg-white p-6 rounded-2xl border border-slate-100 shadow-sm scroll-mt-6">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs font-bold uppercase tracking-wider text-amber-700">CHẾ ĐỘ & KỶ LUẬT</span>
@@ -264,7 +264,7 @@
                 <h2 class="text-xl font-bold text-slate-800 mb-4">06. Chế Độ Phúc Lợi, Thưởng Ca & Xử Lý Vi Phạm</h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Cơ chế khen thưởng -->
+                    {{-- Cơ chế khen thưởng --}}
                     <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
                         <p class="text-xs font-bold text-amber-900 mb-3 flex items-center gap-2">
                             <i class="fa-solid fa-star text-amber-600"></i> Cơ Chế Khen Thưởng & Vinh Danh
@@ -294,7 +294,7 @@
                         </div>
                     </div>
 
-                    <!-- 3 Cấp độ chế tài -->
+                    {{-- 3 Cấp độ chế tài --}}
                     <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60">
                         <p class="text-xs font-bold text-amber-900 mb-3 flex items-center gap-2">
                             <i class="fa-solid fa-gavel text-amber-700"></i> 3 Cấp Độ Chế Tài Kỷ Luật
@@ -319,7 +319,7 @@
         </div>
     </div>
 </div>
-<!-- Script hỗ trợ chuyển đổi active state & cuộn mượt -->
+{{-- Script hỗ trợ chuyển đổi active state & cuộn mượt --}}
 <script>
     function scrollToSection(sectionId) {
         // Cuộn tới mục tương ứng

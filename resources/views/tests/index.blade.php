@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <!-- HEADER TRANG -->
+    {{-- HEADER TRANG --}}
     <div class="page-banner flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-[#E8DFC8] shadow-sm">
         <div>
             <h1 class="text-xl md:text-2xl font-extrabold text-coffee-900 flex items-center gap-2">
@@ -18,24 +18,15 @@
     </div>
 
     @php
-        // 1. Xác định vị trí / chức vụ của user hiện tại
-        $currentUser = auth()->user() ?? $currentUser ?? $user ?? null;
-        $userChucVu = $currentUser->ChucVu ?? $currentUser->chuc_vu ?? $currentUser->vi_tri ?? 'Thu ngân';
-
-        // 2. Lọc danh sách bài kiểm tra phù hợp với chức vụ của user
-        $allTests = $tests ?? $baiKiemTra ?? [];
-        $filteredTests = collect($allTests)->values();
+        $filteredTests = collect($tests)->values();
     @endphp
 
-    <!-- DANH SÁCH BÀI KIỂM TRA -->
+    {{-- DANH SÁCH BÀI KIỂM TRA --}}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse ($filteredTests as $index => $test)
            @php
-    $maBaiTest = $test->MaBaiKiemTra ?? $test->id ?? ($index + 1);
-    $userId = request()->query('user_id', $currentUser->id ?? 1);
-    
-    // Lấy điểm số từ object
-    $diem = $test->Diem ?? $test->diem ?? $test->user_score ?? null;
+    $maBaiTest = $test->MaBaiKiemTra;
+    $diem = $test->Diem;
     $daLam = !is_null($diem);
     
     // LOGIC TỰ ĐỘNG KHÓA/MỞ THEO MẢNG MỚI ĐÃ LỌC:
@@ -45,11 +36,6 @@
     } else {
         // Lấy bài kiểm tra nằm ngay trước bài này trong danh sách $filteredTests
         $prevTest = $filteredTests[$index - 1];
-        $prevScore = $prevTest->Diem ?? $prevTest->diem ?? $prevTest->user_score ?? null;
-        $prevPassScore = $prevTest->DiemChuan ?? 80;
-
-        // Nếu bài trước ĐÃ CÓ ĐIỂM và ĐẠT ĐIỂM CHUẨN -> Mở bài này ($isLocked = false)
-        // Ngược lại nếu bài trước chưa đạt -> Khóa bài này ($isLocked = true)
         $isLocked = !($prevTest->HasPassed ?? false);
     }
 @endphp
@@ -61,16 +47,16 @@
                             Bài {{ $index + 1 }}
                         </span>
                         <span class="text-xs text-slate-400 font-medium">
-                            <i class="fa-regular fa-clock mr-1"></i>{{ $test->ThoiGianLamBai ?? $test->thoi_gian ?? 15 }} phút
+                            <i class="fa-regular fa-clock mr-1"></i>{{ $test->ThoiGianLamBai ?? 15 }} phút
                         </span>
                     </div>
 
                     <h3 class="font-bold text-coffee-900 text-base mb-2 line-clamp-2">
-                        {{ $test->TenBaiKiemTra ?? $test->ten_bai_kiem_tra ?? 'Bài kiểm tra năng lực' }}
+                        {{ $test->TenBaiKiemTra ?? 'Bài kiểm tra năng lực' }}
                     </h3>
 
                     <p class="text-xs text-slate-500 line-clamp-3 mb-4">
-                        {{ $test->MoTa ?? $test->mo_ta ?? 'Kiểm tra kiến thức thực hành và quy trình tiêu chuẩn SOP.' }}
+                        {{ $test->MoTa ?? 'Kiểm tra kiến thức thực hành và quy trình tiêu chuẩn SOP.' }}
                     </p>
                 </div>
 
@@ -86,27 +72,27 @@
                 @endif
                 <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
                     @if ($isLocked)
-                        <!-- TRẠNG THÁI BỊ KHÓA -->
+                        {{-- TRẠNG THÁI BỊ KHÓA --}}
                         <button disabled class="w-full text-center bg-slate-200 text-slate-500 text-xs font-bold py-2.5 rounded-xl cursor-not-allowed flex items-center justify-center gap-2">
                             <i class="fa-solid fa-lock text-xs"></i>
                             Cần đạt bài trước để mở
                         </button>
                     @elseif ($daLam)
-                        <!-- HIỂN THỊ NÚT THI LẠI VÀ ĐIỂM SỐ -->
+                        {{-- HIỂN THỊ NÚT THI LẠI VÀ ĐIỂM SỐ --}}
                         <div class="w-full flex items-center justify-between gap-2">
                             <span class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-2.5 rounded-xl border border-slate-200">
                                 Điểm: <strong class="text-amber_brand">{{ $diem }}</strong>
                             </span>
                             
-                            <a href="{{ route('tests.show', ['id' => $maBaiTest, 'user_id' => $userId]) }}" 
+                            <a href="{{ route('tests.show', $maBaiTest) }}" 
                                class="flex-1 text-center bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold py-2.5 rounded-xl transition border border-amber-300 shadow-sm flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-rotate-right text-xs"></i>
                                 Thi lại
                             </a>
                         </div>
                     @else
-                        <!-- BẮT ĐẦU LÀM BÀI -->
-                        <a href="{{ route('tests.show', ['id' => $maBaiTest, 'user_id' => $userId]) }}" 
+                        {{-- BẮT ĐẦU LÀM BÀI --}}
+                        <a href="{{ route('tests.show', $maBaiTest) }}" 
                            class="w-full text-center bg-coffee-800 hover:bg-coffee-900 text-white text-xs font-bold py-2.5 rounded-xl transition shadow">
                             Bắt đầu làm bài
                         </a>

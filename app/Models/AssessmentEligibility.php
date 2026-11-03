@@ -3,17 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class AssessmentEligibility
 {
     public function initial(User $user): array
     {
-        foreach (['bai_kiem_tra', 'ket_qua_kiem_tra', 'user_lesson_progresses'] as $table) {
-            if (! Schema::hasTable($table)) {
-                return ['ready' => false, 'missing' => ['Chưa có đủ dữ liệu học tập / quiz để kiểm tra điều kiện.']];
-            }
-        }
         $courses = app(CourseProgress::class)->assignedCourses($user->ChucVu ?? '');
         $lessons = DB::table('bai_hoc')->whereIn('FK_MaCTDT', $courses->pluck('MaCTDT'))->get();
         $tests = app(QuizProgress::class)->assignedTests($user->ChucVu ?? '');
@@ -21,7 +15,7 @@ class AssessmentEligibility
         if ($courses->isEmpty() || $lessons->isEmpty()) {
             $missing[] = 'Chưa có khóa học / bài học được phân công để kiểm tra điều kiện.';
         }
-        if (Schema::hasTable('yeu_cau_dao_tao_lai') && DB::table('yeu_cau_dao_tao_lai')->where('user_id', $user->id)
+        if (DB::table('yeu_cau_dao_tao_lai')->where('user_id', $user->id)
             ->whereIn('trang_thai', ['ChoDuyet', 'DaDuyet'])
             ->where(fn ($query) => $query->whereNull('tien_trinh')->orWhere('tien_trinh', '!=', 'DungDaoTao'))->exists()) {
             $missing[] = 'Có yêu cầu đào tạo lại đang xử lý; tạo đánh giá lại từ vòng đào tạo hiện tại.';

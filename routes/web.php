@@ -9,143 +9,88 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TrainingCompletionController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\View;
 
-/*
-|--------------------------------------------------------------------------
-| Global View Composers
-|--------------------------------------------------------------------------
-*/
-View::composer('*', function ($view) {
-    if (request()->attributes->has('brewlearn.view-context')) {
-        $view->with(request()->attributes->get('brewlearn.view-context'));
-
-        return;
-    }
-    $currentUser = auth()->user();
-    $notifications = collect([]);
-
-    if ($currentUser && Schema::hasTable('notifications')) {
-        $query = DB::table('notifications')->where('user_id', $currentUser->id);
-        if (in_array(mb_strtolower(trim($currentUser->ChucVu ?? '')), ['quản lý cửa hàng', 'quan ly cua hang', 'manager'])) {
-            $query->whereNotIn('type', ['risk', 'prediction']);
-        }
-        $notifications = $query->orderByDesc('id')->get();
-    }
-
-    $context = [
-        'currentUser' => $currentUser,
-        'notifications' => $notifications,
-    ];
-    request()->attributes->set('brewlearn.view-context', $context);
-    $view->with($context);
-});
-
-/*
-|--------------------------------------------------------------------------
-| Public Routes
-|--------------------------------------------------------------------------
-*/
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-/*
-|--------------------------------------------------------------------------
-| Protected Routes (Yêu cầu đăng nhập)
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth'])->group(function () {
+Route::middleware('auth')->group(function () {
+    // Trang chủ và tìm kiếm
+    Route::get('/', [CourseController::class, 'dashboard'])->name('dashboard');
+    Route::get('/search', [SearchController::class, 'index'])->name('search');
+
+    // Học tập: khóa học, bài học, bài kiểm tra
+    Route::prefix('courses')->name('courses.')->controller(CourseController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/update-progress', 'updateProgress')->name('updateProgress');
+        Route::get('/lesson/{id}', 'showLesson')->whereNumber('id')->name('lesson');
+        Route::get('/{id}', 'show')->whereNumber('id')->name('show');
+    });
+    Route::post('/lessons/{id}/complete', [CourseController::class, 'completeLesson'])->whereNumber('id')->name('lessons.complete');
+
+    Route::prefix('tests')->name('tests.')->controller(CourseController::class)->group(function () {
+        Route::get('/', 'testsIndex')->name('index');
+        Route::get('/{id}', 'showTest')->whereNumber('id')->name('show');
+        Route::post('/{id}/submit', 'submitTest')->whereNumber('id')->name('submit');
+    });
+
+    Route::view('/assessments/3-months', 'assessments.show')->name('assessments.show');
+    Route::view('/policies', 'policies.index')->name('policies.index');
+
+    // Thông báo
+    Route::prefix('notifications')->name('notifications.')->controller(NotificationController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/read-all', 'markAllAsRead')->name('readAll');
+        Route::get('/{id}', 'show')->whereNumber('id')->name('show');
+        Route::post('/{id}/read', 'markAsRead')->whereNumber('id')->name('read');
+        Route::delete('/{id}', 'destroy')->whereNumber('id')->name('destroy');
+    });
+
+    // Tài khoản cá nhân
+    Route::get('/profile/edit/{id?}', [UserController::class, 'edit'])->whereNumber('id')->name('users.edit');
+    Route::put('/profile/update/{id}', [UserController::class, 'update'])->whereNumber('id')->name('users.update');
+    Route::prefix('account')->name('account.')->controller(UserController::class)->group(function () {
+        Route::put('/update-contact', 'updateContact')->name('update-contact');
+        Route::put('/update-password', 'updatePassword')->name('update-password');
+        Route::post('/logout-other-devices', 'logoutOtherDevices')->name('logout-other-devices');
+        Route::put('/update-notifications', 'updateNotifications')->name('update-notifications');
+        Route::put('/update-preferences', 'updatePreferences')->name('update-preferences');
+    });
+
+    // Yêu cầu hỗ trợ
+    Route::get('/help', [HelpController::class, 'index'])->name('help.index');
+    Route::post('/help/store', [HelpController::class, 'store'])->name('help.store');
+
+    // Đào tạo lại: người phụ trách xác nhận hoàn thành vòng
     Route::get('/training/my-assignments', [TrainingCompletionController::class, 'index'])->name('training.assignments');
-    Route::post('/training/rounds/{id}/confirm', [TrainingCompletionController::class, 'confirm'])->name('training.confirm');
+    Route::post('/training/rounds/{id}/confirm', [TrainingCompletionController::class, 'confirm'])->whereNumber('id')->name('training.confirm');
+
+    // Trưởng ca
+    Route::prefix('leader')->name('leader.')->controller(LeaderEvaluationController::class)->group(function () {
+        Route::get('/dashboard', 'index')->name('dashboard');
+        Route::get('/scoring', 'index')->name('scoring');
+        Route::get('/staff-list', 'staffList')->name('staffList');
+        Route::get('/staff/{id}', 'staffProfile')->whereNumber('id')->name('staffProfile');
+        Route::post('/create-schedule', 'createSchedule')->name('createSchedule');
+        Route::post('/save-score', 'saveScore')->name('saveScore');
+        Route::post('/send-notification', 'sendNotification')->name('sendNotification');
+        Route::post('/record-incident', 'recordIncident')->name('recordIncident');
+    });
+
+    // Quản lý cửa hàng
     Route::prefix('manager')->name('manager.')->controller(ManagerController::class)->group(function () {
         Route::get('/dashboard', 'dashboard')->name('dashboard');
         Route::get('/staff', 'staff')->name('staff');
-        Route::get('/staff/{id}', 'profile')->name('profile');
+        Route::get('/staff/{id}', 'profile')->whereNumber('id')->name('profile');
         Route::post('/shifts', 'createShift')->name('shifts.create');
-        Route::put('/staff/{id}/shift', 'assignShift')->name('shifts.assign');
-        Route::put('/staff/{id}/employment', 'updateEmployment')->name('employment.update');
+        Route::put('/staff/{id}/shift', 'assignShift')->whereNumber('id')->name('shifts.assign');
+        Route::put('/staff/{id}/employment', 'updateEmployment')->whereNumber('id')->name('employment.update');
         Route::get('/assessments', 'assessments')->name('assessments');
-        Route::post('/assessments/{id}/review', 'review')->name('review');
+        Route::post('/assessments/{id}/review', 'review')->whereNumber('id')->name('review');
         Route::get('/training', 'training')->name('training');
-        Route::put('/training/{id}', 'assignTraining')->name('training.assign');
-        Route::post('/training/{id}/reassess', 'reassess')->name('training.reassess');
+        Route::put('/training/{id}', 'assignTraining')->whereNumber('id')->name('training.assign');
+        Route::post('/training/{id}/reassess', 'reassess')->whereNumber('id')->name('training.reassess');
         Route::get('/notifications', 'notifications')->name('notifications');
     });
-
-    // 1. Trang chủ & Hệ thống
-    Route::get('/', [CourseController::class, 'dashboard'])->name('dashboard');
-    Route::get('/courses/roadmap', [CourseController::class, 'dashboard'])->name('courses.roadmap');
-    Route::get('/search', [SearchController::class, 'index'])->name('search');
-
-    // Phân hệ Thông báo
-    Route::prefix('notifications')->name('notifications.')->group(function () {
-        Route::get('/', [NotificationController::class, 'index'])->name('index');
-        Route::post('/read-all', [NotificationController::class, 'markAllAsRead'])->name('readAll');
-
-        Route::get('/{id}', [NotificationController::class, 'show'])->name('show');
-        Route::post('/{id}/read', [NotificationController::class, 'markAsRead'])->name('read');
-        Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
-    });
-
-    // Phân hệ Sự cố / Lỗi
-
-    // 2. Phân hệ Khóa học
-    Route::prefix('courses')->name('courses.')->group(function () {
-        Route::get('/', [CourseController::class, 'index'])->name('index');
-        Route::get('/continue', [CourseController::class, 'continueCourse'])->name('continue');
-        Route::post('/update-progress', [CourseController::class, 'updateProgress'])->name('updateProgress');
-        Route::get('/lesson/{id}', [CourseController::class, 'showLesson'])->name('lesson');
-        Route::get('/{id}', [CourseController::class, 'show'])->name('show');
-    });
-    Route::post('/lessons/{id}/complete', [CourseController::class, 'completeLesson'])->name('lessons.complete');
-
-    // 3. Phân hệ Bài kiểm tra & Sát hạch (Đồng bộ xử lý tại CourseController)
-    Route::prefix('tests')->name('tests.')->group(function () {
-        Route::get('/', [CourseController::class, 'testsIndex'])->name('index');
-        Route::get('/quick-test', [CourseController::class, 'testsIndex'])->name('quick');
-
-        // Trang hiển thị câu hỏi làm bài (Trỏ về showTest trong CourseController)
-        Route::get('/{id}', [CourseController::class, 'showTest'])->name('show');
-
-        // Route xử lý nộp bài AJAX (Trỏ về submitTest trong CourseController)
-        Route::post('/{id}/submit', [CourseController::class, 'submitTest'])->name('submit');
-    });
-
-    // 4. Chính sách
-    Route::view('/policies', 'policies.index')->name('policies.index');
-
-    Route::get('/assessments', fn () => redirect()->route('tests.index'))->name('assessments.index');
-    Route::view('/assessments/3-months', 'assessments.show')->name('assessments.show');
-
-    // 5. Hồ sơ cá nhân & Tài khoản
-    Route::get('/profile/edit/{id?}', [UserController::class, 'edit'])->name('users.edit');
-    Route::put('/profile/update/{id}', [UserController::class, 'update'])->name('users.update');
-    Route::put('/account/update-contact', [UserController::class, 'updateContact'])->name('account.update-contact');
-    Route::put('/account/update-password', [UserController::class, 'updatePassword'])->name('account.update-password');
-    Route::post('/account/logout-other-devices', [UserController::class, 'logoutOtherDevices'])->name('account.logout-other-devices');
-    Route::put('/account/update-notifications', [UserController::class, 'updateNotifications'])->name('account.update-notifications');
-    Route::put('/account/update-preferences', [UserController::class, 'updatePreferences'])->name('account.update-preferences');
-
-    // 6. Phân hệ Quản lý (Trưởng ca)
-    Route::prefix('leader')->name('leader.')->group(function () {
-        Route::get('/dashboard', [LeaderEvaluationController::class, 'index'])->name('dashboard');
-        Route::get('/scoring', [LeaderEvaluationController::class, 'index'])->name('scoring');
-        Route::get('/staff-list', [LeaderEvaluationController::class, 'staffList'])->name('staffList');
-        Route::get('/staff/{id}', [LeaderEvaluationController::class, 'staffProfile'])->whereNumber('id')->name('staffProfile');
-        Route::post('/create-schedule', [LeaderEvaluationController::class, 'createSchedule'])->name('createSchedule');
-        Route::post('/save-score', [LeaderEvaluationController::class, 'saveScore'])->name('saveScore');
-        Route::post('/send-notification', [LeaderEvaluationController::class, 'sendNotification'])->name('sendNotification');
-        Route::post('/record-incident', [LeaderEvaluationController::class, 'recordIncident'])->name('recordIncident');
-    });
-
-    // 7. Yêu cầu hỗ trợ Helpdesk
-    Route::prefix('help')->name('help.')->group(function () {
-        Route::get('/', [HelpController::class, 'index'])->name('index');
-        Route::post('/store', [HelpController::class, 'store'])->name('store');
-    });
-
 });

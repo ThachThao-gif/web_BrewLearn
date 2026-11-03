@@ -15,17 +15,17 @@ use Illuminate\Support\Facades\DB;
 class RemindAssessments extends Command
 {
     /**
-     * Execute the console command.
+     * Nhắc quản lý cửa hàng các nhân viên sắp đến hoặc quá hạn đánh giá định kỳ và hạn đào tạo lại.
      */
     public function handle(): int
     {
-        $managers = User::working()->whereNotNull('cua_hang_id')->whereRaw('LOWER(TRIM(ChucVu)) IN (?, ?)', ['quản lý cửa hàng', 'quan ly cua hang']);
+        $managers = User::working()->whereNotNull('cua_hang_id')->whereRaw('LOWER(TRIM(ChucVu)) = ?', [User::MANAGER_POSITION]);
         if ($this->option('store')) {
             $managers->where('cua_hang_id', $this->option('store'));
         }
         foreach ($managers->get() as $manager) {
             $staff = User::working()->assessmentEligible()->where('cua_hang_id', $manager->cua_hang_id)->where('id', '!=', $manager->id)
-                ->whereRaw("LOWER(TRIM(COALESCE(ChucVu, ''))) NOT IN (?, ?, ?, ?)", ['quản lý cửa hàng', 'quản lý vùng', 'hr', 'hr đào tạo'])->get();
+                ->whereRaw("LOWER(TRIM(COALESCE(ChucVu, ''))) != ?", [User::MANAGER_POSITION])->get();
             foreach (app(AssessmentReminder::class)->decorate($staff) as $person) {
                 $due = $person->due_at;
                 if ($person->needs_reminder && ! $person->scheduled_assessment) {

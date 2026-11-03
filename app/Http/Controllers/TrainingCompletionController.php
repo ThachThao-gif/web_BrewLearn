@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\AssessmentEligibility;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class TrainingCompletionController extends Controller
 {
-    public function index()
+    /**
+     * Các vòng đào tạo lại đang thực hiện mà người dùng được giao phụ trách.
+     */
+    public function index(): View
     {
         $rounds = DB::table('retraining_rounds as r')->join('yeu_cau_dao_tao_lai as y', 'r.request_id', '=', 'y.id')
             ->join('users as u', 'y.user_id', '=', 'u.id')->where('r.owner_id', auth()->id())
@@ -27,7 +32,10 @@ class TrainingCompletionController extends Controller
         return view('training.assignments', compact('rounds'));
     }
 
-    public function confirm(Request $request, int $id)
+    /**
+     * Người phụ trách xác nhận đã hoàn thành phần thực hành / theo dõi của vòng.
+     */
+    public function confirm(Request $request, int $id): RedirectResponse
     {
         $data = $request->validate(['confirmation_note' => ['required', 'string', 'max:2000']]);
         DB::transaction(function () use ($id, $data): void {

@@ -1,6 +1,6 @@
-"""Append rule warning history: python app/ml/ket_noi_db.py.
+"""Tính cảnh báo nguy cơ cho mọi nhân viên đang làm và lưu thêm vào bảng du_doan_nguy_co.
 
-Training scripts and ML artifacts remain separate from the default rules.
+Cách chạy: python app/ml/ket_noi_db.py (Laravel gọi qua lệnh brewlearn:calculate-risk).
 """
 import json
 import logging
@@ -21,10 +21,10 @@ def error_window_start(calculated_at):
 
 
 def summarize_quizzes(tests, results):
-    """Consume cutoff-filtered rows sorted by created_at DESC, id DESC.
+    """Tổng hợp kết quả quiz; các dòng đầu vào đã lọc theo thời điểm tính và sắp xếp mới nhất trước.
 
-    Validate newest rows before grouping; never replace an invalid latest row
-    with an earlier pass. Missing timestamps cannot be ordered safely.
+    Mỗi bài chỉ lấy lượt làm gần nhất. Lượt gần nhất không hợp lệ thì báo lỗi,
+    không lấy lượt cũ hơn thay thế. Dòng thiếu thời điểm không sắp xếp được nên bị từ chối.
     """
     standards = {row["MaBaiKiemTra"]: bounded_number(
         80 if row["DiemChuan"] is None else row["DiemChuan"], "DiemChuan"
@@ -173,10 +173,10 @@ def ghi_ket_qua_du_doan(conn, user_id, cua_hang_id, ket_qua, calculated_at):
 
 
 def chay_du_doan_cho_tat_ca_nhan_vien():
-    # Database packages are not required to import/test pure rules.
+    # Chỉ nạp thư viện kết nối CSDL khi chạy thật, để predict.py có thể dùng độc lập.
     import pymysql
     from dotenv import load_dotenv
-    # Variables already set (e.g. the Selenium test database) take precedence over .env.
+    # Biến môi trường đã đặt sẵn (ví dụ CSDL kiểm thử Selenium) được ưu tiên hơn tệp .env.
     load_dotenv(Path(__file__).resolve().parents[2] / ".env")
     conn = pymysql.connect(host=os.getenv("DB_HOST", "127.0.0.1"),
         port=int(os.getenv("DB_PORT", 3306)), user=os.getenv("DB_USERNAME", "root"),
@@ -191,9 +191,7 @@ def chay_du_doan_cho_tat_ca_nhan_vien():
                 with conn.cursor() as cur:
                     cur.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ")
                     cur.execute("START TRANSACTION WITH CONSISTENT SNAPSHOT")
-                    # Laravel config/app.php uses UTC and writes naive UTC
-                    # values through the default MySQL session. Use the same
-                    # wall-clock convention without reinterpreting old rows.
+                    # Laravel lưu thời gian theo giờ UTC (config/app.php), nên lấy thời điểm tính cũng theo UTC.
                     cur.execute("SELECT UTC_TIMESTAMP() AS calculated_at")
                     calculated_at = cur.fetchone()["calculated_at"]
                     slots = ",".join(["%s"] * len(ELIGIBLE_POSITIONS))

@@ -9,7 +9,7 @@
         </div>
     @endif
 
-    <!-- HIỂN THỊ THÔNG BÁO FLASH MESSAGES (Thành công / Lỗi) -->
+    {{-- HIỂN THỊ THÔNG BÁO FLASH MESSAGES (Thành công / Lỗi) --}}
     @if(session('success'))
         <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-xl shadow-sm flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -30,7 +30,7 @@
         </div>
     @endif
 
-    <!-- Header & Navigation -->
+    {{-- Header & Navigation --}}
     <div class="page-banner flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
         <div>
             @if($page === 'scoring')
@@ -42,11 +42,11 @@
             @endif
         </div>
         
-        <!-- Nút chuyển sang trang Danh sách nhân sự -->
+        {{-- Nút chuyển sang trang Danh sách nhân sự --}}
        
     </div>
 
-    <!-- Cảnh báo nhân viên đến kỳ sát hạch 3 tháng -->
+    {{-- Cảnh báo nhân viên đến kỳ sát hạch 3 tháng --}}
     @if($page === 'schedule' && isset($dueStaffs) && $dueStaffs->count() > 0)
     @php
         $today = now('Asia/Ho_Chi_Minh')->startOfDay();
@@ -141,7 +141,7 @@
 
     <div class="grid grid-cols-1 gap-6">
         @if($page === 'schedule')
-        <!-- Block 1: Phát thông báo lịch đánh giá định kỳ -->
+        {{-- Block 1: Phát thông báo lịch đánh giá định kỳ --}}
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 h-fit">
             <div class="flex items-center gap-2 mb-4">
                 <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center"><i class="fa-regular fa-calendar-plus" aria-hidden="true"></i></div>
@@ -156,7 +156,7 @@
     <option value="">-- Chọn nhân viên --</option>
     @if(isset($staffs) && count($staffs) > 0)
         @foreach($staffs as $staff)
-            <option value="{{ $staff->id }}" @disabled(!$staff->eligibility['ready'])>{{ $staff->name ?? $staff->HoTen }} (NV-{{ str_pad($staff->id, 3, '0', STR_PAD_LEFT) }}){{ !$staff->eligibility['ready'] ? ' — Chưa đủ điều kiện' : ' — Đủ điều kiện' }}</option>
+            <option value="{{ $staff->id }}" @disabled(!$staff->eligibility['ready'])>{{ $staff->name }} (NV-{{ str_pad($staff->id, 3, '0', STR_PAD_LEFT) }}){{ !$staff->eligibility['ready'] ? ' — Chưa đủ điều kiện' : ' — Đủ điều kiện' }}</option>
         @endforeach
     @endif
 </select>
@@ -180,7 +180,7 @@
                     <input type="datetime-local" name="NgayDanhGia" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" required>
                 </div>
 
-                <!-- Ô nhập Ghi chú / Nội dung dặn dò -->
+                {{-- Ô nhập Ghi chú / Nội dung dặn dò --}}
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">
                         Ghi chú / Nội dung dặn dò <span class="text-slate-400 font-normal">(Không bắt buộc)</span>
@@ -201,14 +201,14 @@
         </div>
         @else
 
-        <!-- Block 2: Danh sách lịch sát hạch cần chấm điểm -->
+        {{-- Block 2: Danh sách lịch sát hạch cần chấm điểm --}}
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                 <div class="flex items-center gap-2">
                     <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i></div>
                     <h2 class="text-base font-bold text-slate-800">Lịch Sát Hạch Cần Chấm Điểm</h2>
                 </div>
-                <!-- Ô Lọc tìm kiếm nhanh -->
+                {{-- Ô Lọc tìm kiếm nhanh --}}
                 <div class="relative sm:w-64">
                     <input type="text" id="tableSearchInput" onkeyup="filterScheduleTable()" placeholder="Tìm tên nhân viên..." class="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-amber-500">
                     <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-slate-400 text-xs"></i>
@@ -231,7 +231,7 @@
                                 <tr class="hover:bg-slate-50/50 transition schedule-row">
                                     <td class="py-3 px-4">
                                         <span class="block font-semibold text-slate-700 staff-name-col">{{ $item->staff_name }}</span>
-                                        <span class="text-xs text-slate-500">{{ \Illuminate\Support\Str::after($item->tiêu_chuẩn ?? $item->TieuChuan ?? 'Tiêu chuẩn năng lực', 'Tiêu chuẩn năng lực ') }}</span>
+                                        <span class="text-xs text-slate-500">{{ \Illuminate\Support\Str::after($item->TieuChuan ?? 'Tiêu chuẩn năng lực', 'Tiêu chuẩn năng lực ') }}</span>
                                         @if($item->ChiTietDeXuat)
                                             @include('components.assessment-improvement-summary', ['savedProposal' => json_decode($item->ChiTietDeXuat, true)])
                                         @endif
@@ -240,7 +240,7 @@
                                         {{ \Carbon\Carbon::parse($item->NgayHen)->format('d/m/Y H:i') }}
                                     </td>
                                     
-                                    <!-- Cột Trạng thái -->
+                                    {{-- Cột Trạng thái --}}
                                     @php
                                         [$statusLabel, $statusTone, $statusDot] = match ($item->TrangThai) {
                                             'DaDuyet', 'HoanThanh' => ['Đã duyệt', 'border-emerald-200 bg-emerald-50 text-emerald-700', 'bg-emerald-500'],
@@ -258,12 +258,12 @@
                                         @endif
                                     </td>
 
-                                    <!-- Cột Thao tác -->
+                                    {{-- Cột Thao tác --}}
                                     <td class="py-3 px-4 text-right whitespace-nowrap">
                                         @if(in_array($item->TrangThai, ['ChoDanhGia', 'TraLai']))
                                             <button type="button"
                                                     class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700"
-                                                    onclick="openScoringModal('{{ $item->id }}', '{{ e($item->staff_name) }}', '{{ e($item->tiêu_chuẩn ?? $item->TieuChuan ?? '') }}')">
+                                                    onclick="openScoringModal('{{ $item->id }}', '{{ e($item->staff_name) }}', '{{ e($item->TieuChuan ?? '') }}')">
                                                 <i class="fa-solid fa-pen-to-square text-[10px]" aria-hidden="true"></i>{{ $item->TrangThai === 'TraLai' ? 'Chấm lại' : 'Chấm điểm' }}
                                             </button>
                                         @else
@@ -287,11 +287,11 @@
         @endif
     </div>
 
-    <!-- MODAL CHẤM ĐIỂM & XỬ LÝ NĂNG LỰC -->
+    {{-- MODAL CHẤM ĐIỂM & XỬ LÝ NĂNG LỰC --}}
     <div id="scoringModal" onclick="handleBackdropClick(event)" class="fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-6 space-y-5 overflow-y-auto max-h-[90vh]" onclick="event.stopPropagation()">
             
-            <!-- Header Modal -->
+            {{-- Header Modal --}}
             <div class="flex items-center justify-between border-b pb-3 border-slate-100">
                 <div>
                     <h3 class="text-lg font-bold text-slate-800">Bảng Chấm Điểm Năng Lực</h3>
@@ -313,14 +313,14 @@
                 @endif
                 <input type="hidden" name="assessment_id" id="modalAssessmentId">
 
-                <!-- Các tiêu chí chấm điểm -->
+                {{-- Các tiêu chí chấm điểm --}}
                 <div class="space-y-3">
                     <div class="grid grid-cols-12 gap-2 text-xs font-bold text-slate-500 uppercase bg-slate-50 p-2 rounded-lg">
                         <div class="col-span-7">Tiêu chí đánh giá</div>
                         <div class="col-span-5 text-right">Thang điểm (0 - 100)</div>
                     </div>
 
-                    <!-- 1. Kiến thức nghiệp vụ (20%) -->
+                    {{-- 1. Kiến thức nghiệp vụ (20%) --}}
                     <div class="grid grid-cols-12 gap-2 items-center text-sm border-b pb-2 border-slate-50">
                         <div class="col-span-7">
                             <p class="font-semibold text-slate-700">1. Kiến thức nghiệp vụ <span class="text-amber-600">(20%)</span></p>
@@ -333,7 +333,7 @@
                         </div>
                     </div>
 
-                    <!-- 2. Thao tác công việc (30%) -->
+                    {{-- 2. Thao tác công việc (30%) --}}
                     <div class="grid grid-cols-12 gap-2 items-center text-sm border-b pb-2 border-slate-50">
                         <div class="col-span-7">
                             <p class="font-semibold text-slate-700">2. Thao tác công việc <span class="text-amber-600">(30%)</span></p>
@@ -346,7 +346,7 @@
                         </div>
                     </div>
 
-                    <!-- 3. Tuân thủ quy trình (20%) -->
+                    {{-- 3. Tuân thủ quy trình (20%) --}}
                     <div class="grid grid-cols-12 gap-2 items-center text-sm border-b pb-2 border-slate-50">
                         <div class="col-span-7">
                             <p class="font-semibold text-slate-700">3. Tuân thủ quy trình <span class="text-amber-600">(20%)</span></p>
@@ -359,7 +359,7 @@
                         </div>
                     </div>
 
-                    <!-- 4. Thái độ phục vụ (15%) -->
+                    {{-- 4. Thái độ phục vụ (15%) --}}
                     <div class="grid grid-cols-12 gap-2 items-center text-sm border-b pb-2 border-slate-50">
                         <div class="col-span-7">
                             <p class="font-semibold text-slate-700">4. Thái độ phục vụ <span class="text-amber-600">(15%)</span></p>
@@ -372,7 +372,7 @@
                         </div>
                     </div>
 
-                    <!-- 5. Tác phong (15%) -->
+                    {{-- 5. Tác phong (15%) --}}
                     <div class="grid grid-cols-12 gap-2 items-center text-sm border-b pb-2 border-slate-50">
                         <div class="col-span-7">
                             <p class="font-semibold text-slate-700">5. Tác phong & phối hợp <span class="text-amber-600">(15%)</span></p>
@@ -385,14 +385,14 @@
                         </div>
                     </div>
 
-                    <!-- Nhận xét của Trưởng ca -->
+                    {{-- Nhận xét của Trưởng ca --}}
                     <div class="pt-2">
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nhận xét của Trưởng ca</label>
                         <textarea name="comment" rows="2" class="w-full p-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Nhập nhận xét chi tiết..."></textarea>
                     </div>
                 </div>
 
-                <!-- TỔNG ĐIỂM KẾT QUẢ -->
+                {{-- TỔNG ĐIỂM KẾT QUẢ --}}
                 <div class="bg-amber-50/60 p-4 rounded-xl border border-amber-100 flex items-center justify-between mt-4">
                     <div>
                         <p class="text-xs text-slate-500 font-medium uppercase">Điểm tổng hợp</p>
@@ -407,7 +407,7 @@
                     </div>
                 </div>
 
-                <!-- PHẦN ĐỀ XUẤT XỬ LÝ (TỰ ĐỘNG HIỆN KHI CHƯA ĐẠT) -->
+                {{-- PHẦN ĐỀ XUẤT XỬ LÝ (TỰ ĐỘNG HIỆN KHI CHƯA ĐẠT) --}}
                 <div id="improvementSection" class="hidden bg-rose-50 p-4 rounded-xl border border-rose-100 space-y-3">
                     <p class="text-xs font-bold text-rose-800 uppercase">Đề xuất xử lý của Trưởng ca (Nhân viên chưa đạt):</p>
                     <div class="grid grid-cols-2 gap-2 text-xs text-slate-700">
@@ -431,7 +431,7 @@
                     @include('components.assessment-improvement-details')
                 </div>
 
-                <!-- Nút bấm gửi -->
+                {{-- Nút bấm gửi --}}
                 <div class="flex justify-end gap-3 pt-2">
                     <button type="button" onclick="closeScoringModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-sm font-medium transition">Hủy</button>
                     <button type="submit" id="submitBtn" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium transition shadow-sm">
@@ -545,7 +545,7 @@
         @php
             $retryAssessment = $schedules->firstWhere('id', old('assessment_id'));
         @endphp
-        openScoringModal(@json(old('assessment_id')), @json($retryAssessment->staff_name ?? ''), @json($retryAssessment->tiêu_chuẩn ?? ''));
+        openScoringModal(@json(old('assessment_id')), @json($retryAssessment->staff_name ?? ''), @json($retryAssessment->TieuChuan ?? ''));
         const previousInput = @json(session()->getOldInput());
         function restoreScoringInput(name, value) {
             if (value && typeof value === 'object' && !Array.isArray(value)) {

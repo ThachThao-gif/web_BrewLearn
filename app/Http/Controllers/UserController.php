@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Schema;
 
 class UserController extends Controller
 {
@@ -72,39 +71,20 @@ class UserController extends Controller
     }
 
     /**
-     * Hiển thị trang chỉnh sửa hồ sơ nhân viên & thông báo
+     * Trang tài khoản của người dùng đang đăng nhập.
      */
-    public function edit(Request $request, $id = null)
+    public function edit(Request $request, ?int $id = null): View
     {
-        abort_if($id !== null && (int) $id !== (int) Auth::id(), 403, 'Bạn chỉ được chỉnh sửa hồ sơ của chính mình.');
+        abort_if($id !== null && $id !== (int) Auth::id(), 403, 'Bạn chỉ được chỉnh sửa hồ sơ của chính mình.');
 
-        $user = $request->user();
-
-        if (! $user) {
-            return redirect()->back()->with('error', 'Không tìm thấy dữ liệu nhân viên!');
-        }
-
-        // 2. Lấy danh sách thông báo dành riêng cho user này
-        $notifications = Schema::hasTable('notifications')
-            ? DB::table('notifications')
-                ->where('user_id', $user->id)
-                ->orderBy('created_at', 'desc')
-                ->get()
-            : collect([]);
-
-        // 3. Truyền cả $user và $notifications sang View
-        return view('users.edit', compact('user', 'notifications'));
+        return view('users.edit', ['user' => $request->user()]);
     }
 
-    /**
-     * Xử lý cập nhật thông tin nhân viên vào Database
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): RedirectResponse
     {
-        abort_unless((int) $id === (int) $request->user()->id, 403, 'Bạn chỉ được chỉnh sửa hồ sơ của chính mình.');
-        $user = User::findOrFail($id);
+        abort_unless($id === (int) $request->user()->id, 403, 'Bạn chỉ được chỉnh sửa hồ sơ của chính mình.');
+        $user = $request->user();
 
-        // Validate dữ liệu gửi lên từ form
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'name_tag' => 'required|string|max:100',
@@ -123,10 +103,8 @@ class UserController extends Controller
             'email.unique' => 'Email này đã được sử dụng bởi nhân viên khác.',
             'phone.required' => 'Số điện thoại không được để trống.',
         ]);
-
-        // Cập nhật vào Database
         $user->update($validated);
 
-        return redirect()->back()->with('success', 'Đã cập nhật thông tin hồ sơ & gửi duyệt thành công!');
+        return back()->with('success', 'Đã cập nhật thông tin hồ sơ & gửi duyệt thành công!');
     }
 }

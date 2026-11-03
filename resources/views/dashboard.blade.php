@@ -5,7 +5,7 @@
 @section('content')
 <div class="space-y-6">
 
-    <!-- BANNER CHÀO CÁ NHÂN HÓA -->
+    {{-- BANNER CHÀO CÁ NHÂN HÓA --}}
     <div class="page-banner relative bg-gradient-to-r from-[#2B1B15] via-[#3A261E] to-[#1A0F0B] text-white rounded-3xl p-6 md:p-8 shadow-xl overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div class="space-y-2 max-w-xl z-10">
             <div class="inline-flex items-center gap-2 bg-amber-500/20 text-amber-300 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border border-amber-500/30">
@@ -20,36 +20,12 @@
                 Bạn đã hoàn thành <span class="font-black text-amber-400 text-sm">{{ $overallProgress ?? 0 }}%</span> lộ trình đào tạo được giao. Hãy tiếp tục duy trì phong độ nhé!
             </p>
         </div>
-
-        <!-- THẺ BÀI HỌC TIẾP THEO -->
-        @if(isset($currentLesson) && $currentLesson)
-        <div class="bg-white/10 backdrop-blur-md border border-white/15 p-4 rounded-2xl w-full md:w-80 space-y-3 z-10">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-black/40 overflow-hidden shrink-0 border border-white/20">
-                    <img src="{{ $currentLesson->HinhAnh ?? 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=200' }}" alt="Bài học" class="w-full h-full object-cover">
-                </div>
-                <div class="space-y-0.5">
-                    <div class="text-[10px] font-bold text-amber-300 flex items-center gap-1">
-                        <i class="fa-regular fa-clock"></i> Bài {{ $currentLesson->ThuTu ?? 1 }} • Đang diễn ra
-                    </div>
-                    <h4 class="text-xs font-bold text-white line-clamp-1">
-                        {{ $currentLesson->TenBaiHoc }}
-                    </h4>
-                </div>
-            </div>
-
-            <a href="{{ route('courses.lesson', ['id' => $currentLesson->MaBaiHoc ?? $currentLesson->id]) }}" class="w-full bg-white hover:bg-amber-50 text-amber-900 font-extrabold py-2 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow">
-                <i class="fa-solid fa-play text-amber-600 text-[10px]"></i>
-                <span>Tiếp tục học ngay</span>
-            </a>
-        </div>
-        @endif
     </div>
 
-    <!-- STATS OVERVIEW CARDS -->
+    {{-- STATS OVERVIEW CARDS --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         
-        <!-- 1. Khóa học được giao -->
+        {{-- 1. Khóa học được giao --}}
         <div class="bg-white border-2 border-amber-500/30 rounded-2xl p-4 space-y-2 shadow-sm">
             <div class="flex justify-between items-center">
                 <i class="fa-solid fa-book text-amber-600 text-sm"></i>
@@ -62,7 +38,7 @@
             </div>
         </div>
 
-        <!-- 2. Đang theo học -->
+        {{-- 2. Đang theo học --}}
         <div class="bg-white border border-[#E2D4C1] rounded-2xl p-4 space-y-2 shadow-sm">
             <div class="flex justify-between items-center">
                 <i class="fa-regular fa-hourglass-half text-amber-600 text-sm"></i>
@@ -75,7 +51,7 @@
             </div>
         </div>
 
-        <!-- 3. Tiến độ đào tạo -->
+        {{-- 3. Tiến độ đào tạo --}}
         <div class="bg-white border border-[#E2D4C1] rounded-2xl p-4 space-y-2 shadow-sm">
             <div class="flex justify-between items-center">
                 <i class="fa-solid fa-chart-line text-blue-600 text-sm"></i>
@@ -88,7 +64,7 @@
             </div>
         </div>
 
-        <!-- 4. Đã hoàn thành -->
+        {{-- 4. Đã hoàn thành --}}
         <div class="bg-white border border-[#E2D4C1] rounded-2xl p-4 space-y-2 shadow-sm">
             <div class="flex justify-between items-center">
                 <i class="fa-regular fa-circle-check text-emerald-600 text-sm"></i>
@@ -101,7 +77,7 @@
             </div>
         </div>
 
-        <!-- 5. Điểm Quiz trung bình -->
+        {{-- 5. Điểm Quiz trung bình --}}
         <div class="bg-white border border-[#E2D4C1] rounded-2xl p-4 space-y-2 shadow-sm">
             <div class="flex justify-between items-center">
                 <i class="fa-solid fa-graduation-cap text-indigo-600 text-sm"></i>
@@ -114,14 +90,14 @@
             </div>
         </div>
 
-        <!-- 6. Bài kiểm tra đã hoàn thành -->
+        {{-- 6. Bài kiểm tra đã hoàn thành --}}
 <div class="bg-white border border-[#E2D4C1] rounded-2xl p-4 space-y-2 shadow-sm">
     <div class="flex justify-between items-center">
         <i class="fa-solid fa-list-check text-teal-600 text-sm"></i>
         <span class="text-[10px] font-bold bg-teal-50 text-teal-700 px-2 py-0.5 rounded-md">Đạt</span>
     </div>
     <div>
-        <!-- ĐÃ SỬA: Thay $completedQuizzesCount thành $completedTestsCount -->
+        {{-- ĐÃ SỬA: Thay $completedQuizzesCount thành $completedTestsCount --}}
         <div class="text-2xl font-black text-slate-800">{{ $completedTestsCount ?? 0 }}/{{ $totalTestsCount ?? 0 }} <span class="text-xs font-normal text-slate-500">bài</span></div>
         <div class="text-xs font-bold text-slate-700">Bài kiểm tra đã hoàn thành</div>
         <div class="text-[10px] text-slate-400 mt-0.5">Số bài kiểm tra đã đạt chuẩn</div>
@@ -130,7 +106,7 @@
 
     </div>
 
-    <!-- KHÓA HỌC CỦA NHÂN VIÊN -->
+    {{-- KHÓA HỌC CỦA NHÂN VIÊN --}}
     <div class="bg-white border border-[#E2D4C1] rounded-3xl p-6 space-y-4 shadow-sm">
         <div class="flex justify-between items-center border-b border-slate-100 pb-3">
             <h2 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-2">
@@ -142,7 +118,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             @forelse($assignedCourses ?? [] as $course)
-                @php $cId = $course->MaCTDT ?? $course->id; @endphp
+                @php $cId = $course->MaCTDT; @endphp
                 <div class="p-5 rounded-2xl bg-[#FAF7F2] border border-[#E8DFC8] flex flex-col justify-between space-y-3 hover:border-amber-500 transition shadow-sm">
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">

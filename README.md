@@ -92,11 +92,13 @@ venv\Scripts\python.exe -m unittest tests.selenium.test_luong_nghiep_vu -v
 
 | Thư mục | Nội dung |
 |---|---|
-| `app/Http/Controllers`, `app/Models` | Xử lý nghiệp vụ và mô hình dữ liệu Laravel |
-| `app/Console/Commands` | Lệnh tính cảnh báo, nhắc hạn và chuẩn bị dữ liệu minh họa |
+| `app/Http/Controllers` | Xử lý yêu cầu theo từng vai trò (nhân viên, trưởng ca, quản lý cửa hàng) |
+| `app/Models` | Người dùng và các quy tắc nghiệp vụ: điều kiện đánh giá, nhắc hạn, tiến độ học, hồ sơ nhân viên |
+| `app/Console/Commands` | Lệnh tính cảnh báo, nhắc hạn và dời mốc ngày của dữ liệu minh họa |
 | `app/ml` | Chương trình Python tính cảnh báo theo bộ quy tắc |
 | `resources/views` | Giao diện theo ba vai trò |
-| `database/migrations`, `database/brewlearn.sql` | Cấu trúc cơ sở dữ liệu và dữ liệu minh họa |
+| `database/brewlearn.sql` | Cấu trúc và dữ liệu minh họa đầy đủ (dùng để cài đặt) |
+| `database/migrations` | Lịch sử thay đổi cấu trúc trong quá trình phát triển |
 | `public/videos` | Video bài học minh họa |
 | `tests/selenium` | Kịch bản kiểm thử chức năng |
 | `report` | Báo cáo đồ án bản cuối |

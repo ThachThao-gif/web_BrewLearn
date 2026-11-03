@@ -4,18 +4,18 @@
 
 @section('content')
 <div class="space-y-4">
-    <!-- Thanh điều hướng trên cùng -->
+    {{-- Thanh điều hướng trên cùng --}}
     <div class="flex justify-between items-center bg-white px-6 py-3 rounded-2xl border border-coffee-200/60 shadow-sm">
         <a href="{{ route('courses.show', ['id' => $lesson->FK_MaCTDT ?? 1]) }}" class="text-xs font-bold text-coffee-900 hover:text-amber_brand transition flex items-center gap-2">
             <i class="fa-solid fa-arrow-left"></i>
             <span>Quay lại khóa học</span>
         </a>
         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300/50">
-            {{ $course->ChucVuApDung ?? $lesson->chuongTrinh->ChucVuApDung ?? 'Nội dung' }}
+            {{ $course->ChucVuApDung ?? 'Nội dung' }}
         </span>
     </div>
 
-    <!-- HEADER BÀI HỌC -->
+    {{-- HEADER BÀI HỌC --}}
     <div class="page-banner flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <h1 class="text-xl md:text-2xl font-extrabold text-coffee-900">
             Bài {{ sprintf('%02d', $lesson->ThuTu ?? 1) }}: {{ $lesson->TenBaiHoc ?? 'Nội dung bài học' }}
@@ -23,11 +23,11 @@
     </div>
 </div>
 
-<!-- MAIN LESSON CONTENT GRID -->
+{{-- MAIN LESSON CONTENT GRID --}}
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
-    <!-- LEFT & CENTER: VIDEO PLAYER & LESSON DETAILS -->
+    {{-- LEFT & CENTER: VIDEO PLAYER & LESSON DETAILS --}}
     <div class="lg:col-span-2 space-y-5">
-        <!-- KHUNG VIDEO PLAYER -->
+        {{-- KHUNG VIDEO PLAYER --}}
         <div class="relative bg-black rounded-2xl overflow-hidden shadow-xl w-full aspect-video flex items-center justify-center">
             <video 
                 id="lessonVideo"
@@ -44,7 +44,7 @@
 
         <p class="text-xs text-slate-500">Bài học được ghi nhận hoàn thành khi xem từ 95% thời lượng video.</p>
 
-        <!-- TAB NAVIGATION & CONTENT -->
+        {{-- TAB NAVIGATION & CONTENT --}}
         <div class="bg-white border border-[#E2D4C1] rounded-3xl p-5 space-y-5">
             <div class="flex items-center space-x-2 border-b border-slate-100 pb-3 overflow-x-auto">
                 <button class="px-4 py-2 rounded-xl text-xs font-bold bg-[#EFE7DA] text-coffee-900 flex items-center space-x-2 shrink-0">
@@ -72,20 +72,20 @@
         </div>
     </div>
 
-    <!-- RIGHT SIDEBAR: PROGRAM PLAYLIST & ATTACHMENTS -->
+    {{-- RIGHT SIDEBAR: PROGRAM PLAYLIST & ATTACHMENTS --}}
     <div class="space-y-5">
         @php
-            $playlist = $allLessons ?? $lessons ?? [];
+            $playlist = $lessons;
             $courseProgress = $course->TienDo ?? 0;
         @endphp
 
-        <!-- PROGRESS CARD -->
+        {{-- PROGRESS CARD --}}
         <div class="bg-white border border-[#E2D4C1] rounded-3xl p-5 space-y-3">
             <div class="flex items-center justify-between">
                 <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-900 bg-amber-100 px-2 py-0.5 rounded-md">TIẾN ĐỘ CHUYÊN ĐỀ</span>
                 <span class="text-xs font-extrabold text-amber_brand" id="sidebarCoursePercent">{{ $courseProgress }}%</span>
             </div>
-            <h3 class="text-sm font-bold text-coffee-900">{{ $course->TenCTDT ?? $lesson->chuongTrinh->TenCTDT ?? 'Chương trình đào tạo' }}</h3>
+            <h3 class="text-sm font-bold text-coffee-900">{{ $course->TenCTDT ?? 'Chương trình đào tạo' }}</h3>
             <p class="text-xs text-slate-500">Tổng số bài học: {{ count($playlist) }} bài</p>
             
             <div class="w-full bg-[#EFE7DA] rounded-full h-2 overflow-hidden">
@@ -93,34 +93,28 @@
             </div>
         </div>
 
-<!-- LESSON PLAYLIST -->
+{{-- LESSON PLAYLIST --}}
 <div class="bg-white border border-[#E2D4C1] rounded-3xl p-5 space-y-4">
     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <div class="flex items-center space-x-2">
             <i class="fa-solid fa-list text-coffee-800 text-xs"></i>
             <h3 class="text-xs font-bold text-coffee-900">Danh sách bài học trong chương</h3>
         </div>
-        <span class="text-[10px] font-semibold text-slate-400">{{ count($playlist ?? $lessonsInCourse) }} bài</span>
+        <span class="text-[10px] font-semibold text-slate-400">{{ count($playlist) }} bài</span>
     </div>
 
     <div class="space-y-2">
-        @php $list = $playlist ?? $lessonsInCourse ?? []; @endphp
-
-        @if(count($list) > 0)
-            @foreach($list as $item)
+        @if(count($playlist) > 0)
+            @foreach($playlist as $item)
                 @php
-                    $itemId = $item->MaBaiHoc ?? $item->id;
-                    $currentId = $lesson->MaBaiHoc ?? $lesson->id;
+                    $itemId = $item->MaBaiHoc;
+                    $currentId = $lesson->MaBaiHoc;
                     $isCurrent = ($itemId == $currentId);
-
-                    // Kiểm tra bài học đã hoàn thành hay chưa
-                    $isDone = ($item->is_completed ?? false) 
-                               || (($item->LessonStatus ?? '') === 'HoanThanh') 
-                               || (($item->TienDo ?? 0) >= 95);
+                    $isDone = $item->LessonStatus === 'HoanThanh';
                 @endphp
                 
                 @if($isCurrent)
-                    <!-- 1. BÀI ĐANG HỌC (ĐANG PHÁT) -->
+                    {{-- 1. BÀI ĐANG HỌC (ĐANG PHÁT) --}}
                     <div class="p-2.5 rounded-2xl bg-[#EFE7DA] border-2 border-amber_brand flex items-center justify-between shadow-sm">
                         <div class="flex items-center space-x-2.5 min-w-0">
                             <i class="fa-solid fa-circle-play text-amber_brand text-sm shrink-0"></i>
@@ -133,8 +127,8 @@
                     </div>
 
                 @elseif($isDone)
-                    <!-- 2. BÀI ĐÃ HOÀN THÀNH (TÍCH XANH & MÀU EMERALD) -->
-                    <a href="{{ route('courses.lesson', ['id' => $itemId, 'user_id' => request('user_id')]) }}" 
+                    {{-- 2. BÀI ĐÃ HOÀN THÀNH (TÍCH XANH & MÀU EMERALD) --}}
+                    <a href="{{ route('courses.lesson', $itemId) }}" 
                        class="group p-2.5 rounded-2xl bg-emerald-50/60 hover:bg-emerald-100/70 border border-emerald-200/80 flex items-center justify-between transition min-w-0">
                         <div class="flex items-center space-x-2.5 min-w-0">
                             <i class="fa-solid fa-circle-check text-emerald-500 text-sm shrink-0"></i>
@@ -147,8 +141,8 @@
                     </a>
 
                 @else
-                    <!-- 3. BÀI CHƯA HỌC -->
-                    <a href="{{ route('courses.lesson', ['id' => $itemId, 'user_id' => request('user_id')]) }}" 
+                    {{-- 3. BÀI CHƯA HỌC --}}
+                    <a href="{{ route('courses.lesson', $itemId) }}" 
                        class="group p-2.5 rounded-2xl hover:bg-[#FAF7F2] border border-transparent hover:border-[#E8DFC8] flex items-center justify-between transition min-w-0">
                         <div class="flex items-center space-x-2.5 min-w-0">
                             <i class="fa-solid fa-circle-check text-slate-300 text-sm shrink-0 group-hover:text-amber-500"></i>
@@ -167,7 +161,7 @@
     </div>
 </div>
 
-<!-- POPUP MODAL CHỐNG GIAN LẬN KHI CHUYỂN TAB -->
+{{-- POPUP MODAL CHỐNG GIAN LẬN KHI CHUYỂN TAB --}}
 <div id="tabSwitchModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-amber-100 text-center space-y-5">
         <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-xl shadow-inner">
@@ -185,7 +179,7 @@
     </div>
 </div>
 
-<!-- JAVASCRIPT XỬ LÝ TIẾN ĐỘ XEM VIDEO VÀ CHỐNG GIAN LẬN -->
+{{-- JAVASCRIPT XỬ LÝ TIẾN ĐỘ XEM VIDEO VÀ CHỐNG GIAN LẬN --}}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const video = document.getElementById('lessonVideo');
@@ -194,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!video) return;
 
-    const lessonId = {{ $lesson->MaBaiHoc ?? $lesson->id ?? 0 }};
+    const lessonId = {{ $lesson->MaBaiHoc ?? 0 }};
     const lastWatched = {{ $progress->last_watched_seconds ?? 0 }};
     let lastSavedPercent = {{ $progress->progress_percent ?? 0 }};
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập - BrewLearn LMS</title>
-    <!-- Nhúng Bootstrap 5 CSS -->
+    {{-- Nhúng Bootstrap 5 CSS --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -39,14 +39,14 @@
             <p class="text-muted small">Hệ thống đào tạo & Đánh giá nhân sự</p>
         </div>
 
-        <!-- HIỂN THỊ THÔNG BÁO LỖI SESSION -->
+        {{-- HIỂN THỊ THÔNG BÁO LỖI SESSION --}}
         @if(session('error'))
             <div class="alert alert-danger py-2 small mb-3">
                 {{ session('error') }}
             </div>
         @endif
 
-        <!-- HIỂN THỊ LỖI VALIDATION (SAI EMAIL/PASSWORD) -->
+        {{-- HIỂN THỊ LỖI VALIDATION (SAI EMAIL/PASSWORD) --}}
         @if ($errors->any())
             <div class="alert alert-danger py-2 small mb-3">
                 <ul class="mb-0 ps-3">
@@ -57,7 +57,7 @@
             </div>
         @endif
 
-        <!-- FORM ĐĂNG NHẬP (Đã chỉnh route('login')) -->
+        {{-- FORM ĐĂNG NHẬP (Đã chỉnh route('login')) --}}
         <form action="{{ route('login') }}" method="POST">
             @csrf
             

@@ -3,7 +3,7 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4 py-6 space-y-6">
 
-    <!-- HEADER -->
+    {{-- HEADER --}}
     <div class="page-banner bg-[#6F4E37] text-white rounded-3xl p-6 shadow-md flex justify-between items-center">
         <div>
             <h1 class="text-2xl font-black flex items-center gap-2">
@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <!-- THANH TAB ĐIỀU HƯỚNG (5 MỤC) -->
+    {{-- THANH TAB ĐIỀU HƯỚNG (5 MỤC) --}}
     <div class="bg-white rounded-2xl p-2 border border-[#E8DFC8] shadow-sm flex items-center gap-2 overflow-x-auto">
         <button type="button" onclick="openTab(event, 'tab-1')" class="help-tab-btn active px-4 py-2.5 rounded-xl text-xs font-bold bg-[#6F4E37] text-white transition-all whitespace-nowrap">
             <i class="fa-solid fa-circle-question mr-1"></i> 1. Câu hỏi thường gặp (FAQ)
@@ -32,9 +32,9 @@
 </button>
     </div>
 
-    <!-- NỘI DUNG CÁC TAB -->
+    {{-- NỘI DUNG CÁC TAB --}}
     
-    <!-- TAB 1: FAQ -->
+    {{-- TAB 1: FAQ --}}
     <div id="tab-1" class="help-tab-content space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="bg-white p-5 rounded-2xl border border-[#E8DFC8] shadow-sm space-y-2">
@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <!-- TAB 2: HƯỚNG DẪN SỬ DỤNG -->
+    {{-- TAB 2: HƯỚNG DẪN SỬ DỤNG --}}
     <div id="tab-2" class="help-tab-content hidden space-y-4">
         <div class="bg-white p-6 rounded-2xl border border-[#E8DFC8] shadow-sm space-y-4">
             <h3 class="font-bold text-slate-800 text-sm border-b pb-2">📖 HƯỚNG DẪN THAO TÁC</h3>
@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <!-- TAB 3: BÁO LỖI HỆ THỐNG & TAB 4: GỬI YÊU CẦU -->
+    {{-- TAB 3: BÁO LỖI HỆ THỐNG & TAB 4: GỬI YÊU CẦU --}}
     <div id="tab-3" class="help-tab-content hidden">
         <form action="{{ route('help.store') }}" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-2xl border border-[#E8DFC8] shadow-sm space-y-4">
             @csrf
@@ -122,10 +122,10 @@
         </form>
     </div>
 
-    <!-- TAB 4 dùng chung giao diện với TAB 3 -->
+    {{-- TAB 4 dùng chung giao diện với TAB 3 --}}
     <div id="tab-4" class="help-tab-content hidden"></div>
 
-    <!-- TAB 5: THEO DÕI YÊU CẦU -->
+    {{-- TAB 5: THEO DÕI YÊU CẦU --}}
     <div id="tab-5" class="help-tab-content hidden">
         <div class="bg-white rounded-2xl border border-[#E8DFC8] p-5 shadow-sm space-y-4">
             <h3 class="font-bold text-slate-800 text-sm border-b pb-2">📋 LỊCH SỬ YÊU CẦU HỖ TRỢ DÃ GỬI</h3>
@@ -160,7 +160,7 @@
 
 </div>
 
-<!-- SCRIPT CHÍNH XÁC XỬ LÝ SỰ KIỆN CLICK TAB -->
+{{-- SCRIPT CHÍNH XÁC XỬ LÝ SỰ KIỆN CLICK TAB --}}
 <script>
     function openTab(evt, tabId) {
         // 1. Nếu click vào Tab 4 thì chuyển hướng hiển thị Tab 3 (Dùng chung Form)

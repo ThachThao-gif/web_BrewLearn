@@ -16,7 +16,7 @@
 
     <title>@yield('title', 'BrewLearn - Hệ Thống Đào Tạo & Quản Lý Năng Lực Barista')</title>
 
-    <!-- Tailwind CSS qua CDN -->
+    {{-- Tailwind CSS qua CDN --}}
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -50,7 +50,7 @@
         }
     </script>
 
-    <!-- FontAwesome & Google Fonts -->
+    {{-- FontAwesome & Google Fonts --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -126,7 +126,7 @@
             #sidebar { transition: none; }
         }
     </style>
-    <!-- Nhúng Alpine.js để xử lý Modal Bật Ra -->
+    {{-- Nhúng Alpine.js để xử lý Modal Bật Ra --}}
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="h-full text-slate-800 font-sans antialiased bg-[#FAF7F2] flex flex-col md:flex-row overflow-x-hidden">
@@ -135,23 +135,19 @@
         // Lấy thông tin user hiện tại
         $currentUser = auth()->user() ?? $user ?? null;
         
-        // Kiểm tra vai trò
-        $role =$currentUser->role ?? '';
-        $chucVu =$currentUser->ChucVu ?? '';
-
-        $isLeader = ($role === 'truong_ca' || mb_strtolower($chucVu) === 'trưởng ca' || $role === 'leader');
-        $isManager = in_array(mb_strtolower(trim($chucVu)), ['quản lý cửa hàng', 'quan ly cua hang', 'manager']);
+        $isLeader = (bool) $currentUser?->isLeader();
+        $isManager = (bool) $currentUser?->isStoreManager();
     @endphp
 
-    <!-- MOBILE SIDEBAR BACKDROP -->
+    {{-- MOBILE SIDEBAR BACKDROP --}}
     <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 hidden md:hidden transition-opacity"></div>
 
-    <!-- SIDEBAR BÊN TRÁI -->
+    {{-- SIDEBAR BÊN TRÁI --}}
     <aside id="sidebar" class="w-72 bg-[#FAF7F2] border-r border-[#E8DFC8] flex flex-col justify-between shrink-0 fixed md:static inset-y-0 left-0 z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out h-screen">
         
-        <!-- PHẦN ĐỈNH + DANH SÁCH MENU -->
+        {{-- PHẦN ĐỈNH + DANH SÁCH MENU --}}
         <div class="flex-1 min-h-0 overflow-y-auto overscroll-contain">
-            <!-- LOGO AREA -->
+            {{-- LOGO AREA --}}
             <div class="px-6 py-5 flex items-center justify-between border-b border-[#E8DFC8]/50 sticky top-0 bg-[#FAF7F2] z-10">
                 <a href="{{ route($isManager ? 'manager.dashboard' : 'dashboard') }}" class="flex items-center space-x-3">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#4A2E1B] to-[#6E4E30] flex items-center justify-center text-white shadow-md shadow-coffee-800/10">
@@ -167,10 +163,10 @@
                 </button>
             </div>
 
-            <!-- NAVIGATION LINKS -->
+            {{-- NAVIGATION LINKS --}}
             <div class="p-4 space-y-6">
                 
-                <!-- 1. CHỈ HIỂN THỊ CHO TRƯỞNG CA -->
+                {{-- 1. CHỈ HIỂN THỊ CHO TRƯỞNG CA --}}
 @if($isManager)
     <div>
         <h3 class="px-3 text-[11px] font-bold uppercase tracking-wider text-coffee-500 mb-2">Quản lý cửa hàng</h3>
@@ -202,7 +198,7 @@
                 <span>Chấm Điểm Năng Lực</span>
             </a>
 
-            <!-- 🔥 KHÔI PHỤC MỤC GỬI THÔNG BÁO CHO TRƯỞNG CA -->
+            {{-- 🔥 KHÔI PHỤC MỤC GỬI THÔNG BÁO CHO TRƯỞNG CA --}}
             <a aria-current="{{ request()->routeIs('training.*') ? 'page' : 'false' }}" href="{{ route('training.assignments') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-coffee-100"><i class="fa-solid fa-user-check w-5 text-center"></i>Đào tạo lại tôi phụ trách</a>
             <a href="javascript:void(0)" onclick="openSendNotificationModal()" 
                class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1] transition">
@@ -210,7 +206,7 @@
                 <span>Gửi Thông Báo Nhân Viên</span>
             </a>
 
-            <!-- ⚠️ MỤC GHI NHẬN LỖI & SỰ CỐ TRONG CA -->
+            {{-- ⚠️ MỤC GHI NHẬN LỖI & SỰ CỐ TRONG CA --}}
             <a href="javascript:void(0)" onclick="openIncidentModal()" 
                class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-red-700 hover:bg-red-50/80 transition border border-transparent hover:border-red-100">
                 <i class="fa-solid fa-triangle-exclamation w-5 text-center text-red-500"></i>
@@ -234,32 +230,32 @@
         </nav>
     </div>
 @else
-                 <!-- 2. CHỈ HIỂN THỊ CHO NHÂN VIÊN -->
+                 {{-- 2. CHỈ HIỂN THỊ CHO NHÂN VIÊN --}}
 <div>
     <h3 class="px-3 text-[11px] font-bold uppercase tracking-wider text-coffee-500 mb-2">Học Tập & Đánh Giá</h3>
     <nav class="space-y-1">
-        <!-- Tổng quan lộ trình -->
-        <a aria-current="{{ request()->routeIs('dashboard', 'courses.roadmap') ? 'page' : 'false' }}" href="{{ route('dashboard', ['user_id' => auth()->id() ?? request()->query('user_id', 1)]) }}" 
+        {{-- Tổng quan lộ trình --}}
+        <a aria-current="{{ request()->routeIs('dashboard') ? 'page' : 'false' }}" href="{{ route('dashboard') }}" 
            class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('dashboard') ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }} transition">
             <i class="fa-solid fa-chart-pie w-5 text-center {{ request()->routeIs('dashboard') ? 'text-coffee-800' : 'text-slate-500' }}"></i>
             <span>Tổng quan lộ trình</span>
         </a>
 
-        <!-- Khóa học & Bài giảng -->
-        <a aria-current="{{ request()->routeIs('courses.index', 'courses.show', 'courses.lesson', 'lessons.*') ? 'page' : 'false' }}" href="{{ route('courses.index', ['user_id' => auth()->id() ?? request()->query('user_id', 1)]) }}" 
+        {{-- Khóa học & Bài giảng --}}
+        <a aria-current="{{ request()->routeIs('courses.index', 'courses.show', 'courses.lesson', 'lessons.*') ? 'page' : 'false' }}" href="{{ route('courses.index') }}" 
            class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('courses.*') ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }} transition">
             <i class="fa-solid fa-book-open w-5 text-center {{ request()->routeIs('courses.*') ? 'text-coffee-800' : 'text-slate-500' }}"></i>
             <span>Khóa học & Bài giảng</span>
         </a>
 
-        <!-- Kiểm tra & Đánh giá -->
-        <a aria-current="{{ request()->routeIs('tests.*') ? 'page' : 'false' }}" href="{{ route('tests.index', ['user_id' => auth()->id() ?? request()->query('user_id', 1)]) }}" 
+        {{-- Kiểm tra & Đánh giá --}}
+        <a aria-current="{{ request()->routeIs('tests.*') ? 'page' : 'false' }}" href="{{ route('tests.index') }}" 
            class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('tests.*') ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }} transition">
             <i class="fa-solid fa-clipboard-check w-5 text-center {{ request()->routeIs('tests.*') ? 'text-coffee-800' : 'text-slate-500' }}"></i>
             <span>Kiểm tra & Đánh giá</span>
         </a>
 
-        <!-- Tiêu chuẩn năng lực -->
+        {{-- Tiêu chuẩn năng lực --}}
         <a aria-current="{{ request()->routeIs('assessments.*') ? 'page' : 'false' }}" href="{{ route('assessments.show') }}" 
            class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->routeIs('assessments.show') ? 'text-coffee-900 bg-[#EFE7DA] border border-[#E2D4C1] shadow-sm' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }} transition">
             <i class="fa-solid fa-list-check w-5 text-center {{ request()->routeIs('assessments.show') ? 'text-coffee-800' : 'text-slate-500' }}"></i>
@@ -268,11 +264,11 @@
     </nav>
 </div>
 @endif
-               <!-- 3. TIÊU CHUẨN & HỖ TRỢ -->
+               {{-- 3. TIÊU CHUẨN & HỖ TRỢ --}}
 <div class="mt-4">
     <h3 class="px-3 text-[11px] font-bold uppercase tracking-wider text-coffee-500 mb-2">TIÊU CHUẨN & HỖ TRỢ</h3>
     <nav class="space-y-1">
-        <!-- 🔥 CHỈ ẨN SỔ TAY SOP VỚI TRƯỞNG CA (NHÂN VIÊN VẪN THẤY) -->
+        {{-- 🔥 CHỈ ẨN SỔ TAY SOP VỚI TRƯỞNG CA (NHÂN VIÊN VẪN THẤY) --}}
         @if(!$isLeader && !$isManager)
             <a href="javascript:void(0)" onclick="openSOPModal()" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1] transition">
                 <i class="fa-solid fa-book-bookmark w-5 text-center text-slate-500"></i>
@@ -280,8 +276,8 @@
             </a>
         @endif
 
-        <!-- DÙNG CHUNG CHO CẢ LEADER & NHÂN VIÊN -->
-        @if(!$isLeader && \Illuminate\Support\Facades\Schema::hasTable('retraining_rounds') && \Illuminate\Support\Facades\DB::table('retraining_rounds')->where('owner_id', auth()->id())->exists())
+        {{-- DÙNG CHUNG CHO CẢ LEADER & NHÂN VIÊN --}}
+        @if(!$isLeader && \Illuminate\Support\Facades\DB::table('retraining_rounds')->where('owner_id', auth()->id())->exists())
             <a aria-current="{{ request()->routeIs('training.*') ? 'page' : 'false' }}" href="{{ route('training.assignments') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-coffee-100"><i class="fa-solid fa-user-check w-5 text-center"></i>Đào tạo lại tôi phụ trách</a>
         @endif
        
@@ -291,18 +287,18 @@
             <span>Cài đặt tài khoản</span>
         </a>
 
-        <a aria-current="{{ request()->routeIs('policies.*') ? 'page' : 'false' }}" href="{{ route('policies.index', ['user_id' => $currentUser->id ?? 1]) }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('policies.index') ? 'text-coffee-900 bg-[#F3ECE1] font-semibold' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }}">
+        <a aria-current="{{ request()->routeIs('policies.*') ? 'page' : 'false' }}" href="{{ route('policies.index') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('policies.index') ? 'text-coffee-900 bg-[#F3ECE1] font-semibold' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }}">
             <i class="fa-solid fa-file-contract w-5 text-center text-slate-500"></i>
             <span>Nội quy & Chính sách</span>
         </a>
-         <!-- Nút Trợ giúp & Hỗ trợ trong Sidebar -->
+         {{-- Nút Trợ giúp & Hỗ trợ trong Sidebar --}}
 <a aria-current="{{ request()->routeIs('help.*') ? 'page' : 'false' }}" href="{{ route('help.index') }}"
    class="flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all {{ request()->routeIs('help.*') ? 'bg-amber-100 text-amber-900 border border-amber-300 shadow-sm' : 'text-slate-600 hover:bg-amber-50/50' }}">
     <i class="fa-solid fa-headset text-base text-amber-700"></i>
     <span>Trợ giúp & Hỗ trợ</span>
 </a>
 
-        <!-- Nút Đăng xuất -->
+        {{-- Nút Đăng xuất --}}
         <form action="{{ route('logout') }}" method="POST" class="mt-1">
             @csrf
             <button type="submit" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 transition text-left">
@@ -316,7 +312,7 @@
             </div>
         </div>
 
-       <!-- THẺ CÁ NHÂN CỦA USER Ở ĐÁY SIDEBAR -->
+       {{-- THẺ CÁ NHÂN CỦA USER Ở ĐÁY SIDEBAR --}}
         <div class="shrink-0 p-4 border-t border-[#E8DFC8] bg-[#FAF7F2]">
             <div class="bg-[#EFE7DA]/80 border border-[#E2D4C1] rounded-2xl p-3 flex items-center justify-between gap-2 shadow-sm">
                 <div class="flex items-center space-x-2.5 min-w-0">
@@ -360,24 +356,24 @@
         });
     </script>
 
-    <!-- MAIN CONTENT WRAPPER -->
+    {{-- MAIN CONTENT WRAPPER --}}
     <div id="mainContent" class="flex-1 flex flex-col min-w-0 min-h-screen">
-        <!-- TOPBAR HEADER -->
+        {{-- TOPBAR HEADER --}}
         <header class="bg-[#FAF7F2]/90 backdrop-blur-md sticky top-0 z-20 border-b border-[#E8DFC8] px-4 md:px-8 py-3.5 flex items-center justify-between gap-4 w-full">
             
-            <!-- BÊN TRÁI: Nút Mobile + Chi nhánh + Ô tìm kiếm -->
+            {{-- BÊN TRÁI: Nút Mobile + Chi nhánh + Ô tìm kiếm --}}
             <div class="flex items-center gap-3 flex-1 max-w-2xl">
                 <button id="sidebarToggle" type="button" onclick="toggleSidebar()" aria-controls="sidebar" aria-expanded="true" aria-label="Ẩn menu" title="Ẩn menu" class="p-2 rounded-lg bg-[#EFE7DA] text-coffee-800 hover:bg-[#E5D8C5] shrink-0">
                     <i class="fa-solid fa-bars"></i>
                 </button>
                 
-                <!-- Chi nhánh làm việc của Nhân viên -->
+                {{-- Chi nhánh làm việc của Nhân viên --}}
                 <div class="inline-flex items-center space-x-2 bg-[#EFE7DA] border border-[#E2D4C1] px-3.5 py-2 rounded-xl text-xs md:text-sm font-semibold text-coffee-900 shadow-sm shrink-0 select-none">
                     <i class="fa-solid fa-store text-amber_brand"></i>
                     <span>{{ $currentUser->ChiNhanh ?? 'BrewLearn Thảo Điền' }}</span>
                 </div>
 
-                <!-- Search Bar -->
+                {{-- Search Bar --}}
                 <form action="{{ route($isManager ? 'manager.staff' : 'search') }}" method="GET" class="hidden sm:flex flex-1 relative">
                     <button type="submit" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-coffee-800 text-sm transition">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -389,9 +385,9 @@
                            class="w-full bg-[#EFE7DA]/60 border border-[#E2D4C1] rounded-xl pl-10 pr-4 py-2 text-xs md:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-coffee-600 focus:bg-white transition"
                            required>
                 </form>
-            </div> <!-- ĐÃ BỔ SUNG THẺ ĐÓNG DIV KHỐI BÊN TRÁI -->
+            </div>
 
-           <!-- BÊN PHẢI: Tài khoản đang đăng nhập & Quả chuông Thông báo -->
+           {{-- BÊN PHẢI: Tài khoản đang đăng nhập & Quả chuông Thông báo --}}
 <div class="flex items-center space-x-2 md:space-x-3 shrink-0">
     @if($currentUser)
         <a href="{{ route('users.edit', ['id' => $currentUser->id]) }}" title="Cài đặt tài khoản" class="flex items-center gap-2.5 rounded-xl border border-[#E2D4C1] bg-white py-1.5 pl-1.5 pr-3 shadow-sm transition hover:bg-[#FAF7F2]">
@@ -403,7 +399,7 @@
         </a>
     @endif
 
-    <!-- ================= QUẢ CHUÔNG & DROPDOWN THÔNG BÁO ================= -->
+    {{-- ================= QUẢ CHUÔNG & DROPDOWN THÔNG BÁO ================= --}}
     <div class="relative inline-block text-left">
         <button type="button" onclick="toggleNotificationMenu()" class="relative p-2.5 rounded-xl bg-[#EFE7DA] hover:bg-[#E8DFC8] border border-[#E2D4C1] text-coffee-800 transition focus:outline-none cursor-pointer">
             <i class="fa-regular fa-bell text-base"></i>
@@ -414,7 +410,7 @@
             @endif
         </button>
 
-        <!-- Menu xổ xuống khi bấm quả chuông -->
+        {{-- Menu xổ xuống khi bấm quả chuông --}}
         <div id="notificationMenu" class="hidden absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 z-50 overflow-hidden border border-[#E8DFC8]">
             <div class="p-3.5 bg-[#FAF7F2] border-b border-[#E8DFC8] flex items-center justify-between">
                 <div class="flex items-center gap-2">
@@ -426,13 +422,13 @@
                 </span>
             </div>
 
-            <!-- Danh sách thông báo trong Dropdown -->
+            {{-- Danh sách thông báo trong Dropdown --}}
             <div class="max-h-80 overflow-y-auto divide-y divide-gray-100">
                 @if(isset($notifications) && $notifications->count() > 0)
                     @foreach($notifications as $noti)
                         @php
-                            $titleText     = $noti->title ?? $noti->tieu_de ?? 'Thông báo hệ thống';
-                            $messageText   = $noti->message ?? $noti->noi_dung ?? $noti->content ?? '';
+                            $titleText     = $noti->title ?? 'Thông báo hệ thống';
+                            $messageText   = $noti->message ?? $noti->content ?? '';
                             $typeText      = $noti->type ?? 'general';
                             $formattedTime = \Carbon\Carbon::parse($noti->created_at)->diffForHumans();
                             $fullTime      = \Carbon\Carbon::parse($noti->created_at)->format('H:i:s d/m/Y');
@@ -462,7 +458,7 @@
                                         <i class="fa-regular fa-clock mr-1"></i>{{ $formattedTime }}
                                     </span>
 
-                                    <!-- Badge nhỏ phân loại type -->
+                                    {{-- Badge nhỏ phân loại type --}}
                                     @if(in_array($typeText, ['warning', 'incident']))
                                         <span class="text-[8px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-bold">Sự cố</span>
                                     @elseif($typeText === 'schedule')
@@ -481,18 +477,18 @@
                 @endif
             </div>
 
-            <!-- NÚT XEM TẤT CẢ -->
+            {{-- NÚT XEM TẤT CẢ --}}
             <a href="{{ route($isManager ? 'manager.notifications' : 'notifications.index') }}"
                class="block text-center py-2.5 text-xs font-bold text-amber-900 bg-[#FAF7F2] hover:bg-[#EFE7DA] border-t border-[#E8DFC8] transition">
                 Xem tất cả thông báo →
             </a>
 
-        </div> <!-- Đóng #notificationMenu -->
-    </div> <!-- Đóng .relative.inline-block -->
-</div> <!-- Đóng div bên phải -->
+        </div>
+    </div>
+</div>
 </header>
 
-<!-- Nút quay lại dùng chung cho nhân viên, trưởng ca và quản lý cửa hàng -->
+{{-- Nút quay lại dùng chung cho nhân viên, trưởng ca và quản lý cửa hàng --}}
     <div class="page-back-button">
         <button onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = this.dataset.fallback; }"
                 data-fallback="{{ route($isManager ? 'manager.dashboard' : ($isLeader ? 'leader.dashboard' : 'dashboard')) }}"
@@ -505,19 +501,19 @@
         </button>
     </div>
 
-<!-- MAIN BODY CONTAINER -->
+{{-- MAIN BODY CONTAINER --}}
 <main class="p-4 md:p-8 space-y-7 max-w-7xl w-full mx-auto flex-1">
     @yield('content')
 </main>
 </div>
 
-<!-- GENERAL NOTIFICATION TOAST -->
+{{-- GENERAL NOTIFICATION TOAST --}}
 <div id="toastNotification" class="fixed bottom-5 right-5 bg-coffee-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
     <i class="fa-solid fa-circle-info text-amber-400"></i>
     <span id="toastMessage" class="text-xs font-semibold">Thông báo từ hệ thống BrewLearn</span>
 </div>
 
-<!-- SCRIPT XỬ LÝ DROPDOWN VÀ MỞ DETAIL MODAL -->
+{{-- SCRIPT XỬ LÝ DROPDOWN VÀ MỞ DETAIL MODAL --}}
 <script>
     function toggleNotificationMenu() {
         const menu = document.getElementById('notificationMenu');
@@ -567,11 +563,11 @@
     });
 </script>
 
-    <!-- MODAL POPUP TRA CỨU QUY CHUẨN & SOP BREWLEARN -->
+    {{-- MODAL POPUP TRA CỨU QUY CHUẨN & SOP BREWLEARN --}}
 <div id="sopModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-3xl w-full p-6 space-y-4 shadow-2xl relative border border-amber-100 max-h-[90vh] flex flex-col">
         
-        <!-- Header -->
+        {{-- Header --}}
         <div class="flex items-center justify-between border-b border-slate-100 pb-3 flex-shrink-0">
             <div class="flex items-center space-x-2.5">
                 <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-base font-bold">
@@ -587,7 +583,7 @@
             </button>
         </div>
 
-        <!-- Tab Chuyển Vị Trí (Barista / Thu Ngân / Phục Vụ / Quản Lý Ca) -->
+        {{-- Tab Chuyển Vị Trí (Barista / Thu Ngân / Phục Vụ / Quản Lý Ca) --}}
         <div class="flex items-center space-x-2 border-b border-slate-100 pb-2 flex-shrink-0 overflow-x-auto text-xs font-bold">
             <button type="button" onclick="switchSOPTab('barista')" id="tab-barista" class="sop-tab-btn px-3.5 py-2 rounded-xl bg-coffee-900 text-white transition flex items-center space-x-1.5 whitespace-nowrap">
                 <i class="fa-solid fa-mug-hot"></i>
@@ -607,13 +603,13 @@
             </button>
         </div>
 
-        <!-- Nội Dung Accordion xổ xuống (Cho phép Cuộn chuột) -->
+        {{-- Nội Dung Accordion xổ xuống (Cho phép Cuộn chuột) --}}
         <div class="overflow-y-auto pr-1 space-y-2 flex-grow text-xs">
             
-            <!-- 1. SOP BARISTA -->
+            {{-- 1. SOP BARISTA --}}
             <div id="sop-content-barista" class="sop-tab-content space-y-2">
                 
-                <!-- Chuẩn bị trước ca -->
+                {{-- Chuẩn bị trước ca --}}
                 <div class="border border-slate-200 rounded-xl overflow-hidden">
                     <button type="button" onclick="toggleAccordion('barista-1')" class="w-full bg-slate-50 hover:bg-amber-50/50 p-3 text-left font-bold text-coffee-900 flex justify-between items-center transition">
                         <span>Chuẩn bị trước ca</span>
@@ -626,7 +622,7 @@
                     </div>
                 </div>
 
-                <!-- Chuẩn bị nguyên liệu -->
+                {{-- Chuẩn bị nguyên liệu --}}
                 <div class="border border-slate-200 rounded-xl overflow-hidden">
                     <button type="button" onclick="toggleAccordion('barista-2')" class="w-full bg-slate-50 hover:bg-amber-50/50 p-3 text-left font-bold text-coffee-900 flex justify-between items-center transition">
                         <span>Chuẩn bị nguyên liệu</span>
@@ -638,7 +634,7 @@
                     </div>
                 </div>
 
-                <!--  Pha Espresso & Đánh sữa -->
+                {{-- Pha Espresso & Đánh sữa --}}
                 <div class="border border-slate-200 rounded-xl overflow-hidden">
                     <button type="button" onclick="toggleAccordion('barista-3')" class="w-full bg-slate-50 hover:bg-amber-50/50 p-3 text-left font-bold text-coffee-900 flex justify-between items-center transition">
                         <span> Pha Espresso & Đánh sữa</span>
@@ -651,7 +647,7 @@
                     </div>
                 </div>
 
-                <!-- Vệ sinh & Bảo quản -->
+                {{-- Vệ sinh & Bảo quản --}}
                 <div class="border border-slate-200 rounded-xl overflow-hidden">
                     <button type="button" onclick="toggleAccordion('barista-4')" class="w-full bg-slate-50 hover:bg-amber-50/50 p-3 text-left font-bold text-coffee-900 flex justify-between items-center transition">
                         <span>Vệ sinh khu vực & Máy móc</span>
@@ -665,7 +661,7 @@
 
             </div>
 
-            <!-- 2. SOP THU NGÂN -->
+            {{-- 2. SOP THU NGÂN --}}
             <div id="sop-content-cashier" class="sop-tab-content space-y-2 hidden">
                 <div class="border border-slate-200 rounded-xl overflow-hidden">
                     <button type="button" onclick="toggleAccordion('cashier-1')" class="w-full bg-slate-50 hover:bg-amber-50/50 p-3 text-left font-bold text-coffee-900 flex justify-between items-center transition">
@@ -690,7 +686,7 @@
                 </div>
             </div>
 
-            <!-- 3. SOP PHỤC VỤ -->
+            {{-- 3. SOP PHỤC VỤ --}}
             <div id="sop-content-service" class="sop-tab-content space-y-2 hidden">
                 <div class="border border-slate-200 rounded-xl overflow-hidden">
                     <button type="button" onclick="toggleAccordion('service-1')" class="w-full bg-slate-50 hover:bg-amber-50/50 p-3 text-left font-bold text-coffee-900 flex justify-between items-center transition">
@@ -704,7 +700,7 @@
                 </div>
             </div>
 
-            <!-- 4. QUẢN LÝ CA -->
+            {{-- 4. QUẢN LÝ CA --}}
             <div id="sop-content-manager" class="sop-tab-content space-y-2 hidden">
                 <div class="border border-slate-200 rounded-xl overflow-hidden">
                     <button type="button" onclick="toggleAccordion('manager-1')" class="w-full bg-slate-50 hover:bg-amber-50/50 p-3 text-left font-bold text-coffee-900 flex justify-between items-center transition">
@@ -720,7 +716,7 @@
 
         </div>
 
-        <!-- Footer Modal -->
+        {{-- Footer Modal --}}
         <div class="pt-3 border-t border-slate-100 flex items-center justify-end flex-shrink-0">
             <button type="button" onclick="closeSOPModal()" class="px-5 py-2 bg-coffee-900 hover:bg-coffee-800 text-white font-bold rounded-xl transition">
                 Đóng
@@ -730,7 +726,7 @@
     </div>
 </div>
 
-<!-- SCRIPT ĐIỀU KHIỂN TABS VÀ ACCORDION XỔ XUỐNG -->
+{{-- SCRIPT ĐIỀU KHIỂN TABS VÀ ACCORDION XỔ XUỐNG --}}
 <script>
     function openSOPModal() {
         document.getElementById('sopModal').classList.remove('hidden');
@@ -874,7 +870,7 @@
         })();
     </script>
 
-    <!-- JAVASCRIPT LOGIC -->
+    {{-- JAVASCRIPT LOGIC --}}
     <script>
         function toggleStoreDropdown() {
             document.getElementById('storeDropdown').classList.toggle('hidden');
@@ -917,7 +913,7 @@
             }
         });
     </script>
- <!-- MODAL GỬI THÔNG BÁO DÀNH CHO TRƯỞNG CA -->
+ {{-- MODAL GỬI THÔNG BÁO DÀNH CHO TRƯỞNG CA --}}
 @if($isLeader)
 <div id="sendNotificationModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl relative border border-[#E8DFC8]">
@@ -933,7 +929,7 @@
         <form action="{{ route('leader.sendNotification') }}" method="POST" class="space-y-3 text-xs">
             @csrf
             
-           <!-- Chọn nhân viên nhận thông báo -->
+           {{-- Chọn nhân viên nhận thông báo --}}
 <div>
     <label class="font-bold text-coffee-800 block mb-1">Gửi đến nhân viên (Mã NV / User ID):</label>
     <select name="user_id" required class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-coffee-600 font-bold">
@@ -979,11 +975,11 @@
     }
 </script>
 
-<!-- MODAL POPUP: GHI NHẬN LỖI & PHÁT NHẮC NHỞ IN-SHIFT -->
+{{-- MODAL POPUP: GHI NHẬN LỖI & PHÁT NHẮC NHỞ IN-SHIFT --}}
 <div id="incidentModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-amber-100 flex flex-col max-h-[90vh]">
 
-        <!-- Header Modal -->
+        {{-- Header Modal --}}
         <div class="flex items-start justify-between gap-4 px-7 py-5 border-b border-slate-100">
             <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-lg">
@@ -1002,7 +998,7 @@
         <form id="incidentForm" action="{{ route('leader.recordIncident') }}" method="POST" class="flex flex-col min-h-0">
             @csrf
             <div class="px-7 py-6 flex flex-col gap-5 overflow-y-auto text-sm">
-                <!-- Nhân viên -->
+                {{-- Nhân viên --}}
                 <div>
                     <label for="incident_user_id" class="font-semibold text-coffee-900 block mb-1.5">1. Nhân viên <span class="text-red-500">*</span></label>
                     <select id="incident_user_id" name="user_id" required class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl px-3.5 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-coffee-600/40">
@@ -1015,7 +1011,7 @@
                     </select>
                 </div>
 
-                <!-- Loại lỗi & Mức độ -->
+                {{-- Loại lỗi & Mức độ --}}
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label for="incident_loai_loi" class="font-semibold text-coffee-900 block mb-1.5">2. Loại lỗi <span class="text-red-500">*</span></label>
@@ -1039,21 +1035,21 @@
                     </div>
                 </div>
 
-                <!-- Thời điểm -->
+                {{-- Thời điểm --}}
                 <div>
                     <label for="incident_thoi_diem" class="font-semibold text-coffee-900 block mb-1.5">4. Thời điểm xảy ra</label>
                     <input id="incident_thoi_diem" type="datetime-local" name="thoi_diem" class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl px-3.5 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-coffee-600/40">
                     <p class="text-xs text-slate-500 mt-1.5">Để trống nếu lỗi xảy ra ngay lúc ghi nhận.</p>
                 </div>
 
-                <!-- Nội dung -->
+                {{-- Nội dung --}}
                 <div>
                     <label for="incident_mo_ta" class="font-semibold text-coffee-900 block mb-1.5">5. Nội dung ghi nhận và nhắc nhở <span class="text-red-500">*</span></label>
                     <textarea id="incident_mo_ta" name="mo_ta" rows="4" required maxlength="2000" placeholder="Mô tả lỗi và nội dung nhắc nhở gửi đến nhân viên" class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl px-3.5 py-3 text-slate-800 resize-y focus:outline-none focus:ring-2 focus:ring-coffee-600/40"></textarea>
                 </div>
             </div>
 
-            <!-- Buttons -->
+            {{-- Buttons --}}
             <div class="px-7 py-4 flex items-center justify-end gap-3 border-t border-slate-100 bg-slate-50/60 rounded-b-2xl">
                 <button type="button" onclick="closeIncidentModal()" class="px-5 py-2.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 rounded-xl font-semibold text-sm">Hủy</button>
                 <button type="submit" class="px-6 py-2.5 bg-coffee-900 hover:bg-coffee-800 text-white rounded-xl font-semibold text-sm transition flex items-center gap-2 shadow-md">

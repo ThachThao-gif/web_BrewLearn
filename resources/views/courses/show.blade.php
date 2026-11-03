@@ -4,36 +4,19 @@
 
 @section('content')
 @php
-    // 1. Đồng bộ danh sách bài học
-    $lessonList = collect($lessons ?? $allLessons ?? []);
+    $lessonList = collect($lessons);
     $totalLessons = $lessonList->count();
-    
-    // 2. Đếm số bài đã hoàn thành
-    $completedLessons = $lessonList->filter(function($item) {
-        return in_array($item->LessonStatus ?? $item->TrangThai ?? '', ['HoanThanh', 'DaHoc', 'Completed']);
-    })->count();
-    
-    // 3. Tính % tiến độ
+    $completedLessons = $lessonList->where('LessonStatus', 'HoanThanh')->count();
     $progressPercent = round($course->TienDo ?? 0, 1);
-
-    // 4. Tìm bài học tiếp theo chưa học (nếu học xong hết thì lấy bài đầu tiên)
-    $nextLesson = $lessonList->firstWhere('LessonStatus', '!=', 'HoanThanh') 
-        ?? $lessonList->firstWhere('TrangThai', '!=', 'HoanThanh') 
-        ?? $lessonList->first();
-
-    $targetLessonId = $nextLesson->MaBaiHoc ?? $nextLesson->id ?? 1;
-
-    $currentUserId = request()->query('user_id');
-    $actionRouteParams = ['id' => $targetLessonId];
-    if ($currentUserId) {
-        $actionRouteParams['user_id'] = $currentUserId;
-    }
+    // Bài học tiếp theo chưa hoàn thành; học xong hết thì quay lại bài đầu tiên
+    $nextLesson = $lessonList->firstWhere('LessonStatus', '!=', 'HoanThanh') ?? $lessonList->first();
+    $targetLessonId = $nextLesson->MaBaiHoc ?? null;
 @endphp
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- CỘT TRÁI: TỔNG QUAN VÀ DANH SÁCH BÀI HỌC -->
+    {{-- CỘT TRÁI: TỔNG QUAN VÀ DANH SÁCH BÀI HỌC --}}
     <div class="space-y-4">
-        <!-- HÀNH TRÌNH HỌC TẬP CARD -->
+        {{-- HÀNH TRÌNH HỌC TẬP CARD --}}
         <div class="page-banner bg-gradient-to-br from-[#2D1E18] to-[#1F1410] text-white p-5 rounded-3xl space-y-4 shadow-lg">
             <div class="flex justify-between items-center text-[11px] font-bold tracking-wider text-amber-200/80 uppercase">
                 <span>HÀNH TRÌNH HỌC TẬP</span>
@@ -44,7 +27,7 @@
                 {{ $course->TenCTDT ?? 'Làm Việc An Toàn - Kỹ Năng tại nơi Làm Việc Cho Nhân Viên' }}
             </h2>
 
-            <!-- HIỂN THỊ TIẾN ĐỘ -->
+            {{-- HIỂN THỊ TIẾN ĐỘ --}}
             <div class="flex justify-between items-center mb-2 pt-2 border-t border-amber-900/40">
                 <div>
                     <span class="text-xs text-gray-400 uppercase font-semibold">HOÀN THÀNH</span>
@@ -56,13 +39,13 @@
                 </div>
             </div>
 
-            <!-- Thanh Progress Bar -->
+            {{-- Thanh Progress Bar --}}
             <div class="w-full bg-neutral-800 h-2 rounded-full overflow-hidden">
                 <div class="bg-emerald-500 h-full transition-all duration-500" style="width: {{ $progressPercent }}%;"></div>
             </div>
         </div>
 
-        <!-- DANH SÁCH BÀI HỌC -->
+        {{-- DANH SÁCH BÀI HỌC --}}
         <div class="bg-white border border-[#E2D4C1] rounded-3xl p-4 space-y-3 shadow-sm">
             <div class="flex items-center justify-between border-b border-slate-100 pb-2">
                 <span class="text-xs font-bold text-coffee-900 flex items-center space-x-2">
@@ -74,17 +57,13 @@
                 </span>
             </div>
 
-            <!-- LOOP BÀI HỌC -->
+            {{-- LOOP BÀI HỌC --}}
             <div class="space-y-2">
                 @if($totalLessons > 0)
                     @foreach($lessonList as $index => $item)
                         @php
-                            $isDone = in_array($item->LessonStatus ?? $item->TrangThai ?? '', ['HoanThanh', 'DaHoc', 'Completed']);
-                            $itemRouteParams = ['id' => $item->MaBaiHoc ?? $item->id ?? ($index + 1)];
-                            if ($currentUserId) {
-                                $itemRouteParams['user_id'] = $currentUserId;
-                            }
-                            $itemUrl = route('courses.lesson', $itemRouteParams);
+                            $isDone = $item->LessonStatus === 'HoanThanh';
+                            $itemUrl = route('courses.lesson', $item->MaBaiHoc);
                         @endphp
 
                         <a href="{{ $itemUrl }}" class="group block p-3 rounded-2xl {{ $isDone ? 'bg-emerald-50/60 border-emerald-200' : 'bg-[#FAF7F2] hover:bg-[#EFE7DA] border-[#E8DFC8]' }} border transition shadow-sm">
@@ -120,7 +99,7 @@
         </div>
     </div>
 
-    <!-- CỘT PHẢI: NỘI DUNG TỔNG QUAN & NÚT HỌC BÀI -->
+    {{-- CỘT PHẢI: NỘI DUNG TỔNG QUAN & NÚT HỌC BÀI --}}
     <div class="lg:col-span-2 space-y-6">
         <div class="bg-white border border-[#E2D4C1] rounded-3xl p-6 shadow-sm space-y-6">
             <div class="text-center space-y-2 pt-2">
@@ -133,9 +112,10 @@
                 </p>
             </div>
 
-            <!-- TÓM TẮT NỘI DUNG -->
+            {{-- TÓM TẮT NỘI DUNG --}}
             @php
-                $learningOutcomes = collect(preg_split('/?
+                $learningOutcomes = collect(preg_split('/
+?
 /', (string) ($course->MucTieuHoc ?? '')))->map(fn ($line) => trim($line))->filter();
             @endphp
             <div class="space-y-4 px-2 text-sm leading-relaxed text-slate-700">
@@ -160,10 +140,10 @@
                 @endif
             </div>
 
-            <!-- NÚT HỌC BÀI -->
+            {{-- NÚT HỌC BÀI --}}
             @if($totalLessons > 0)
                 <div class="pt-4 border-t border-slate-100 flex justify-start">
-                    <a href="{{ route('courses.lesson', $actionRouteParams) }}" class="inline-flex items-center space-x-2 {{ $progressPercent == 100 ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border-emerald-300' : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border-amber-300/50' }} font-extrabold px-5 py-3 rounded-2xl text-xs transition border shadow-sm">
+                    <a href="{{ route('courses.lesson', $targetLessonId) }}" class="inline-flex items-center space-x-2 {{ $progressPercent == 100 ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border-emerald-300' : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border-amber-300/50' }} font-extrabold px-5 py-3 rounded-2xl text-xs transition border shadow-sm">
                         <i class="fa-solid {{ $completedLessons > 0 ? 'fa-play' : 'fa-location-arrow' }} text-amber_brand"></i>
                         <span>{{ $completedLessons > 0 ? ($progressPercent == 100 ? 'Xem lại bài học đầu tiên' : 'Học tiếp bài dở ngay') : 'Học bài đầu tiên' }}</span>
                         <i class="fa-solid fa-chevron-right text-[10px]"></i>

@@ -5,7 +5,6 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class AssessmentReminder
 {
@@ -14,11 +13,9 @@ class AssessmentReminder
     public function decorate(Collection $staff): Collection
     {
         $ids = $staff->pluck('id');
-        $hasDate = Schema::hasColumn('danh_gia_nang_luc', 'NgayDanhGia');
         $approved = DB::table('danh_gia_nang_luc')->whereIn('user_id', $ids)
-            ->whereIn('TrangThai', ['DaDuyet', 'HoanThanh'])->whereNotNull('Diem');
-        $approved = $hasDate ? $approved->whereNotNull('NgayDanhGia')->orderByDesc('NgayDanhGia') : $approved->orderByDesc('updated_at');
-        $approved = $approved->orderByDesc('id')->get()->unique('user_id')->keyBy('user_id');
+            ->whereIn('TrangThai', ['DaDuyet', 'HoanThanh'])->whereNotNull('Diem')->whereNotNull('NgayDanhGia')
+            ->orderByDesc('NgayDanhGia')->orderByDesc('id')->get()->unique('user_id')->keyBy('user_id');
         $pending = DB::table('danh_gia_nang_luc')->whereIn('user_id', $ids)
             ->whereIn('TrangThai', ['ChoDanhGia', 'ChoPheDuyet', 'TraLai'])->orderByDesc('id')->get()->unique('user_id')->keyBy('user_id');
         $today = Carbon::today('Asia/Ho_Chi_Minh');
@@ -35,7 +32,7 @@ class AssessmentReminder
                 continue;
             }
             $last = $approved->get($person->id);
-            $date = ($hasDate ? ($last->NgayDanhGia ?? null) : ($last->updated_at ?? null)) ?? $person->joined_at ?? null;
+            $date = $last->NgayDanhGia ?? $person->joined_at ?? null;
             if (! $date) {
                 continue;
             }

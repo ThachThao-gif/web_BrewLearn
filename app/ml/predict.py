@@ -1,4 +1,4 @@
-"""Default warning rules; normalized scores are NOT probabilities."""
+"""Bộ quy tắc cảnh báo nguy cơ (mục 4.5 của báo cáo). Điểm cảnh báo là điểm quy tắc, không phải xác suất."""
 import math
 
 RULES_VERSION = "rules-v4"
@@ -19,7 +19,7 @@ def bounded_number(value, name, lower=0, upper=100):
 
 def predict_risk(progress_percent, avg_quiz_score, quiz_attempts, failed_rate, learning_visits,
                  latest_assessment_failed=False, recent_error_count=0, recent_serious_error_count=0):
-    """Keep legacy keyword arguments; distinct-quiz eligibility is checked upstream."""
+    """Tính điểm cảnh báo S1–S5 và mức cảnh báo; điều kiện đủ số bài quiz được kiểm tra trước khi gọi hàm."""
     progress = bounded_number(progress_percent, "progress_percent")
     average = bounded_number(avg_quiz_score, "avg_quiz_score")
     failed = bounded_number(failed_rate, "failed_rate", upper=1)

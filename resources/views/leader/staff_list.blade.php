@@ -3,10 +3,10 @@
 @section('title', 'Danh Sách Nhân Sự Ca & Theo Dõi Năng Lực')
 
 @section('content')
-<!-- Khởi tạo trạng thái Modal & Bộ lọc trong Alpine.js -->
+{{-- Khởi tạo trạng thái Modal & Bộ lọc trong Alpine.js --}}
 <div class="space-y-6 font-sans" x-data="{ searchQuery: '', activeTab: 'all', selectedStaff: null }">
 
-    <!-- BREADCRUMB & HEADER CONTAINER -->
+    {{-- BREADCRUMB & HEADER CONTAINER --}}
     <div class="page-banner bg-white border border-coffee-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-coffee-900 tracking-tight">Danh Sách Nhân Sự Ca & Theo Dõi Năng Lực</h1>
@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <!-- PHẦN THỐNG KÊ NHANH -->
+    {{-- PHẦN THỐNG KÊ NHANH --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div class="bg-white border border-coffee-200 border-t-4 border-t-coffee-700 rounded-2xl p-5 shadow-sm flex items-start justify-between gap-3">
             <div>
@@ -65,7 +65,7 @@
         </a>
     </div>
 
-    <!-- BỘ LỌC TÌM KIẾM & TAB -->
+    {{-- BỘ LỌC TÌM KIẾM & TAB --}}
     <div class="bg-white border border-[#E8DFC8] rounded-2xl p-4 shadow-sm space-y-3">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div class="relative flex-1 max-w-md">
@@ -81,7 +81,7 @@
         </div>
     </div>
 
-    <!-- DANH SÁCH NHÂN VIÊN -->
+    {{-- DANH SÁCH NHÂN VIÊN --}}
     <div class="space-y-4">
         @forelse($staffs as $staff)
             @php
@@ -96,8 +96,8 @@
                 // 3. THÔNG TIN CƠ BẢN
                 $staffCode        = 'NV-' . str_pad($staff->id ?? 0, 3, '0', STR_PAD_LEFT);
                 $staffName        = $staff->name ?? 'N/A';
-                $staffChucVu      = $staff->ChucVu ?? $staff->chuc_vu ?? 'Thu ngân';
-                $staffTram        = $staff->tram_lam_viec ?? $staff->Tram ?? 'Quầy Bar';
+                $staffChucVu      = $staff->ChucVu ?? 'Thu ngân';
+                $staffTram        = $staff->tram_lam_viec ?? 'Quầy Bar';
                 $assessmentScore  = $staff->assessment_score;
                 $assessmentStatus = $staff->assessment_status;
 
@@ -108,7 +108,7 @@
                  class="bg-white border border-[#E8DFC8] rounded-2xl p-4 shadow-sm relative overflow-hidden transition hover:shadow-md">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
                     
-                    <!-- Thông tin NV -->
+                    {{-- Thông tin NV --}}
                     <div class="lg:col-span-4 flex items-start space-x-3">
                         <div class="relative">
                             <img src="https://ui-avatars.com/api/?name={{ urlencode($staffName) }}&background=6E4E30&color=fff" class="w-12 h-12 rounded-full object-cover" alt="{{ $staffName }}">
@@ -128,7 +128,7 @@
                         </div>
                     </div>
 
-                    <!-- Tiến độ -->
+                    {{-- Tiến độ --}}
                     <div class="lg:col-span-3 bg-[#FAF7F2] p-3 rounded-xl border border-[#E8DFC8]/60 space-y-1.5">
                         <div class="flex justify-between items-center text-xs">
                             <span class="font-bold text-coffee-900 truncate">Tiến độ đào tạo</span>
@@ -143,7 +143,7 @@
                         </div>
                     </div>
 
-                    <!-- Điểm số -->
+                    {{-- Điểm số --}}
                     <div class="lg:col-span-3 grid grid-cols-2 gap-2 text-center">
                         <div class="bg-slate-50 border border-slate-200 p-2 rounded-xl">
                             <span class="text-[10px] font-bold text-slate-500 block">Kiểm tra lý thuyết</span>
@@ -165,7 +165,7 @@
                         </div>
                     </div>
 
-                    <!-- Xem hồ sơ -->
+                    {{-- Xem hồ sơ --}}
                     <div class="lg:col-span-2 flex items-center lg:justify-end">
                         <a href="{{ route('leader.staffProfile', $staff->id) }}" class="font-bold text-amber-800 hover:text-coffee-900 transition flex items-center text-xs">
                             <i class="fa-solid fa-address-card mr-1.5" aria-hidden="true"></i>Xem hồ sơ <i class="fa-solid fa-angle-right text-[10px] ml-1" aria-hidden="true"></i>

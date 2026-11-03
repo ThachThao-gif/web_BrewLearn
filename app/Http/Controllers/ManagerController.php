@@ -25,7 +25,7 @@ class ManagerController extends Controller
 
     private function storeId(): int
     {
-        abort_unless(in_array(mb_strtolower(trim(auth()->user()->ChucVu ?? '')), ['quản lý cửa hàng', 'quan ly cua hang', 'manager']) && auth()->user()->cua_hang_id, 403);
+        abort_unless(auth()->user()->isStoreManager() && auth()->user()->cua_hang_id, 403);
 
         return (int) auth()->user()->cua_hang_id;
     }
@@ -33,7 +33,7 @@ class ManagerController extends Controller
     private function members(): Builder
     {
         return User::query()->where('cua_hang_id', $this->storeId())->where('id', '!=', auth()->id())
-            ->whereRaw("LOWER(TRIM(COALESCE(ChucVu, ''))) NOT IN (?, ?, ?, ?, ?)", ['quản lý cửa hàng', 'quan ly cua hang', 'quản lý vùng', 'hr', 'hr đào tạo']);
+            ->whereRaw("LOWER(TRIM(COALESCE(ChucVu, ''))) != ?", [User::MANAGER_POSITION]);
     }
 
     private function context(Request $request): array
