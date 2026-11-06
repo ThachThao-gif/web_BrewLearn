@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AssessmentEligibility;
 use App\Models\CourseProgress;
 use App\Models\QuizProgress;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -79,6 +80,9 @@ class CourseController extends Controller
         if (! $lesson) {
             return redirect()->route('courses.index')->with('error', 'Bài học không tồn tại!');
         }
+        if (! $this->canOpenLesson($request->user(), $lesson)) {
+            return redirect()->route('courses.index')->with('error', 'Bài học không thuộc chức danh của bạn hoặc khóa học đang bị khóa!');
+        }
 
         $course = DB::table('chuong_trinh_dao_tao')->where('MaCTDT', $lesson->FK_MaCTDT)->first();
         if ($course) {
@@ -126,6 +130,9 @@ class CourseController extends Controller
         if (! $lesson) {
             return response()->json(['error' => 'Bài học không tồn tại'], 404);
         }
+        if (! $this->canOpenLesson($request->user(), $lesson)) {
+            return response()->json(['error' => 'Bài học không thuộc chức danh của bạn hoặc khóa học đang bị khóa'], 403);
+        }
 
         app(CourseProgress::class)->initializeLessons($userId, (int) $lesson->FK_MaCTDT);
         $existing = DB::table('user_lesson_progresses')->where('user_id', $userId)->where('lesson_id', $lesson->MaBaiHoc)->first();
@@ -151,27 +158,6 @@ class CourseController extends Controller
             'status' => 'success',
             'lesson_percent' => $percent,
             'is_completed' => $isCompleted,
-            'course_progress' => app(CourseProgress::class)->sync($userId, (int) $lesson->FK_MaCTDT),
-        ]);
-    }
-
-    public function completeLesson(Request $request, int $id): JsonResponse
-    {
-        $userId = $request->user()->id;
-        $lesson = DB::table('bai_hoc')->where('MaBaiHoc', $id)->first();
-        if (! $lesson) {
-            return response()->json(['status' => 'error', 'message' => 'Bài học không tồn tại!'], 404);
-        }
-
-        app(CourseProgress::class)->initializeLessons($userId, (int) $lesson->FK_MaCTDT);
-        DB::table('user_lesson_progresses')->updateOrInsert(
-            ['user_id' => $userId, 'lesson_id' => $id],
-            ['progress_percent' => 100, 'is_completed' => 1, 'updated_at' => now()]
-        );
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Đã đánh dấu hoàn thành bài học!',
             'course_progress' => app(CourseProgress::class)->sync($userId, (int) $lesson->FK_MaCTDT),
         ]);
     }
@@ -206,6 +192,9 @@ class CourseController extends Controller
         if (! $test) {
             return redirect()->route('tests.index')->with('error', 'Bài kiểm tra không tồn tại!');
         }
+        if (! $this->canTakeTest($request->user(), $id)) {
+            return redirect()->route('tests.index')->with('error', 'Bài kiểm tra không thuộc chức danh của bạn hoặc chưa được mở: cần đạt bài kiểm tra liền trước.');
+        }
 
         $questions = DB::table('cau_hoi_kiem_tra')->where('MaBaiKiemTra', $id)->orderBy('id')->get();
         $attemptToken = (string) Str::uuid();
@@ -230,6 +219,9 @@ class CourseController extends Controller
         $test = DB::table('bai_kiem_tra')->where('MaBaiKiemTra', $id)->first();
         if (! $test) {
             return response()->json(['success' => false, 'message' => 'Bài kiểm tra không tồn tại!'], 404);
+        }
+        if (! $this->canTakeTest($request->user(), $id)) {
+            return response()->json(['success' => false, 'message' => 'Bài kiểm tra không thuộc chức danh của bạn hoặc chưa được mở.'], 403);
         }
         $questions = DB::table('cau_hoi_kiem_tra')->where('MaBaiKiemTra', $id)->orderBy('id')->get()->values();
         if ($questions->isEmpty()) {
@@ -287,6 +279,40 @@ class CourseController extends Controller
     }
 
     /**
+     * Bài học mở được khi thuộc khóa học được giao theo chức danh và khóa học không bị khóa (BR01, BR02);
+     * bài học được giao trong vòng đào tạo lại hiện tại luôn mở được.
+     */
+    private function canOpenLesson(User $user, object $lesson): bool
+    {
+        $course = $this->assignedCoursesWithLock($user->id, $user->ChucVu)->firstWhere('MaCTDT', $lesson->FK_MaCTDT);
+        if ($course && ! $course->IsLocked) {
+            return true;
+        }
+
+        return in_array((int) $lesson->MaBaiHoc, $this->retrainingItemIds($user->id, 'lesson'), true);
+    }
+
+    /**
+     * Bài kiểm tra làm được khi thuộc chức danh và đã được mở theo thứ tự (BR02);
+     * bài kiểm tra được giao trong vòng đào tạo lại hiện tại luôn làm được.
+     */
+    private function canTakeTest(User $user, int $testId): bool
+    {
+        return app(QuizProgress::class)->isUnlocked($user->id, $user->ChucVu ?? '', $testId)
+            || in_array($testId, $this->retrainingItemIds($user->id, 'quiz'), true);
+    }
+
+    /**
+     * Mã bài học hoặc bài kiểm tra của vòng đào tạo lại đang thực hiện.
+     *
+     * @return list<int>
+     */
+    private function retrainingItemIds(int $userId, string $type): array
+    {
+        return collect($this->currentRetraining($userId)['checklist'] ?? [])->where('type', $type)->pluck('id')->all();
+    }
+
+    /**
      * Gắn tiến độ và trạng thái (HoanThanh, DangHoc, ChuaHoc) cho từng bài học; trả về tiến độ theo mã bài học.
      */
     private function attachLessonStatus(int $userId, int $courseId, Collection $lessons): Collection
@@ -312,8 +338,8 @@ class CourseController extends Controller
      */
     private function currentRetraining(int $userId): ?array
     {
-        $plan = DB::table('yeu_cau_dao_tao_lai')->where('user_id', $userId)->where('trang_thai', 'DaDuyet')
-            ->whereIn('tien_trinh', ['ChoGiao', 'DangThucHien', 'ChoDanhGiaLai'])->orderByDesc('id')->first();
+        $plan = DB::table('yeu_cau_dao_tao_lai')->where('user_id', $userId)
+            ->whereIn('tien_trinh', AssessmentEligibility::OPEN_RETRAINING_STATES)->orderByDesc('id')->first();
         if (! $plan) {
             return null;
         }

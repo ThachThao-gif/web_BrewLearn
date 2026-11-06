@@ -16,7 +16,7 @@ Nguyên mẫu web của đề tài **“Phân tích và thiết kế hệ thốn
 | Trưởng ca | Theo dõi nhân viên cùng cửa hàng, cùng ca; tạo lịch và chấm điểm năng lực theo năm tiêu chí; đề xuất đào tạo lại; xác nhận hoàn thành vòng đào tạo lại; ghi nhận lỗi nghiệp vụ |
 | Quản lý cửa hàng | Phê duyệt hoặc trả lại kết quả đánh giá, giao vòng đào tạo lại (tối đa ba vòng), tạo lịch đánh giá lại, xem thông tin cảnh báo nguy cơ |
 
-Cảnh báo nguy cơ được tính theo bộ quy tắc `rules-v4` (mục 4.5 của báo cáo) bằng chương trình Python trong `app/ml/`, kèm lý do cảnh báo.
+Cảnh báo nguy cơ được tính theo bộ quy tắc `rules-v4` (mục 4.5 của báo cáo) bằng chương trình Python trong `app/risk_rules/` (không dùng học máy), kèm lý do cảnh báo.
 
 ## Công nghệ
 
@@ -48,7 +48,7 @@ Yêu cầu: PHP 8.3+, Composer, Node.js, MySQL 8+, Python 3, trình duyệt Chro
 
    ```bash
    python -m venv venv
-   venv\Scripts\pip install -r app/ml/requirements.txt
+   venv\Scripts\pip install -r app/risk_rules/requirements.txt
    ```
 
 4. Biên dịch giao diện và chạy ứng dụng tại http://localhost:8000:
@@ -95,7 +95,7 @@ venv\Scripts\python.exe -m unittest tests.selenium.test_luong_nghiep_vu -v
 | `app/Http/Controllers` | Xử lý yêu cầu theo từng vai trò (nhân viên, trưởng ca, quản lý cửa hàng) |
 | `app/Models` | Người dùng và các quy tắc nghiệp vụ: điều kiện đánh giá, nhắc hạn, tiến độ học, hồ sơ nhân viên |
 | `app/Console/Commands` | Lệnh tính cảnh báo, nhắc hạn và dời mốc ngày của dữ liệu minh họa |
-| `app/ml` | Chương trình Python tính cảnh báo theo bộ quy tắc |
+| `app/risk_rules` | Chương trình Python tính cảnh báo theo bộ quy tắc |
 | `resources/views` | Giao diện theo ba vai trò |
 | `database/brewlearn.sql` | Cấu trúc và dữ liệu minh họa đầy đủ (dùng để cài đặt) |
 | `database/migrations` | Lịch sử thay đổi cấu trúc trong quá trình phát triển |

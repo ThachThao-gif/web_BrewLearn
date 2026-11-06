@@ -35,11 +35,32 @@ class LeaderEvaluationController extends Controller
     }
 
     /**
-     * Chỉ trưởng ca mới được dùng các chức năng sát hạch, nhắc việc và ghi nhận lỗi.
+     * Chỉ trưởng ca mới được dùng các chức năng đánh giá năng lực, nhắc việc và ghi nhận lỗi.
      */
     private function authorizeLeader(): void
     {
         abort_unless(Auth::user()?->isLeader(), 403, 'Chức năng chỉ dành cho trưởng ca.');
+    }
+
+    /**
+     * Mã các bản đánh giá lại gắn với vòng đào tạo lại.
+     */
+    private function reassessmentIds(): array
+    {
+        return DB::table('retraining_rounds')->whereNotNull('assessment_id')->pluck('assessment_id')->all();
+    }
+
+    /**
+     * Bản đánh giá lại chỉ do trưởng ca được quản lý phân công chấm (có thể khác ca);
+     * các bản đánh giá khác do trưởng ca cùng cửa hàng, cùng ca chấm.
+     */
+    private function canScore(object $assessment, array $reassessmentIds): bool
+    {
+        if (in_array($assessment->id, $reassessmentIds)) {
+            return (int) $assessment->NguoiDanhGia_id === (int) Auth::id();
+        }
+
+        return $this->staffQuery()->where('id', $assessment->user_id)->exists();
     }
 
     /**
@@ -58,12 +79,15 @@ class LeaderEvaluationController extends Controller
 
         $standards = collect(self::STANDARDS)->map(fn (string $name, string $code) => (object) ['MaCTDT' => $code, 'TenCTDT' => $name])->values();
 
-        // Mỗi nhân viên: giữ mọi lượt còn cần xử lý, nếu không có thì chỉ giữ lượt gần nhất
+        // Mỗi nhân viên: giữ mọi lượt còn cần xử lý, nếu không có thì chỉ giữ lượt gần nhất.
+        // Gồm cả bản đánh giá lại được phân công cho trưởng ca này dù nhân viên thuộc ca khác.
+        $reassessmentIds = $this->reassessmentIds();
         $schedules = DB::table('danh_gia_nang_luc')
             ->join('users', 'danh_gia_nang_luc.user_id', '=', 'users.id')
             ->select(
                 'danh_gia_nang_luc.id',
                 'danh_gia_nang_luc.user_id',
+                'danh_gia_nang_luc.NguoiDanhGia_id',
                 'users.name as staff_name',
                 'danh_gia_nang_luc.TieuChuan',
                 'danh_gia_nang_luc.MaCTDT',
@@ -73,10 +97,15 @@ class LeaderEvaluationController extends Controller
                 'danh_gia_nang_luc.ChiTietDeXuat',
                 'danh_gia_nang_luc.ly_do_tra_lai'
             )
-            ->whereIn('danh_gia_nang_luc.user_id', $staffs->modelKeys())
+            ->where(fn ($query) => $query->whereIn('danh_gia_nang_luc.user_id', $staffs->modelKeys())
+                ->orWhere(fn ($query) => $query->whereIn('danh_gia_nang_luc.id', $reassessmentIds)
+                    ->where('danh_gia_nang_luc.NguoiDanhGia_id', Auth::id())))
             ->whereIn('danh_gia_nang_luc.TrangThai', ['ChoDanhGia', 'ChoPheDuyet', 'DaDuyet', 'HoanThanh', 'TraLai'])
             ->orderBy('danh_gia_nang_luc.NgayHen', 'asc')
             ->get();
+        foreach ($schedules as $item) {
+            $item->can_score = ! in_array($item->id, $reassessmentIds) || (int) $item->NguoiDanhGia_id === (int) Auth::id();
+        }
 
         $schedules = $schedules->groupBy('user_id')->flatMap(function ($history) {
             $pending = $history->whereIn('TrangThai', ['ChoDanhGia', 'ChoPheDuyet', 'TraLai']);
@@ -113,7 +142,7 @@ class LeaderEvaluationController extends Controller
         ]);
 
         $standard = self::STANDARDS[$data['MaCTDT']];
-        $message = "Bạn có lịch sát hạch '$standard' vào lúc ".Carbon::parse($data['NgayDanhGia'])->format('H:i d/m/Y').'.';
+        $message = "Bạn có lịch đánh giá năng lực theo '$standard' vào lúc ".Carbon::parse($data['NgayDanhGia'])->format('H:i d/m/Y').'.';
         if (trim($data['note'] ?? '') !== '') {
             $message .= "\n\nLời dặn từ Trưởng ca: ".trim($data['note']);
         }
@@ -136,7 +165,7 @@ class LeaderEvaluationController extends Controller
                 'NgayHen' => $data['NgayDanhGia'], 'TrangThai' => 'ChoDanhGia', 'created_at' => now(), 'updated_at' => now(),
             ]);
             DB::table('notifications')->insert([
-                'user_id' => $person->id, 'title' => 'Lịch sát hạch năng lực mới từ Trưởng ca', 'message' => $message,
+                'user_id' => $person->id, 'title' => 'Lịch đánh giá năng lực mới từ trưởng ca', 'message' => $message,
                 'type' => 'schedule', 'is_read' => 0, 'created_at' => now(), 'updated_at' => now(),
             ]);
 
@@ -306,7 +335,7 @@ class LeaderEvaluationController extends Controller
         }
 
         $assessment = DB::table('danh_gia_nang_luc')->find($request->assessment_id);
-        abort_unless($this->staffQuery()->where('id', $assessment->user_id)->exists(), 403);
+        abort_unless($this->canScore($assessment, $this->reassessmentIds()), 403, 'Bạn không được phân công chấm đánh giá này.');
 
         return DB::transaction(function () use ($request, $isPassed, $diemTong, $nv, $kn, $qt, $pv, $tp, $proposalDetails): RedirectResponse {
             $assessment = DB::table('danh_gia_nang_luc')->where('id', $request->assessment_id)->lockForUpdate()->first();
@@ -411,15 +440,13 @@ class LeaderEvaluationController extends Controller
         $dueCount = app(AssessmentReminder::class)->decorate($staffs)->where('needs_reminder', true)->count();
 
         $avgProgress = $totalStaffs > 0 ? round($staffs->avg('overall_progress') ?? 0, 1) : 0;
-        $highRiskCount = $staffs->filter(fn ($staff) => $staff->overall_progress < 30)->count();
 
         return view('leader.staff_list', compact(
             'truongCa',
             'staffs',
             'totalStaffs',
             'dueCount',
-            'avgProgress',
-            'highRiskCount'
+            'avgProgress'
         ));
     }
 

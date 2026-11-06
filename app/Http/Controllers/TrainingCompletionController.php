@@ -18,7 +18,7 @@ class TrainingCompletionController extends Controller
     {
         $rounds = DB::table('retraining_rounds as r')->join('yeu_cau_dao_tao_lai as y', 'r.request_id', '=', 'y.id')
             ->join('users as u', 'y.user_id', '=', 'u.id')->where('r.owner_id', auth()->id())
-            ->where('y.trang_thai', 'DaDuyet')->where('y.tien_trinh', 'DangThucHien')
+            ->where('y.tien_trinh', 'DangThucHien')
             ->where('r.status', 'DangThucHien')
             ->whereNotExists(function ($query) {
                 $query->selectRaw('1')->from('retraining_rounds as newer')
@@ -43,7 +43,7 @@ class TrainingCompletionController extends Controller
             abort_unless($round, 404);
             abort_unless($round->status === 'DangThucHien', 409);
             $plan = DB::table('yeu_cau_dao_tao_lai')->find($round->request_id);
-            abort_unless($plan && $plan->trang_thai === 'DaDuyet' && $plan->tien_trinh === 'DangThucHien', 409);
+            abort_unless($plan && $plan->tien_trinh === 'DangThucHien', 409);
             abort_if(DB::table('retraining_rounds')->where('request_id', $round->request_id)->where('round_number', '>', $round->round_number)->exists(), 409);
             $eligibility = app(AssessmentEligibility::class)->round($round, $plan->user_id, false);
             if (! $eligibility['ready']) {

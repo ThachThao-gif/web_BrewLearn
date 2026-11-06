@@ -44,7 +44,7 @@
                                 @if(in_array($typeText, ['warning', 'incident']))
                                     Sự cố / Nhắc nhở
                                 @elseif($typeText === 'schedule')
-                                    Lịch sát hạch & Đào tạo
+                                    Lịch đánh giá & Đào tạo
                                 @else
                                     Thông báo chung
                                 @endif
@@ -74,7 +74,7 @@
                                 </span>
                             @elseif($typeText === 'schedule')
                                 <span class="bg-amber-100 text-amber-900 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
-                                    <i class="fa-regular fa-calendar-check text-[9px]"></i> Lịch sát hạch
+                                    <i class="fa-regular fa-calendar-check text-[9px]"></i> Lịch đánh giá
                                 </span>
                             @else
                                 <span class="bg-blue-100 text-blue-900 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
@@ -163,7 +163,7 @@
             badge.innerText = 'Nhắc nhở / Sự cố';
         } else if (item.type === 'schedule') {
             badge.className = 'inline-block mb-1 text-[10px] font-bold px-2.5 py-0.5 rounded-lg bg-amber-100 text-amber-900';
-            badge.innerText = 'Lịch sát hạch';
+            badge.innerText = 'Lịch đánh giá';
         } else {
             badge.className = 'inline-block mb-1 text-[10px] font-bold px-2.5 py-0.5 rounded-lg bg-blue-100 text-blue-900';
             badge.innerText = 'Thông báo hệ thống';

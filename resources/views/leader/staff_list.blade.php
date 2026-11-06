@@ -4,7 +4,33 @@
 
 @section('content')
 {{-- Khởi tạo trạng thái Modal & Bộ lọc trong Alpine.js --}}
-<div class="space-y-6 font-sans" x-data="{ searchQuery: '', activeTab: 'all', selectedStaff: null }">
+@php
+    $staffFilterItems = collect($staffs)->values()->map(fn ($staff) => [
+        'search' => mb_strtolower(($staff->name ?? '').' nv-'.str_pad($staff->id ?? 0, 3, '0', STR_PAD_LEFT)),
+        'inShift' => (bool) ($staff->in_shift ?? true),
+    ]);
+@endphp
+<div class="space-y-6 font-sans"
+     x-data="{
+        searchQuery: '',
+        activeTab: 'all',
+        selectedStaff: null,
+        page: 1,
+        perPage: 4,
+        items: {{ \Illuminate\Support\Js::from($staffFilterItems) }},
+        get filteredIndexes() {
+            const query = this.searchQuery.trim().toLowerCase();
+            return this.items.flatMap((item, index) =>
+                (query === '' || item.search.includes(query)) && (this.activeTab === 'all' || item.inShift) ? [index] : []);
+        },
+        get totalPages() { return Math.max(1, Math.ceil(this.filteredIndexes.length / this.perPage)); },
+        get pageIndexes() {
+            const start = (this.page - 1) * this.perPage;
+            return this.filteredIndexes.slice(start, start + this.perPage);
+        },
+        goToPage(target) { this.page = Math.min(Math.max(1, target), this.totalPages); },
+     }"
+     x-init="$watch('searchQuery', () => page = 1); $watch('activeTab', () => page = 1)">
 
     {{-- BREADCRUMB & HEADER CONTAINER --}}
     <div class="page-banner bg-white border border-coffee-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -51,13 +77,13 @@
 
         <a href="{{ route('leader.dashboard') }}" class="bg-amber-50 border border-amber-200 border-t-4 border-t-amber-500 rounded-2xl p-5 shadow-sm flex items-start justify-between gap-3 hover:shadow-md transition focus:outline-none focus:ring-2 focus:ring-amber-500">
             <div>
-                <p class="text-xs font-bold uppercase tracking-wider text-amber-800 mb-3">Nhắc hạn sát hạch</p>
+                <p class="text-xs font-bold uppercase tracking-wider text-amber-800 mb-3">Nhắc hạn đánh giá</p>
                 <div class="flex items-baseline space-x-2">
                     <span class="text-3xl font-black text-coffee-900">{{ $dueCount ?? 0 }}</span>
                     <span class="text-xs font-bold text-slate-600">nhân sự</span>
                 </div>
                 <p class="text-xs text-amber-800 mt-3">Sắp đến hạn trong 7 ngày, đến hạn hoặc quá hạn.</p>
-                <p class="text-xs font-bold text-amber-800 mt-2">Xem lịch & xếp sát hạch <i class="fa-solid fa-arrow-right ml-1"></i></p>
+                <p class="text-xs font-bold text-amber-800 mt-2">Xem lịch & xếp lịch đánh giá <i class="fa-solid fa-arrow-right ml-1"></i></p>
             </div>
             <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-lg">
                 <i class="fa-solid fa-clipboard-check"></i>
@@ -104,7 +130,7 @@
                 $inShift          = $staff->in_shift ?? true;
             @endphp
             
-            <div x-show="(searchQuery === '' || '{{ strtolower(addslashes($staffName)) }}'.includes(searchQuery.toLowerCase()) || '{{ strtolower($staffCode) }}'.includes(searchQuery.toLowerCase())) && (activeTab === 'all' || (activeTab === 'shift' && {{ $inShift ? 'true' : 'false' }}))" 
+            <div x-cloak :hidden="!pageIndexes.includes({{ $loop->index }})"
                  class="bg-white border border-[#E8DFC8] rounded-2xl p-4 shadow-sm relative overflow-hidden transition hover:shadow-md">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
                     
@@ -159,6 +185,9 @@
                             @if($assessmentScore !== null)
                                 <span class="text-base font-black text-coffee-900">{{ $assessmentScore }}/100</span>
                                 <span class="text-[10px] font-semibold block {{ $assessmentStatus === 'Đạt' ? 'text-emerald-700' : ($assessmentStatus === 'Chưa đạt' ? 'text-red-700' : 'text-amber-700') }}">{{ $assessmentStatus }}</span>
+                                @if(($staff->due_status ?? null) === \App\Models\AssessmentReminder::STOPPED_LABEL)
+                                    <span class="mt-1 inline-block rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-700" title="Chưa đạt sau 3 vòng đào tạo lại; trưởng ca và quản lý quyết định hướng xử lý ngoài hệ thống">Dừng đào tạo lại</span>
+                                @endif
                             @else
                                 <span class="text-xs font-semibold text-slate-500">Chưa đánh giá</span>
                             @endif
@@ -180,6 +209,32 @@
             </div>
         @endforelse
     </div>
+
+    @if(count($staffs) > 0)
+        <p x-cloak :hidden="filteredIndexes.length > 0" class="bg-white p-6 text-center rounded-2xl border border-dashed border-slate-300 text-sm font-semibold text-slate-600">
+            Không tìm thấy nhân viên phù hợp.
+        </p>
+
+        {{-- PHÂN TRANG --}}
+        <nav x-cloak x-show="totalPages > 1" aria-label="Phân trang danh sách nhân viên"
+             class="flex items-center justify-end gap-1.5 text-xs font-bold">
+                <button type="button" @click="goToPage(page - 1)" :disabled="page === 1"
+                        class="min-h-9 px-3 rounded-lg border border-[#E8DFC8] text-coffee-900 hover:bg-[#FAF7F2] transition disabled:opacity-40 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-angle-left mr-1" aria-hidden="true"></i>Trước
+                </button>
+                <template x-for="number in totalPages" :key="number">
+                    <button type="button" @click="goToPage(number)" x-text="number"
+                            :aria-current="page === number ? 'page' : null"
+                            :aria-label="`Trang ${number}`"
+                            :class="page === number ? 'bg-coffee-800 border-coffee-800 text-white' : 'border-[#E8DFC8] text-coffee-900 hover:bg-[#FAF7F2]'"
+                            class="min-h-9 min-w-9 px-2 rounded-lg border transition"></button>
+                </template>
+                <button type="button" @click="goToPage(page + 1)" :disabled="page === totalPages"
+                        class="min-h-9 px-3 rounded-lg border border-[#E8DFC8] text-coffee-900 hover:bg-[#FAF7F2] transition disabled:opacity-40 disabled:cursor-not-allowed">
+                    Sau<i class="fa-solid fa-angle-right ml-1" aria-hidden="true"></i>
+                </button>
+        </nav>
+    @endif
 
 </div>
 

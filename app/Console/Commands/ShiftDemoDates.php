@@ -32,7 +32,7 @@ class ShiftDemoDates extends Command
         'user_lesson_progresses' => ['created_at', 'updated_at'],
         'nhan_vien_khoa_hoc' => ['created_at', 'updated_at'],
         'notifications' => ['created_at', 'updated_at'],
-        'du_doan_nguy_co' => ['ngay_du_doan'],
+        'canh_bao_nguy_co' => ['thoi_diem_tinh'],
         'loi_nghiep_vu' => ['thoi_diem_xay_ra', 'created_at', 'updated_at'],
     ];
 

@@ -10,7 +10,7 @@
 @endphp
 <section class="text-sm" aria-label="Các vòng đào tạo lại">
     <div class="mb-2 flex items-baseline justify-between gap-2">
-        <h3 class="{{ $label }}">Nhật ký {{ $plan->rounds->count() }} vòng sát hạch</h3>
+        <h3 class="{{ $label }}">Nhật ký {{ $plan->rounds->count() }} vòng đào tạo lại</h3>
         <span class="text-xs text-slate-500">Đạt khi tổng <strong class="text-coffee-900">≥ 80</strong> và mọi tiêu chí <strong class="text-coffee-900">≥ 70</strong></span>
     </div>
     <ol class="grid gap-3 sm:grid-cols-3">

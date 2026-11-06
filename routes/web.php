@@ -27,7 +27,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/lesson/{id}', 'showLesson')->whereNumber('id')->name('lesson');
         Route::get('/{id}', 'show')->whereNumber('id')->name('show');
     });
-    Route::post('/lessons/{id}/complete', [CourseController::class, 'completeLesson'])->whereNumber('id')->name('lessons.complete');
 
     Route::prefix('tests')->name('tests.')->controller(CourseController::class)->group(function () {
         Route::get('/', 'testsIndex')->name('index');

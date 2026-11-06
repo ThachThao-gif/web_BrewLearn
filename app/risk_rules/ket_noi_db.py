@@ -1,14 +1,14 @@
-"""Tính cảnh báo nguy cơ cho mọi nhân viên đang làm và lưu thêm vào bảng du_doan_nguy_co.
+"""Tính cảnh báo nguy cơ cho mọi nhân viên đang làm và lưu thêm vào bảng canh_bao_nguy_co.
 
-Cách chạy: python app/ml/ket_noi_db.py (Laravel gọi qua lệnh brewlearn:calculate-risk).
+Cách chạy: python app/risk_rules/ket_noi_db.py (Laravel gọi qua lệnh brewlearn:calculate-risk).
 """
 import json
 import logging
 import os
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
-from predict import RULES_VERSION, bounded_number, predict_risk
+from quy_tac_canh_bao import RULES_VERSION, bounded_number, tinh_diem_canh_bao
 
 logger = logging.getLogger(__name__)
 ELIGIBLE_POSITIONS = ("barista", "thu ngân", "phục vụ")
@@ -67,7 +67,7 @@ def lay_danh_sach_nhan_vien(conn):
         return cur.fetchall()
 
 
-def lay_du_lieu_du_doan(conn, user_id, calculated_at):
+def lay_du_lieu_canh_bao(conn, user_id, calculated_at):
     with conn.cursor() as cur:
         cur.execute("""
             SELECT c.MaCTDT, COALESCE(n.TienDo, 0) AS progress
@@ -140,40 +140,51 @@ def lay_du_lieu_du_doan(conn, user_id, calculated_at):
         "recent_serious_error_count": recent_serious_errors,
         "applicable_course_count": len(courses),
         "co_du_lieu_quiz": quiz["completed_quiz_count"] > 0,
-        "du_dieu_kien_du_doan": not missing,
+        "du_dieu_kien_tinh": not missing,
         "missing_reasons": missing,
         "calculated_at": str(calculated_at),
     }
 
 
-def du_doan_nhan_vien(du_lieu):
-    if not du_lieu["du_dieu_kien_du_doan"]:
+def tinh_canh_bao_nhan_vien(du_lieu):
+    if not du_lieu["du_dieu_kien_tinh"]:
         return {"diem_rui_ro": None, "muc_canh_bao": "ChuaDuDuLieu",
-                "chi_tiet_yeu_to": du_lieu, "phien_ban_mo_hinh": RULES_VERSION}
-    result = predict_risk(**{key: du_lieu[key] for key in (
+                "chi_tiet_yeu_to": du_lieu, "phien_ban_quy_tac": RULES_VERSION}
+    result = tinh_diem_canh_bao(**{key: du_lieu[key] for key in (
         "progress_percent", "avg_quiz_score", "quiz_attempts", "failed_rate", "learning_visits",
         "latest_assessment_failed", "recent_error_count", "recent_serious_error_count")})
     return {
         "diem_rui_ro": result["normalized_score"],
         "muc_canh_bao": {"Thấp": "Thap", "Trung bình": "TrungBinh", "Cao": "Cao"}[result["risk_level"]],
         "chi_tiet_yeu_to": {**du_lieu, "details": result["details"]},
-        "phien_ban_mo_hinh": RULES_VERSION,
+        "phien_ban_quy_tac": RULES_VERSION,
     }
 
 
-def ghi_ket_qua_du_doan(conn, user_id, cua_hang_id, ket_qua, calculated_at):
+def ghi_ket_qua_canh_bao(conn, user_id, cua_hang_id, ket_qua, calculated_at):
     with conn.cursor() as cur:
         cur.execute("""
-            INSERT INTO du_doan_nguy_co
-            (user_id, cua_hang_id, diem_rui_ro, muc_canh_bao, chi_tiet_yeu_to, phien_ban_mo_hinh, ngay_du_doan)
+            INSERT INTO canh_bao_nguy_co
+            (user_id, cua_hang_id, diem_rui_ro, muc_canh_bao, chi_tiet_yeu_to, phien_ban_quy_tac, thoi_diem_tinh)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """, (user_id, cua_hang_id, ket_qua["diem_rui_ro"], ket_qua["muc_canh_bao"],
               json.dumps(ket_qua["chi_tiet_yeu_to"], ensure_ascii=False, allow_nan=False),
-              ket_qua["phien_ban_mo_hinh"], calculated_at))
+              ket_qua["phien_ban_quy_tac"], calculated_at))
 
 
-def chay_du_doan_cho_tat_ca_nhan_vien():
-    # Chỉ nạp thư viện kết nối CSDL khi chạy thật, để predict.py có thể dùng độc lập.
+def co_dinh_ngay_demo(conn, demo_today):
+    """Cùng quy ước với Laravel (config brewlearn.demo_today): "hôm nay" là ngày của dữ liệu giả lập,
+    giờ phút theo đồng hồ thật; UTC_TIMESTAMP() trong phiên kết nối trả về thời điểm này."""
+    if not demo_today:
+        return
+    vietnam = timezone(timedelta(hours=7))
+    moment = datetime.combine(date.fromisoformat(demo_today), datetime.now(vietnam).time(), vietnam)
+    with conn.cursor() as cur:
+        cur.execute("SET timestamp = %s", (moment.timestamp(),))
+
+
+def chay_canh_bao_cho_tat_ca_nhan_vien():
+    # Chỉ nạp thư viện kết nối CSDL khi chạy thật, để quy_tac_canh_bao.py có thể dùng độc lập.
     import pymysql
     from dotenv import load_dotenv
     # Biến môi trường đã đặt sẵn (ví dụ CSDL kiểm thử Selenium) được ưu tiên hơn tệp .env.
@@ -182,6 +193,7 @@ def chay_du_doan_cho_tat_ca_nhan_vien():
         port=int(os.getenv("DB_PORT", 3306)), user=os.getenv("DB_USERNAME", "root"),
         password=os.getenv("DB_PASSWORD", ""), database=os.getenv("DB_DATABASE", "brewlearn"),
         charset="utf8mb4", cursorclass=pymysql.cursors.DictCursor)
+    co_dinh_ngay_demo(conn, os.getenv("BREWLEARN_DEMO_TODAY"))
     counts = {"calculated": 0, "insufficient": 0, "errors": 0}
     try:
         employees = lay_danh_sach_nhan_vien(conn)
@@ -199,9 +211,9 @@ def chay_du_doan_cho_tat_ca_nhan_vien():
                                 (employee["id"], employee["cua_hang_id"], *ELIGIBLE_POSITIONS))
                     if not cur.fetchone():
                         raise ValueError("Employee no longer eligible")
-                data = lay_du_lieu_du_doan(conn, employee["id"], calculated_at)
-                result = du_doan_nhan_vien(data)
-                ghi_ket_qua_du_doan(conn, employee["id"], employee["cua_hang_id"], result, calculated_at)
+                data = lay_du_lieu_canh_bao(conn, employee["id"], calculated_at)
+                result = tinh_canh_bao_nhan_vien(data)
+                ghi_ket_qua_canh_bao(conn, employee["id"], employee["cua_hang_id"], result, calculated_at)
                 conn.commit()
                 key = "insufficient" if result["diem_rui_ro"] is None else "calculated"
                 counts[key] += 1
@@ -219,5 +231,5 @@ def chay_du_doan_cho_tat_ca_nhan_vien():
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    summary = chay_du_doan_cho_tat_ca_nhan_vien()
+    summary = chay_canh_bao_cho_tat_ca_nhan_vien()
     raise SystemExit(1 if summary["errors"] else 0)

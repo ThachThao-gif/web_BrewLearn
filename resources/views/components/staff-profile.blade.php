@@ -23,7 +23,7 @@
         $assessmentResult = 'Đã duyệt';
     }
     $resultTone = $assessmentResult === 'Đạt' ? 'text-emerald-700' : ($assessmentResult === 'Chưa đạt' ? 'text-rose-700' : 'text-amber-700');
-    $dueTones = ['Quá hạn' => 'text-rose-700', 'Đến hạn' => 'text-rose-700', 'Sắp đến hạn' => 'text-amber-700'];
+    $dueTones = ['Quá hạn' => 'text-rose-700', 'Đến hạn' => 'text-rose-700', 'Sắp đến hạn' => 'text-amber-700', 'Dừng đào tạo lại' => 'text-rose-700'];
     $statusStyles = [
         'ChoDanhGia' => ['Chờ đánh giá', 'border-blue-200 bg-blue-50 text-blue-700'],
         'ChoPheDuyet' => ['Chờ quản lý phê duyệt', 'border-amber-300 bg-amber-50 text-amber-800'],
@@ -55,7 +55,7 @@
     $tabs = [
         'info' => ['Thông tin', 'fa-id-card'],
         'courses' => ['Khóa học', 'fa-book-open'],
-        'quizzes' => ['Lượt quiz', 'fa-list-check'],
+        'quizzes' => ['Lượt kiểm tra', 'fa-list-check'],
         'assessments' => ['Đánh giá', 'fa-clipboard-check'],
     ];
     $tabCounts = ['courses' => $courses->count(), 'quizzes' => $quizzes->count(), 'assessments' => $assessments->count()];
@@ -97,7 +97,7 @@
                 <dd class="mt-1 text-xl font-extrabold text-coffee-900">{{ $learning['completed'] }}/{{ $learning['total'] }}</dd>
             </div>
             <div class="px-5 py-4">
-                <dt class="text-xs text-slate-500">Quiz gần nhất</dt>
+                <dt class="text-xs text-slate-500">Bài kiểm tra gần nhất</dt>
                 <dd class="mt-1 text-xl font-extrabold text-coffee-900">{{ $quizzes->first() ? round($quizzes->first()->Diem, 1) : '—' }}</dd>
                 <p class="text-xs text-slate-500">{{ $quizzes->count() }} lượt · <span class="{{ $quizFailed ? 'text-rose-600' : '' }}">{{ $quizFailed }} không đạt</span></p>
             </div>
@@ -114,13 +114,16 @@
                 <dt class="text-xs text-slate-500">Hạn đánh giá 3 tháng</dt>
                 <dd class="mt-1 text-xl font-extrabold text-coffee-900">{{ $staff->due_at?->format('d/m/Y') ?? '—' }}</dd>
                 <p class="text-xs font-semibold {{ $dueTones[$staff->due_status] ?? 'text-slate-500' }}">{{ $staff->due_status }}</p>
+                @if($staff->due_status === \App\Models\AssessmentReminder::STOPPED_LABEL)
+                    <p class="mt-1 text-xs text-slate-500">Chưa đạt sau 3 vòng. Không nhắc hạn định kỳ; hướng xử lý do trưởng ca và quản lý quyết định ngoài hệ thống.</p>
+                @endif
             </div>
             @if($showRisk)
                 <div class="px-5 py-4">
                     <dt class="text-xs text-slate-500">Cảnh báo nguy cơ</dt>
                     <dd class="mt-1.5">@include('manager.risk', ['risk' => $staff->risk])</dd>
-                    @if($staff->prediction?->diem_rui_ro !== null)
-                        <p class="mt-1 text-xs text-slate-500">Điểm {{ (int) round($staff->prediction->diem_rui_ro * 10) }}/10 · chỉ để tham khảo</p>
+                    @if($staff->risk_result?->diem_rui_ro !== null)
+                        <p class="mt-1 text-xs text-slate-500">Điểm {{ (int) round($staff->risk_result->diem_rui_ro * 10) }}/10 · chỉ để tham khảo</p>
                     @endif
                 </div>
             @endif
@@ -175,10 +178,10 @@
         </div>
     </section>
 
-    {{-- Từng lượt làm quiz --}}
+    {{-- Từng lượt làm bài kiểm tra --}}
     <section id="panel-quizzes" role="tabpanel" aria-labelledby="tab-quizzes" x-show="tab === 'quizzes'" x-cloak class="overflow-hidden rounded-2xl border border-coffee-200 bg-white shadow-sm">
         <div class="flex flex-wrap items-center justify-between gap-2 px-6 pt-6 pb-4">
-            <h2 class="text-base font-bold text-coffee-900">Từng lượt làm quiz</h2>
+            <h2 class="text-base font-bold text-coffee-900">Từng lượt làm bài kiểm tra</h2>
             <span class="text-xs text-slate-500">{{ $quizzes->count() }} lượt · {{ $quizFailed }} lượt không đạt</span>
         </div>
         <div class="overflow-x-auto">
@@ -199,7 +202,7 @@
                             <td class="px-6 py-2.5 text-xs text-slate-600">{{ \Carbon\Carbon::parse($quiz->NgayLam ?? $quiz->created_at)->format('d/m/Y H:i') }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="px-6 py-5 text-slate-500">Chưa có lượt làm quiz.</td></tr>
+                        <tr><td colspan="5" class="px-6 py-5 text-slate-500">Chưa có lượt làm bài kiểm tra.</td></tr>
                     @endforelse
                 </tbody>
             </table>

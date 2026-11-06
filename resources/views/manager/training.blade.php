@@ -8,10 +8,6 @@
         'HoanTat' => ['Hoàn tất', 'border-emerald-200 bg-emerald-50 text-emerald-700', 'text-emerald-600', 'bg-emerald-500'],
         'DungDaoTao' => ['Dừng đào tạo lại', 'border-rose-200 bg-rose-50 text-rose-700', 'text-rose-600', 'bg-rose-500'],
     ];
-    $otherStates = [
-        'ChoDuyet' => ['Chờ duyệt đề xuất', 'border-amber-300 bg-amber-50 text-amber-800', 'text-amber-600', 'bg-amber-500'],
-        'TuChoi' => ['Đã từ chối', 'border-slate-200 bg-slate-50 text-slate-600', 'text-slate-500', 'bg-slate-400'],
-    ];
     $stateFilter = array_key_exists(request('state'), $trainingStates) ? request('state') : null;
     $visible = $stateFilter ? $training->where('display_state', $stateFilter) : $training;
     $filters = request()->only('shift', 'q');
@@ -55,9 +51,9 @@
         @forelse($visible as $plan)
             @php
                 $employee = $staff->firstWhere('id', $plan->user_id);
-                [$stateLabel, $stateClass, , $stateDot] = $otherStates[$plan->trang_thai] ?? $trainingStates[$plan->display_state] ?? [$plan->trang_thai, 'border-slate-200 bg-slate-50 text-slate-600', '', 'bg-slate-400'];
+                [$stateLabel, $stateClass, , $stateDot] = $trainingStates[$plan->display_state] ?? [$plan->tien_trinh, 'border-slate-200 bg-slate-50 text-slate-600', '', 'bg-slate-400'];
                 $currentRound = $plan->tien_trinh === 'DangThucHien' ? $plan->rounds->last() : null;
-                $canAssign = $plan->trang_thai === 'DaDuyet' && ($plan->tien_trinh === 'DangThucHien' || ($plan->tien_trinh === 'ChoGiao' && ! $plan->round_limit_reached));
+                $canAssign = $plan->tien_trinh === 'DangThucHien' || ($plan->tien_trinh === 'ChoGiao' && ! $plan->round_limit_reached);
                 $stopped = $plan->display_state === 'DungDaoTao';
                 $owner = $proposalOwners->firstWhere('id', $plan->nguoi_phu_trach_id)?->name;
                 $dialogId = 'training-'.$plan->id;
@@ -126,13 +122,13 @@
                         @if($plan->ly_do)
                             <div class="{{ $row }}"><dt class="{{ $sectionLabel }} pt-0.5">Lý do</dt><dd class="whitespace-pre-line text-coffee-900">{{ $plan->ly_do }}</dd></div>
                         @endif
-                        @if($plan->ghi_chu_thuc_hien && $plan->trang_thai !== 'TuChoi')
+                        @if($plan->ghi_chu_thuc_hien)
                             <div class="{{ $row }}"><dt class="{{ $sectionLabel }} pt-0.5">Kế hoạch đã giao</dt><dd class="whitespace-pre-line text-coffee-900">{{ $plan->ghi_chu_thuc_hien }}</dd></div>
                         @endif
-                        @if($plan->trang_thai === 'HoanThanh')
+                        @if($plan->tien_trinh === 'HoanTat')
                             <div class="{{ $row }}"><dt class="{{ $sectionLabel }} pt-0.5">Kết quả</dt><dd class="font-bold text-emerald-700">{{ $plan->ket_qua_sau_dao_tao_lai === 'Dat' ? 'Đạt' : $plan->ket_qua_sau_dao_tao_lai }}</dd></div>
                         @endif
-                        <div class="{{ $row }}"><dt class="{{ $sectionLabel }} pt-0.5">Nguồn</dt><dd class="text-coffee-900">{{ $plan->nguon_de_xuat ?? ($plan->du_doan_id ? 'Từ cảnh báo học tập' : 'Trưởng ca đề xuất') }}
+                        <div class="{{ $row }}"><dt class="{{ $sectionLabel }} pt-0.5">Nguồn</dt><dd class="text-coffee-900">{{ $plan->nguon_de_xuat ?? 'Trưởng ca đề xuất' }}
                             @if($plan->ke_hoach)@include('components.assessment-improvement-summary', ['savedProposal' => json_decode($plan->ke_hoach, true)])@endif
                         </dd></div>
                     </dl>
@@ -155,7 +151,7 @@
                         </details>
                     @endif
 
-                    @if($plan->tien_trinh === 'DangThucHien' && $plan->trang_thai === 'DaDuyet')
+                    @if($plan->tien_trinh === 'DangThucHien')
                         <details class="rounded-xl border border-coffee-200">
                             <summary class="cursor-pointer px-4 py-3 text-sm font-bold text-coffee-800">Tạo lịch đánh giá lại</summary>
                             <form method="POST" action="{{ route('manager.training.reassess', $plan->id) }}" class="space-y-3 border-t border-coffee-100 px-4 py-4">

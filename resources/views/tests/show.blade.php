@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $test->TenBaiKiemTra ?? 'Bài kiểm tra sát hạch')
+@section('title', $test->TenBaiKiemTra ?? 'Bài kiểm tra')
 
 @section('content')
 <div class="space-y-6 max-w-6xl mx-auto">
@@ -170,7 +170,7 @@
         // Đổi chữ nút Hoàn thành ở câu cuối
         const btnNext = document.getElementById('btnNext');
         if (index === totalQuestions - 1) {
-            btnNext.innerHTML = '<span>Hoàn thành bài thi</span> <i class="fa-solid fa-check text-[10px]"></i>';
+            btnNext.innerHTML = '<span>Hoàn thành bài kiểm tra</span> <i class="fa-solid fa-check text-[10px]"></i>';
         } else {
             btnNext.innerHTML = '<span>Lưu & Sang câu tiếp theo</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>';
         }

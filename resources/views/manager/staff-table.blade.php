@@ -1,5 +1,5 @@
 @php
-    $dueTones = ['Quá hạn' => 'bg-rose-50 text-rose-700', 'Đến hạn' => 'bg-rose-50 text-rose-700', 'Sắp đến hạn' => 'bg-amber-50 text-amber-800'];
+    $dueTones = ['Quá hạn' => 'bg-rose-50 text-rose-700', 'Đến hạn' => 'bg-rose-50 text-rose-700', 'Sắp đến hạn' => 'bg-amber-50 text-amber-800', 'Chờ giao đào tạo lại' => 'bg-amber-50 text-amber-800', 'Đang đào tạo lại' => 'bg-blue-50 text-blue-700', 'Chờ đánh giá lại' => 'bg-violet-50 text-violet-700', 'Dừng đào tạo lại' => 'bg-rose-50 text-rose-700'];
 @endphp
 <div class="overflow-hidden rounded-2xl border border-coffee-200 bg-white">
     <div class="overflow-x-auto">
@@ -36,7 +36,7 @@
                             @endif
                         </td>
                         <td class="px-4 py-3 text-xs">
-                            <span class="text-slate-600">{{ $person->due_at?->format('d/m/Y') ?? $person->due_status }}</span>
+                            @if($person->due_at || ! isset($dueTones[$person->due_status]))<span class="text-slate-600">{{ $person->due_at?->format('d/m/Y') ?? $person->due_status }}</span>@endif
                             @if($person->scheduled_assessment && isset($dueTones[$person->due_status]))
                                 <span class="ml-1 inline-block rounded-full bg-blue-50 px-2 py-0.5 font-semibold text-blue-700">{{ $person->scheduled_assessment->TrangThai === 'ChoDanhGia' ? 'Đã xếp lịch' : 'Đang xử lý' }}</span>
                             @elseif(isset($dueTones[$person->due_status]))

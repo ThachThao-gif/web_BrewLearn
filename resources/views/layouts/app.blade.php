@@ -462,7 +462,7 @@
                                     @if(in_array($typeText, ['warning', 'incident']))
                                         <span class="text-[8px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-bold">Sự cố</span>
                                     @elseif($typeText === 'schedule')
-                                        <span class="text-[8px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-bold">Lịch sát hạch</span>
+                                        <span class="text-[8px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-bold">Lịch đánh giá</span>
                                     @else
                                         <span class="text-[8px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold">Hệ thống</span>
                                     @endif
@@ -1065,9 +1065,8 @@
     function openIncidentModal() {
         const form = document.getElementById('incidentForm');
         form.reset();
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        document.getElementById('incident_thoi_diem').max = now.toISOString().slice(0, 16);
+        // Giờ hiện tại theo máy chủ (có thể là ngày cố định của dữ liệu giả lập), không theo đồng hồ trình duyệt
+        document.getElementById('incident_thoi_diem').max = @json(now('Asia/Ho_Chi_Minh')->format('Y-m-d\TH:i'));
         document.getElementById('incidentModal').classList.remove('hidden');
     }
     function closeIncidentModal() {

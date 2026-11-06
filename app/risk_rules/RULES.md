@@ -1,20 +1,20 @@
-# Cảnh báo theo luật BrewLearn
+# Cảnh báo theo bộ quy tắc BrewLearn
 
 Phương án vận hành mặc định là `rules-v4`, thống nhất với
-`config/brewlearn.php`. Điểm 0–1 là điểm luật chuẩn hóa, không phải xác suất.
+`config/brewlearn.php`. Điểm 0–1 là điểm quy tắc chuẩn hóa, không phải xác suất; chương trình không dùng học máy.
 
 ## Chạy thủ công
 
 Từ thư mục gốc dự án:
 
 ```powershell
-venv\Scripts\python.exe -X utf8 app/ml/ket_noi_db.py
+venv\Scripts\python.exe -X utf8 app/risk_rules/ket_noi_db.py
 ```
 
 Chương trình dùng cấu hình MySQL trong `.env`, chỉ xử lý Barista, Thu ngân, Phục vụ đang làm có
 cửa hàng; loại trưởng ca, quản lý và HR. Mỗi nhân viên được đọc trong một
 transaction có snapshot nhất quán. Thời điểm lấy từ UTC_TIMESTAMP() của MySQL, cùng quy ước UTC của Laravel, được dùng
-cả để lọc quiz và lưu `ngay_du_doan`. Mỗi lần thành công thêm bản ghi mới;
+cả để lọc quiz và lưu cột `thoi_diem_tinh`. Mỗi lần thành công thêm bản ghi mới;
 không ghi đè cảnh báo trước đó và không sửa dữ liệu học tập, đánh giá, đào tạo lại.
 
 ## Dữ liệu và luật

@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\DB;
 
 class AssessmentEligibility
 {
+    /**
+     * Tiến trình của yêu cầu đào tạo lại chưa kết thúc (chưa Hoàn tất, chưa Dừng đào tạo lại).
+     */
+    public const OPEN_RETRAINING_STATES = ['ChoGiao', 'DangThucHien', 'ChoDanhGiaLai'];
+
     public function initial(User $user): array
     {
         $courses = app(CourseProgress::class)->assignedCourses($user->ChucVu ?? '');
@@ -15,10 +20,10 @@ class AssessmentEligibility
         if ($courses->isEmpty() || $lessons->isEmpty()) {
             $missing[] = 'Chưa có khóa học / bài học được phân công để kiểm tra điều kiện.';
         }
-        if (DB::table('yeu_cau_dao_tao_lai')->where('user_id', $user->id)
-            ->whereIn('trang_thai', ['ChoDuyet', 'DaDuyet'])
-            ->where(fn ($query) => $query->whereNull('tien_trinh')->orWhere('tien_trinh', '!=', 'DungDaoTao'))->exists()) {
+        if (DB::table('yeu_cau_dao_tao_lai')->where('user_id', $user->id)->whereIn('tien_trinh', self::OPEN_RETRAINING_STATES)->exists()) {
             $missing[] = 'Có yêu cầu đào tạo lại đang xử lý; tạo đánh giá lại từ vòng đào tạo hiện tại.';
+        } elseif (DB::table('yeu_cau_dao_tao_lai')->where('user_id', $user->id)->where('tien_trinh', 'DungDaoTao')->exists()) {
+            $missing[] = 'Đã dừng đào tạo lại sau 3 vòng vẫn chưa đạt; trưởng ca và quản lý quyết định hướng xử lý ngoài hệ thống.';
         }
 
         return ['ready' => empty($missing), 'missing' => $missing];
@@ -66,7 +71,7 @@ class AssessmentEligibility
     {
         return collect($checklist)->reject(fn (array $item) => $item['done'])->map(fn (array $item) => $item['type'] === 'lesson'
             ? 'Chưa hoàn thành bài học: '.$item['name']
-            : 'Chưa đạt quiz: '.$item['name'].($inRound ? ' (cần lượt thi trong vòng hiện tại)' : ''))->values()->all();
+            : 'Chưa đạt bài kiểm tra: '.$item['name'].($inRound ? ' (cần lượt làm bài trong vòng hiện tại)' : ''))->values()->all();
     }
 
     /**

@@ -77,7 +77,7 @@
             </div>
         </div>
 
-        {{-- 5. Điểm Quiz trung bình --}}
+        {{-- 5. Điểm kiểm tra trung bình --}}
         <div class="bg-white border border-[#E2D4C1] rounded-2xl p-4 space-y-2 shadow-sm">
             <div class="flex justify-between items-center">
                 <i class="fa-solid fa-graduation-cap text-indigo-600 text-sm"></i>
@@ -85,7 +85,7 @@
             </div>
             <div>
                 <div class="text-2xl font-black text-slate-800">{{ $avgQuizScore ?? 0 }} <span class="text-xs font-semibold text-slate-400">/100</span></div>
-                <div class="text-xs font-bold text-slate-700">Điểm Quiz trung bình</div>
+                <div class="text-xs font-bold text-slate-700">Điểm kiểm tra trung bình</div>
                 <div class="text-[10px] text-slate-400 mt-0.5">Trung bình các lượt thi thuộc bài được phân công, gồm thi lại</div>
             </div>
         </div>

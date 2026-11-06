@@ -276,7 +276,7 @@
                             <i class="fa-solid fa-lock text-[9px]"></i> Thông báo hệ thống bắt buộc
                         </div>
                         <div class="flex items-center justify-between text-xs font-semibold text-slate-700">
-                            <span>Cảnh báo tiến độ đào tạo & Nhắc sát hạch</span>
+                            <span>Cảnh báo tiến độ đào tạo & Nhắc lịch đánh giá</span>
                             <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">Luôn bật</span>
                         </div>
                         <div class="flex items-center justify-between text-xs font-semibold text-slate-700">
@@ -300,7 +300,7 @@
                         <label class="flex items-center justify-between cursor-pointer p-2 rounded-xl hover:bg-slate-50 transition">
                             <div>
                                 <div class="text-xs font-bold text-coffee-900">Nhắc nhở làm bài kiểm tra</div>
-                                <div class="text-[10px] text-slate-400">Nhắc nhở trước 24h khi bài Quiz sắp hết hạn</div>
+                                <div class="text-[10px] text-slate-400">Nhắc nhở trước 24h khi bài kiểm tra sắp hết hạn</div>
                             </div>
                             <input type="checkbox" name="notify_quiz_reminders" value="1" @checked(data_get($notifications, 'notify_quiz_reminders', true)) class="w-4 h-4 rounded text-coffee-900 focus:ring-coffee-700">
                         </label>

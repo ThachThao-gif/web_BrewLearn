@@ -113,10 +113,12 @@ def chuan_bi_du_lieu_canh_bao():
            WHERE UPPER(TRIM(c.ChucVuApDung)) = UPPER(TRIM(u.ChucVu))
            OR UPPER(TRIM(c.ChucVuApDung)) IN ('ALL STAFF', 'ALL', 'TẤT CẢ')""", nhan_vien)]
     o_chuong_trinh = ",".join(["%s"] * len(chuong_trinh))
+    # Hai bài đầu có điểm chuẩn ≤ 80 để 90 và 80 đều đạt; bài thứ ba nhận 40 nên chưa đạt với mọi điểm chuẩn
     bai_kiem_tra = [row["MaBaiKiemTra"] for row in truy_van(
         f"""SELECT q.MaBaiKiemTra FROM bai_kiem_tra q JOIN bai_hoc l ON l.MaBaiHoc = q.MaBaiHoc
-            WHERE l.FK_MaCTDT IN ({o_chuong_trinh}) AND COALESCE(q.DiemChuan, 80) <= 80
-            ORDER BY q.MaBaiKiemTra LIMIT 3""", *chuong_trinh)]
+            WHERE l.FK_MaCTDT IN ({o_chuong_trinh})
+            ORDER BY COALESCE(q.DiemChuan, 80) <= 80 DESC, q.MaBaiKiemTra LIMIT 3""", *chuong_trinh)]
+    assert len(bai_kiem_tra) == 3
     with ket_noi() as conn, conn.cursor() as cur:
         cur.execute("DELETE FROM nhan_vien_khoa_hoc WHERE user_id = %s", (nhan_vien,))
         cur.executemany("INSERT INTO nhan_vien_khoa_hoc (user_id, MaCTDT, TienDo) VALUES (%s, %s, 60)",
@@ -137,8 +139,9 @@ class LuongNghiepVuTest(unittest.TestCase):
         sao_chep_csdl()
         cls.tien_de = chuan_bi_du_lieu()
         server = GOC_DU_AN / "vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php"
-        # Tắt dời ngày demo: tiền đề có mốc thời gian cố định, và tệp mốc ngày dùng chung với bản demo thật
-        moi_truong = dict(os.environ, DB_DATABASE=CSDL_KIEM_THU, APP_URL=DIA_CHI, BREWLEARN_DEMO_AUTO_SHIFT="false")
+        # Tắt dời ngày và ngày cố định của bản demo: tiền đề được tạo theo giờ thật của MySQL
+        moi_truong = dict(os.environ, DB_DATABASE=CSDL_KIEM_THU, APP_URL=DIA_CHI, BREWLEARN_DEMO_AUTO_SHIFT="false",
+                          BREWLEARN_DEMO_TODAY="")
         cls.may_chu = subprocess.Popen(["php", "-S", "127.0.0.1:8001", str(server)], cwd=GOC_DU_AN / "public",
                                        env=moi_truong, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         cls.addClassCleanup(cls.may_chu.terminate)
@@ -461,7 +464,7 @@ class LuongNghiepVuTest(unittest.TestCase):
 
         # Bước 2: chạy chương trình tính cảnh báo (bình thường chạy tự động hằng đêm)
         lenh = subprocess.run(["php", "artisan", "brewlearn:calculate-risk"], cwd=GOC_DU_AN,
-                              env=dict(os.environ, DB_DATABASE=CSDL_KIEM_THU), capture_output=True)
+                              env=dict(os.environ, DB_DATABASE=CSDL_KIEM_THU, BREWLEARN_DEMO_TODAY=""), capture_output=True)
         self.assertEqual(0, lenh.returncode)
 
         # Bước 3: quản lý mở hồ sơ, kết quả trùng với kết quả tính tay: 5/10 điểm, mức Cao
@@ -470,7 +473,7 @@ class LuongNghiepVuTest(unittest.TestCase):
         self.bam("//*[@id='tab-risk']")
         noi_dung = self.cho(EC.visibility_of_element_located((By.ID, "panel-risk"))).text
         for mong_doi in ("Cao", "Điểm cảnh báo 5/10", "Đã làm 3/",
-                         "Điểm quiz trung bình từ 60 đến dưới 80",
+                         "Điểm kiểm tra trung bình từ 60 đến dưới 80",
                          "Tiến độ đào tạo từ 50% đến dưới 80%",
                          "Có 1 lỗi nghiệp vụ trong 30 ngày gần nhất, trong đó 1 lỗi nghiêm trọng"):
             self.assertIn(mong_doi, noi_dung)

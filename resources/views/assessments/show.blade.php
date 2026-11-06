@@ -44,7 +44,7 @@
                     </div>
                     <div class="text-xs">
                         <span class="text-slate-400 block text-[10px]">Người đánh giá trực tiếp</span>
-                        <strong class="text-slate-800 font-semibold">Ca trưởng / Manager</strong>
+                        <strong class="text-slate-800 font-semibold">Trưởng ca / Quản lý cửa hàng</strong>
                     </div>
                 </div>
 
@@ -188,7 +188,7 @@
             <div class="p-5 bg-amber-50/50 border-t border-slate-100 flex items-start gap-3 text-xs text-amber-950">
                 <i class="fa-solid fa-circle-info text-amber-700 text-sm mt-0.5 shrink-0"></i>
                 <p class="leading-relaxed">
-                    <strong>Lưu ý:</strong> Sau khi ca trưởng hoàn thành kỳ sát hạch đánh giá thực tế, kết quả và thông báo phân công bài học bổ sung (nếu có) sẽ được gửi đến tài khoản của bạn.
+                    <strong>Lưu ý:</strong> Sau khi trưởng ca hoàn thành buổi đánh giá năng lực, kết quả và thông báo phân công bài học bổ sung (nếu có) sẽ được gửi đến tài khoản của bạn.
                 </p>
             </div>
         </div>

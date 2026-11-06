@@ -67,7 +67,7 @@
             <ul class="space-y-3 text-xs text-slate-600">
                 <li class="p-3 bg-[#FAF7F2] rounded-xl"><b>2.1 Bắt đầu:</b> Đăng nhập tài khoản, kiểm tra thông tin Ca làm & Cửa hàng công tác.</li>
                 <li class="p-3 bg-[#FAF7F2] rounded-xl"><b>2.2 Học bài & Tài liệu:</b> Vào Chương trình đào tạo, xem tài liệu SOP/Video pha chế.</li>
-                <li class="p-3 bg-[#FAF7F2] rounded-xl"><b>2.3 Làm bài kiểm tra:</b> Chọn bài thi trắc nghiệm -> Đọc kỹ câu hỏi -> Bấm Nộp bài.</li>
+                <li class="p-3 bg-[#FAF7F2] rounded-xl"><b>2.3 Làm bài kiểm tra:</b> Chọn bài kiểm tra trắc nghiệm -> Đọc kỹ câu hỏi -> Bấm Nộp bài.</li>
                 <li class="p-3 bg-[#FAF7F2] rounded-xl"><b>2.4 Xem kết quả:</b> Kiểm tra % tiến độ học tập và điểm thi tại trang Hồ sơ cá nhân.</li>
             </ul>
         </div>

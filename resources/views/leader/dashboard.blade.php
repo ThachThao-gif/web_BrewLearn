@@ -46,7 +46,7 @@
        
     </div>
 
-    {{-- Cảnh báo nhân viên đến kỳ sát hạch 3 tháng --}}
+    {{-- Nhắc nhân viên đến kỳ đánh giá 3 tháng --}}
     @if($page === 'schedule' && isset($dueStaffs) && $dueStaffs->count() > 0)
     @php
         $today = now('Asia/Ho_Chi_Minh')->startOfDay();
@@ -160,7 +160,7 @@
         @endforeach
     @endif
 </select>
-<p class="text-xs text-slate-500 mt-2">Chỉ chọn được người hoàn thành toàn bộ bài học và đạt các quiz được phân công. Nhắc hạn vẫn giữ người chưa đủ điều kiện.</p>
+<p class="text-xs text-slate-500 mt-2">Chỉ chọn được người hoàn thành toàn bộ bài học và đạt các bài kiểm tra được phân công. Nhắc hạn vẫn giữ người chưa đủ điều kiện.</p>
 </div>
 
                 <div>
@@ -176,7 +176,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ngày Đánh Giá Sát Hạch <span class="text-rose-500">*</span></label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ngày Đánh Giá <span class="text-rose-500">*</span></label>
                     <input type="datetime-local" name="NgayDanhGia" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" required>
                 </div>
 
@@ -201,12 +201,12 @@
         </div>
         @else
 
-        {{-- Block 2: Danh sách lịch sát hạch cần chấm điểm --}}
+        {{-- Block 2: Danh sách lịch đánh giá cần chấm điểm --}}
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                 <div class="flex items-center gap-2">
                     <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i></div>
-                    <h2 class="text-base font-bold text-slate-800">Lịch Sát Hạch Cần Chấm Điểm</h2>
+                    <h2 class="text-base font-bold text-slate-800">Lịch Đánh Giá Cần Chấm Điểm</h2>
                 </div>
                 {{-- Ô Lọc tìm kiếm nhanh --}}
                 <div class="relative sm:w-64">
@@ -260,7 +260,9 @@
 
                                     {{-- Cột Thao tác --}}
                                     <td class="py-3 px-4 text-right whitespace-nowrap">
-                                        @if(in_array($item->TrangThai, ['ChoDanhGia', 'TraLai']))
+                                        @if(in_array($item->TrangThai, ['ChoDanhGia', 'TraLai']) && ! $item->can_score)
+                                            <span class="text-xs text-slate-500">Trưởng ca khác được phân công chấm</span>
+                                        @elseif(in_array($item->TrangThai, ['ChoDanhGia', 'TraLai']))
                                             <button type="button"
                                                     class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700"
                                                     onclick="openScoringModal('{{ $item->id }}', '{{ e($item->staff_name) }}', '{{ e($item->TieuChuan ?? '') }}')">
@@ -276,7 +278,7 @@
                         @else
                             <tr>
                                 <td colspan="4" class="py-6 text-center text-slate-400 text-sm">
-                                    Hiện chưa có lịch sát hạch nào cần chấm điểm.
+                                    Hiện chưa có lịch đánh giá nào cần chấm điểm.
                                 </td>
                             </tr>
                         @endif

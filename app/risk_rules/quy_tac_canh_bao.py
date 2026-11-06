@@ -17,9 +17,9 @@ def bounded_number(value, name, lower=0, upper=100):
     return number
 
 
-def predict_risk(progress_percent, avg_quiz_score, quiz_attempts, failed_rate, learning_visits,
+def tinh_diem_canh_bao(progress_percent, avg_quiz_score, quiz_attempts, failed_rate, learning_visits,
                  latest_assessment_failed=False, recent_error_count=0, recent_serious_error_count=0):
-    """Tính điểm cảnh báo S1–S5 và mức cảnh báo; điều kiện đủ số bài quiz được kiểm tra trước khi gọi hàm."""
+    """Tính điểm cảnh báo S1–S5 và mức cảnh báo; điều kiện đủ số bài kiểm tra được xét trước khi gọi hàm."""
     progress = bounded_number(progress_percent, "progress_percent")
     average = bounded_number(avg_quiz_score, "avg_quiz_score")
     failed = bounded_number(failed_rate, "failed_rate", upper=1)
@@ -29,7 +29,7 @@ def predict_risk(progress_percent, avg_quiz_score, quiz_attempts, failed_rate, l
     failed_score = 3 if failed >= 0.5 else 1 if failed > 0 else 0
     knowledge_score = max(quiz_score, failed_score)
     if knowledge_score and quiz_score == knowledge_score:
-        reasons.append("Điểm quiz trung bình dưới 60" if average < 60 else "Điểm quiz trung bình từ 60 đến dưới 80")
+        reasons.append("Điểm kiểm tra trung bình dưới 60" if average < 60 else "Điểm kiểm tra trung bình từ 60 đến dưới 80")
     if knowledge_score and failed_score == knowledge_score:
         reasons.append("Có ít nhất 50% số bài đã làm chưa đạt" if failed >= 0.5 else "Có bài kiểm tra chưa đạt, chiếm dưới 50% số bài đã làm")
     progress_score = 2 if progress < 50 else 1 if progress < 80 else 0
