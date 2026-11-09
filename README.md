@@ -69,6 +69,7 @@ Các tài khoản thuộc cửa hàng Flagship Quận 1 (Bảng PL2.1 của báo
 | Nhân viên (Thu ngân) | vannam@brewlearn.com |
 | Nhân viên (Barista) – đang đào tạo lại | quocbao.demo@brewlearn.com |
 | Nhân viên (Barista) – dừng sau ba vòng | hoanglong.demo@brewlearn.com |
+| Nhân viên (Barista) – hoàn tất đào tạo lại sau khi đánh giá lại Đạt | thanhtung.demo@brewlearn.com |
 
 ## Lệnh nghiệp vụ
 
