@@ -21,7 +21,7 @@ class ManagerController extends Controller
 {
     public const MAX_RETRAINING_ROUNDS = 3;
 
-    private const STAFF_PER_PAGE = 10;
+    private const STAFF_PER_PAGE = 7;
 
     private function storeId(): int
     {
@@ -137,6 +137,10 @@ class ManagerController extends Controller
         $page = LengthAwarePaginator::resolveCurrentPage();
         $data['staffPage'] = new LengthAwarePaginator($data['staff']->forPage($page, self::STAFF_PER_PAGE)->values(),
             $data['staff']->count(), self::STAFF_PER_PAGE, $page, ['path' => $request->url(), 'query' => $request->query()]);
+        $shiftPage = LengthAwarePaginator::resolveCurrentPage('shift_page');
+        $data['shiftPage'] = new LengthAwarePaginator($data['staff']->forPage($shiftPage, self::STAFF_PER_PAGE)->values(),
+            $data['staff']->count(), self::STAFF_PER_PAGE, $shiftPage,
+            ['path' => $request->url(), 'query' => $request->query(), 'pageName' => 'shift_page', 'fragment' => 'phan-ca']);
 
         return view('manager.staff', $data);
     }

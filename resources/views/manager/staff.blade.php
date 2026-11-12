@@ -5,7 +5,7 @@
     @include('manager.filter')
     @include('manager.staff-table')
 
-    <details class="rounded-2xl border border-coffee-200 bg-white">
+    <details id="phan-ca" class="rounded-2xl border border-coffee-200 bg-white" @if(request()->has('shift_page')) open @endif>
         <summary class="cursor-pointer px-5 py-4 font-bold text-coffee-900">Phân ca & trạng thái làm việc</summary>
         <div class="border-t border-coffee-100 px-5 py-4 space-y-4">
             <form action="{{ route('manager.shifts.create') }}" method="POST" class="flex flex-wrap items-center gap-2">
@@ -20,7 +20,7 @@
                 <table class="w-full text-left text-sm">
                     <thead class="text-xs text-slate-500"><tr><th class="py-2">Nhân viên</th><th class="py-2">Ca làm việc</th><th class="py-2">Trạng thái làm việc</th></tr></thead>
                     <tbody class="divide-y divide-coffee-100">
-                        @foreach($staff as $person)
+                        @foreach($shiftPage as $person)
                             <tr>
                                 <td class="py-2 pr-3 font-semibold">{{ $person->name }}</td>
                                 <td class="py-2 pr-3">
@@ -47,7 +47,7 @@
                     </tbody>
                 </table>
             </div>
-            <p class="text-[11px] text-slate-400">Tạm ngưng hoặc nghỉ việc sẽ dừng nhắc hạn đánh giá, lịch sử vẫn được giữ.</p>
+            {{ $shiftPage->links() }}
         </div>
     </details>
 </div>
