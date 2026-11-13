@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use DateTimeImmutable;
@@ -38,7 +39,17 @@ class AppServiceProvider extends ServiceProvider
                     }
                     $notifications = $query->orderByDesc('id')->get();
                 }
-                request()->attributes->set('brewlearn.view-context', ['currentUser' => $user, 'notifications' => $notifications]);
+                request()->attributes->set('brewlearn.view-context', [
+                    'currentUser' => $user,
+                    'notifications' => $notifications,
+                    // Thanh bên: mục "Đào tạo lại tôi phụ trách" chỉ hiện khi người dùng được giao phụ trách ít nhất một vòng
+                    'ownsRetraining' => $user !== null
+                        && DB::table('retraining_rounds')->where('owner_id', $user->id)->exists(),
+                    // Biểu mẫu gửi thông báo của trưởng ca: danh sách nhân viên thuộc phạm vi phụ trách
+                    'leaderStaffList' => $user?->isLeader()
+                        ? User::query()->ledBy($user)->orderBy('name')->get()
+                        : collect(),
+                ]);
             }
             $view->with(request()->attributes->get('brewlearn.view-context'));
         });

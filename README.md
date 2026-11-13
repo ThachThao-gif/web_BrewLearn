@@ -7,6 +7,8 @@ Nguyên mẫu web của đề tài **“Phân tích và thiết kế hệ thốn
 - Báo cáo đồ án: [`report/Đồ án HTTTQL.final.docx`](report/)
 
 > Bối cảnh nghiệp vụ và dữ liệu trong nguyên mẫu là dữ liệu giả định, dùng để minh họa thiết kế.
+>
+> Dữ liệu minh họa được dựng tại ngày **29/10/2026**. Với cấu hình mẫu (`BREWLEARN_DEMO_TODAY=2026-10-29` trong `.env.example`), ứng dụng và chương trình cảnh báo coi ngày này là "hôm nay" (giờ phút vẫn theo đồng hồ thật), nên hạn đánh giá, số lỗi trong 30 ngày và mức cảnh báo khớp với báo cáo. Để trống biến này nếu muốn dùng ngày thật.
 
 ## Chức năng chính
 

@@ -277,7 +277,7 @@
         @endif
 
         {{-- DÙNG CHUNG CHO CẢ LEADER & NHÂN VIÊN --}}
-        @if(!$isLeader && \Illuminate\Support\Facades\DB::table('retraining_rounds')->where('owner_id', auth()->id())->exists())
+        @if(!$isLeader && $ownsRetraining)
             <a aria-current="{{ request()->routeIs('training.*') ? 'page' : 'false' }}" href="{{ route('training.assignments') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-coffee-100"><i class="fa-solid fa-user-check w-5 text-center"></i>Đào tạo lại tôi phụ trách</a>
         @endif
        
@@ -936,11 +936,7 @@
         <option value="">-- Chọn nhân viên nhận thông báo --</option>
         <option value="all" class="font-bold text-blue-600">📢 Tất cả nhân viên tôi phụ trách</option>
         
-        @php
-            $staffsList = \App\Models\User::query()->ledBy($currentUser)->orderBy('name')->get();
-        @endphp
-
-        @foreach($staffsList as $staff)
+        @foreach($leaderStaffList as $staff)
             <option value="{{ $staff->id }}">
                 {{ $staff->ma_nv ?? 'NV-' . str_pad($staff->id, 3, '0', STR_PAD_LEFT) }}: {{ $staff->name }}
             </option>
@@ -1003,7 +999,7 @@
                     <label for="incident_user_id" class="font-semibold text-coffee-900 block mb-1.5">1. Nhân viên <span class="text-red-500">*</span></label>
                     <select id="incident_user_id" name="user_id" required class="w-full bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl px-3.5 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-coffee-600/40">
                         <option value="" selected disabled>-- Chọn nhân viên --</option>
-                        @foreach($staffsList as $staff)
+                        @foreach($leaderStaffList as $staff)
                             <option value="{{ $staff->id }}">
                                 NV-{{ str_pad($staff->id, 3, '0', STR_PAD_LEFT) }}: {{ $staff->name }}
                             </option>
