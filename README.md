@@ -63,7 +63,7 @@ Yêu cầu: PHP 8.3+, Composer, MySQL 8+, Python 3, kết nối Internet (tải 
 
 ## Tài khoản minh họa
 
-Mọi tài khoản minh họa (28 tài khoản trong `database/brewlearn.sql`) dùng chung mật khẩu **`BrewLearn@2026`**. Đây là dữ liệu giả lập, không dùng mật khẩu này cho hệ thống thật. Các tài khoản tiêu biểu thuộc cửa hàng Flagship Quận 1 (dữ liệu minh họa ở Phụ lục 1 của báo cáo):
+Mọi tài khoản minh họa (28 tài khoản trong `database/brewlearn.sql`) dùng chung mật khẩu **`12345678`**. Đây là dữ liệu giả lập, không dùng mật khẩu này cho hệ thống thật. Các tài khoản tiêu biểu thuộc cửa hàng Flagship Quận 1 (dữ liệu minh họa ở Phụ lục 1 của báo cáo):
 
 | Vai trò | Email |
 |---|---|
