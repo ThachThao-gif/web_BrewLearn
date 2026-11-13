@@ -4,7 +4,7 @@ Nguyên mẫu web của đề tài **“Phân tích và thiết kế hệ thốn
 
 - Sinh viên thực hiện: Bùi Thị Thạch Thảo – MSSV 030239230215 – Lớp DH39CDS02
 - Giảng viên hướng dẫn: TS. Phạm Xuân Kiên
-- Báo cáo đồ án: [`report/ĐỒ ÁN_BREWLEARN_ban-cuoi-v4-dong-bo.docx`](report/)
+- Báo cáo đồ án: [`report/Đồ án HTTTQL.final.docx`](report/)
 
 > Bối cảnh nghiệp vụ và dữ liệu trong nguyên mẫu là dữ liệu giả định, dùng để minh họa thiết kế.
 
@@ -60,7 +60,7 @@ Yêu cầu: PHP 8.3+, Composer, Node.js, MySQL 8+, Python 3, trình duyệt Chro
 
 ## Tài khoản minh họa
 
-Các tài khoản thuộc cửa hàng Flagship Quận 1 (Bảng PL2.1 của báo cáo):
+Các tài khoản thuộc cửa hàng Flagship Quận 1 (dữ liệu minh họa ở Phụ lục 1 của báo cáo):
 
 | Vai trò | Email |
 |---|---|
@@ -81,13 +81,42 @@ php artisan schedule:work                  # chạy bộ lập lịch khi thử 
 
 ## Kiểm thử
 
-Bảy kịch bản Selenium (KB01–KB07, 25 ca kiểm thử – mục 5.5 và Phụ lục 5 của báo cáo) nằm trong `tests/selenium/test_luong_nghiep_vu.py`. Chương trình tự sao chép cơ sở dữ liệu sang `brewlearn_selenium` và chạy máy chủ riêng ở cổng 8001, nên dữ liệu minh họa không bị thay đổi.
+Bảy kịch bản Selenium (KB01–KB07, 25 ca kiểm thử – mục 5.5 và Phụ lục 4 của báo cáo) nằm trong `tests/selenium/test_luong_nghiep_vu.py`. Chương trình tự sao chép cơ sở dữ liệu sang `brewlearn_selenium` và chạy máy chủ riêng ở cổng 8001, nên dữ liệu minh họa không bị thay đổi.
 
 ```bash
 venv\Scripts\python.exe -m unittest tests.selenium.test_luong_nghiep_vu -v
 ```
 
 Đặt biến môi trường `HEADLESS=1` để chạy Chrome ẩn. Nếu MySQL không cài ở `D:\wamp64\bin\mysql\mysql9.1.0\bin`, đặt biến `MYSQL_BIN` trỏ tới thư mục chứa `mysql` và `mysqldump`.
+
+## Tên bảng trong báo cáo và trong cơ sở dữ liệu
+
+Mục 4.2, ERD (Hình 4.2) và từ điển dữ liệu (Phụ lục 7) của báo cáo dùng **tên thiết kế mức logic**: tiếng Việt không dấu, chữ thường, nối bằng dấu gạch dưới. Cơ sở dữ liệu của nguyên mẫu (`database/brewlearn.sql`) giữ một số tên theo quy ước của Laravel hoặc theo cách đặt ban đầu, nên tên vật lý khác nhưng cấu trúc và quan hệ giữ nguyên như thiết kế.
+
+Bốn bảng có tên khác:
+
+| Tên trong báo cáo | Tên trong cơ sở dữ liệu |
+|---|---|
+| `nguoi_dung` | `users` |
+| `thong_bao` | `notifications` |
+| `tien_do_bai_hoc` | `user_lesson_progresses` |
+| `vong_dao_tao_lai` | `retraining_rounds` |
+
+14 bảng còn lại trùng tên. Khác biệt về tên cột:
+
+| Trong báo cáo | Trong cơ sở dữ liệu |
+|---|---|
+| `nguoi_dung_id` (khóa ngoại tới người dùng) | `user_id` |
+| Cột tiếng Việt viết thường, ví dụ `ma_bai_hoc`, `ma_ctdt`, `diem_chuan`, `diem_nghiep_vu`, `dat_yeu_cau` | Viết hoa đầu từ, ví dụ `MaBaiHoc`, `FK_MaCTDT` (trong `bai_hoc`), `DiemChuan`, `Diem_NghiepVu`, `IsPassed` |
+| `danh_gia_nang_luc.nguoi_danh_gia_id` | `NguoiDanhGia_id` |
+| `yeu_cau_dao_tao_lai.danh_gia_nguon_id` | `assessment_id` |
+| `ket_qua_kiem_tra.ma_luot_nop` | `attempt_token` |
+| `nguoi_dung`: `ho_ten`, `chuc_vu`, `ngay_vao_lam`, `trang_thai_lam_viec`, `cap_do` | `users`: `name`, `ChucVu`, `joined_at`, `employment_status`, `CapDo` |
+| `thong_bao`: `tieu_de`, `noi_dung`, `loai`, `da_doc`, `ma_su_kien` | `notifications`: `title`, `message`, `type`, `is_read`, `event_key` |
+| `tien_do_bai_hoc`: `ma_bai_hoc`, `so_giay_xem_gan_nhat`, `phan_tram_tien_do`, `da_hoan_thanh`, `so_luot_hoc` | `user_lesson_progresses`: `lesson_id`, `last_watched_seconds`, `progress_percent`, `is_completed`, `visit_count` |
+| `vong_dao_tao_lai`: `yeu_cau_id`, `so_vong`, `nguoi_giao_id`, `nguoi_phu_trach_id`, `noi_dung_huong_dan`, `noi_dung_de_xuat`, `han_hoan_thanh`, `ngay_danh_gia_lai`, `danh_gia_lai_id`, `trang_thai`, `ket_qua`, `diem`, `nguoi_duyet_id`, `ngay_duyet`, `danh_sach_bai_hoc_yeu_cau`, `danh_sach_bai_kiem_tra_yeu_cau`, `moc_du_lieu_hoc_tap_ban_dau`, `nguoi_xac_nhan_id`, `ngay_xac_nhan`, `ghi_chu_xac_nhan` | `retraining_rounds`: `request_id`, `round_number`, `assigned_by`, `owner_id`, `instructions`, `proposal`, `deadline`, `assessment_date`, `assessment_id`, `status`, `result`, `score`, `approved_by`, `approved_at`, `required_lessons`, `required_quizzes`, `learning_baseline`, `confirmed_by`, `confirmed_at`, `confirmation_note` |
+
+Ngoài 18 bảng nghiệp vụ, cơ sở dữ liệu còn các bảng hệ thống của Laravel (`cache`, `cache_locks`, `jobs`, `job_batches`, `failed_jobs`, `migrations`, `password_reset_tokens`, `sessions`); các bảng này không thuộc thiết kế nghiệp vụ nên không có trong báo cáo.
 
 ## Cấu trúc thư mục chính
 
