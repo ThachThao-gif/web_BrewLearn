@@ -75,7 +75,7 @@
 
     {{-- TAB 3: BÁO LỖI HỆ THỐNG & TAB 4: GỬI YÊU CẦU --}}
     <div id="tab-3" class="help-tab-content hidden">
-        <form action="{{ route('help.store') }}" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-2xl border border-[#E8DFC8] shadow-sm space-y-4">
+        <form action="{{ route('help.store') }}" method="POST" class="bg-white p-6 rounded-2xl border border-[#E8DFC8] shadow-sm space-y-4">
             @csrf
             <h3 class="font-bold text-slate-800 text-sm border-b pb-2">🚨 BÁO LỖI HỆ THỐNG / YÊU CẦU TRỢ GIÚP</h3>
 
@@ -109,11 +109,6 @@
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Nội dung chi tiết <span class="text-red-500">*</span></label>
                 <textarea name="noi_dung" rows="3" required placeholder="Mô tả chi tiết bước gặp lỗi..." class="w-full bg-[#FAF7F2] border border-[#E2D4C1] rounded-xl px-3 py-2 text-xs font-bold"></textarea>
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Đính kèm ảnh minh họa</label>
-                <input type="file" name="hinh_anh" accept="image/*" class="w-full text-xs text-slate-500">
             </div>
 
             <button type="submit" class="bg-[#6F4E37] text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-sm">

@@ -48,7 +48,6 @@ Route::middleware('auth')->group(function () {
 
     // Tài khoản cá nhân
     Route::get('/profile/edit/{id?}', [UserController::class, 'edit'])->whereNumber('id')->name('users.edit');
-    Route::put('/profile/update/{id}', [UserController::class, 'update'])->whereNumber('id')->name('users.update');
     Route::prefix('account')->name('account.')->controller(UserController::class)->group(function () {
         Route::put('/update-contact', 'updateContact')->name('update-contact');
         Route::put('/update-password', 'updatePassword')->name('update-password');

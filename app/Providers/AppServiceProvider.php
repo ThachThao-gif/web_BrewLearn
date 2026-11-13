@@ -42,9 +42,6 @@ class AppServiceProvider extends ServiceProvider
                 request()->attributes->set('brewlearn.view-context', [
                     'currentUser' => $user,
                     'notifications' => $notifications,
-                    // Thanh bên: mục "Đào tạo lại tôi phụ trách" chỉ hiện khi người dùng được giao phụ trách ít nhất một vòng
-                    'ownsRetraining' => $user !== null
-                        && DB::table('retraining_rounds')->where('owner_id', $user->id)->exists(),
                     // Biểu mẫu gửi thông báo của trưởng ca: danh sách nhân viên thuộc phạm vi phụ trách
                     'leaderStaffList' => $user?->isLeader()
                         ? User::query()->ledBy($user)->orderBy('name')->get()

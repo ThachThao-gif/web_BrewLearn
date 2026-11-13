@@ -276,11 +276,6 @@
             </a>
         @endif
 
-        {{-- DÙNG CHUNG CHO CẢ LEADER & NHÂN VIÊN --}}
-        @if(!$isLeader && $ownsRetraining)
-            <a aria-current="{{ request()->routeIs('training.*') ? 'page' : 'false' }}" href="{{ route('training.assignments') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-coffee-100"><i class="fa-solid fa-user-check w-5 text-center"></i>Đào tạo lại tôi phụ trách</a>
-        @endif
-       
 
         <a aria-current="{{ request()->routeIs('users.*') ? 'page' : 'false' }}" href="{{ route('users.edit', ['id' => $currentUser->id ?? 1]) }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ request()->routeIs('users.edit') ? 'text-coffee-900 bg-[#F3ECE1] font-semibold' : 'text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1]' }}">
             <i class="fa-solid fa-gear w-5 text-center text-slate-500"></i>

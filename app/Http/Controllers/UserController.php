@@ -79,32 +79,4 @@ class UserController extends Controller
 
         return view('users.edit', ['user' => $request->user()]);
     }
-
-    public function update(Request $request, int $id): RedirectResponse
-    {
-        abort_unless($id === (int) $request->user()->id, 403, 'Bạn chỉ được chỉnh sửa hồ sơ của chính mình.');
-        $user = $request->user();
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'name_tag' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email,'.$user->id,
-            'phone' => 'required|string|max:20',
-            'dob' => 'nullable|date',
-            'id_card' => 'nullable|string|max:20',
-            'ChiNhanh' => 'required|string|max:255',
-            'tram_lam_viec' => 'nullable|string|max:255',
-            'emergency_contact' => 'nullable|string|max:255',
-            'emergency_phone' => 'nullable|string|max:20',
-        ], [
-            'name.required' => 'Họ và tên không được để trống.',
-            'name_tag.required' => 'Tên trên bảng tên không được để trống.',
-            'email.required' => 'Email không được để trống.',
-            'email.unique' => 'Email này đã được sử dụng bởi nhân viên khác.',
-            'phone.required' => 'Số điện thoại không được để trống.',
-        ]);
-        $user->update($validated);
-
-        return back()->with('success', 'Đã cập nhật thông tin hồ sơ & gửi duyệt thành công!');
-    }
 }

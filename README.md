@@ -22,19 +22,19 @@ Cảnh báo nguy cơ được tính theo bộ quy tắc `rules-v4` (mục 4.5 c�
 
 ## Công nghệ
 
-- PHP 8.3, Laravel 13, MySQL (WAMP), Blade, Tailwind CSS 4, Vite
+- PHP 8.3, Laravel 13, MySQL (WAMP), Blade
+- Giao diện dùng Tailwind CSS (Play CDN), Alpine.js, Font Awesome và Google Fonts; trang đăng nhập dùng Bootstrap 5. Các thư viện này được tải qua CDN nên máy chạy cần có Internet, không cần Node.js hay bước build
 - Python 3 (`pymysql`, `python-dotenv`) cho chương trình cảnh báo
 - Selenium WebDriver cho kiểm thử chức năng
 
 ## Cài đặt
 
-Yêu cầu: PHP 8.3+, Composer, Node.js, MySQL 8+, Python 3, trình duyệt Chrome (để chạy kiểm thử).
+Yêu cầu: PHP 8.3+, Composer, MySQL 8+, Python 3, kết nối Internet (tải thư viện giao diện qua CDN), trình duyệt Chrome (để chạy kiểm thử).
 
 1. Cài thư viện và tạo tệp cấu hình:
 
    ```bash
    composer install
-   npm install
    copy .env.example .env
    php artisan key:generate
    ```
@@ -46,6 +46,8 @@ Yêu cầu: PHP 8.3+, Composer, Node.js, MySQL 8+, Python 3, trình duyệt Chro
    mysql -uroot --default-character-set=utf8mb4 brewlearn < database/brewlearn.sql
    ```
 
+   > **Không chạy `php artisan migrate`.** Thư mục `database/migrations` chỉ lưu lịch sử thay đổi cấu trúc trong quá trình phát triển, chưa đủ để dựng lại cơ sở dữ liệu từ đầu (thiếu một số bảng nghiệp vụ). Cấu trúc và dữ liệu đầy đủ nằm trong `database/brewlearn.sql`.
+
 3. Tạo môi trường Python cho chương trình cảnh báo:
 
    ```bash
@@ -53,16 +55,15 @@ Yêu cầu: PHP 8.3+, Composer, Node.js, MySQL 8+, Python 3, trình duyệt Chro
    venv\Scripts\pip install -r app/risk_rules/requirements.txt
    ```
 
-4. Biên dịch giao diện và chạy ứng dụng tại http://localhost:8000:
+4. Chạy ứng dụng tại http://localhost:8000:
 
    ```bash
-   npm run build
    php artisan serve
    ```
 
 ## Tài khoản minh họa
 
-Các tài khoản thuộc cửa hàng Flagship Quận 1 (dữ liệu minh họa ở Phụ lục 1 của báo cáo):
+Mọi tài khoản minh họa (28 tài khoản trong `database/brewlearn.sql`) dùng chung mật khẩu **`BrewLearn@2026`**. Đây là dữ liệu giả lập, không dùng mật khẩu này cho hệ thống thật. Các tài khoản tiêu biểu thuộc cửa hàng Flagship Quận 1 (dữ liệu minh họa ở Phụ lục 1 của báo cáo):
 
 | Vai trò | Email |
 |---|---|
@@ -130,7 +131,7 @@ Ngoài 18 bảng nghiệp vụ, cơ sở dữ liệu còn các bảng hệ thố
 | `app/risk_rules` | Chương trình Python tính cảnh báo theo bộ quy tắc |
 | `resources/views` | Giao diện theo ba vai trò |
 | `database/brewlearn.sql` | Cấu trúc và dữ liệu minh họa đầy đủ (dùng để cài đặt) |
-| `database/migrations` | Lịch sử thay đổi cấu trúc trong quá trình phát triển |
+| `database/migrations` | Lịch sử thay đổi cấu trúc trong quá trình phát triển (không dùng để cài đặt) |
 | `public/videos` | Video bài học minh họa |
 | `tests/selenium` | Kịch bản kiểm thử chức năng |
 | `report` | Báo cáo đồ án bản cuối |
