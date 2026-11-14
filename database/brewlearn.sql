@@ -31,7 +31,6 @@ CREATE TABLE `bai_hoc` (
   `ThuTu` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`MaBaiHoc`),
   KEY `fk_bai_hoc_ctdt_new` (`FK_MaCTDT`),
-  CONSTRAINT `fk_bai_hoc_ctdt` FOREIGN KEY (`FK_MaCTDT`) REFERENCES `chuong_trinh_dao_tao` (`MaCTDT`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_bai_hoc_ctdt_new` FOREIGN KEY (`FK_MaCTDT`) REFERENCES `chuong_trinh_dao_tao` (`MaCTDT`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -49,12 +48,11 @@ CREATE TABLE `bai_kiem_tra` (
   `ThoiGianLamBai` int DEFAULT NULL COMMENT 'Thời gian tính bằng phút',
   `DiemChuan` int NOT NULL DEFAULT '80' COMMENT 'Điểm đạt (%)',
   `MaBaiHoc` int DEFAULT NULL,
-  `ChucVu` varchar(50) COLLATE utf8mb3_unicode_ci DEFAULT 'Barista',
+  `ChucVu` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT 'Barista',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`MaBaiKiemTra`),
   KEY `fk_bai_kiem_tra_bai_hoc_new` (`MaBaiHoc`),
-  CONSTRAINT `fk_bai_kiem_tra_bai_hoc` FOREIGN KEY (`MaBaiHoc`) REFERENCES `bai_hoc` (`MaBaiHoc`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_bai_kiem_tra_bai_hoc_new` FOREIGN KEY (`MaBaiHoc`) REFERENCES `bai_hoc` (`MaBaiHoc`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -69,14 +67,15 @@ DROP TABLE IF EXISTS `ca_lam_viec`;
 CREATE TABLE `ca_lam_viec` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `cua_hang_id` bigint unsigned NOT NULL,
-  `ten_ca` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `ten_ca` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `bat_dau` time DEFAULT NULL,
   `ket_thuc` time DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ca_lam_viec_cua_hang_id_ten_ca_unique` (`cua_hang_id`,`ten_ca`),
-  KEY `ca_lam_viec_cua_hang_id_index` (`cua_hang_id`)
+  KEY `ca_lam_viec_cua_hang_id_index` (`cua_hang_id`),
+  CONSTRAINT `ca_lam_viec_cua_hang_id_foreign` FOREIGN KEY (`cua_hang_id`) REFERENCES `cua_hang` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -131,7 +130,6 @@ CREATE TABLE `cau_hoi_kiem_tra` (
   `GiaiThich` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `fk_cau_hoi_bai_kiem_tra_new` (`MaBaiKiemTra`),
-  CONSTRAINT `fk_cau_hoi_bai_kiem_tra` FOREIGN KEY (`MaBaiKiemTra`) REFERENCES `bai_kiem_tra` (`MaBaiKiemTra`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_cau_hoi_bai_kiem_tra_new` FOREIGN KEY (`MaBaiKiemTra`) REFERENCES `bai_kiem_tra` (`MaBaiKiemTra`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -208,13 +206,15 @@ CREATE TABLE `danh_gia_nang_luc` (
   `IsPassed` tinyint(1) DEFAULT NULL,
   `nguoi_duyet_id` bigint unsigned DEFAULT NULL,
   `ngay_duyet` datetime DEFAULT NULL,
-  `ly_do_tra_lai` text COLLATE utf8mb4_unicode_ci,
+  `ly_do_tra_lai` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `fk_dgnl_user_new` (`user_id`),
   KEY `fk_dgnl_nguoi_danh_gia_new` (`NguoiDanhGia_id`),
   KEY `fk_dgnl_ctdt_new` (`MaCTDT`),
+  KEY `fk_dgnl_nguoi_duyet` (`nguoi_duyet_id`),
   CONSTRAINT `fk_dgnl_ctdt_new` FOREIGN KEY (`MaCTDT`) REFERENCES `chuong_trinh_dao_tao` (`MaCTDT`) ON DELETE SET NULL,
   CONSTRAINT `fk_dgnl_nguoi_danh_gia_new` FOREIGN KEY (`NguoiDanhGia_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_dgnl_nguoi_duyet` FOREIGN KEY (`nguoi_duyet_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   CONSTRAINT `fk_dgnl_user_new` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -331,9 +331,7 @@ CREATE TABLE `ket_qua_kiem_tra` (
   UNIQUE KEY `ket_qua_kiem_tra_attempt_token_unique` (`attempt_token`),
   KEY `fk_kqkt_user_new` (`user_id`),
   KEY `fk_kqkt_bai_kiem_tra_new` (`MaBaiKiemTra`),
-  CONSTRAINT `fk_kqkt_bai_kiem_tra` FOREIGN KEY (`MaBaiKiemTra`) REFERENCES `bai_kiem_tra` (`MaBaiKiemTra`) ON DELETE CASCADE,
   CONSTRAINT `fk_kqkt_bai_kiem_tra_new` FOREIGN KEY (`MaBaiKiemTra`) REFERENCES `bai_kiem_tra` (`MaBaiKiemTra`) ON DELETE CASCADE,
-  CONSTRAINT `fk_kqkt_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_kqkt_user_new` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -349,9 +347,9 @@ CREATE TABLE `loi_nghiep_vu` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `user_id` bigint unsigned NOT NULL COMMENT 'ID Nhân viên vi phạm',
   `nguoi_ghi_nhan_id` bigint unsigned NOT NULL COMMENT 'ID Trưởng ca ghi nhận',
-  `loai_loi` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Loại lỗi: SOP_PhaChe, VeSinh_AnToan, ThaiDo_PhucVu, DongPhuc_TacPhong, Khac',
-  `muc_do` enum('Nhe','TrungBinh','NghiemTrong') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Nhe' COMMENT 'Mức độ lỗi',
-  `mo_ta` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Mô tả chi tiết sự cố/vi phạm',
+  `loai_loi` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Loại lỗi: SOP_PhaChe, VeSinh_AnToan, ThaiDo_PhucVu, DongPhuc_TacPhong, Khac',
+  `muc_do` enum('Nhe','TrungBinh','NghiemTrong') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Nhe' COMMENT 'Mức độ lỗi',
+  `mo_ta` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Mô tả chi tiết sự cố/vi phạm',
   `thoi_diem_xay_ra` datetime NOT NULL COMMENT 'Thời điểm xảy ra lỗi trong ca',
   `chi_nhanh_id` int DEFAULT NULL COMMENT 'Chi nhánh xảy ra lỗi',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -359,6 +357,8 @@ CREATE TABLE `loi_nghiep_vu` (
   PRIMARY KEY (`id`),
   KEY `idx_user_id` (`user_id`),
   KEY `idx_thoi_diem` (`thoi_diem_xay_ra`),
+  KEY `fk_loi_nghiep_vu_nguoi_ghi_nhan` (`nguoi_ghi_nhan_id`),
+  CONSTRAINT `fk_loi_nghiep_vu_nguoi_ghi_nhan` FOREIGN KEY (`nguoi_ghi_nhan_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_loi_nghiep_vu_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -454,14 +454,14 @@ CREATE TABLE `retraining_rounds` (
   `request_id` bigint unsigned NOT NULL,
   `round_number` int unsigned NOT NULL,
   `assigned_by` bigint unsigned NOT NULL,
-  `owner_id` bigint unsigned DEFAULT NULL,
-  `instructions` text COLLATE utf8mb3_unicode_ci,
+  `owner_id` bigint unsigned NOT NULL,
+  `instructions` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `proposal` json DEFAULT NULL,
   `deadline` date DEFAULT NULL,
   `assessment_date` date DEFAULT NULL,
   `assessment_id` bigint unsigned DEFAULT NULL,
-  `status` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'DangThucHien',
-  `result` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'ChuaCoKetQua',
+  `status` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'DangThucHien',
+  `result` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'ChuaCoKetQua',
   `score` decimal(5,1) DEFAULT NULL,
   `approved_by` bigint unsigned DEFAULT NULL,
   `approved_at` timestamp NULL DEFAULT NULL,
@@ -472,10 +472,20 @@ CREATE TABLE `retraining_rounds` (
   `learning_baseline` json DEFAULT NULL,
   `confirmed_by` bigint unsigned DEFAULT NULL,
   `confirmed_at` timestamp NULL DEFAULT NULL,
-  `confirmation_note` text COLLATE utf8mb3_unicode_ci,
+  `confirmation_note` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   PRIMARY KEY (`id`),
   UNIQUE KEY `retraining_rounds_request_id_round_number_unique` (`request_id`,`round_number`),
-  UNIQUE KEY `retraining_rounds_assessment_id_unique` (`assessment_id`)
+  UNIQUE KEY `retraining_rounds_assessment_id_unique` (`assessment_id`),
+  KEY `retraining_rounds_assigned_by_foreign` (`assigned_by`),
+  KEY `retraining_rounds_owner_id_foreign` (`owner_id`),
+  KEY `retraining_rounds_approved_by_foreign` (`approved_by`),
+  KEY `retraining_rounds_confirmed_by_foreign` (`confirmed_by`),
+  CONSTRAINT `retraining_rounds_approved_by_foreign` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `retraining_rounds_assessment_id_foreign` FOREIGN KEY (`assessment_id`) REFERENCES `danh_gia_nang_luc` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `retraining_rounds_assigned_by_foreign` FOREIGN KEY (`assigned_by`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
+  CONSTRAINT `retraining_rounds_confirmed_by_foreign` FOREIGN KEY (`confirmed_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `retraining_rounds_owner_id_foreign` FOREIGN KEY (`owner_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
+  CONSTRAINT `retraining_rounds_request_id_foreign` FOREIGN KEY (`request_id`) REFERENCES `yeu_cau_dao_tao_lai` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -509,7 +519,7 @@ DROP TABLE IF EXISTS `user_lesson_progresses`;
 CREATE TABLE `user_lesson_progresses` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `user_id` bigint unsigned NOT NULL,
-  `lesson_id` bigint unsigned NOT NULL,
+  `lesson_id` int NOT NULL,
   `last_watched_seconds` double NOT NULL DEFAULT '0',
   `progress_percent` int NOT NULL DEFAULT '0',
   `is_completed` tinyint(1) NOT NULL DEFAULT '0',
@@ -517,7 +527,10 @@ CREATE TABLE `user_lesson_progresses` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `user_lesson_progresses_user_id_lesson_id_unique` (`user_id`,`lesson_id`),
   KEY `user_lesson_progresses_user_id_foreign` (`user_id`),
+  KEY `user_lesson_progresses_lesson_id_foreign` (`lesson_id`),
+  CONSTRAINT `user_lesson_progresses_lesson_id_foreign` FOREIGN KEY (`lesson_id`) REFERENCES `bai_hoc` (`MaBaiHoc`) ON DELETE CASCADE,
   CONSTRAINT `user_lesson_progresses_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=356 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -535,10 +548,10 @@ CREATE TABLE `users` (
   `name_tag` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `email` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `joined_at` date DEFAULT NULL,
-  `secondary_email` varchar(191) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `secondary_email` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `phone` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `remember_token` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -552,11 +565,11 @@ CREATE TABLE `users` (
   `tram_lam_viec` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `emergency_contact` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `emergency_phone` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `theme` varchar(20) COLLATE utf8mb3_unicode_ci DEFAULT 'light',
-  `language` varchar(10) COLLATE utf8mb3_unicode_ci DEFAULT 'vi',
+  `theme` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT 'light',
+  `language` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT 'vi',
   `notification_settings` json DEFAULT NULL,
   `ca_lam_viec_id` bigint unsigned DEFAULT NULL,
-  `employment_status` varchar(20) COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'DangLam',
+  `employment_status` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'DangLam',
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`),
   KEY `fk_users_cua_hang` (`cua_hang_id`),
@@ -575,13 +588,15 @@ DROP TABLE IF EXISTS `vung`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `vung` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `ma_vung` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ten_vung` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ma_vung` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ten_vung` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `nguoi_quan_ly_id` bigint unsigned DEFAULT NULL COMMENT 'ID Quản lý vùng',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `ma_vung` (`ma_vung`)
+  UNIQUE KEY `ma_vung` (`ma_vung`),
+  KEY `vung_nguoi_quan_ly_id_foreign` (`nguoi_quan_ly_id`),
+  CONSTRAINT `vung_nguoi_quan_ly_id_foreign` FOREIGN KEY (`nguoi_quan_ly_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -598,20 +613,20 @@ CREATE TABLE `yeu_cau_dao_tao_lai` (
   `canh_bao_id` bigint unsigned DEFAULT NULL COMMENT 'Kết quả cảnh báo tham khảo, dự phòng',
   `nguoi_de_xuat_id` bigint unsigned DEFAULT NULL COMMENT 'Trưởng ca đề xuất',
   `nguoi_duyet_id` bigint unsigned DEFAULT NULL COMMENT 'QL cửa hàng duyệt',
-  `ly_do` text COLLATE utf8mb4_unicode_ci,
-  `ket_qua_sau_dao_tao_lai` enum('ChuaCoKetQua','Dat','ChuaDat') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ChuaCoKetQua' COMMENT 'Kết quả cuối cùng của yêu cầu đào tạo lại',
+  `ly_do` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `ket_qua_sau_dao_tao_lai` enum('ChuaCoKetQua','Dat','ChuaDat') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ChuaCoKetQua' COMMENT 'Kết quả cuối cùng của yêu cầu đào tạo lại',
   `ngay_de_xuat` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `ngay_duyet` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `assessment_id` bigint unsigned DEFAULT NULL,
-  `nguon_de_xuat` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nguon_de_xuat` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `ke_hoach` json DEFAULT NULL,
   `nguoi_phu_trach_id` bigint unsigned DEFAULT NULL,
   `han_hoan_thanh` date DEFAULT NULL,
   `ngay_danh_gia_lai` date DEFAULT NULL,
-  `tien_trinh` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ChoGiao',
-  `ghi_chu_thuc_hien` text COLLATE utf8mb4_unicode_ci,
+  `tien_trinh` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ChoGiao',
+  `ghi_chu_thuc_hien` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `danh_gia_lai_id` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `yeu_cau_dao_tao_lai_assessment_id_unique` (`assessment_id`),
@@ -619,9 +634,14 @@ CREATE TABLE `yeu_cau_dao_tao_lai` (
   KEY `idx_ytdl_canh_bao` (`canh_bao_id`),
   KEY `idx_ytdl_nguoi_duyet` (`nguoi_duyet_id`),
   KEY `fk_ytdl_nguoi_de_xuat` (`nguoi_de_xuat_id`),
+  KEY `fk_ytdl_nguoi_phu_trach` (`nguoi_phu_trach_id`),
+  KEY `fk_ytdl_danh_gia_lai` (`danh_gia_lai_id`),
   CONSTRAINT `fk_ytdl_canh_bao` FOREIGN KEY (`canh_bao_id`) REFERENCES `canh_bao_nguy_co` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_ytdl_danh_gia_lai` FOREIGN KEY (`danh_gia_lai_id`) REFERENCES `danh_gia_nang_luc` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_ytdl_danh_gia_nguon` FOREIGN KEY (`assessment_id`) REFERENCES `danh_gia_nang_luc` (`id`) ON DELETE SET NULL,
   CONSTRAINT `fk_ytdl_nguoi_de_xuat` FOREIGN KEY (`nguoi_de_xuat_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   CONSTRAINT `fk_ytdl_nguoi_duyet` FOREIGN KEY (`nguoi_duyet_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_ytdl_nguoi_phu_trach` FOREIGN KEY (`nguoi_phu_trach_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   CONSTRAINT `fk_ytdl_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -791,7 +811,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES (1,'0001_01_01_000000_create_users_table',1),(2,'0001_01_01_000001_create_cache_table',1),(3,'0001_01_01_000002_create_jobs_table',1),(4,'2026_09_22_142623_create_bai_kiem_tra_table',2),(5,'2026_09_22_162338_create_bai_hoc_table',3),(6,'2026_09_22_163241_create_chuong_trinh_dao_tao_table',4),(7,'2026_09_23_150425_add_employee_fields_to_users_table',5),(8,'2026_09_24_150516_create_notifications_table',6),(9,'2026_10_01_140519_add_demo_settings_and_attempt_tokens',7),(10,'2026_10_01_141818_preserve_decimal_course_progress',8),(11,'2026_10_01_151137_store_assessment_improvement_details',9),(12,'2026_10_01_153056_create_manager_training_workflow',10),(13,'2026_10_01_165925_add_employment_status_to_users_table',11),(14,'2026_10_02_100000_create_retraining_rounds_table',12),(15,'2026_10_02_110000_add_retraining_completion_requirements',13),(16,'2026_10_16_140009_add_learning_outcomes_to_chuong_trinh_dao_tao_table',14),(17,'2026_10_16_150000_add_cover_image_to_chuong_trinh_dao_tao_table',15),(18,'2026_10_29_150605_rename_nhe_severity_and_drop_diem_tru_risk_on_loi_nghiep_vu',16),(19,'2026_11_03_160000_update_risk_column_comments',17),(20,'2026_11_03_170000_drop_trang_thai_from_yeu_cau_dao_tao_lai',18),(21,'2026_11_06_100000_rename_risk_warning_names',19);
+INSERT INTO `migrations` VALUES (1,'0001_01_01_000000_create_users_table',1),(2,'0001_01_01_000001_create_cache_table',1),(3,'0001_01_01_000002_create_jobs_table',1),(4,'2026_09_22_142623_create_bai_kiem_tra_table',2),(5,'2026_09_22_162338_create_bai_hoc_table',3),(6,'2026_09_22_163241_create_chuong_trinh_dao_tao_table',4),(7,'2026_09_23_150425_add_employee_fields_to_users_table',5),(8,'2026_09_24_150516_create_notifications_table',6),(9,'2026_10_01_140519_add_demo_settings_and_attempt_tokens',7),(10,'2026_10_01_141818_preserve_decimal_course_progress',8),(11,'2026_10_01_151137_store_assessment_improvement_details',9),(12,'2026_10_01_153056_create_manager_training_workflow',10),(13,'2026_10_01_165925_add_employment_status_to_users_table',11),(14,'2026_10_02_100000_create_retraining_rounds_table',12),(15,'2026_10_02_110000_add_retraining_completion_requirements',13),(16,'2026_10_16_140009_add_learning_outcomes_to_chuong_trinh_dao_tao_table',14),(17,'2026_10_16_150000_add_cover_image_to_chuong_trinh_dao_tao_table',15),(18,'2026_10_29_150605_rename_nhe_severity_and_drop_diem_tru_risk_on_loi_nghiep_vu',16),(19,'2026_11_03_160000_update_risk_column_comments',17),(20,'2026_11_03_170000_drop_trang_thai_from_yeu_cau_dao_tao_lai',18),(21,'2026_11_06_100000_rename_risk_warning_names',19),(23,'2026_11_14_100000_align_foreign_keys_with_erd',20);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
