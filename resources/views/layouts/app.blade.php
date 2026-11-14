@@ -126,7 +126,7 @@
             #sidebar { transition: none; }
         }
     </style>
-    {{-- Nhúng Alpine.js để xử lý Modal Bật Ra --}}
+    {{-- Alpine.js cho các cửa sổ bật lên --}}
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="h-full text-slate-800 font-sans antialiased bg-[#FAF7F2] flex flex-col md:flex-row overflow-x-hidden">
@@ -198,7 +198,7 @@
                 <span>Chấm Điểm Năng Lực</span>
             </a>
 
-            {{-- 🔥 KHÔI PHỤC MỤC GỬI THÔNG BÁO CHO TRƯỞNG CA --}}
+            {{-- Đào tạo lại được phân công, gửi thông báo và ghi nhận lỗi trong ca --}}
             <a aria-current="{{ request()->routeIs('training.*') ? 'page' : 'false' }}" href="{{ route('training.assignments') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-coffee-100"><i class="fa-solid fa-user-check w-5 text-center"></i>Đào tạo lại tôi phụ trách</a>
             <a href="javascript:void(0)" onclick="openSendNotificationModal()" 
                class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1] transition">
@@ -206,7 +206,6 @@
                 <span>Gửi Thông Báo Nhân Viên</span>
             </a>
 
-            {{-- ⚠️ MỤC GHI NHẬN LỖI & SỰ CỐ TRONG CA --}}
             <a href="javascript:void(0)" onclick="openIncidentModal()" 
                class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-red-700 hover:bg-red-50/80 transition border border-transparent hover:border-red-100">
                 <i class="fa-solid fa-triangle-exclamation w-5 text-center text-red-500"></i>
@@ -268,7 +267,7 @@
 <div class="mt-4">
     <h3 class="px-3 text-[11px] font-bold uppercase tracking-wider text-coffee-500 mb-2">TIÊU CHUẨN & HỖ TRỢ</h3>
     <nav class="space-y-1">
-        {{-- 🔥 CHỈ ẨN SỔ TAY SOP VỚI TRƯỞNG CA (NHÂN VIÊN VẪN THẤY) --}}
+        {{-- Sổ tay SOP chỉ hiển thị cho nhân viên --}}
         @if(!$isLeader && !$isManager)
             <a href="javascript:void(0)" onclick="openSOPModal()" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-coffee-900 hover:bg-[#F3ECE1] transition">
                 <i class="fa-solid fa-book-bookmark w-5 text-center text-slate-500"></i>
@@ -518,32 +517,21 @@
     }
 
     function handleBellClick(id, item) {
-        // 1. Tự động đánh dấu đã đọc qua API
+        // Đánh dấu đã đọc rồi mở chi tiết (trang thông báo) hoặc chuyển tới trang thông báo
         fetch(`/notifications/${id}/read`, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                 'Content-Type': 'application/json'
             }
-        }).catch(() => {
-            fetch(`/notifications/mark-as-read/${id}`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                }
-            });
         });
 
-        // 2. Ẩn chấm đỏ chưa đọc
         const dot = document.getElementById(`dot-${id}`);
         if (dot) dot.remove();
 
-        // 3. Nếu đang có Modal mở chi tiết trên trang thì gọi mở Modal
         if (typeof openNotificationDetail === 'function') {
             openNotificationDetail(item);
         } else {
-            // Nếu ở trang khác, chuyển hướng tới trang thông báo
             window.location.href = "{{ route('notifications.index') }}";
         }
     }

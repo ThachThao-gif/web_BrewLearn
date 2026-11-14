@@ -41,9 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('notifications')->name('notifications.')->controller(NotificationController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/read-all', 'markAllAsRead')->name('readAll');
-        Route::get('/{id}', 'show')->whereNumber('id')->name('show');
         Route::post('/{id}/read', 'markAsRead')->whereNumber('id')->name('read');
-        Route::delete('/{id}', 'destroy')->whereNumber('id')->name('destroy');
     });
 
     // Tài khoản cá nhân
