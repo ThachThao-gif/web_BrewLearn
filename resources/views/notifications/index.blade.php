@@ -83,8 +83,13 @@
                             @endif
                         </div>
 
-                        {{-- Nút xem chi tiết --}}
-                        <button type="button" 
+                        <div class="flex items-center gap-4">
+                        <form method="POST" action="{{ route('notifications.destroy', $item->id) }}" onsubmit="return confirm('Xóa thông báo này?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-xs font-bold text-slate-400 hover:text-red-700 transition cursor-pointer border-0 bg-transparent">Xóa</button>
+                        </form>
+                        <button type="button"
                                 onclick='openNotificationDetail({
                                     id: {{ $item->id }},
                                     title: @json($titleText),
@@ -98,6 +103,7 @@
                             <span>Chi tiết</span>
                             <i class="fa-solid fa-arrow-right text-[10px]"></i>
                         </button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/read-all', 'markAllAsRead')->name('readAll');
         Route::post('/{id}/read', 'markAsRead')->whereNumber('id')->name('read');
+        Route::delete('/{id}', 'destroy')->whereNumber('id')->name('destroy');
     });
 
     // Tài khoản cá nhân

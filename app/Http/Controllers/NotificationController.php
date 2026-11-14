@@ -47,4 +47,11 @@ class NotificationController extends Controller
 
         return back()->with('success', 'Đã đánh dấu tất cả thông báo là đã đọc!');
     }
+
+    public function destroy(int $id): RedirectResponse
+    {
+        abort_unless($this->mine()->where('id', $id)->delete(), 404);
+
+        return back()->with('success', 'Đã xóa thông báo.');
+    }
 }
