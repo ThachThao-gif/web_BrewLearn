@@ -4,7 +4,7 @@ Nguyên mẫu web của đề tài **“Phân tích và thiết kế hệ thốn
 
 - Sinh viên thực hiện: Bùi Thị Thạch Thảo – MSSV 030239230215 – Lớp DH39CDS02
 - Giảng viên hướng dẫn: TS. Phạm Xuân Kiên
-- Báo cáo đồ án: [`report/Đồ án HTTTQL.final.docx`](report/)
+- Báo cáo đồ án (bản nộp): [`report/Đồ án HTTTQL.BuiThiThachThao.banmem.pdf`](report/) và bản Word cùng tên
 
 > Bối cảnh nghiệp vụ và dữ liệu trong nguyên mẫu là dữ liệu giả định, dùng để minh họa thiết kế.
 >
@@ -45,6 +45,8 @@ Yêu cầu: PHP 8.3+, Composer, MySQL 8+, Python 3, kết nối Internet (tải 
    mysql -uroot -e "CREATE DATABASE brewlearn CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
    mysql -uroot --default-character-set=utf8mb4 brewlearn < database/brewlearn.sql
    ```
+
+   > Chạy hai lệnh này trong **Command Prompt (cmd)**: PowerShell không hỗ trợ ký hiệu `<`. Nếu báo không tìm thấy `mysql`, dùng đường dẫn đầy đủ tới `mysql.exe` của WAMP (ví dụ `D:\wamp64\bin\mysql\mysql9.1.0\bin\mysql.exe`), hoặc tạo cơ sở dữ liệu `brewlearn` (utf8mb4_unicode_ci) rồi nhập tệp `database/brewlearn.sql` bằng phpMyAdmin.
 
    > **Không chạy `php artisan migrate`.** Thư mục `database/migrations` chỉ lưu lịch sử thay đổi cấu trúc trong quá trình phát triển, chưa đủ để dựng lại cơ sở dữ liệu từ đầu (thiếu một số bảng nghiệp vụ). Cấu trúc và dữ liệu đầy đủ nằm trong `database/brewlearn.sql`.
 

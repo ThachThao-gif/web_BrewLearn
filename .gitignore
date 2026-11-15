@@ -29,7 +29,8 @@ Thumbs.db
 /tmp
 /output
 /report/*
-!/report/Đồ án HTTTQL.final.docx
+!/report/Đồ án HTTTQL.BuiThiThachThao.banmem.docx
+!/report/Đồ án HTTTQL.BuiThiThachThao.banmem.pdf
 /brewlearn.sql
 /push.php
 /export_usecase_*.py
