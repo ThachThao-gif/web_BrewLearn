@@ -4,7 +4,6 @@ Nguyên mẫu web của đề tài **“Phân tích và thiết kế hệ thốn
 
 - Sinh viên thực hiện: Bùi Thị Thạch Thảo – MSSV 030239230215 – Lớp DH39CDS02
 - Giảng viên hướng dẫn: TS. Phạm Xuân Kiên
-- Báo cáo đồ án (bản nộp): [`report/Đồ án ngành HTTTQL - Bùi Thị Thạch Thảo.pdf`](report/) 
 
 > Bối cảnh nghiệp vụ và dữ liệu trong nguyên mẫu là dữ liệu giả định, dùng để minh họa thiết kế.
 >
