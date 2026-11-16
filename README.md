@@ -72,6 +72,7 @@ Mọi tài khoản minh họa (28 tài khoản trong `database/brewlearn.sql`) d
 | Quản lý cửa hàng | ngocbich@brewlearn.com |
 | Trưởng ca | minhthu@brewlearn.com |
 | Nhân viên (Thu ngân) | vannam@brewlearn.com |
+| Nhân viên (Barista) – chờ trưởng ca chấm đánh giá | minhkhang@brewlearn.com |
 | Nhân viên (Barista) – đang đào tạo lại | quocbao.demo@brewlearn.com |
 | Nhân viên (Barista) – dừng sau ba vòng | hoanglong.demo@brewlearn.com |
 | Nhân viên (Barista) – hoàn tất đào tạo lại sau khi đánh giá lại Đạt | thanhtung.demo@brewlearn.com |

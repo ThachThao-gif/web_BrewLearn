@@ -424,7 +424,7 @@
                             $titleText     = $noti->title ?? 'Thông báo hệ thống';
                             $messageText   = $noti->message ?? $noti->content ?? '';
                             $typeText      = $noti->type ?? 'general';
-                            $formattedTime = \Carbon\Carbon::parse($noti->created_at)->diffForHumans();
+                            $formattedTime = \Carbon\Carbon::parse($noti->created_at)->locale('vi')->diffForHumans();
                             $fullTime      = \Carbon\Carbon::parse($noti->created_at)->format('H:i:s d/m/Y');
                         @endphp
 

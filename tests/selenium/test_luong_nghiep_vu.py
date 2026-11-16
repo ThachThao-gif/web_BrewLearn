@@ -38,7 +38,7 @@ MAT_KHAU_KIEM_THU = "Selenium@2026"
 QUAN_LY = "ngocbich@brewlearn.com"
 TRUONG_CA = "minhthu@brewlearn.com"
 NHAN_VIEN = "vannam@brewlearn.com"
-NHAN_VIEN_DUOC_DANH_GIA = "operations1.demo@brewlearn.com"
+NHAN_VIEN_DUOC_DANH_GIA = "minhkhang@brewlearn.com"
 NHAN_VIEN_VONG_3 = "hoanganh@brewlearn.com"
 NHAN_VIEN_CANH_BAO = "tuan.demo@brewlearn.com"
 
